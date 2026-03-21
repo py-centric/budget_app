@@ -9,6 +9,10 @@ import '../pages/manage_recurring_page.dart';
 import 'package:budget_app/features/settings/presentation/pages/settings_page.dart';
 import 'package:budget_app/features/financial_tools/presentation/pages/tools_hub_page.dart';
 
+import 'package:budget_app/features/business_tools/presentation/pages/invoices_page.dart';
+import 'package:budget_app/features/business_tools/presentation/pages/clients_page.dart';
+import 'package:budget_app/features/business_tools/presentation/pages/profile_settings_page.dart';
+
 class NavigationDrawerWidget extends StatefulWidget {
   const NavigationDrawerWidget({super.key});
 
@@ -85,6 +89,45 @@ class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
                     MaterialPageRoute(builder: (context) => const ToolsHubPage()),
                   );
                 },
+              ),
+              ExpansionTile(
+                leading: const Icon(Icons.business_center),
+                title: const Text('Business Tools'),
+                children: [
+                  ListTile(
+                    leading: const Icon(Icons.receipt_long),
+                    title: const Text('Invoices'),
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const InvoicesPage()),
+                      );
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.people),
+                    title: const Text('Clients'),
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const ClientsPage()), // To be created
+                      );
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.store),
+                    title: const Text('Profiles'),
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const ProfileSettingsPage()),
+                      );
+                    },
+                  ),
+                ],
               ),
               ListTile(
                 leading: const Icon(Icons.settings_applications),

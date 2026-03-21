@@ -39,6 +39,10 @@ import 'features/emergency_fund/domain/repositories/emergency_fund_repository.da
 import 'features/emergency_fund/data/repositories/emergency_fund_repository_impl.dart';
 import 'features/emergency_fund/presentation/bloc/emergency_fund_bloc.dart';
 import 'features/emergency_fund/presentation/bloc/emergency_fund_event.dart';
+import 'features/business_tools/domain/repositories/business_repository.dart';
+import 'features/business_tools/data/repositories/business_repository_impl.dart';
+import 'features/business_tools/presentation/bloc/business_bloc.dart';
+import 'features/business_tools/presentation/bloc/business_event.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -57,6 +61,7 @@ void main() async {
   final recurringRepository = RecurringRepositoryImpl(localDatabase);
   final financialRepository = FinancialRepositoryImpl(localDatabase);
   final emergencyFundRepository = EmergencyFundRepositoryImpl(localDatabase);
+  final businessRepository = BusinessRepositoryImpl(localDatabase);
 
   runApp(
     MultiRepositoryProvider(
@@ -67,12 +72,16 @@ void main() async {
         RepositoryProvider<EmergencyFundRepository>(
           create: (context) => emergencyFundRepository,
         ),
+        RepositoryProvider<BusinessRepository>(
+          create: (context) => businessRepository,
+        ),
       ],
       child: BudgetApp(
         repository: repository,
         recurringRepository: recurringRepository,
         financialRepository: financialRepository,
         emergencyFundRepository: emergencyFundRepository,
+        businessRepository: businessRepository,
       ),
     ),
   );
@@ -83,6 +92,7 @@ class BudgetApp extends StatelessWidget {
   final RecurringRepository recurringRepository;
   final FinancialRepository financialRepository;
   final EmergencyFundRepository emergencyFundRepository;
+  final BusinessRepository businessRepository;
 
   const BudgetApp({
     super.key,
@@ -90,6 +100,7 @@ class BudgetApp extends StatelessWidget {
     required this.recurringRepository,
     required this.financialRepository,
     required this.emergencyFundRepository,
+    required this.businessRepository,
   });
 
   @override
@@ -163,6 +174,9 @@ class BudgetApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (_) => EmergencyFundBloc(emergencyFundRepository)..add(LoadEmergencyFund()),
+        ),
+        BlocProvider(
+          create: (_) => BusinessBloc(businessRepository)..add(LoadBusinessData()),
         ),
       ],
       child: BlocBuilder<SettingsBloc, SettingsState>(

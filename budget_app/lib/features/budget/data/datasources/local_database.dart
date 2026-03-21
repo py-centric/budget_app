@@ -248,6 +248,112 @@ class LocalDatabase {
         )
       ''');
     }
+
+    if (oldVersion < 12) {
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS company_profiles (
+          id TEXT PRIMARY KEY,
+          name TEXT NOT NULL,
+          address TEXT NOT NULL,
+          tax_id TEXT,
+          logo_path TEXT,
+          payment_info TEXT,
+          default_vat_rate REAL NOT NULL DEFAULT 0.0
+        )
+      ''');
+
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS invoices (
+          id TEXT PRIMARY KEY,
+          profile_id TEXT NOT NULL,
+          invoice_number TEXT NOT NULL,
+          date TEXT NOT NULL,
+          client_name TEXT NOT NULL,
+          client_details TEXT NOT NULL,
+          status TEXT NOT NULL,
+          sub_total REAL NOT NULL,
+          tax_total REAL NOT NULL,
+          grand_total REAL NOT NULL,
+          notes TEXT,
+          balance_due REAL NOT NULL,
+          FOREIGN KEY (profile_id) REFERENCES company_profiles (id) ON DELETE CASCADE
+        )
+      ''');
+
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS invoice_items (
+          id TEXT PRIMARY KEY,
+          invoice_id TEXT NOT NULL,
+          description TEXT NOT NULL,
+          quantity REAL NOT NULL,
+          rate REAL NOT NULL,
+          tax_rate REAL NOT NULL,
+          total REAL NOT NULL,
+          FOREIGN KEY (invoice_id) REFERENCES invoices (id) ON DELETE CASCADE
+        )
+      ''');
+
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS invoice_payments (
+          id TEXT PRIMARY KEY,
+          invoice_id TEXT NOT NULL,
+          amount REAL NOT NULL,
+          date TEXT NOT NULL,
+          method TEXT NOT NULL,
+          FOREIGN KEY (invoice_id) REFERENCES invoices (id) ON DELETE CASCADE
+        )
+      ''');
+    }
+
+    if (oldVersion < 13) {
+      await db.execute('ALTER TABLE company_profiles ADD COLUMN bank_name TEXT');
+      await db.execute('ALTER TABLE company_profiles ADD COLUMN bank_iban TEXT');
+      await db.execute('ALTER TABLE company_profiles ADD COLUMN bank_bic TEXT');
+      await db.execute('ALTER TABLE company_profiles ADD COLUMN bank_holder TEXT');
+      await db.execute('ALTER TABLE company_profiles ADD COLUMN primary_color INTEGER');
+      await db.execute('ALTER TABLE company_profiles ADD COLUMN font_family TEXT');
+      await db.execute('ALTER TABLE company_profiles ADD COLUMN logo_on_right INTEGER DEFAULT 0');
+
+      await db.execute('ALTER TABLE invoices ADD COLUMN bank_name TEXT');
+      await db.execute('ALTER TABLE invoices ADD COLUMN bank_iban TEXT');
+      await db.execute('ALTER TABLE invoices ADD COLUMN bank_bic TEXT');
+      await db.execute('ALTER TABLE invoices ADD COLUMN bank_holder TEXT');
+    }
+
+    if (oldVersion < 14) {
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS clients (
+          id TEXT PRIMARY KEY,
+          name TEXT NOT NULL,
+          address TEXT NOT NULL,
+          tax_id TEXT,
+          primary_contact TEXT,
+          email TEXT,
+          phone TEXT,
+          website TEXT,
+          industry TEXT,
+          notes TEXT
+        )
+      ''');
+      await db.execute('ALTER TABLE invoices ADD COLUMN client_id TEXT');
+    }
+
+    if (oldVersion < 15) {
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS received_invoices (
+          id TEXT PRIMARY KEY,
+          vendor_name TEXT NOT NULL,
+          invoice_number TEXT,
+          date TEXT NOT NULL,
+          due_date TEXT,
+          amount REAL NOT NULL,
+          tax_amount REAL NOT NULL,
+          status TEXT NOT NULL,
+          balance_due REAL NOT NULL,
+          notes TEXT
+        )
+      ''');
+    }
   }
 
   Future<void> _onCreate(Database db, int version) async {
@@ -397,6 +503,103 @@ class LocalDatabase {
       CREATE TABLE IF NOT EXISTS metadata (
         key TEXT PRIMARY KEY,
         value TEXT NOT NULL
+      )
+    ''');
+
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS company_profiles (
+        id TEXT PRIMARY KEY,
+        name TEXT NOT NULL,
+        address TEXT NOT NULL,
+        tax_id TEXT,
+        logo_path TEXT,
+        payment_info TEXT,
+        default_vat_rate REAL NOT NULL DEFAULT 0.0,
+        bank_name TEXT,
+        bank_iban TEXT,
+        bank_bic TEXT,
+        bank_holder TEXT,
+        primary_color INTEGER,
+        font_family TEXT,
+        logo_on_right INTEGER DEFAULT 0
+      )
+    ''');
+
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS invoices (
+        id TEXT PRIMARY KEY,
+        profile_id TEXT NOT NULL,
+        client_id TEXT,
+        invoice_number TEXT NOT NULL,
+        date TEXT NOT NULL,
+        client_name TEXT NOT NULL,
+        client_details TEXT NOT NULL,
+        status TEXT NOT NULL,
+        sub_total REAL NOT NULL,
+        tax_total REAL NOT NULL,
+        grand_total REAL NOT NULL,
+        notes TEXT,
+        balance_due REAL NOT NULL,
+        bank_name TEXT,
+        bank_iban TEXT,
+        bank_bic TEXT,
+        bank_holder TEXT,
+        FOREIGN KEY (profile_id) REFERENCES company_profiles (id) ON DELETE CASCADE,
+        FOREIGN KEY (client_id) REFERENCES clients (id) ON DELETE SET NULL
+      )
+    ''');
+
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS clients (
+        id TEXT PRIMARY KEY,
+        name TEXT NOT NULL,
+        address TEXT NOT NULL,
+        tax_id TEXT,
+        primary_contact TEXT,
+        email TEXT,
+        phone TEXT,
+        website TEXT,
+        industry TEXT,
+        notes TEXT
+      )
+    ''');
+
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS invoice_items (
+        id TEXT PRIMARY KEY,
+        invoice_id TEXT NOT NULL,
+        description TEXT NOT NULL,
+        quantity REAL NOT NULL,
+        rate REAL NOT NULL,
+        tax_rate REAL NOT NULL,
+        total REAL NOT NULL,
+        FOREIGN KEY (invoice_id) REFERENCES invoices (id) ON DELETE CASCADE
+      )
+    ''');
+
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS invoice_payments (
+        id TEXT PRIMARY KEY,
+        invoice_id TEXT NOT NULL,
+        amount REAL NOT NULL,
+        date TEXT NOT NULL,
+        method TEXT NOT NULL,
+        FOREIGN KEY (invoice_id) REFERENCES invoices (id) ON DELETE CASCADE
+      )
+    ''');
+
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS received_invoices (
+        id TEXT PRIMARY KEY,
+        vendor_name TEXT NOT NULL,
+        invoice_number TEXT,
+        date TEXT NOT NULL,
+        due_date TEXT,
+        amount REAL NOT NULL,
+        tax_amount REAL NOT NULL,
+        status TEXT NOT NULL,
+        balance_due REAL NOT NULL,
+        notes TEXT
       )
     ''');
   }
@@ -769,5 +972,71 @@ class LocalDatabase {
     );
     if (result.isEmpty) return null;
     return result.first['value'] as String?;
+  }
+
+  // Business Tools Methods
+  Future<int> insertCompanyProfile(Map<String, dynamic> profile) async {
+    final db = await database;
+    return await db.insert('company_profiles', profile);
+  }
+
+  Future<int> updateCompanyProfile(Map<String, dynamic> profile) async {
+    final db = await database;
+    return await db.update('company_profiles', profile, where: 'id = ?', whereArgs: [profile['id']]);
+  }
+
+  Future<int> deleteCompanyProfile(String id) async {
+    final db = await database;
+    return await db.delete('company_profiles', where: 'id = ?', whereArgs: [id]);
+  }
+
+  Future<List<Map<String, dynamic>>> getCompanyProfiles() async {
+    final db = await database;
+    return await db.query('company_profiles');
+  }
+
+  Future<int> insertInvoice(Map<String, dynamic> invoice) async {
+    final db = await database;
+    return await db.insert('invoices', invoice);
+  }
+
+  Future<int> updateInvoice(Map<String, dynamic> invoice) async {
+    final db = await database;
+    return await db.update('invoices', invoice, where: 'id = ?', whereArgs: [invoice['id']]);
+  }
+
+  Future<int> deleteInvoice(String id) async {
+    final db = await database;
+    return await db.delete('invoices', where: 'id = ?', whereArgs: [id]);
+  }
+
+  Future<List<Map<String, dynamic>>> getInvoices() async {
+    final db = await database;
+    return await db.query('invoices', orderBy: 'date DESC');
+  }
+
+  Future<int> insertInvoiceItem(Map<String, dynamic> item) async {
+    final db = await database;
+    return await db.insert('invoice_items', item);
+  }
+
+  Future<void> deleteInvoiceItems(String invoiceId) async {
+    final db = await database;
+    await db.delete('invoice_items', where: 'invoice_id = ?', whereArgs: [invoiceId]);
+  }
+
+  Future<List<Map<String, dynamic>>> getInvoiceItems(String invoiceId) async {
+    final db = await database;
+    return await db.query('invoice_items', where: 'invoice_id = ?', whereArgs: [invoiceId]);
+  }
+
+  Future<int> insertInvoicePayment(Map<String, dynamic> payment) async {
+    final db = await database;
+    return await db.insert('invoice_payments', payment);
+  }
+
+  Future<List<Map<String, dynamic>>> getInvoicePayments(String invoiceId) async {
+    final db = await database;
+    return await db.query('invoice_payments', where: 'invoice_id = ?', whereArgs: [invoiceId], orderBy: 'date DESC');
   }
 }
