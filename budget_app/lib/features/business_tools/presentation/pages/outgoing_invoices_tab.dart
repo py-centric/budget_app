@@ -35,7 +35,9 @@ class OutgoingInvoicesTab extends StatelessWidget {
             return Card(
               child: ListTile(
                 title: Text('${invoice.invoiceNumber} - ${invoice.clientName}'),
-                subtitle: Text('${dateFormat.format(invoice.date)} • ${invoice.status.name.toUpperCase()}'),
+                subtitle: Text(
+                  '${dateFormat.format(invoice.date)} • ${invoice.status.name.toUpperCase()}',
+                ),
                 trailing: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -50,25 +52,34 @@ class OutgoingInvoicesTab extends StatelessWidget {
                         if (invoice.balanceDue > 0)
                           Text(
                             'Due: ${CurrencyFormatter.format(invoice.balanceDue)}',
-                            style: const TextStyle(color: Colors.red, fontSize: 12),
+                            style: const TextStyle(
+                              color: Colors.red,
+                              fontSize: 12,
+                            ),
                           ),
                       ],
                     ),
                     PopupMenuButton<String>(
                       onSelected: (value) async {
                         if (value == 'clone') {
-                          context.read<BusinessBloc>().add(CloneInvoiceEvent(invoice.id));
+                          context.read<BusinessBloc>().add(
+                            CloneInvoiceEvent(invoice.id),
+                          );
                           Future.delayed(const Duration(milliseconds: 300), () {
                             if (context.mounted) {
                               final state = context.read<BusinessBloc>().state;
                               final clonedInvoice = state.invoices.firstWhere(
-                                (inv) => inv.status == InvoiceStatus.draft && inv.invoiceNumber != invoice.invoiceNumber,
+                                (inv) =>
+                                    inv.status == InvoiceStatus.draft &&
+                                    inv.invoiceNumber != invoice.invoiceNumber,
                                 orElse: () => state.invoices.last,
                               );
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => InvoiceBuilderPage(initialInvoice: clonedInvoice),
+                                  builder: (context) => InvoiceBuilderPage(
+                                    initialInvoice: clonedInvoice,
+                                  ),
                                 ),
                               );
                             }
@@ -84,7 +95,10 @@ class OutgoingInvoicesTab extends StatelessWidget {
                         ),
                         const PopupMenuItem(
                           value: 'delete',
-                          child: Text('Delete', style: TextStyle(color: Colors.red)),
+                          child: Text(
+                            'Delete',
+                            style: TextStyle(color: Colors.red),
+                          ),
                         ),
                       ],
                     ),
@@ -93,12 +107,15 @@ class OutgoingInvoicesTab extends StatelessWidget {
                 onTap: () async {
                   final repository = context.read<BusinessRepository>();
                   final items = await repository.getInvoiceItems(invoice.id);
+                  if (!context.mounted) return;
                   final profiles = context.read<BusinessBloc>().state.profiles;
-                  final profile = profiles.firstWhere((p) => p.id == invoice.profileId);
-                  
+                  final profile = profiles.firstWhere(
+                    (p) => p.id == invoice.profileId,
+                  );
+
                   if (!context.mounted) return;
                   final navigator = Navigator.of(context);
-                  
+
                   navigator.push(
                     MaterialPageRoute(
                       builder: (context) => PdfPreviewPage(
@@ -125,9 +142,14 @@ class OutgoingInvoicesTab extends StatelessWidget {
       context: context,
       builder: (dialogContext) => AlertDialog(
         title: const Text('Delete Invoice'),
-        content: Text('Are you sure you want to delete invoice ${invoice.invoiceNumber}?'),
+        content: Text(
+          'Are you sure you want to delete invoice ${invoice.invoiceNumber}?',
+        ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(dialogContext), child: const Text('Cancel')),
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: const Text('Cancel'),
+          ),
           TextButton(
             onPressed: () {
               context.read<BusinessBloc>().add(DeleteInvoice(invoice.id));

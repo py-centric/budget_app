@@ -12,7 +12,8 @@ class ReceivedInvoiceEditPage extends StatefulWidget {
   const ReceivedInvoiceEditPage({super.key, this.invoice});
 
   @override
-  State<ReceivedInvoiceEditPage> createState() => _ReceivedInvoiceEditPageState();
+  State<ReceivedInvoiceEditPage> createState() =>
+      _ReceivedInvoiceEditPageState();
 }
 
 class _ReceivedInvoiceEditPageState extends State<ReceivedInvoiceEditPage> {
@@ -29,9 +30,15 @@ class _ReceivedInvoiceEditPageState extends State<ReceivedInvoiceEditPage> {
   void initState() {
     super.initState();
     _vendorController = TextEditingController(text: widget.invoice?.vendorName);
-    _invoiceNumController = TextEditingController(text: widget.invoice?.invoiceNumber);
-    _amountController = TextEditingController(text: widget.invoice?.amount.toString());
-    _taxController = TextEditingController(text: widget.invoice?.taxAmount.toString());
+    _invoiceNumController = TextEditingController(
+      text: widget.invoice?.invoiceNumber,
+    );
+    _amountController = TextEditingController(
+      text: widget.invoice?.amount.toString(),
+    );
+    _taxController = TextEditingController(
+      text: widget.invoice?.taxAmount.toString(),
+    );
     _notesController = TextEditingController(text: widget.invoice?.notes);
     _date = widget.invoice?.date ?? DateTime.now();
     _dueDate = widget.invoice?.dueDate;
@@ -52,13 +59,12 @@ class _ReceivedInvoiceEditPageState extends State<ReceivedInvoiceEditPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.invoice == null ? 'Add Received Invoice' : 'Edit Received Invoice'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.save),
-            onPressed: _save,
-          ),
-        ],
+        title: Text(
+          widget.invoice == null
+              ? 'Add Received Invoice'
+              : 'Edit Received Invoice',
+        ),
+        actions: [IconButton(icon: const Icon(Icons.save), onPressed: _save)],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -79,8 +85,12 @@ class _ReceivedInvoiceEditPageState extends State<ReceivedInvoiceEditPage> {
                 Expanded(
                   child: TextField(
                     controller: _amountController,
-                    decoration: const InputDecoration(labelText: 'Total Amount *'),
-                    keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                    decoration: const InputDecoration(
+                      labelText: 'Total Amount *',
+                    ),
+                    keyboardType: const TextInputType.numberWithOptions(
+                      decimal: true,
+                    ),
                   ),
                 ),
                 const SizedBox(width: 16),
@@ -88,7 +98,9 @@ class _ReceivedInvoiceEditPageState extends State<ReceivedInvoiceEditPage> {
                   child: TextField(
                     controller: _taxController,
                     decoration: const InputDecoration(labelText: 'Tax Amount'),
-                    keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                    keyboardType: const TextInputType.numberWithOptions(
+                      decimal: true,
+                    ),
                   ),
                 ),
               ],
@@ -110,7 +122,11 @@ class _ReceivedInvoiceEditPageState extends State<ReceivedInvoiceEditPage> {
             ),
             ListTile(
               title: const Text('Due Date'),
-              subtitle: Text(_dueDate != null ? DateFormat('yyyy-MM-dd').format(_dueDate!) : 'Not set'),
+              subtitle: Text(
+                _dueDate != null
+                    ? DateFormat('yyyy-MM-dd').format(_dueDate!)
+                    : 'Not set',
+              ),
               trailing: const Icon(Icons.calendar_today),
               onTap: () async {
                 final picked = await showDatePicker(
@@ -123,10 +139,13 @@ class _ReceivedInvoiceEditPageState extends State<ReceivedInvoiceEditPage> {
               },
             ),
             DropdownButtonFormField<ReceivedInvoiceStatus>(
-              value: _status,
+              initialValue: _status,
               decoration: const InputDecoration(labelText: 'Status'),
               items: ReceivedInvoiceStatus.values.map((s) {
-                return DropdownMenuItem(value: s, child: Text(s.name.toUpperCase()));
+                return DropdownMenuItem(
+                  value: s,
+                  child: Text(s.name.toUpperCase()),
+                );
               }).toList(),
               onChanged: (val) => setState(() => _status = val!),
             ),
@@ -162,7 +181,9 @@ class _ReceivedInvoiceEditPageState extends State<ReceivedInvoiceEditPage> {
       amount: amount,
       taxAmount: tax,
       status: _status,
-      balanceDue: _status == ReceivedInvoiceStatus.paid ? 0 : amount, // Simple logic
+      balanceDue: _status == ReceivedInvoiceStatus.paid
+          ? 0
+          : amount, // Simple logic
       notes: _notesController.text,
     );
 

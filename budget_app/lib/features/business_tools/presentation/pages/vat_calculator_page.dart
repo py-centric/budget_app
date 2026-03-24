@@ -13,7 +13,7 @@ class _VatCalculatorPageState extends State<VatCalculatorPage> {
   final _calculateVat = CalculateVat();
   final _amountController = TextEditingController();
   final _rateController = TextEditingController(text: '20');
-  
+
   bool _isNetToGross = true;
   VatResult? _result;
 
@@ -55,9 +55,7 @@ class _VatCalculatorPageState extends State<VatCalculatorPage> {
     final currencyFormat = NumberFormat.currency(symbol: '\$');
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('VAT Calculator'),
-      ),
+      appBar: AppBar(title: const Text('VAT Calculator')),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -65,8 +63,16 @@ class _VatCalculatorPageState extends State<VatCalculatorPage> {
           children: [
             SegmentedButton<bool>(
               segments: [
-                ButtonSegment(value: true, label: Text('Add VAT'), icon: Icon(Icons.add)),
-                ButtonSegment(value: false, label: Text('Remove VAT'), icon: Icon(Icons.remove)),
+                ButtonSegment(
+                  value: true,
+                  label: Text('Add VAT'),
+                  icon: Icon(Icons.add),
+                ),
+                ButtonSegment(
+                  value: false,
+                  label: Text('Remove VAT'),
+                  icon: Icon(Icons.remove),
+                ),
               ],
               selected: {_isNetToGross},
               onSelectionChanged: (value) {
@@ -89,10 +95,10 @@ class _VatCalculatorPageState extends State<VatCalculatorPage> {
             const SizedBox(height: 16),
             TextField(
               controller: _rateController,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 labelText: 'VAT Rate (%)',
                 suffixText: '%',
-                border: const OutlineInputBorder(),
+                border: OutlineInputBorder(),
               ),
               keyboardType: TextInputType.numberWithOptions(decimal: true),
             ),
@@ -151,9 +157,9 @@ class _ResultCard extends StatelessWidget {
             Text(
               value,
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    color: color,
-                    fontWeight: isTotal ? FontWeight.bold : null,
-                  ),
+                color: color,
+                fontWeight: isTotal ? FontWeight.bold : null,
+              ),
             ),
           ],
         ),

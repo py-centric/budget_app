@@ -42,10 +42,7 @@ class _InsuranceSectionState extends State<InsuranceSection> {
                   child: DropdownButtonFormField<String>(
                     initialValue: _selectedType,
                     items: _types.map((type) {
-                      return DropdownMenuItem(
-                        value: type,
-                        child: Text(type),
-                      );
+                      return DropdownMenuItem(value: type, child: Text(type));
                     }).toList(),
                     onChanged: (value) {
                       setState(() {
@@ -64,7 +61,9 @@ class _InsuranceSectionState extends State<InsuranceSection> {
                       labelText: 'Excess Amount',
                       prefixText: '\$',
                     ),
-                    keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                    keyboardType: const TextInputType.numberWithOptions(
+                      decimal: true,
+                    ),
                   ),
                 ),
               ],
@@ -74,13 +73,10 @@ class _InsuranceSectionState extends State<InsuranceSection> {
               onPressed: () {
                 final amount = double.tryParse(_amountController.text) ?? 0.0;
                 if (amount >= 0) {
-                  final name = _selectedType + ' Insurance Excess';
+                  final name = '$_selectedType Insurance Excess';
                   context.read<EmergencyFundBloc>().add(
-                        AddCustomExpense(
-                          name,
-                          amount,
-                        ),
-                      );
+                    AddCustomExpense(name, amount),
+                  );
                   _amountController.clear();
                 }
               },
