@@ -5,6 +5,11 @@ import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'core/theme/app_theme.dart';
+import 'features/app_lock/data/repositories/app_lock_repository_impl.dart';
+import 'features/app_lock/presentation/bloc/app_lock_bloc.dart';
+import 'features/app_lock/presentation/bloc/app_lock_event.dart';
+import 'features/app_lock/presentation/bloc/app_lock_state.dart';
+import 'features/app_lock/presentation/pages/lock_screen_page.dart';
 import 'features/budget/data/datasources/local_database.dart';
 import 'features/budget/data/repositories/budget_repository_impl.dart';
 import 'features/budget/data/repositories/recurring_repository_impl.dart';
@@ -75,6 +80,10 @@ void main() async {
         RepositoryProvider<BusinessRepository>(
           create: (context) => businessRepository,
         ),
+        RepositoryProvider<AppLockRepository>(
+          create: (context) =>
+              AppLockRepository(authService: AuthServiceImpl()),
+        ),
       ],
       child: BudgetApp(
         repository: repository,
@@ -111,15 +120,26 @@ class BudgetApp extends StatelessWidget {
     final getAvailablePeriodsUseCase = GetAvailablePeriods(repository);
     final deleteEntryUseCase = DeleteEntry(repository);
     final updateEntryUseCase = UpdateEntry(repository);
-    final saveRecurringTransactionUseCase = SaveRecurringTransaction(recurringRepository);
-    final applyRecurringOverrideUseCase = ApplyRecurringOverride(recurringRepository);
+    final saveRecurringTransactionUseCase = SaveRecurringTransaction(
+      recurringRepository,
+    );
+    final applyRecurringOverrideUseCase = ApplyRecurringOverride(
+      recurringRepository,
+    );
     final duplicateBudgetUseCase = DuplicateBudget(repository);
-    final confirmPotentialTransactionUseCase = ConfirmPotentialTransaction(repository);
-    
+    final confirmPotentialTransactionUseCase = ConfirmPotentialTransaction(
+      repository,
+    );
+
     final addCategoryUseCase = AddCategory(repository);
     final deleteCategoryUseCase = DeleteCategory(repository);
-    final reassignAndDeleteCategoryUseCase = ReassignAndDeleteCategory(repository);
-    final calculateProjectionUseCase = CalculateProjection(repository, recurringRepository);
+    final reassignAndDeleteCategoryUseCase = ReassignAndDeleteCategory(
+      repository,
+    );
+    final calculateProjectionUseCase = CalculateProjection(
+      repository,
+      recurringRepository,
+    );
 
     final calculateNetWorthUseCase = CalculateNetWorth();
     final calculateAmortizationUseCase = CalculateAmortization();
@@ -127,6 +147,11 @@ class BudgetApp extends StatelessWidget {
 
     return MultiBlocProvider(
       providers: [
+        BlocProvider(
+          create: (context) =>
+              AppLockBloc(repository: context.read<AppLockRepository>())
+                ..add(AppLockLoadSettings()),
+        ),
         BlocProvider(
           create: (_) => SettingsBloc()..add(const InitializeSettingsEvent()),
         ),
@@ -154,7 +179,8 @@ class BudgetApp extends StatelessWidget {
             updateEntryUseCase: updateEntryUseCase,
             saveRecurringTransactionUseCase: saveRecurringTransactionUseCase,
             duplicateBudgetUseCase: duplicateBudgetUseCase,
-            confirmPotentialTransactionUseCase: confirmPotentialTransactionUseCase,
+            confirmPotentialTransactionUseCase:
+                confirmPotentialTransactionUseCase,
           ),
         ),
         BlocProvider(
@@ -173,10 +199,13 @@ class BudgetApp extends StatelessWidget {
           )..add(const LoadProjection()),
         ),
         BlocProvider(
-          create: (_) => EmergencyFundBloc(emergencyFundRepository)..add(LoadEmergencyFund()),
+          create: (_) =>
+              EmergencyFundBloc(emergencyFundRepository)
+                ..add(LoadEmergencyFund()),
         ),
         BlocProvider(
-          create: (_) => BusinessBloc(businessRepository)..add(LoadBusinessData()),
+          create: (_) =>
+              BusinessBloc(businessRepository)..add(LoadBusinessData()),
         ),
       ],
       child: BlocBuilder<SettingsBloc, SettingsState>(
@@ -193,13 +222,35 @@ class BudgetApp extends StatelessWidget {
               mode = ThemeMode.system;
           }
 
-          return MaterialApp(
-            title: 'Budget App',
-            debugShowCheckedModeBanner: false,
-            theme: AppTheme.lightTheme,
-            darkTheme: AppTheme.darkTheme,
-            themeMode: mode,
-            home: const HomePage(),
+          return BlocBuilder<AppLockBloc, AppLockState>(
+            builder: (context, appLockState) {
+              if (appLockState.settings.isEnabled &&
+                  appLockState.status != AppLockStatus.authenticated &&
+                  appLockState.status != AppLockStatus.loaded &&
+                  appLockState.status != AppLockStatus.initial) {
+                return MaterialApp(
+                  title: 'Budget App',
+                  debugShowCheckedModeBanner: false,
+                  theme: AppTheme.lightTheme,
+                  darkTheme: AppTheme.darkTheme,
+                  themeMode: mode,
+                  home: LockScreenPage(
+                    onUnlocked: () {
+                      context.read<AppLockBloc>().add(AppLockLoadSettings());
+                    },
+                  ),
+                );
+              }
+
+              return MaterialApp(
+                title: 'Budget App',
+                debugShowCheckedModeBanner: false,
+                theme: AppTheme.lightTheme,
+                darkTheme: AppTheme.darkTheme,
+                themeMode: mode,
+                home: const HomePage(),
+              );
+            },
           );
         },
       ),

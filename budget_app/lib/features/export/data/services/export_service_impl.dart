@@ -5,7 +5,8 @@ import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
-import 'package:share_plus/share_plus.dart' show Share, XFile;
+// ignore: deprecated_member_use
+import 'package:share_plus/share_plus.dart';
 import '../../domain/entities/export_configuration.dart';
 import '../../domain/entities/export_format.dart';
 import '../../domain/entities/export_period.dart';
@@ -125,6 +126,7 @@ class ExportServiceImpl implements ExportService {
           ),
           pw.SizedBox(height: 20),
           pw.Header(level: 1, child: pw.Text('Transactions')),
+          // ignore: deprecated_member_use
           pw.Table.fromTextArray(
             headers: ['Date', 'Description', 'Category', 'Amount'],
             data: transactions
