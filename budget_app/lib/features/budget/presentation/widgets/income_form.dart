@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/utils/currency_formatter.dart';
+import '../../../../features/settings/presentation/bloc/settings_bloc.dart';
 import '../../domain/entities/category.dart';
 
 import '../../domain/entities/recurring_transaction.dart';
@@ -17,9 +20,14 @@ class IncomeForm extends StatefulWidget {
     RecurrenceUnit? unit,
     DateTime? endDate,
     bool isPotential,
-  }) onSubmit;
+  })
+  onSubmit;
 
-  const IncomeForm({super.key, required this.onSubmit, required this.categories});
+  const IncomeForm({
+    super.key,
+    required this.onSubmit,
+    required this.categories,
+  });
 
   @override
   State<IncomeForm> createState() => _IncomeFormState();
@@ -31,7 +39,11 @@ class _IncomeFormState extends State<IncomeForm> {
   final _descriptionController = TextEditingController();
   final _intervalController = TextEditingController(text: '1');
   String? _selectedCategoryId;
-  DateTime _selectedDate = DateTime(DateTime.now().year, DateTime.now().month, 1);
+  DateTime _selectedDate = DateTime(
+    DateTime.now().year,
+    DateTime.now().month,
+    1,
+  );
   bool _isRecurring = false;
   bool _isPotential = false;
   RecurrenceUnit _selectedUnit = RecurrenceUnit.months;
@@ -53,10 +65,14 @@ class _IncomeFormState extends State<IncomeForm> {
           '',
           amount,
           _selectedCategoryId!,
-          _descriptionController.text.isEmpty ? null : _descriptionController.text,
+          _descriptionController.text.isEmpty
+              ? null
+              : _descriptionController.text,
           _selectedDate,
           isRecurring: _isRecurring,
-          interval: _isRecurring ? int.tryParse(_intervalController.text) : null,
+          interval: _isRecurring
+              ? int.tryParse(_intervalController.text)
+              : null,
           unit: _isRecurring ? _selectedUnit : null,
           endDate: _isRecurring ? _endDate : null,
           isPotential: _isPotential,
@@ -89,27 +105,35 @@ class _IncomeFormState extends State<IncomeForm> {
             children: [
               Text('Add Income', style: Theme.of(context).textTheme.titleLarge),
               const SizedBox(height: 16),
-              TextFormField(
-                controller: _amountController,
-                decoration: const InputDecoration(
-                  labelText: 'Amount',
-                  prefixText: '\$ ',
-                ),
-                keyboardType: const TextInputType.numberWithOptions(
-                  decimal: true,
-                ),
-                inputFormatters: [
-                  FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
-                ],
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter an amount';
-                  }
-                  final amount = double.tryParse(value);
-                  if (amount == null || amount <= 0) {
-                    return 'Please enter a valid positive amount';
-                  }
-                  return null;
+              BlocBuilder<SettingsBloc, SettingsState>(
+                builder: (context, settingsState) {
+                  final currencyCode = settingsState.settings.currencyCode;
+                  return TextFormField(
+                    controller: _amountController,
+                    decoration: InputDecoration(
+                      labelText: 'Amount',
+                      prefixText:
+                          '${CurrencyFormatter.getSymbol(currencyCode: currencyCode)} ',
+                    ),
+                    keyboardType: const TextInputType.numberWithOptions(
+                      decimal: true,
+                    ),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(
+                        RegExp(r'^\d+\.?\d{0,2}'),
+                      ),
+                    ],
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter an amount';
+                      }
+                      final amount = double.tryParse(value);
+                      if (amount == null || amount <= 0) {
+                        return 'Please enter a valid positive amount';
+                      }
+                      return null;
+                    },
+                  );
                 },
               ),
               const SizedBox(height: 12),
@@ -194,9 +218,12 @@ class _IncomeFormState extends State<IncomeForm> {
                         controller: _intervalController,
                         decoration: const InputDecoration(labelText: 'Every'),
                         keyboardType: TextInputType.number,
-                        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                        ],
                         validator: (value) {
-                          if (_isRecurring && (value == null || value.isEmpty)) {
+                          if (_isRecurring &&
+                              (value == null || value.isEmpty)) {
                             return 'Required';
                           }
                           return null;
@@ -212,7 +239,9 @@ class _IncomeFormState extends State<IncomeForm> {
                         items: RecurrenceUnit.values.map((unit) {
                           return DropdownMenuItem(
                             value: unit,
-                            child: Text(unit.toString().split('.').last.toUpperCase()),
+                            child: Text(
+                              unit.toString().split('.').last.toUpperCase(),
+                            ),
                           );
                         }).toList(),
                         onChanged: (value) {
@@ -244,7 +273,9 @@ class _IncomeFormState extends State<IncomeForm> {
                   onTap: () async {
                     final picked = await showDatePicker(
                       context: context,
-                      initialDate: _endDate ?? _selectedDate.add(const Duration(days: 30)),
+                      initialDate:
+                          _endDate ??
+                          _selectedDate.add(const Duration(days: 30)),
                       firstDate: _selectedDate,
                       lastDate: DateTime(2100),
                     );

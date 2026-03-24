@@ -1,5 +1,8 @@
 # budget_app
 
+[![Flutter CI](https://github.com/anomalyco/budget_app/actions/workflows/ci.yml/badge.svg)](https://github.com/anomalyco/budget_app/actions/workflows/ci.yml)
+[![Flutter Release Build](https://github.com/anomalyco/budget_app/actions/workflows/release.yml/badge.svg)](https://github.com/anomalyco/budget_app/actions/workflows/release.yml)
+
 A new Flutter project.
 
 ## Getting Started

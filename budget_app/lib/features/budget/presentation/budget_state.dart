@@ -59,3 +59,15 @@ class BudgetError extends BudgetState {
   @override
   List<Object?> get props => [message];
 }
+
+class BudgetDeleted extends BudgetState {
+  const BudgetDeleted();
+}
+
+class BudgetsCleared extends BudgetState {
+  const BudgetsCleared();
+}
+
+class FactoryResetComplete extends BudgetState {
+  const FactoryResetComplete();
+}

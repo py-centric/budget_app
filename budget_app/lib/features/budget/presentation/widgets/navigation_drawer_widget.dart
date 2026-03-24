@@ -27,11 +27,13 @@ class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
   Widget build(BuildContext context) {
     return BlocBuilder<NavigationBloc, NavigationState>(
       builder: (context, state) {
-        final sortedYears = state.availablePeriods.map((p) => p.year).toSet().toList()
-          ..sort((a, b) => b.compareTo(a));
+        final sortedYears =
+            state.availablePeriods.map((p) => p.year).toSet().toList()
+              ..sort((a, b) => b.compareTo(a));
 
         return Drawer(
-          child: Column(
+          child: ListView(
+            padding: EdgeInsets.zero,
             children: [
               DrawerHeader(
                 decoration: BoxDecoration(
@@ -41,8 +43,8 @@ class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
                   child: Text(
                     'Budget App',
                     style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                          color: Theme.of(context).colorScheme.onPrimaryContainer,
-                        ),
+                      color: Theme.of(context).colorScheme.onPrimaryContainer,
+                    ),
                   ),
                 ),
               ),
@@ -53,7 +55,9 @@ class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
                   Navigator.pop(context);
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const CategorySettingsPage()),
+                    MaterialPageRoute(
+                      builder: (context) => const CategorySettingsPage(),
+                    ),
                   );
                 },
               ),
@@ -64,7 +68,9 @@ class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
                   Navigator.pop(context);
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const ProjectionPage()),
+                    MaterialPageRoute(
+                      builder: (context) => const ProjectionPage(),
+                    ),
                   );
                 },
               ),
@@ -75,7 +81,9 @@ class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
                   Navigator.pop(context);
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const ManageRecurringPage()),
+                    MaterialPageRoute(
+                      builder: (context) => const ManageRecurringPage(),
+                    ),
                   );
                 },
               ),
@@ -86,7 +94,9 @@ class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
                   Navigator.pop(context);
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const ToolsHubPage()),
+                    MaterialPageRoute(
+                      builder: (context) => const ToolsHubPage(),
+                    ),
                   );
                 },
               ),
@@ -101,7 +111,9 @@ class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
                       Navigator.pop(context);
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const InvoicesPage()),
+                        MaterialPageRoute(
+                          builder: (context) => const InvoicesPage(),
+                        ),
                       );
                     },
                   ),
@@ -112,7 +124,9 @@ class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
                       Navigator.pop(context);
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const ClientsPage()), // To be created
+                        MaterialPageRoute(
+                          builder: (context) => const ClientsPage(),
+                        ), // To be created
                       );
                     },
                   ),
@@ -123,7 +137,9 @@ class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
                       Navigator.pop(context);
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const ProfileSettingsPage()),
+                        MaterialPageRoute(
+                          builder: (context) => const ProfileSettingsPage(),
+                        ),
                       );
                     },
                   ),
@@ -136,53 +152,52 @@ class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
                   Navigator.pop(context);
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const SettingsPage()),
+                    MaterialPageRoute(
+                      builder: (context) => const SettingsPage(),
+                    ),
                   );
                 },
               ),
               const Divider(),
-              Expanded(
-                child: ListView.builder(
-                  padding: EdgeInsets.zero,
-                  itemCount: sortedYears.length,
-                  itemBuilder: (context, index) {
-                    final year = sortedYears[index];
-                    final monthsInYear =
-                        state.availablePeriods.where((p) => p.year == year).toList()
-                          ..sort((a, b) => b.month.compareTo(a.month));
+              ...List.generate(sortedYears.length, (index) {
+                final year = sortedYears[index];
+                final monthsInYear =
+                    state.availablePeriods.where((p) => p.year == year).toList()
+                      ..sort((a, b) => b.month.compareTo(a.month));
 
-                    final isExpanded = _expandedYears[year] ?? (index == 0);
+                final isExpanded = _expandedYears[year] ?? (index == 0);
 
-                    return Column(
-                      children: [
-                        YearGroupHeader(
-                          year: year,
-                          isExpanded: isExpanded,
+                return Column(
+                  children: [
+                    YearGroupHeader(
+                      year: year,
+                      isExpanded: isExpanded,
+                      onTap: () {
+                        setState(() {
+                          _expandedYears[year] = !isExpanded;
+                        });
+                      },
+                    ),
+                    if (isExpanded)
+                      ...monthsInYear.map(
+                        (period) => ListTile(
+                          title: Text(
+                            DateFormat(
+                              'MMMM',
+                            ).format(DateTime(year, period.month)),
+                          ),
+                          selected: state.currentPeriod == period,
                           onTap: () {
-                            setState(() {
-                              _expandedYears[year] = !isExpanded;
-                            });
+                            context.read<NavigationBloc>().add(
+                              ChangePeriod(period),
+                            );
+                            Navigator.pop(context);
                           },
                         ),
-                        if (isExpanded)
-                          for (final period in monthsInYear)
-                            ListTile(
-                              title: Text(
-                                DateFormat('MMMM').format(DateTime(year, period.month)),
-                              ),
-                              selected: state.currentPeriod == period,
-                              onTap: () {
-                                context.read<NavigationBloc>().add(
-                                      ChangePeriod(period),
-                                    );
-                                Navigator.pop(context);
-                              },
-                            ),
-                      ],
-                    );
-                  },
-                ),
-              ),
+                      ),
+                  ],
+                );
+              }),
             ],
           ),
         );

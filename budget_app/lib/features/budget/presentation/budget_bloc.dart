@@ -49,6 +49,9 @@ class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
     on<SaveRecurringTransactionEvent>(_onSaveRecurringTransaction);
     on<DuplicateBudgetEvent>(_onDuplicateBudget);
     on<ConfirmPotentialTransactionEvent>(_onConfirmPotentialTransaction);
+    on<DeleteBudgetEvent>(_onDeleteBudget);
+    on<ClearAllBudgetsEvent>(_onClearAllBudgets);
+    on<FactoryResetEvent>(_onFactoryReset);
   }
 
   Future<void> _onConfirmPotentialTransaction(
@@ -79,7 +82,7 @@ class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
         newName: event.newName,
         includeTransactions: event.includeTransactions,
       );
-      // Once duplicated, we might want to reload available periods, 
+      // Once duplicated, we might want to reload available periods,
       // but that is handled by NavigationBloc. Here we just emit a success state.
       // Alternatively, we can just load the summary for the new period.
       add(LoadSummaryEvent(period: event.targetPeriod));
@@ -95,7 +98,11 @@ class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
     try {
       await saveRecurringTransactionUseCase(event.recurring);
       // Optional: emit a specific state if needed, or just reload summary
-      add(LoadSummaryEvent(period: BudgetPeriod.fromDate(event.recurring.startDate)));
+      add(
+        LoadSummaryEvent(
+          period: BudgetPeriod.fromDate(event.recurring.startDate),
+        ),
+      );
     } catch (e) {
       emit(BudgetError(e.toString()));
     }
@@ -117,7 +124,12 @@ class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
       );
       await addIncomeUseCase(income);
       emit(const IncomeAdded());
-      add(LoadSummaryEvent(period: BudgetPeriod.fromDate(event.date), budgetId: event.budgetId));
+      add(
+        LoadSummaryEvent(
+          period: BudgetPeriod.fromDate(event.date),
+          budgetId: event.budgetId,
+        ),
+      );
     } catch (e) {
       emit(BudgetError(e.toString()));
     }
@@ -139,7 +151,12 @@ class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
       );
       await addExpenseUseCase(expense);
       emit(const ExpenseAdded());
-      add(LoadSummaryEvent(period: BudgetPeriod.fromDate(event.date), budgetId: event.budgetId));
+      add(
+        LoadSummaryEvent(
+          period: BudgetPeriod.fromDate(event.date),
+          budgetId: event.budgetId,
+        ),
+      );
     } catch (e) {
       emit(BudgetError(e.toString()));
     }
@@ -151,7 +168,10 @@ class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
   ) async {
     emit(const BudgetLoading());
     try {
-      final summary = await calculateSummaryUseCase(period: event.period, budgetId: event.budgetId);
+      final summary = await calculateSummaryUseCase(
+        period: event.period,
+        budgetId: event.budgetId,
+      );
       emit(SummaryLoaded(summary));
     } catch (e) {
       emit(BudgetError(e.toString()));
@@ -194,7 +214,12 @@ class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
     try {
       await updateEntryUseCase(income: event.income);
       emit(const EntryUpdated());
-      add(LoadSummaryEvent(period: BudgetPeriod.fromDate(event.income.date), budgetId: event.income.budgetId));
+      add(
+        LoadSummaryEvent(
+          period: BudgetPeriod.fromDate(event.income.date),
+          budgetId: event.income.budgetId,
+        ),
+      );
     } catch (e) {
       emit(BudgetError(e.toString()));
     }
@@ -207,7 +232,48 @@ class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
     try {
       await updateEntryUseCase(expense: event.expense);
       emit(const EntryUpdated());
-      add(LoadSummaryEvent(period: BudgetPeriod.fromDate(event.expense.date), budgetId: event.expense.budgetId));
+      add(
+        LoadSummaryEvent(
+          period: BudgetPeriod.fromDate(event.expense.date),
+          budgetId: event.expense.budgetId,
+        ),
+      );
+    } catch (e) {
+      emit(BudgetError(e.toString()));
+    }
+  }
+
+  Future<void> _onDeleteBudget(
+    DeleteBudgetEvent event,
+    Emitter<BudgetState> emit,
+  ) async {
+    try {
+      await repository.deleteBudget(event.budgetId);
+      emit(const BudgetDeleted());
+    } catch (e) {
+      emit(BudgetError(e.toString()));
+    }
+  }
+
+  Future<void> _onClearAllBudgets(
+    ClearAllBudgetsEvent event,
+    Emitter<BudgetState> emit,
+  ) async {
+    try {
+      await repository.clearAllBudgets();
+      emit(const BudgetsCleared());
+    } catch (e) {
+      emit(BudgetError(e.toString()));
+    }
+  }
+
+  Future<void> _onFactoryReset(
+    FactoryResetEvent event,
+    Emitter<BudgetState> emit,
+  ) async {
+    try {
+      await repository.factoryReset();
+      emit(const FactoryResetComplete());
     } catch (e) {
       emit(BudgetError(e.toString()));
     }

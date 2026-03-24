@@ -27,7 +27,12 @@ class DuplicateBudgetEvent extends BudgetEvent {
   });
 
   @override
-  List<Object?> get props => [sourceBudget, targetPeriod, newName, includeTransactions];
+  List<Object?> get props => [
+    sourceBudget,
+    targetPeriod,
+    newName,
+    includeTransactions,
+  ];
 }
 
 class AddIncomeEvent extends BudgetEvent {
@@ -50,7 +55,15 @@ class AddIncomeEvent extends BudgetEvent {
   });
 
   @override
-  List<Object?> get props => [id, budgetId, amount, categoryId, description, date, isPotential];
+  List<Object?> get props => [
+    id,
+    budgetId,
+    amount,
+    categoryId,
+    description,
+    date,
+    isPotential,
+  ];
 }
 
 class AddExpenseEvent extends BudgetEvent {
@@ -73,7 +86,15 @@ class AddExpenseEvent extends BudgetEvent {
   });
 
   @override
-  List<Object?> get props => [id, budgetId, amount, category, description, date, isPotential];
+  List<Object?> get props => [
+    id,
+    budgetId,
+    amount,
+    category,
+    description,
+    date,
+    isPotential,
+  ];
 }
 
 class LoadSummaryEvent extends BudgetEvent {
@@ -137,4 +158,21 @@ class ConfirmPotentialTransactionEvent extends BudgetEvent {
 
   @override
   List<Object?> get props => [incomeId, expenseId];
+}
+
+class DeleteBudgetEvent extends BudgetEvent {
+  final String budgetId;
+
+  const DeleteBudgetEvent(this.budgetId);
+
+  @override
+  List<Object?> get props => [budgetId];
+}
+
+class ClearAllBudgetsEvent extends BudgetEvent {
+  const ClearAllBudgetsEvent();
+}
+
+class FactoryResetEvent extends BudgetEvent {
+  const FactoryResetEvent();
 }

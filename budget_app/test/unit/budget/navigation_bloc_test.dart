@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:budget_app/features/budget/domain/entities/budget.dart';
 import 'package:budget_app/features/budget/domain/entities/budget_period.dart';
 import 'package:budget_app/features/budget/domain/usecases/get_available_periods.dart';
 import 'package:budget_app/features/budget/presentation/bloc/navigation_bloc.dart';
@@ -15,10 +16,13 @@ class MockStorage extends Mock implements Storage {}
 
 class FakeBudgetPeriod extends Fake implements BudgetPeriod {}
 
+class FakeBudget extends Fake implements Budget {}
+
 void main() {
   setUpAll(() {
     registerFallbackValue(FakeBudgetPeriod());
     registerFallbackValue(BudgetPeriod.current());
+    registerFallbackValue(FakeBudget());
   });
 
   late MockGetAvailablePeriods mockGetAvailablePeriods;
@@ -34,6 +38,9 @@ void main() {
     when(
       () => mockBudgetRepository.addBudget(any()),
     ).thenAnswer((_) async => null);
+    when(
+      () => mockGetAvailablePeriods.call(),
+    ).thenAnswer((_) async => [BudgetPeriod.current()]);
     mockStorage = MockStorage();
     when(
       () => mockStorage.write(any(), any<dynamic>()),
@@ -58,13 +65,12 @@ void main() {
       ),
       act: (bloc) =>
           bloc.add(const ChangePeriod(BudgetPeriod(year: 2024, month: 1))),
-      expect: () => [
-        isA<NavigationState>().having(
-          (s) => s.currentPeriod,
-          'currentPeriod',
+      verify: (bloc) {
+        expect(
+          bloc.state.currentPeriod,
           const BudgetPeriod(year: 2024, month: 1),
-        ),
-      ],
+        );
+      },
     );
 
     blocTest<NavigationBloc, NavigationState>(
@@ -79,13 +85,11 @@ void main() {
         );
       },
       act: (bloc) => bloc.add(const LoadAvailablePeriods()),
-      expect: () => [
-        isA<NavigationState>().having(
-          (s) => s.availablePeriods,
-          'availablePeriods',
-          [const BudgetPeriod(year: 2024, month: 1)],
-        ),
-      ],
+      verify: (bloc) {
+        expect(bloc.state.availablePeriods, [
+          const BudgetPeriod(year: 2024, month: 1),
+        ]);
+      },
     );
   });
 }

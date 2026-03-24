@@ -1,22 +1,61 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mocktail/mocktail.dart';
+import 'package:bloc_test/bloc_test.dart';
 import 'package:budget_app/features/budget/presentation/widgets/expense_form.dart';
 import 'package:budget_app/features/budget/domain/entities/category.dart';
+import 'package:budget_app/features/settings/presentation/bloc/settings_bloc.dart';
+
+class MockSettingsBloc extends MockBloc<SettingsEvent, SettingsState>
+    implements SettingsBloc {}
 
 void main() {
+  late MockSettingsBloc mockSettingsBloc;
+
+  setUp(() {
+    mockSettingsBloc = MockSettingsBloc();
+    when(() => mockSettingsBloc.state).thenReturn(const SettingsState());
+  });
+
   final testCategories = [
-    const Category(id: '1', name: 'Food', type: CategoryType.expense, icon: 'restaurant'),
-    const Category(id: '2', name: 'Transport', type: CategoryType.expense, icon: 'directions_car'),
+    const Category(
+      id: '1',
+      name: 'Food',
+      type: CategoryType.expense,
+      icon: 'restaurant',
+    ),
+    const Category(
+      id: '2',
+      name: 'Transport',
+      type: CategoryType.expense,
+      icon: 'directions_car',
+    ),
   ];
 
   group('ExpenseForm Widget Tests', () {
     testWidgets('should render correctly', (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
-          home: Scaffold(
-            body: ExpenseForm(
-              categories: testCategories,
-              onSubmit: (id, amount, categoryId, description, date, {endDate, interval, isRecurring = false, unit, isPotential = false}) {},
+          home: BlocProvider<SettingsBloc>.value(
+            value: mockSettingsBloc,
+            child: Scaffold(
+              body: ExpenseForm(
+                categories: testCategories,
+                onSubmit:
+                    (
+                      id,
+                      amount,
+                      categoryId,
+                      description,
+                      date, {
+                      endDate,
+                      interval,
+                      isRecurring = false,
+                      unit,
+                      isPotential = false,
+                    }) {},
+              ),
             ),
           ),
         ),
@@ -33,10 +72,25 @@ void main() {
     ) async {
       await tester.pumpWidget(
         MaterialApp(
-          home: Scaffold(
-            body: ExpenseForm(
-              categories: testCategories,
-              onSubmit: (id, amount, categoryId, description, date, {endDate, interval, isRecurring = false, unit, isPotential = false}) {},
+          home: BlocProvider<SettingsBloc>.value(
+            value: mockSettingsBloc,
+            child: Scaffold(
+              body: ExpenseForm(
+                categories: testCategories,
+                onSubmit:
+                    (
+                      id,
+                      amount,
+                      categoryId,
+                      description,
+                      date, {
+                      endDate,
+                      interval,
+                      isRecurring = false,
+                      unit,
+                      isPotential = false,
+                    }) {},
+              ),
             ),
           ),
         ),
@@ -53,19 +107,31 @@ void main() {
     ) async {
       await tester.pumpWidget(
         MaterialApp(
-          home: Scaffold(
-            body: ExpenseForm(
-              categories: testCategories,
-              onSubmit: (id, amount, categoryId, description, date, {endDate, interval, isRecurring = false, unit, isPotential = false}) {},
+          home: BlocProvider<SettingsBloc>.value(
+            value: mockSettingsBloc,
+            child: Scaffold(
+              body: ExpenseForm(
+                categories: testCategories,
+                onSubmit:
+                    (
+                      id,
+                      amount,
+                      categoryId,
+                      description,
+                      date, {
+                      endDate,
+                      interval,
+                      isRecurring = false,
+                      unit,
+                      isPotential = false,
+                    }) {},
+              ),
             ),
           ),
         ),
       );
 
-      await tester.enterText(
-        find.widgetWithText(TextFormField, 'Amount'),
-        '0',
-      );
+      await tester.enterText(find.widgetWithText(TextFormField, 'Amount'), '0');
       await tester.tap(find.widgetWithText(ElevatedButton, 'Add Expense'));
       await tester.pumpAndSettle();
 
@@ -77,10 +143,25 @@ void main() {
     ) async {
       await tester.pumpWidget(
         MaterialApp(
-          home: Scaffold(
-            body: ExpenseForm(
-              categories: testCategories,
-              onSubmit: (id, amount, categoryId, description, date, {endDate, interval, isRecurring = false, unit, isPotential = false}) {},
+          home: BlocProvider<SettingsBloc>.value(
+            value: mockSettingsBloc,
+            child: Scaffold(
+              body: ExpenseForm(
+                categories: testCategories,
+                onSubmit:
+                    (
+                      id,
+                      amount,
+                      categoryId,
+                      description,
+                      date, {
+                      endDate,
+                      interval,
+                      isRecurring = false,
+                      unit,
+                      isPotential = false,
+                    }) {},
+              ),
             ),
           ),
         ),
