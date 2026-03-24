@@ -14,9 +14,7 @@ class ProfileSettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Business Profiles'),
-      ),
+      appBar: AppBar(title: const Text('Business Profiles')),
       body: BlocBuilder<BusinessBloc, BusinessState>(
         builder: (context, state) {
           if (state.status == BusinessStatus.loading) {
@@ -31,8 +29,12 @@ class ProfileSettingsPage extends StatelessWidget {
               return Card(
                 child: ListTile(
                   leading: CircleAvatar(
-                    backgroundImage: profile.logoPath != null ? FileImage(File(profile.logoPath!)) : null,
-                    child: profile.logoPath == null ? Text(profile.name[0].toUpperCase()) : null,
+                    backgroundImage: profile.logoPath != null
+                        ? FileImage(File(profile.logoPath!))
+                        : null,
+                    child: profile.logoPath == null
+                        ? Text(profile.name[0].toUpperCase())
+                        : null,
                   ),
                   title: Text(profile.name),
                   subtitle: Text(profile.taxId ?? 'No Tax ID'),
@@ -41,11 +43,14 @@ class ProfileSettingsPage extends StatelessWidget {
                     children: [
                       IconButton(
                         icon: const Icon(Icons.edit),
-                        onPressed: () => _showProfileDialog(context, profile: profile),
+                        onPressed: () =>
+                            _showProfileDialog(context, profile: profile),
                       ),
                       IconButton(
                         icon: const Icon(Icons.delete, color: Colors.red),
-                        onPressed: () => context.read<BusinessBloc>().add(DeleteProfile(profile.id)),
+                        onPressed: () => context.read<BusinessBloc>().add(
+                          DeleteProfile(profile.id),
+                        ),
                       ),
                     ],
                   ),
@@ -67,14 +72,18 @@ class ProfileSettingsPage extends StatelessWidget {
     final addressController = TextEditingController(text: profile?.address);
     final taxIdController = TextEditingController(text: profile?.taxId);
     final paymentController = TextEditingController(text: profile?.paymentInfo);
-    final vatRateController = TextEditingController(text: profile?.defaultVatRate.toString() ?? '20');
+    final vatRateController = TextEditingController(
+      text: profile?.defaultVatRate.toString() ?? '20',
+    );
     final bankNameController = TextEditingController(text: profile?.bankName);
     final bankIbanController = TextEditingController(text: profile?.bankIban);
     final bankBicController = TextEditingController(text: profile?.bankBic);
-    final bankHolderController = TextEditingController(text: profile?.bankHolder);
+    final bankHolderController = TextEditingController(
+      text: profile?.bankHolder,
+    );
 
     String? logoPath = profile?.logoPath;
-    int? primaryColor = profile?.primaryColor ?? Colors.blue.value;
+    int? primaryColor = profile?.primaryColor ?? Colors.blue.toARGB32();
     String? fontFamily = profile?.fontFamily ?? 'Helvetica';
     bool logoOnRight = profile?.logoOnRight ?? false;
 
@@ -130,18 +139,26 @@ class ProfileSettingsPage extends StatelessWidget {
                 ),
                 TextField(
                   controller: vatRateController,
-                  decoration: const InputDecoration(labelText: 'Default VAT Rate (%)', suffixText: '%'),
+                  decoration: const InputDecoration(
+                    labelText: 'Default VAT Rate (%)',
+                    suffixText: '%',
+                  ),
                   keyboardType: TextInputType.number,
                 ),
                 const Divider(),
-                const Text('Banking Details', style: TextStyle(fontWeight: FontWeight.bold)),
+                const Text(
+                  'Banking Details',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
                 TextField(
                   controller: bankNameController,
                   decoration: const InputDecoration(labelText: 'Bank Name'),
                 ),
                 TextField(
                   controller: bankHolderController,
-                  decoration: const InputDecoration(labelText: 'Account Holder'),
+                  decoration: const InputDecoration(
+                    labelText: 'Account Holder',
+                  ),
                 ),
                 TextField(
                   controller: bankIbanController,
@@ -152,7 +169,10 @@ class ProfileSettingsPage extends StatelessWidget {
                   decoration: const InputDecoration(labelText: 'BIC/SWIFT'),
                 ),
                 const Divider(),
-                const Text('Styling', style: TextStyle(fontWeight: FontWeight.bold)),
+                const Text(
+                  'Styling',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
                 ListTile(
                   title: const Text('Brand Color'),
                   trailing: Container(
@@ -168,20 +188,27 @@ class ProfileSettingsPage extends StatelessWidget {
                         title: const Text('Pick Brand Color'),
                         content: Wrap(
                           spacing: 8,
-                          children: [
-                            Colors.blue,
-                            Colors.red,
-                            Colors.green,
-                            Colors.orange,
-                            Colors.purple,
-                            Colors.black,
-                          ].map((c) => GestureDetector(
-                            onTap: () {
-                              setState(() => primaryColor = c.value);
-                              Navigator.pop(context);
-                            },
-                            child: CircleAvatar(backgroundColor: c),
-                          )).toList(),
+                          children:
+                              [
+                                    Colors.blue,
+                                    Colors.red,
+                                    Colors.green,
+                                    Colors.orange,
+                                    Colors.purple,
+                                    Colors.black,
+                                  ]
+                                  .map(
+                                    (c) => GestureDetector(
+                                      onTap: () {
+                                        setState(
+                                          () => primaryColor = c.toARGB32(),
+                                        );
+                                        Navigator.pop(context);
+                                      },
+                                      child: CircleAvatar(backgroundColor: c),
+                                    ),
+                                  )
+                                  .toList(),
                         ),
                       ),
                     );
@@ -212,7 +239,8 @@ class ProfileSettingsPage extends StatelessWidget {
                   taxId: taxIdController.text,
                   logoPath: logoPath,
                   paymentInfo: paymentController.text,
-                  defaultVatRate: double.tryParse(vatRateController.text) ?? 0.0,
+                  defaultVatRate:
+                      double.tryParse(vatRateController.text) ?? 0.0,
                   bankName: bankNameController.text,
                   bankIban: bankIbanController.text,
                   bankBic: bankBicController.text,
