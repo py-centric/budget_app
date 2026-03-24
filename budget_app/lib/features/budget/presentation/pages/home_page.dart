@@ -44,10 +44,12 @@ class _HomePageState extends State<HomePage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<BudgetBloc>().add(const LoadCategoriesEvent());
       final navState = context.read<NavigationBloc>().state;
-      context.read<BudgetBloc>().add(LoadSummaryEvent(
-            period: navState.currentPeriod,
-            budgetId: navState.activeBudget?.id,
-          ));
+      context.read<BudgetBloc>().add(
+        LoadSummaryEvent(
+          period: navState.currentPeriod,
+          budgetId: navState.activeBudget?.id,
+        ),
+      );
     });
   }
 
@@ -55,10 +57,12 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return BlocListener<NavigationBloc, NavigationState>(
       listener: (context, navState) {
-        context.read<BudgetBloc>().add(LoadSummaryEvent(
-              period: navState.currentPeriod,
-              budgetId: navState.activeBudget?.id,
-            ));
+        context.read<BudgetBloc>().add(
+          LoadSummaryEvent(
+            period: navState.currentPeriod,
+            budgetId: navState.activeBudget?.id,
+          ),
+        );
       },
       child: Scaffold(
         appBar: AppBar(
@@ -84,11 +88,14 @@ class _HomePageState extends State<HomePage> {
                     if (activeBudget != null) {
                       showDialog(
                         context: context,
-                        builder: (context) => DuplicationDialog(sourceBudget: activeBudget),
+                        builder: (context) =>
+                            DuplicationDialog(sourceBudget: activeBudget),
                       );
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('No active budget to duplicate.')),
+                        const SnackBar(
+                          content: Text('No active budget to duplicate.'),
+                        ),
                       );
                     }
                   },
@@ -98,8 +105,58 @@ class _HomePageState extends State<HomePage> {
             IconButton(
               icon: const Icon(Icons.refresh),
               onPressed: () {
-                final currentPeriod = context.read<NavigationBloc>().state.currentPeriod;
-                context.read<BudgetBloc>().add(LoadSummaryEvent(period: currentPeriod));
+                final currentPeriod = context
+                    .read<NavigationBloc>()
+                    .state
+                    .currentPeriod;
+                context.read<BudgetBloc>().add(
+                  LoadSummaryEvent(period: currentPeriod),
+                );
+              },
+            ),
+            BlocBuilder<NavigationBloc, NavigationState>(
+              builder: (context, state) {
+                return IconButton(
+                  icon: Icon(
+                    Icons.delete,
+                    color: state.activeBudget != null
+                        ? Colors.red
+                        : Colors.grey,
+                  ),
+                  tooltip: 'Delete Budget',
+                  onPressed: state.activeBudget != null
+                      ? () async {
+                          final confirmed = await showDialog<bool>(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              title: const Text('Delete Budget'),
+                              content: Text(
+                                'Are you sure you want to delete "${state.activeBudget!.name}"? This action cannot be undone.',
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.pop(context, false),
+                                  child: const Text('Cancel'),
+                                ),
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context, true),
+                                  child: const Text(
+                                    'Delete',
+                                    style: TextStyle(color: Colors.red),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                          if (confirmed == true && context.mounted) {
+                            context.read<BudgetBloc>().add(
+                              DeleteBudgetEvent(state.activeBudget!.id),
+                            );
+                          }
+                        }
+                      : null,
+                );
               },
             ),
           ],
@@ -117,12 +174,20 @@ class _HomePageState extends State<HomePage> {
                 _lastSummary = state.summary;
               });
             }
-            if (state is IncomeAdded || state is ExpenseAdded || state is EntryDeleted || state is EntryUpdated) {
+            if (state is IncomeAdded ||
+                state is ExpenseAdded ||
+                state is EntryDeleted ||
+                state is EntryUpdated ||
+                state is BudgetDeleted ||
+                state is BudgetsCleared ||
+                state is FactoryResetComplete) {
               final navState = context.read<NavigationBloc>().state;
-              context.read<BudgetBloc>().add(LoadSummaryEvent(
-                    period: navState.currentPeriod,
-                    budgetId: navState.activeBudget?.id,
-                  ));
+              context.read<BudgetBloc>().add(
+                LoadSummaryEvent(
+                  period: navState.currentPeriod,
+                  budgetId: navState.activeBudget?.id,
+                ),
+              );
               context.read<ProjectionBloc>().add(const LoadProjection());
 
               if (state is EntryDeleted || state is EntryUpdated) {
@@ -134,10 +199,38 @@ class _HomePageState extends State<HomePage> {
                   ),
                 );
               }
+              if (state is BudgetDeleted) {
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(const SnackBar(content: Text('Budget deleted')));
+                final navState = context.read<NavigationBloc>().state;
+                context.read<NavigationBloc>().add(
+                  ChangePeriod(navState.currentPeriod),
+                );
+              }
+              if (state is BudgetsCleared) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('All budgets cleared')),
+                );
+                final navState = context.read<NavigationBloc>().state;
+                context.read<NavigationBloc>().add(
+                  ChangePeriod(navState.currentPeriod),
+                );
+              }
+              if (state is FactoryResetComplete) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Factory reset complete')),
+                );
+                final navState = context.read<NavigationBloc>().state;
+                context.read<NavigationBloc>().add(
+                  ChangePeriod(navState.currentPeriod),
+                );
+              }
             }
           },
           builder: (context, state) {
-            if (_lastSummary == null && (state is BudgetInitial || state is BudgetLoading)) {
+            if (_lastSummary == null &&
+                (state is BudgetInitial || state is BudgetLoading)) {
               return const Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -155,14 +248,23 @@ class _HomePageState extends State<HomePage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(Icons.error_outline, size: 64, color: Colors.red),
+                    const Icon(
+                      Icons.error_outline,
+                      size: 64,
+                      color: Colors.red,
+                    ),
                     const SizedBox(height: 16),
                     Text('Error: ${state.message}'),
                     const SizedBox(height: 16),
                     ElevatedButton(
                       onPressed: () {
-                        final currentPeriod = context.read<NavigationBloc>().state.currentPeriod;
-                        context.read<BudgetBloc>().add(LoadSummaryEvent(period: currentPeriod));
+                        final currentPeriod = context
+                            .read<NavigationBloc>()
+                            .state
+                            .currentPeriod;
+                        context.read<BudgetBloc>().add(
+                          LoadSummaryEvent(period: currentPeriod),
+                        );
                         context.read<BudgetBloc>().add(
                           const LoadCategoriesEvent(),
                         );
@@ -174,7 +276,9 @@ class _HomePageState extends State<HomePage> {
               );
             }
 
-            final summary = state is SummaryLoaded ? state.summary : _lastSummary;
+            final summary = state is SummaryLoaded
+                ? state.summary
+                : _lastSummary;
 
             return Column(
               children: [
@@ -194,9 +298,19 @@ class _HomePageState extends State<HomePage> {
                               Expanded(
                                 child: ElevatedButton.icon(
                                   onPressed: () {
-                                    final budgetId = context.read<NavigationBloc>().state.activeBudget?.id;
+                                    final budgetId = context
+                                        .read<NavigationBloc>()
+                                        .state
+                                        .activeBudget
+                                        ?.id;
                                     if (budgetId == null) {
-                                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('No active budget')));
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        const SnackBar(
+                                          content: Text('No active budget'),
+                                        ),
+                                      );
                                       return;
                                     }
                                     setState(() {
@@ -207,7 +321,9 @@ class _HomePageState extends State<HomePage> {
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.green,
                                     foregroundColor: Colors.white,
-                                    padding: const EdgeInsets.symmetric(vertical: 16),
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 16,
+                                    ),
                                     textStyle: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
@@ -221,9 +337,19 @@ class _HomePageState extends State<HomePage> {
                               Expanded(
                                 child: ElevatedButton.icon(
                                   onPressed: () {
-                                    final budgetId = context.read<NavigationBloc>().state.activeBudget?.id;
+                                    final budgetId = context
+                                        .read<NavigationBloc>()
+                                        .state
+                                        .activeBudget
+                                        ?.id;
                                     if (budgetId == null) {
-                                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('No active budget')));
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        const SnackBar(
+                                          content: Text('No active budget'),
+                                        ),
+                                      );
                                       return;
                                     }
                                     setState(() {
@@ -234,7 +360,9 @@ class _HomePageState extends State<HomePage> {
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.red,
                                     foregroundColor: Colors.white,
-                                    padding: const EdgeInsets.symmetric(vertical: 16),
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 16,
+                                    ),
                                     textStyle: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
@@ -274,24 +402,30 @@ class _HomePageState extends State<HomePage> {
                                 },
                                 onConfirm: (entry) {
                                   context.read<BudgetBloc>().add(
-                                        ConfirmPotentialTransactionEvent(incomeId: entry.id),
-                                      );
+                                    ConfirmPotentialTransactionEvent(
+                                      incomeId: entry.id,
+                                    ),
+                                  );
                                 },
                                 onDelete: (entry) {
                                   showDialog(
                                     context: context,
                                     builder: (context) => DeleteConfirmationDialog(
                                       title: 'Delete Income',
-                                      content: 'Are you sure you want to delete this income entry?',
+                                      content:
+                                          'Are you sure you want to delete this income entry?',
                                       onConfirm: () {
                                         context.read<BudgetBloc>().add(
-                                              DeleteEntryEvent(entry.id, EntryType.income),
-                                            );
+                                          DeleteEntryEvent(
+                                            entry.id,
+                                            EntryType.income,
+                                          ),
+                                        );
                                       },
                                     ),
                                   );
                                 },
-                              )
+                              ),
                             ],
                           ),
                           const SizedBox(height: 8),
@@ -302,7 +436,10 @@ class _HomePageState extends State<HomePage> {
                               actualTotal: summary.totalExpenses,
                               potentialTotal: summary.totalPotentialExpenses,
                             ),
-                            leading: const Icon(Icons.arrow_upward, color: Colors.red),
+                            leading: const Icon(
+                              Icons.arrow_upward,
+                              color: Colors.red,
+                            ),
                             children: [
                               ExpenseList(
                                 entries: summary.expenseEntries,
@@ -317,24 +454,30 @@ class _HomePageState extends State<HomePage> {
                                 },
                                 onConfirm: (entry) {
                                   context.read<BudgetBloc>().add(
-                                        ConfirmPotentialTransactionEvent(expenseId: entry.id),
-                                      );
+                                    ConfirmPotentialTransactionEvent(
+                                      expenseId: entry.id,
+                                    ),
+                                  );
                                 },
                                 onDelete: (entry) {
                                   showDialog(
                                     context: context,
                                     builder: (context) => DeleteConfirmationDialog(
                                       title: 'Delete Expense',
-                                      content: 'Are you sure you want to delete this expense entry?',
+                                      content:
+                                          'Are you sure you want to delete this expense entry?',
                                       onConfirm: () {
                                         context.read<BudgetBloc>().add(
-                                              DeleteEntryEvent(entry.id, EntryType.expense),
-                                            );
+                                          DeleteEntryEvent(
+                                            entry.id,
+                                            EntryType.expense,
+                                          ),
+                                        );
                                       },
                                     ),
                                   );
                                 },
-                              )
+                              ),
                             ],
                           ),
                         ],
@@ -361,11 +504,24 @@ class _HomePageState extends State<HomePage> {
             children: [
               if (_showIncomeForm)
                 IncomeForm(
-                  categories: _categories.where((c) => c.type == CategoryType.income).toList(),
-                  onSubmit: (id, amount, categoryId, description, date,
-                      {bool isRecurring = false, int? interval, RecurrenceUnit? unit, DateTime? endDate, bool isPotential = false}) {
-                    if (isRecurring && interval != null && unit != null) {
-                      context.read<BudgetBloc>().add(
+                  categories: _categories
+                      .where((c) => c.type == CategoryType.income)
+                      .toList(),
+                  onSubmit:
+                      (
+                        id,
+                        amount,
+                        categoryId,
+                        description,
+                        date, {
+                        bool isRecurring = false,
+                        int? interval,
+                        RecurrenceUnit? unit,
+                        DateTime? endDate,
+                        bool isPotential = false,
+                      }) {
+                        if (isRecurring && interval != null && unit != null) {
+                          context.read<BudgetBloc>().add(
                             SaveRecurringTransactionEvent(
                               RecurringTransaction(
                                 id: _uuid.v4(),
@@ -381,8 +537,8 @@ class _HomePageState extends State<HomePage> {
                               ),
                             ),
                           );
-                    } else {
-                      context.read<BudgetBloc>().add(
+                        } else {
+                          context.read<BudgetBloc>().add(
                             AddIncomeEvent(
                               id: id,
                               budgetId: budgetId,
@@ -393,17 +549,30 @@ class _HomePageState extends State<HomePage> {
                               isPotential: isPotential,
                             ),
                           );
-                    }
-                    Navigator.pop(context);
-                  },
+                        }
+                        Navigator.pop(context);
+                      },
                 )
               else
                 ExpenseForm(
-                  categories: _categories.where((c) => c.type == CategoryType.expense).toList(),
-                  onSubmit: (id, amount, categoryId, description, date,
-                      {bool isRecurring = false, int? interval, RecurrenceUnit? unit, DateTime? endDate, bool isPotential = false}) {
-                    if (isRecurring && interval != null && unit != null) {
-                      context.read<BudgetBloc>().add(
+                  categories: _categories
+                      .where((c) => c.type == CategoryType.expense)
+                      .toList(),
+                  onSubmit:
+                      (
+                        id,
+                        amount,
+                        categoryId,
+                        description,
+                        date, {
+                        bool isRecurring = false,
+                        int? interval,
+                        RecurrenceUnit? unit,
+                        DateTime? endDate,
+                        bool isPotential = false,
+                      }) {
+                        if (isRecurring && interval != null && unit != null) {
+                          context.read<BudgetBloc>().add(
                             SaveRecurringTransactionEvent(
                               RecurringTransaction(
                                 id: _uuid.v4(),
@@ -419,8 +588,8 @@ class _HomePageState extends State<HomePage> {
                               ),
                             ),
                           );
-                    } else {
-                      context.read<BudgetBloc>().add(
+                        } else {
+                          context.read<BudgetBloc>().add(
                             AddExpenseEvent(
                               id: id,
                               budgetId: budgetId,
@@ -431,9 +600,9 @@ class _HomePageState extends State<HomePage> {
                               isPotential: isPotential,
                             ),
                           );
-                    }
-                    Navigator.pop(context);
-                  },
+                        }
+                        Navigator.pop(context);
+                      },
                 ),
             ],
           ),

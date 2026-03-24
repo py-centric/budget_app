@@ -44,13 +44,25 @@ class LocalDatabase {
 
   Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
     if (oldVersion < 2) {
-      await db.execute('ALTER TABLE income_entries ADD COLUMN period_month INTEGER');
-      await db.execute('ALTER TABLE income_entries ADD COLUMN period_year INTEGER');
-      await db.execute('CREATE INDEX idx_income_period ON income_entries (period_year, period_month)');
+      await db.execute(
+        'ALTER TABLE income_entries ADD COLUMN period_month INTEGER',
+      );
+      await db.execute(
+        'ALTER TABLE income_entries ADD COLUMN period_year INTEGER',
+      );
+      await db.execute(
+        'CREATE INDEX idx_income_period ON income_entries (period_year, period_month)',
+      );
 
-      await db.execute('ALTER TABLE expense_entries ADD COLUMN period_month INTEGER');
-      await db.execute('ALTER TABLE expense_entries ADD COLUMN period_year INTEGER');
-      await db.execute('CREATE INDEX idx_expense_period ON expense_entries (period_year, period_month)');
+      await db.execute(
+        'ALTER TABLE expense_entries ADD COLUMN period_month INTEGER',
+      );
+      await db.execute(
+        'ALTER TABLE expense_entries ADD COLUMN period_year INTEGER',
+      );
+      await db.execute(
+        'CREATE INDEX idx_expense_period ON expense_entries (period_year, period_month)',
+      );
 
       await db.execute('''
         CREATE TABLE budget_goals (
@@ -61,11 +73,17 @@ class LocalDatabase {
           period_year INTEGER NOT NULL
         )
       ''');
-      await db.execute('CREATE INDEX idx_budget_goals_period ON budget_goals (period_year, period_month)');
+      await db.execute(
+        'CREATE INDEX idx_budget_goals_period ON budget_goals (period_year, period_month)',
+      );
 
       // Backfill data based on date
-      await db.execute("UPDATE income_entries SET period_month = cast(strftime('%m', date) as integer), period_year = cast(strftime('%Y', date) as integer) WHERE period_month IS NULL");
-      await db.execute("UPDATE expense_entries SET period_month = cast(strftime('%m', date) as integer), period_year = cast(strftime('%Y', date) as integer) WHERE period_month IS NULL");
+      await db.execute(
+        "UPDATE income_entries SET period_month = cast(strftime('%m', date) as integer), period_year = cast(strftime('%Y', date) as integer) WHERE period_month IS NULL",
+      );
+      await db.execute(
+        "UPDATE expense_entries SET period_month = cast(strftime('%m', date) as integer), period_year = cast(strftime('%Y', date) as integer) WHERE period_month IS NULL",
+      );
     }
 
     if (oldVersion < 3) {
@@ -87,13 +105,23 @@ class LocalDatabase {
         SELECT id, name, icon, 'expense' FROM categories_old
       ''');
       await db.execute('DROP TABLE categories_old');
-      
+
       // Update income_entries and expense_entries to include category_id
-      await db.execute('ALTER TABLE income_entries ADD COLUMN category_id TEXT');
-      await db.execute('ALTER TABLE expense_entries ADD COLUMN category_id TEXT');
+      await db.execute(
+        'ALTER TABLE income_entries ADD COLUMN category_id TEXT',
+      );
+      await db.execute(
+        'ALTER TABLE expense_entries ADD COLUMN category_id TEXT',
+      );
 
       // Add default income categories
-      final defaultIncomeCategories = ['Salary', 'Gift', 'Interest', 'Investment', 'Other'];
+      final defaultIncomeCategories = [
+        'Salary',
+        'Gift',
+        'Interest',
+        'Investment',
+        'Other',
+      ];
       for (final cat in defaultIncomeCategories) {
         await db.insert('categories', {
           'id': 'income_${cat.toLowerCase()}',
@@ -116,7 +144,7 @@ class LocalDatabase {
         SET category_id = "other" 
         WHERE category_id IS NULL
       ''');
-      
+
       await db.execute('''
         UPDATE income_entries 
         SET category_id = "income_other" 
@@ -125,8 +153,12 @@ class LocalDatabase {
     }
 
     if (oldVersion < 4) {
-      await db.execute('CREATE INDEX IF NOT EXISTS idx_income_date ON income_entries (date)');
-      await db.execute('CREATE INDEX IF NOT EXISTS idx_expense_date ON expense_entries (date)');
+      await db.execute(
+        'CREATE INDEX IF NOT EXISTS idx_income_date ON income_entries (date)',
+      );
+      await db.execute(
+        'CREATE INDEX IF NOT EXISTS idx_expense_date ON expense_entries (date)',
+      );
     }
 
     if (oldVersion < 6) {
@@ -153,7 +185,7 @@ class LocalDatabase {
         final year = period['period_year'] as int;
         final month = period['period_month'] as int;
         final budgetId = 'default_${year}_$month';
-        
+
         await db.insert('budgets', {
           'id': budgetId,
           'name': 'Default Budget',
@@ -208,11 +240,17 @@ class LocalDatabase {
           FOREIGN KEY (recurring_transaction_id) REFERENCES recurring_transactions (id) ON DELETE CASCADE
         )
       ''');
-      await db.execute('CREATE INDEX IF NOT EXISTS idx_recurring_overrides_template ON recurring_overrides (recurring_transaction_id)');
+      await db.execute(
+        'CREATE INDEX IF NOT EXISTS idx_recurring_overrides_template ON recurring_overrides (recurring_transaction_id)',
+      );
     }
     if (oldVersion < 8) {
-      await db.execute('ALTER TABLE income_entries ADD COLUMN is_potential INTEGER NOT NULL DEFAULT 0');
-      await db.execute('ALTER TABLE expense_entries ADD COLUMN is_potential INTEGER NOT NULL DEFAULT 0');
+      await db.execute(
+        'ALTER TABLE income_entries ADD COLUMN is_potential INTEGER NOT NULL DEFAULT 0',
+      );
+      await db.execute(
+        'ALTER TABLE expense_entries ADD COLUMN is_potential INTEGER NOT NULL DEFAULT 0',
+      );
     }
 
     if (oldVersion < 9) {
@@ -306,13 +344,25 @@ class LocalDatabase {
     }
 
     if (oldVersion < 13) {
-      await db.execute('ALTER TABLE company_profiles ADD COLUMN bank_name TEXT');
-      await db.execute('ALTER TABLE company_profiles ADD COLUMN bank_iban TEXT');
+      await db.execute(
+        'ALTER TABLE company_profiles ADD COLUMN bank_name TEXT',
+      );
+      await db.execute(
+        'ALTER TABLE company_profiles ADD COLUMN bank_iban TEXT',
+      );
       await db.execute('ALTER TABLE company_profiles ADD COLUMN bank_bic TEXT');
-      await db.execute('ALTER TABLE company_profiles ADD COLUMN bank_holder TEXT');
-      await db.execute('ALTER TABLE company_profiles ADD COLUMN primary_color INTEGER');
-      await db.execute('ALTER TABLE company_profiles ADD COLUMN font_family TEXT');
-      await db.execute('ALTER TABLE company_profiles ADD COLUMN logo_on_right INTEGER DEFAULT 0');
+      await db.execute(
+        'ALTER TABLE company_profiles ADD COLUMN bank_holder TEXT',
+      );
+      await db.execute(
+        'ALTER TABLE company_profiles ADD COLUMN primary_color INTEGER',
+      );
+      await db.execute(
+        'ALTER TABLE company_profiles ADD COLUMN font_family TEXT',
+      );
+      await db.execute(
+        'ALTER TABLE company_profiles ADD COLUMN logo_on_right INTEGER DEFAULT 0',
+      );
 
       await db.execute('ALTER TABLE invoices ADD COLUMN bank_name TEXT');
       await db.execute('ALTER TABLE invoices ADD COLUMN bank_iban TEXT');
@@ -366,7 +416,7 @@ class LocalDatabase {
         is_active INTEGER NOT NULL DEFAULT 1
       )
     ''');
-    
+
     await db.execute('''
       CREATE TABLE income_entries (
         id TEXT PRIMARY KEY,
@@ -381,9 +431,13 @@ class LocalDatabase {
         FOREIGN KEY (budget_id) REFERENCES budgets (id) ON DELETE CASCADE
       )
     ''');
-    await db.execute('CREATE INDEX idx_income_period ON income_entries (period_year, period_month)');
+    await db.execute(
+      'CREATE INDEX idx_income_period ON income_entries (period_year, period_month)',
+    );
     await db.execute('CREATE INDEX idx_income_date ON income_entries (date)');
-    await db.execute('CREATE INDEX idx_income_budget ON income_entries (budget_id)');
+    await db.execute(
+      'CREATE INDEX idx_income_budget ON income_entries (budget_id)',
+    );
 
     await db.execute('''
       CREATE TABLE expense_entries (
@@ -400,9 +454,13 @@ class LocalDatabase {
         FOREIGN KEY (budget_id) REFERENCES budgets (id) ON DELETE CASCADE
       )
     ''');
-    await db.execute('CREATE INDEX idx_expense_period ON expense_entries (period_year, period_month)');
+    await db.execute(
+      'CREATE INDEX idx_expense_period ON expense_entries (period_year, period_month)',
+    );
     await db.execute('CREATE INDEX idx_expense_date ON expense_entries (date)');
-    await db.execute('CREATE INDEX idx_expense_budget ON expense_entries (budget_id)');
+    await db.execute(
+      'CREATE INDEX idx_expense_budget ON expense_entries (budget_id)',
+    );
 
     await db.execute('''
       CREATE TABLE budget_goals (
@@ -415,9 +473,12 @@ class LocalDatabase {
         FOREIGN KEY (budget_id) REFERENCES budgets (id) ON DELETE CASCADE
       )
     ''');
-    await db.execute('CREATE INDEX idx_budget_goals_period ON budget_goals (period_year, period_month)');
-    await db.execute('CREATE INDEX idx_budget_goals_budget ON budget_goals (budget_id)');
-
+    await db.execute(
+      'CREATE INDEX idx_budget_goals_period ON budget_goals (period_year, period_month)',
+    );
+    await db.execute(
+      'CREATE INDEX idx_budget_goals_budget ON budget_goals (budget_id)',
+    );
 
     await db.execute('''
       CREATE TABLE categories (
@@ -440,7 +501,13 @@ class LocalDatabase {
     }
 
     // Add default income categories
-    final defaultIncomeCategories = ['Salary', 'Gift', 'Interest', 'Investment', 'Other'];
+    final defaultIncomeCategories = [
+      'Salary',
+      'Gift',
+      'Interest',
+      'Investment',
+      'Other',
+    ];
     for (final cat in defaultIncomeCategories) {
       await db.insert('categories', {
         'id': 'income_${cat.toLowerCase()}',
@@ -476,7 +543,9 @@ class LocalDatabase {
         FOREIGN KEY (recurring_transaction_id) REFERENCES recurring_transactions (id) ON DELETE CASCADE
       )
     ''');
-    await db.execute('CREATE INDEX idx_recurring_overrides_template ON recurring_overrides (recurring_transaction_id)');
+    await db.execute(
+      'CREATE INDEX idx_recurring_overrides_template ON recurring_overrides (recurring_transaction_id)',
+    );
 
     await db.execute('''
       CREATE TABLE IF NOT EXISTS saved_calculations (
@@ -642,11 +711,7 @@ class LocalDatabase {
 
   Future<int> deleteCategory(String id) async {
     final db = await database;
-    return await db.delete(
-      'categories',
-      where: 'id = ?',
-      whereArgs: [id],
-    );
+    return await db.delete('categories', where: 'id = ?', whereArgs: [id]);
   }
 
   Future<int> reassignCategory(String oldId, String newId) async {
@@ -689,11 +754,7 @@ class LocalDatabase {
 
   Future<int> deleteIncome(String id) async {
     final db = await database;
-    return await db.delete(
-      'income_entries',
-      where: 'id = ?',
-      whereArgs: [id],
-    );
+    return await db.delete('income_entries', where: 'id = ?', whereArgs: [id]);
   }
 
   Future<int> insertExpense(Map<String, dynamic> expense) async {
@@ -713,11 +774,7 @@ class LocalDatabase {
 
   Future<int> deleteExpense(String id) async {
     final db = await database;
-    return await db.delete(
-      'expense_entries',
-      where: 'id = ?',
-      whereArgs: [id],
-    );
+    return await db.delete('expense_entries', where: 'id = ?', whereArgs: [id]);
   }
 
   Future<List<Map<String, dynamic>>> getAllIncome() async {
@@ -730,47 +787,65 @@ class LocalDatabase {
     ''');
   }
 
-  Future<List<Map<String, dynamic>>> getIncomeForPeriod(int year, int month) async {
+  Future<List<Map<String, dynamic>>> getIncomeForPeriod(
+    int year,
+    int month,
+  ) async {
     final db = await database;
-    return await db.rawQuery('''
+    return await db.rawQuery(
+      '''
       SELECT income_entries.*, categories.name as category_name, categories.icon as category_icon
       FROM income_entries
       LEFT JOIN categories ON income_entries.category_id = categories.id
       WHERE period_year = ? AND period_month = ?
       ORDER BY date DESC
-    ''', [year, month]);
+    ''',
+      [year, month],
+    );
   }
 
-  Future<List<Map<String, dynamic>>> getIncomeForDateRange(String startDate, String endDate) async {
+  Future<List<Map<String, dynamic>>> getIncomeForDateRange(
+    String startDate,
+    String endDate,
+  ) async {
     final db = await database;
-    return await db.rawQuery('''
+    return await db.rawQuery(
+      '''
       SELECT income_entries.*, categories.name as category_name, categories.icon as category_icon
       FROM income_entries
       LEFT JOIN categories ON income_entries.category_id = categories.id
       WHERE date >= ? AND date <= ?
       ORDER BY date DESC
-    ''', [startDate, endDate]);
+    ''',
+      [startDate, endDate],
+    );
   }
 
   Future<List<Map<String, dynamic>>> getIncomeForBudget(String budgetId) async {
     final db = await database;
-    return await db.rawQuery('''
+    return await db.rawQuery(
+      '''
       SELECT income_entries.*, categories.name as category_name, categories.icon as category_icon
       FROM income_entries
       LEFT JOIN categories ON income_entries.category_id = categories.id
       WHERE budget_id = ?
       ORDER BY date DESC
-    ''', [budgetId]);
+    ''',
+      [budgetId],
+    );
   }
 
   Future<List<Map<String, dynamic>>> getIncomeBefore(String date) async {
     final db = await database;
-    return await db.rawQuery('''
+    return await db.rawQuery(
+      '''
       SELECT income_entries.*, categories.name as category_name, categories.icon as category_icon
       FROM income_entries
       LEFT JOIN categories ON income_entries.category_id = categories.id
       WHERE date < ?
-    ''', [date]);
+    ''',
+      [date],
+    );
   }
 
   Future<List<Map<String, dynamic>>> getAllExpenses() async {
@@ -783,47 +858,67 @@ class LocalDatabase {
     ''');
   }
 
-  Future<List<Map<String, dynamic>>> getExpensesForPeriod(int year, int month) async {
+  Future<List<Map<String, dynamic>>> getExpensesForPeriod(
+    int year,
+    int month,
+  ) async {
     final db = await database;
-    return await db.rawQuery('''
+    return await db.rawQuery(
+      '''
       SELECT expense_entries.*, categories.name as category_name, categories.icon as category_icon
       FROM expense_entries
       LEFT JOIN categories ON expense_entries.category_id = categories.id
       WHERE period_year = ? AND period_month = ?
       ORDER BY date DESC
-    ''', [year, month]);
+    ''',
+      [year, month],
+    );
   }
 
-  Future<List<Map<String, dynamic>>> getExpensesForDateRange(String startDate, String endDate) async {
+  Future<List<Map<String, dynamic>>> getExpensesForDateRange(
+    String startDate,
+    String endDate,
+  ) async {
     final db = await database;
-    return await db.rawQuery('''
+    return await db.rawQuery(
+      '''
       SELECT expense_entries.*, categories.name as category_name, categories.icon as category_icon
       FROM expense_entries
       LEFT JOIN categories ON expense_entries.category_id = categories.id
       WHERE date >= ? AND date <= ?
       ORDER BY date DESC
-    ''', [startDate, endDate]);
+    ''',
+      [startDate, endDate],
+    );
   }
 
-  Future<List<Map<String, dynamic>>> getExpensesForBudget(String budgetId) async {
+  Future<List<Map<String, dynamic>>> getExpensesForBudget(
+    String budgetId,
+  ) async {
     final db = await database;
-    return await db.rawQuery('''
+    return await db.rawQuery(
+      '''
       SELECT expense_entries.*, categories.name as category_name, categories.icon as category_icon
       FROM expense_entries
       LEFT JOIN categories ON expense_entries.category_id = categories.id
       WHERE budget_id = ?
       ORDER BY date DESC
-    ''', [budgetId]);
+    ''',
+      [budgetId],
+    );
   }
 
   Future<List<Map<String, dynamic>>> getExpensesBefore(String date) async {
     final db = await database;
-    return await db.rawQuery('''
+    return await db.rawQuery(
+      '''
       SELECT expense_entries.*, categories.name as category_name, categories.icon as category_icon
       FROM expense_entries
       LEFT JOIN categories ON expense_entries.category_id = categories.id
       WHERE date < ?
-    ''', [date]);
+    ''',
+      [date],
+    );
   }
 
   Future<List<Map<String, dynamic>>> getCategories() async {
@@ -833,11 +928,7 @@ class LocalDatabase {
 
   Future<List<Map<String, dynamic>>> getCategoriesByType(String type) async {
     final db = await database;
-    return await db.query(
-      'categories',
-      where: 'type = ?',
-      whereArgs: [type],
-    );
+    return await db.query('categories', where: 'type = ?', whereArgs: [type]);
   }
 
   Future<List<Map<String, dynamic>>> getAvailablePeriods() async {
@@ -848,8 +939,11 @@ class LocalDatabase {
     ''');
     return result;
   }
-  
-  Future<List<Map<String, dynamic>>> getBudgetsForPeriod(int year, int month) async {
+
+  Future<List<Map<String, dynamic>>> getBudgetsForPeriod(
+    int year,
+    int month,
+  ) async {
     final db = await database;
     return await db.query(
       'budgets',
@@ -857,31 +951,56 @@ class LocalDatabase {
       whereArgs: [year, month],
     );
   }
-  
+
   Future<Map<String, dynamic>?> getBudget(String id) async {
     final db = await database;
-    final maps = await db.query(
-      'budgets',
-      where: 'id = ?',
-      whereArgs: [id],
-    );
+    final maps = await db.query('budgets', where: 'id = ?', whereArgs: [id]);
     if (maps.isEmpty) return null;
     return maps.first;
   }
-  
+
   Future<void> insertBudget(Map<String, dynamic> budget) async {
     final db = await database;
     await db.insert('budgets', budget);
   }
-  
+
   Future<void> updateBudget(Map<String, dynamic> budget) async {
     final db = await database;
-    await db.update('budgets', budget, where: 'id = ?', whereArgs: [budget['id']]);
+    await db.update(
+      'budgets',
+      budget,
+      where: 'id = ?',
+      whereArgs: [budget['id']],
+    );
   }
-  
+
   Future<void> deleteBudget(String id) async {
     final db = await database;
+    await db.delete('income_entries', where: 'budget_id = ?', whereArgs: [id]);
+    await db.delete('expense_entries', where: 'budget_id = ?', whereArgs: [id]);
     await db.delete('budgets', where: 'id = ?', whereArgs: [id]);
+  }
+
+  Future<void> clearAllBudgets() async {
+    final db = await database;
+    await db.delete('income_entries');
+    await db.delete('expense_entries');
+    await db.delete('budgets');
+  }
+
+  Future<void> factoryReset() async {
+    final db = await database;
+    await db.delete('budgets');
+    await db.delete('income_entries');
+    await db.delete('expense_entries');
+    await db.delete('categories');
+    await db.delete('recurring_transactions');
+    await db.delete('recurring_overrides');
+    await db.delete('saved_calculations');
+    await db.delete('emergency_expenses');
+    await db.delete('loan_calculations');
+    await db.delete('net_worth_items');
+    await db.delete('settings');
   }
 
   // Saved Calculations
@@ -897,7 +1016,11 @@ class LocalDatabase {
 
   Future<int> deleteSavedCalculation(String id) async {
     final db = await database;
-    return await db.delete('saved_calculations', where: 'id = ?', whereArgs: [id]);
+    return await db.delete(
+      'saved_calculations',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
   }
 
   // Emergency Expenses
@@ -918,7 +1041,11 @@ class LocalDatabase {
 
   Future<int> deleteEmergencyExpense(String id) async {
     final db = await database;
-    return await db.delete('emergency_expenses', where: 'id = ?', whereArgs: [id]);
+    return await db.delete(
+      'emergency_expenses',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
   }
 
   Future<List<Map<String, dynamic>>> getEmergencyExpenses() async {
@@ -929,12 +1056,15 @@ class LocalDatabase {
   Future<double> getAverageSpendingForLastMonths(int count) async {
     final db = await database;
     // Get distinct periods from expense_entries
-    final periods = await db.rawQuery('''
+    final periods = await db.rawQuery(
+      '''
       SELECT DISTINCT period_year, period_month 
       FROM expense_entries 
       ORDER BY period_year DESC, period_month DESC 
       LIMIT ?
-    ''', [count]);
+    ''',
+      [count],
+    );
 
     if (periods.isEmpty) return 0.0;
 
@@ -942,11 +1072,14 @@ class LocalDatabase {
     for (var period in periods) {
       final year = period['period_year'];
       final month = period['period_month'];
-      final sumResult = await db.rawQuery('''
+      final sumResult = await db.rawQuery(
+        '''
         SELECT SUM(amount) as total 
         FROM expense_entries 
         WHERE period_year = ? AND period_month = ? AND is_potential = 0
-      ''', [year, month]);
+      ''',
+        [year, month],
+      );
       total += (sumResult.first['total'] as num?)?.toDouble() ?? 0.0;
     }
 
@@ -956,11 +1089,10 @@ class LocalDatabase {
   // Metadata
   Future<void> setMetadata(String key, String value) async {
     final db = await database;
-    await db.insert(
-      'metadata',
-      {'key': key, 'value': value},
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
+    await db.insert('metadata', {
+      'key': key,
+      'value': value,
+    }, conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
   Future<String?> getMetadata(String key) async {
@@ -982,12 +1114,21 @@ class LocalDatabase {
 
   Future<int> updateCompanyProfile(Map<String, dynamic> profile) async {
     final db = await database;
-    return await db.update('company_profiles', profile, where: 'id = ?', whereArgs: [profile['id']]);
+    return await db.update(
+      'company_profiles',
+      profile,
+      where: 'id = ?',
+      whereArgs: [profile['id']],
+    );
   }
 
   Future<int> deleteCompanyProfile(String id) async {
     final db = await database;
-    return await db.delete('company_profiles', where: 'id = ?', whereArgs: [id]);
+    return await db.delete(
+      'company_profiles',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
   }
 
   Future<List<Map<String, dynamic>>> getCompanyProfiles() async {
@@ -1002,7 +1143,12 @@ class LocalDatabase {
 
   Future<int> updateInvoice(Map<String, dynamic> invoice) async {
     final db = await database;
-    return await db.update('invoices', invoice, where: 'id = ?', whereArgs: [invoice['id']]);
+    return await db.update(
+      'invoices',
+      invoice,
+      where: 'id = ?',
+      whereArgs: [invoice['id']],
+    );
   }
 
   Future<int> deleteInvoice(String id) async {
@@ -1022,12 +1168,20 @@ class LocalDatabase {
 
   Future<void> deleteInvoiceItems(String invoiceId) async {
     final db = await database;
-    await db.delete('invoice_items', where: 'invoice_id = ?', whereArgs: [invoiceId]);
+    await db.delete(
+      'invoice_items',
+      where: 'invoice_id = ?',
+      whereArgs: [invoiceId],
+    );
   }
 
   Future<List<Map<String, dynamic>>> getInvoiceItems(String invoiceId) async {
     final db = await database;
-    return await db.query('invoice_items', where: 'invoice_id = ?', whereArgs: [invoiceId]);
+    return await db.query(
+      'invoice_items',
+      where: 'invoice_id = ?',
+      whereArgs: [invoiceId],
+    );
   }
 
   Future<int> insertInvoicePayment(Map<String, dynamic> payment) async {
@@ -1035,8 +1189,15 @@ class LocalDatabase {
     return await db.insert('invoice_payments', payment);
   }
 
-  Future<List<Map<String, dynamic>>> getInvoicePayments(String invoiceId) async {
+  Future<List<Map<String, dynamic>>> getInvoicePayments(
+    String invoiceId,
+  ) async {
     final db = await database;
-    return await db.query('invoice_payments', where: 'invoice_id = ?', whereArgs: [invoiceId], orderBy: 'date DESC');
+    return await db.query(
+      'invoice_payments',
+      where: 'invoice_id = ?',
+      whereArgs: [invoiceId],
+      orderBy: 'date DESC',
+    );
   }
 }

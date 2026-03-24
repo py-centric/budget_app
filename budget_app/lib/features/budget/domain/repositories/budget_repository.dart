@@ -8,7 +8,7 @@ abstract class BudgetRepository {
   Future<void> addIncome(IncomeEntry income);
   Future<void> updateIncome(IncomeEntry income);
   Future<void> deleteIncome(String id);
-  
+
   Future<void> addExpense(ExpenseEntry expense);
   Future<void> updateExpense(ExpenseEntry expense);
   Future<void> deleteExpense(String id);
@@ -18,10 +18,13 @@ abstract class BudgetRepository {
   Future<List<IncomeEntry>> getIncomeForPeriod(BudgetPeriod period);
   Future<List<ExpenseEntry>> getExpensesForPeriod(BudgetPeriod period);
   Future<List<IncomeEntry>> getIncomeForDateRange(DateTime start, DateTime end);
-  Future<List<ExpenseEntry>> getExpensesForDateRange(DateTime start, DateTime end);
+  Future<List<ExpenseEntry>> getExpensesForDateRange(
+    DateTime start,
+    DateTime end,
+  );
   Future<List<IncomeEntry>> getIncomeBefore(DateTime date);
   Future<List<ExpenseEntry>> getExpensesBefore(DateTime date);
-  
+
   // Budget specific methods
   Future<List<IncomeEntry>> getIncomeForBudget(String budgetId);
   Future<List<ExpenseEntry>> getExpensesForBudget(String budgetId);
@@ -30,7 +33,7 @@ abstract class BudgetRepository {
   Future<void> addBudget(Budget budget);
   Future<void> updateBudget(Budget budget);
   Future<void> deleteBudget(String id);
-  
+
   Future<List<Category>> getCategories();
   Future<List<Category>> getCategoriesByType(CategoryType type);
   Future<void> addCategory(Category category);
@@ -39,4 +42,7 @@ abstract class BudgetRepository {
   Future<void> reassignAndDeleteCategory(String oldId, String newId);
 
   Future<List<BudgetPeriod>> getAvailablePeriods();
+
+  Future<void> clearAllBudgets();
+  Future<void> factoryReset();
 }

@@ -11,6 +11,8 @@ import '../../../backup/data/services/backup_service_impl.dart';
 import '../../../backup/presentation/bloc/backup_bloc.dart';
 import '../../../backup/presentation/bloc/backup_event.dart';
 import '../../../backup/presentation/bloc/backup_state.dart';
+import '../../../budget/presentation/budget_bloc.dart';
+import '../../../budget/presentation/budget_event.dart';
 import '../bloc/settings_bloc.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -188,6 +190,11 @@ class SettingsPage extends StatelessWidget {
                 create: (context) =>
                     BackupBloc(backupService: BackupServiceImpl()),
                 child: const _BackupSection(),
+              ),
+              const SizedBox(height: 16),
+              BlocProvider.value(
+                value: context.read<BudgetBloc>(),
+                child: const _FactoryResetSection(),
               ),
             ],
           );
@@ -375,6 +382,101 @@ class _BackupSection extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+
+  Future<void> _selectAndImport(BuildContext context) async {
+    try {
+      final result = await FilePicker.platform.pickFiles(type: FileType.any);
+
+      if (result != null && result.files.single.path != null) {
+        if (context.mounted) {
+          context.read<BackupBloc>().add(
+            BackupImport(filePath: result.files.single.path!),
+          );
+        }
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to select file: ${e.toString()}'),
+            backgroundColor: Theme.of(context).colorScheme.error,
+          ),
+        );
+      }
+    }
+  }
+}
+
+class _FactoryResetSection extends StatelessWidget {
+  const _FactoryResetSection();
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Factory Reset',
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+            const SizedBox(height: 8),
+            const Text(
+              'Delete all budgets and reset the app to its initial state. This cannot be undone.',
+              style: TextStyle(color: Colors.grey),
+            ),
+            const SizedBox(height: 16),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                onPressed: () => _showFactoryResetDialog(context),
+                icon: const Icon(Icons.delete_forever),
+                label: const Text('Factory Reset'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red,
+                  foregroundColor: Colors.white,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showFactoryResetDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Factory Reset'),
+        content: const Text(
+          'Are you sure you want to delete all budgets and reset the app? This action cannot be undone.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(dialogContext).pop();
+              context.read<BudgetBloc>().add(FactoryResetEvent());
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Factory reset complete'),
+                  backgroundColor: Colors.green,
+                ),
+              );
+            },
+            style: TextButton.styleFrom(foregroundColor: Colors.red),
+            child: const Text('Reset'),
+          ),
+        ],
+      ),
     );
   }
 

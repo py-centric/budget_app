@@ -13,6 +13,10 @@ Auto-generated from all feature plans. Last updated: 2026-03-24
 - Local file system (export to device storage) (027-budget-export)
 - Dart 3.x (Flutter 3.x) + sqflite (existing), path_provider (existing), share_plus (existing from export feature) (028-db-backup)
 - SQLite database + local file system for backups (028-db-backup)
+- YAML (GitHub Actions workflow syntax), Flutter SDK 3.x (pinned stable version) + GitHub Actions (ubuntu-latest runner), Flutter SDK, pub.dev packages (029-github-actions-ci)
+- N/A (CI/CD infrastructure - no persistent data) (029-github-actions-ci)
+- Dart 3.x + Flutter 3.x, flutter_bloc, sqflite, flutter_secure_storage (existing) (030-budget-reset-options)
+- SQLite database via sqflite (existing - needs cascade delete verification) (030-budget-reset-options)
 
 - Dart 3.x (Flutter 3.x) + flutter_bloc, sqflite, flutter_secure_storage, fl_chart (for pie charts) (023-invoice-dashboard-and-payables)
 
@@ -32,9 +36,9 @@ tests/
 Dart 3.x (Flutter 3.x): Follow standard conventions
 
 ## Recent Changes
+- 030-budget-reset-options: Added Dart 3.x + Flutter 3.x, flutter_bloc, sqflite, flutter_secure_storage (existing)
+- 029-github-actions-ci: Added YAML (GitHub Actions workflow syntax), Flutter SDK 3.x (pinned stable version) + GitHub Actions (ubuntu-latest runner), Flutter SDK, pub.dev packages
 - 028-db-backup: Added Dart 3.x (Flutter 3.x) + sqflite (existing), path_provider (existing), share_plus (existing from export feature)
-- 027-budget-export: Added Dart 3.x (Flutter 3.x) + csv (new), excel (new), pdf (existing), path_provider (existing), share_plus (new)
-- 026-app-lock: Added Dart 3.x (Flutter 3.x) + flutter_secure_storage (existing), local_auth (new - biometrics)
 
 
 <!-- MANUAL ADDITIONS START -->

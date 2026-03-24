@@ -11,6 +11,11 @@ class CurrencyFormatter {
     return format.format(amount);
   }
 
+  static String getSymbol({String currencyCode = 'USD'}) {
+    final format = NumberFormat.simpleCurrency(name: currencyCode);
+    return format.currencySymbol;
+  }
+
   static double? parse(String value) {
     try {
       final cleanValue = value.replaceAll(RegExp(r'[^\d.-]'), '');

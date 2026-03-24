@@ -15,8 +15,11 @@ import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:bloc_test/bloc_test.dart';
 
 class MockFinancialRepository extends Mock implements FinancialRepository {}
+
 class MockStorage extends Mock implements Storage {}
-class MockSettingsBloc extends MockBloc<SettingsEvent, SettingsState> implements SettingsBloc {}
+
+class MockSettingsBloc extends MockBloc<SettingsEvent, SettingsState>
+    implements SettingsBloc {}
 
 void main() {
   late MockFinancialRepository mockRepository;
@@ -33,7 +36,9 @@ void main() {
     HydratedBloc.storage = mockStorage;
 
     when(() => mockSettingsBloc.state).thenReturn(const SettingsState());
-    when(() => mockRepository.getSavedCalculations()).thenAnswer((_) async => []);
+    when(
+      () => mockRepository.getSavedCalculations(),
+    ).thenAnswer((_) async => []);
   });
 
   Widget createWidgetUnderTest(Widget page) {
@@ -49,18 +54,18 @@ void main() {
           ),
         ),
       ],
-      child: MaterialApp(
-        home: page,
-      ),
+      child: MaterialApp(home: page),
     );
   }
 
   group('Financial Tools Integration', () {
-    testWidgets('should navigate from Hub to Net Worth and calculate value', (WidgetTester tester) async {
+    testWidgets('should navigate from Hub to Net Worth and calculate value', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(createWidgetUnderTest(const ToolsHubPage()));
-      
-      // Tap on Net Worth Tool
-      await tester.tap(find.text('Net Worth'));
+
+      // Tap on Net Worth Calculator Tool
+      await tester.tap(find.text('Net Worth Calculator'));
       await tester.pumpAndSettle();
 
       expect(find.byType(NetWorthCalculatorPage), findsOneWidget);
@@ -78,11 +83,13 @@ void main() {
       expect(find.text('\$5,000.00'), findsNWidgets(2)); // Total and list item
     });
 
-    testWidgets('should navigate to Loan Calculator and change interest type', (WidgetTester tester) async {
+    testWidgets('should navigate to Loan Calculator and change interest type', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(createWidgetUnderTest(const ToolsHubPage()));
 
-      // Tap on Loans Tool
-      await tester.tap(find.text('Loans'));
+      // Tap on Loan Amortization Tool
+      await tester.tap(find.text('Loan Amortization'));
       await tester.pumpAndSettle();
 
       expect(find.byType(LoanCalculatorPage), findsOneWidget);
