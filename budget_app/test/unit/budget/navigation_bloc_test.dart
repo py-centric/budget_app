@@ -8,13 +8,17 @@ import 'package:budget_app/features/budget/presentation/bloc/navigation_bloc.dar
 import 'package:budget_app/features/budget/domain/repositories/budget_repository.dart';
 
 class MockGetAvailablePeriods extends Mock implements GetAvailablePeriods {}
+
 class MockBudgetRepository extends Mock implements BudgetRepository {}
+
 class MockStorage extends Mock implements Storage {}
+
 class FakeBudgetPeriod extends Fake implements BudgetPeriod {}
 
 void main() {
   setUpAll(() {
     registerFallbackValue(FakeBudgetPeriod());
+    registerFallbackValue(BudgetPeriod.current());
   });
 
   late MockGetAvailablePeriods mockGetAvailablePeriods;
@@ -24,9 +28,16 @@ void main() {
   setUp(() {
     mockGetAvailablePeriods = MockGetAvailablePeriods();
     mockBudgetRepository = MockBudgetRepository();
-    when(() => mockBudgetRepository.getBudgetsForPeriod(any())).thenAnswer((_) async => []);
+    when(
+      () => mockBudgetRepository.getBudgetsForPeriod(any()),
+    ).thenAnswer((_) async => []);
+    when(
+      () => mockBudgetRepository.addBudget(any()),
+    ).thenAnswer((_) async => null);
     mockStorage = MockStorage();
-    when(() => mockStorage.write(any(), any<dynamic>())).thenAnswer((_) async {});
+    when(
+      () => mockStorage.write(any(), any<dynamic>()),
+    ).thenAnswer((_) async {});
     HydratedBloc.storage = mockStorage;
   });
 
@@ -45,11 +56,12 @@ void main() {
         getAvailablePeriodsUseCase: mockGetAvailablePeriods,
         budgetRepository: mockBudgetRepository,
       ),
-      act: (bloc) => bloc.add(const ChangePeriod(BudgetPeriod(year: 2024, month: 1))),
+      act: (bloc) =>
+          bloc.add(const ChangePeriod(BudgetPeriod(year: 2024, month: 1))),
       expect: () => [
         isA<NavigationState>().having(
-          (s) => s.currentPeriod, 
-          'currentPeriod', 
+          (s) => s.currentPeriod,
+          'currentPeriod',
           const BudgetPeriod(year: 2024, month: 1),
         ),
       ],
@@ -58,9 +70,9 @@ void main() {
     blocTest<NavigationBloc, NavigationState>(
       'emits new state when LoadAvailablePeriods is added',
       build: () {
-        when(() => mockGetAvailablePeriods.call()).thenAnswer(
-          (_) async => [const BudgetPeriod(year: 2024, month: 1)],
-        );
+        when(
+          () => mockGetAvailablePeriods.call(),
+        ).thenAnswer((_) async => [const BudgetPeriod(year: 2024, month: 1)]);
         return NavigationBloc(
           getAvailablePeriodsUseCase: mockGetAvailablePeriods,
           budgetRepository: mockBudgetRepository,
@@ -69,8 +81,8 @@ void main() {
       act: (bloc) => bloc.add(const LoadAvailablePeriods()),
       expect: () => [
         isA<NavigationState>().having(
-          (s) => s.availablePeriods, 
-          'availablePeriods', 
+          (s) => s.availablePeriods,
+          'availablePeriods',
           [const BudgetPeriod(year: 2024, month: 1)],
         ),
       ],
