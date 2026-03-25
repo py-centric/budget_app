@@ -21,3 +21,9 @@
 .pub/
 build/
 
+# Specify/OpenCode/Gemini (not part of the app)
+specs/
+.specify/
+.opencode/
+.gemini/
+

@@ -404,6 +404,17 @@ class LocalDatabase {
         )
       ''');
     }
+
+    if (oldVersion < 16) {
+      await db.execute(
+        'ALTER TABLE budgets ADD COLUMN currency_code TEXT DEFAULT \'USD\'',
+      );
+      await db.execute(
+        'ALTER TABLE budgets ADD COLUMN target_currency_code TEXT',
+      );
+      await db.execute('ALTER TABLE budgets ADD COLUMN exchange_rate REAL');
+      await db.execute('ALTER TABLE budgets ADD COLUMN converted_amount REAL');
+    }
   }
 
   Future<void> _onCreate(Database db, int version) async {
@@ -413,7 +424,11 @@ class LocalDatabase {
         name TEXT NOT NULL,
         period_month INTEGER NOT NULL,
         period_year INTEGER NOT NULL,
-        is_active INTEGER NOT NULL DEFAULT 1
+        is_active INTEGER NOT NULL DEFAULT 1,
+        currency_code TEXT DEFAULT 'USD',
+        target_currency_code TEXT,
+        exchange_rate REAL,
+        converted_amount REAL
       )
     ''');
 

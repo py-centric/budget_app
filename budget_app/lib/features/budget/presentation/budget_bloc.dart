@@ -52,6 +52,8 @@ class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
     on<DeleteBudgetEvent>(_onDeleteBudget);
     on<ClearAllBudgetsEvent>(_onClearAllBudgets);
     on<FactoryResetEvent>(_onFactoryReset);
+    on<ConvertBudgetEvent>(_onConvertBudget);
+    on<UpdateExchangeRateEvent>(_onUpdateExchangeRate);
   }
 
   Future<void> _onConfirmPotentialTransaction(
@@ -274,6 +276,84 @@ class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
     try {
       await repository.factoryReset();
       emit(const FactoryResetComplete());
+    } catch (e) {
+      emit(BudgetError(e.toString()));
+    }
+  }
+
+  Future<void> _onConvertBudget(
+    ConvertBudgetEvent event,
+    Emitter<BudgetState> emit,
+  ) async {
+    try {
+      if (event.exchangeRate <= 0) {
+        emit(const BudgetError('Exchange rate must be greater than zero'));
+        return;
+      }
+
+      final budget = await repository.getBudget(event.budgetId);
+      if (budget == null) {
+        emit(const BudgetError('Budget not found'));
+        return;
+      }
+
+      final updatedBudget = budget.copyWith(
+        targetCurrencyCode: event.targetCurrencyCode,
+        exchangeRate: event.exchangeRate,
+        convertedAmount: null,
+      );
+
+      await repository.updateBudget(updatedBudget);
+
+      emit(
+        BudgetConverted(
+          budgetId: event.budgetId,
+          targetCurrencyCode: event.targetCurrencyCode,
+          exchangeRate: event.exchangeRate,
+          convertedAmount: 0,
+        ),
+      );
+    } catch (e) {
+      emit(BudgetError(e.toString()));
+    }
+  }
+
+  Future<void> _onUpdateExchangeRate(
+    UpdateExchangeRateEvent event,
+    Emitter<BudgetState> emit,
+  ) async {
+    try {
+      if (event.exchangeRate <= 0) {
+        emit(const BudgetError('Exchange rate must be greater than zero'));
+        return;
+      }
+
+      final budget = await repository.getBudget(event.budgetId);
+      if (budget == null) {
+        emit(const BudgetError('Budget not found'));
+        return;
+      }
+
+      final convertedAmount =
+          budget.convertedAmount != null && budget.exchangeRate != null
+          ? budget.convertedAmount! * event.exchangeRate / budget.exchangeRate!
+          : null;
+
+      final updatedBudget = budget.copyWith(
+        exchangeRate: event.exchangeRate,
+        convertedAmount: convertedAmount,
+      );
+
+      await repository.updateBudget(updatedBudget);
+
+      emit(
+        BudgetConverted(
+          budgetId: event.budgetId,
+          targetCurrencyCode: budget.targetCurrencyCode ?? '',
+          exchangeRate: event.exchangeRate,
+          convertedAmount: convertedAmount ?? 0,
+        ),
+      );
     } catch (e) {
       emit(BudgetError(e.toString()));
     }

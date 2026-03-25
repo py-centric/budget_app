@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 import '../../../../core/utils/currency_formatter.dart';
 import '../../../../features/settings/presentation/bloc/settings_bloc.dart';
 import '../../domain/entities/category.dart';

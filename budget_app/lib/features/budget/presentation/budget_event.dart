@@ -176,3 +176,31 @@ class ClearAllBudgetsEvent extends BudgetEvent {
 class FactoryResetEvent extends BudgetEvent {
   const FactoryResetEvent();
 }
+
+class ConvertBudgetEvent extends BudgetEvent {
+  final String budgetId;
+  final String targetCurrencyCode;
+  final double exchangeRate;
+
+  const ConvertBudgetEvent({
+    required this.budgetId,
+    required this.targetCurrencyCode,
+    required this.exchangeRate,
+  });
+
+  @override
+  List<Object?> get props => [budgetId, targetCurrencyCode, exchangeRate];
+}
+
+class UpdateExchangeRateEvent extends BudgetEvent {
+  final String budgetId;
+  final double exchangeRate;
+
+  const UpdateExchangeRateEvent({
+    required this.budgetId,
+    required this.exchangeRate,
+  });
+
+  @override
+  List<Object?> get props => [budgetId, exchangeRate];
+}

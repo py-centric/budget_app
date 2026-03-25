@@ -1,4 +1,3 @@
-import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:budget_app/features/export/data/services/export_service_impl.dart';
@@ -10,10 +9,8 @@ class MockExportServiceImpl extends Mock {}
 
 void main() {
   group('ExportServiceImpl', () {
-    late ExportServiceImpl service;
-
     setUp(() {
-      service = ExportServiceImpl(
+      ExportServiceImpl(
         fetchTransactions: (_) async => [],
         fetchSummary: (_) async => {
           'totalIncome': 100.0,
