@@ -71,3 +71,25 @@ class BudgetsCleared extends BudgetState {
 class FactoryResetComplete extends BudgetState {
   const FactoryResetComplete();
 }
+
+class BudgetConverted extends BudgetState {
+  final String budgetId;
+  final String targetCurrencyCode;
+  final double exchangeRate;
+  final double convertedAmount;
+
+  const BudgetConverted({
+    required this.budgetId,
+    required this.targetCurrencyCode,
+    required this.exchangeRate,
+    required this.convertedAmount,
+  });
+
+  @override
+  List<Object?> get props => [
+    budgetId,
+    targetCurrencyCode,
+    exchangeRate,
+    convertedAmount,
+  ];
+}

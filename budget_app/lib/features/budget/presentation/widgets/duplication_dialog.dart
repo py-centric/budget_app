@@ -19,14 +19,44 @@ class _DuplicationDialogState extends State<DuplicationDialog> {
   late int _selectedMonth;
   late int _selectedYear;
   bool _includeTransactions = true;
+  late String _selectedCurrency;
+
+  static const List<Map<String, String>> supportedCurrencies = [
+    {'code': 'USD', 'name': 'US Dollar', 'symbol': '\$'},
+    {'code': 'EUR', 'name': 'Euro', 'symbol': '€'},
+    {'code': 'GBP', 'name': 'British Pound', 'symbol': '£'},
+    {'code': 'JPY', 'name': 'Japanese Yen', 'symbol': '¥'},
+    {'code': 'CAD', 'name': 'Canadian Dollar', 'symbol': '\$'},
+    {'code': 'AUD', 'name': 'Australian Dollar', 'symbol': '\$'},
+    {'code': 'CHF', 'name': 'Swiss Franc', 'symbol': 'Fr'},
+    {'code': 'CNY', 'name': 'Chinese Yuan', 'symbol': '¥'},
+    {'code': 'INR', 'name': 'Indian Rupee', 'symbol': '₹'},
+    {'code': 'MXN', 'name': 'Mexican Peso', 'symbol': '\$'},
+    {'code': 'BRL', 'name': 'Brazilian Real', 'symbol': 'R\$'},
+    {'code': 'KRW', 'name': 'South Korean Won', 'symbol': '₩'},
+    {'code': 'SGD', 'name': 'Singapore Dollar', 'symbol': '\$'},
+    {'code': 'HKD', 'name': 'Hong Kong Dollar', 'symbol': '\$'},
+    {'code': 'SEK', 'name': 'Swedish Krona', 'symbol': 'kr'},
+    {'code': 'ZAR', 'name': 'South African Rand', 'symbol': 'R'},
+    {'code': 'NZD', 'name': 'New Zealand Dollar', 'symbol': '\$'},
+    {'code': 'NOK', 'name': 'Norwegian Krone', 'symbol': 'kr'},
+    {'code': 'DKK', 'name': 'Danish Krone', 'symbol': 'kr'},
+    {'code': 'THB', 'name': 'Thai Baht', 'symbol': '฿'},
+  ];
 
   @override
   void initState() {
     super.initState();
-    _nameController = TextEditingController(text: '${widget.sourceBudget.name} - Copy');
-    final nextPeriod = BudgetPeriod(year: widget.sourceBudget.periodYear, month: widget.sourceBudget.periodMonth).next;
+    _nameController = TextEditingController(
+      text: '${widget.sourceBudget.name} - Copy',
+    );
+    final nextPeriod = BudgetPeriod(
+      year: widget.sourceBudget.periodYear,
+      month: widget.sourceBudget.periodMonth,
+    ).next;
     _selectedMonth = nextPeriod.month;
     _selectedYear = nextPeriod.year;
+    _selectedCurrency = widget.sourceBudget.currencyCode ?? 'USD';
   }
 
   @override
@@ -47,6 +77,22 @@ class _DuplicationDialogState extends State<DuplicationDialog> {
             TextField(
               controller: _nameController,
               decoration: const InputDecoration(labelText: 'New Budget Name'),
+            ),
+            const SizedBox(height: 16),
+            DropdownButtonFormField<String>(
+              initialValue: _selectedCurrency,
+              decoration: const InputDecoration(labelText: 'Currency'),
+              items: supportedCurrencies.map((currency) {
+                return DropdownMenuItem(
+                  value: currency['code'],
+                  child: Text(
+                    '${currency['symbol']} ${currency['code']} - ${currency['name']}',
+                  ),
+                );
+              }).toList(),
+              onChanged: (val) {
+                if (val != null) setState(() => _selectedCurrency = val);
+              },
             ),
             const SizedBox(height: 16),
             const Text('Target Period:'),
@@ -89,7 +135,9 @@ class _DuplicationDialogState extends State<DuplicationDialog> {
             const SizedBox(height: 16),
             SwitchListTile(
               title: const Text('Include Transactions'),
-              subtitle: const Text('Copies all individual entries shifted to the new month.'),
+              subtitle: const Text(
+                'Copies all individual entries shifted to the new month.',
+              ),
               value: _includeTransactions,
               onChanged: (val) => setState(() => _includeTransactions = val),
               contentPadding: EdgeInsets.zero,
@@ -105,13 +153,18 @@ class _DuplicationDialogState extends State<DuplicationDialog> {
         ElevatedButton(
           onPressed: () {
             context.read<BudgetBloc>().add(
-                  DuplicateBudgetEvent(
-                    sourceBudget: widget.sourceBudget,
-                    targetPeriod: BudgetPeriod(year: _selectedYear, month: _selectedMonth),
-                    newName: _nameController.text,
-                    includeTransactions: _includeTransactions,
-                  ),
-                );
+              DuplicateBudgetEvent(
+                sourceBudget: widget.sourceBudget.copyWith(
+                  currencyCode: _selectedCurrency,
+                ),
+                targetPeriod: BudgetPeriod(
+                  year: _selectedYear,
+                  month: _selectedMonth,
+                ),
+                newName: _nameController.text,
+                includeTransactions: _includeTransactions,
+              ),
+            );
             Navigator.pop(context);
           },
           child: const Text('Duplicate'),

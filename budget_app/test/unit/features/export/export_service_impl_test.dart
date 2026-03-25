@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:budget_app/features/export/domain/entities/export_configuration.dart';
@@ -32,10 +31,8 @@ void main() {
   };
 
   group('ExportServiceImpl CSV generation', () {
-    late ExportServiceImpl service;
-
     setUp(() async {
-      service = ExportServiceImpl(
+      ExportServiceImpl(
         fetchTransactions: (_) async => testTransactions,
         fetchSummary: (_) async => testSummary,
       );

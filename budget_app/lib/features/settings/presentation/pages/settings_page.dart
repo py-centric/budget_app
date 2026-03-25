@@ -479,27 +479,4 @@ class _FactoryResetSection extends StatelessWidget {
       ),
     );
   }
-
-  Future<void> _selectAndImport(BuildContext context) async {
-    try {
-      final result = await FilePicker.platform.pickFiles(type: FileType.any);
-
-      if (result != null && result.files.single.path != null) {
-        if (context.mounted) {
-          context.read<BackupBloc>().add(
-            BackupImport(filePath: result.files.single.path!),
-          );
-        }
-      }
-    } catch (e) {
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Failed to select file: ${e.toString()}'),
-            backgroundColor: Theme.of(context).colorScheme.error,
-          ),
-        );
-      }
-    }
-  }
 }

@@ -18,6 +18,7 @@ import '../widgets/home_projection_overview.dart';
 import '../widgets/duplication_dialog.dart';
 import '../widgets/budget_selector.dart';
 import '../widgets/list_header_total.dart';
+import '../widgets/currency_conversion_dialog.dart';
 import '../bloc/projection_bloc.dart';
 import '../bloc/projection_event.dart';
 import '../../domain/entities/category.dart';
@@ -111,6 +112,27 @@ class _HomePageState extends State<HomePage> {
                     .currentPeriod;
                 context.read<BudgetBloc>().add(
                   LoadSummaryEvent(period: currentPeriod),
+                );
+              },
+            ),
+            BlocBuilder<NavigationBloc, NavigationState>(
+              builder: (context, state) {
+                return IconButton(
+                  icon: const Icon(Icons.currency_exchange),
+                  tooltip: 'Convert Currency',
+                  onPressed: state.activeBudget != null
+                      ? () {
+                          showDialog(
+                            context: context,
+                            builder: (dialogContext) => BlocProvider.value(
+                              value: context.read<BudgetBloc>(),
+                              child: CurrencyConversionDialog(
+                                budget: state.activeBudget!,
+                              ),
+                            ),
+                          );
+                        }
+                      : null,
                 );
               },
             ),

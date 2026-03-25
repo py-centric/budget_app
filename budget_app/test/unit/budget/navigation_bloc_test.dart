@@ -35,9 +35,7 @@ void main() {
     when(
       () => mockBudgetRepository.getBudgetsForPeriod(any()),
     ).thenAnswer((_) async => []);
-    when(
-      () => mockBudgetRepository.addBudget(any()),
-    ).thenAnswer((_) async => null);
+    when(() => mockBudgetRepository.addBudget(any())).thenAnswer((_) async {});
     when(
       () => mockGetAvailablePeriods.call(),
     ).thenAnswer((_) async => [BudgetPeriod.current()]);
