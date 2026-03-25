@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>} &#8212; Budget App 1.0.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
+    <script src="_static/documentation_options.js?v=8d563738"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <p># Categories</p>
+<p>## Overview</p>
+<p>Categories allow you to organize your income and expenses for better financial tracking and reporting.</p>
+<p>## Default Categories</p>
+<p>The app comes with pre-defined default categories:</p>
+<p>### Expense Categories</p>
+<ul class="simple">
+<li><p>Food &amp; Dining</p></li>
+<li><p>Transportation</p></li>
+<li><p>Shopping</p></li>
+<li><p>Entertainment</p></li>
+<li><p>Bills &amp; Utilities</p></li>
+<li><p>Health &amp; Fitness</p></li>
+<li><p>Education</p></li>
+<li><p>Travel</p></li>
+<li><p>Personal Care</p></li>
+<li><p>Gifts &amp; Donations</p></li>
+<li><p>Other</p></li>
+</ul>
+<p>### Income Categories</p>
+<ul class="simple">
+<li><p>Salary</p></li>
+<li><p>Freelance</p></li>
+<li><p>Investments</p></li>
+<li><p>Gifts</p></li>
+<li><p>Other Income</p></li>
+</ul>
+<p>## Custom Categories</p>
+<p>### Creating Custom Categories</p>
+<ol class="arabic simple">
+<li><p>Navigate to the categories section from the settings or transaction form</p></li>
+<li><p>Tap “Add Category”</p></li>
+<li><p>Enter category name</p></li>
+<li><p>Choose an icon from the available set</p></li>
+<li><p>Select a color for visual identification</p></li>
+</ol>
+<p>### Category Properties</p>
+<ul class="simple">
+<li><p><strong>Name</strong>: Descriptive label for the category</p></li>
+<li><p><strong>Icon</strong>: Visual identifier from Material Icons</p></li>
+<li><p><strong>Color</strong>: Hex color code for visual distinction</p></li>
+<li><p><strong>Type</strong>: Income or Expense</p></li>
+</ul>
+<p>## Managing Categories</p>
+<p>### Editing Categories</p>
+<p>Tap on any category to modify its name, icon, or color.</p>
+<p>### Deleting Categories</p>
+<p>When deleting a category:
+- Transactions using that category will need reassignment
+- The category is permanently removed</p>
+<p>## Category Data Model</p>
+<p><a href="#id1"><span class="problematic" id="id2">``</span></a>`
+Category {</p>
+<blockquote>
+<div><p>id: String
+name: String
+icon: String (Material Icon name)
+color: int (color value)
+type: CategoryType (income/expense)
+isDefault: bool
+createdAt: DateTime</p>
+</div></blockquote>
+<section id="id3">
+<h1>}<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h1>
+<p>## Related Features</p>
+<ul class="simple">
+<li><p>[Transactions](transactions.rst)</p></li>
+<li><p>[Budget Management](budget_management.rst)</p></li>
+</ul>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Budget App</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2026, Budget App Team.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 9.1.0</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="_sources/categories.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
