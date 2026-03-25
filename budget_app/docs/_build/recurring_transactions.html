@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>} &#8212; Budget App 1.0.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
+    <script src="_static/documentation_options.js?v=8d563738"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <p># Recurring Transactions</p>
+<p>## Overview</p>
+<p>Recurring transactions automate the entry of regular income and expenses, saving time and ensuring you never miss recurring payments.</p>
+<p>## Features</p>
+<p>### Creating Recurring Transactions</p>
+<ol class="arabic simple">
+<li><p>From the transactions screen, tap the recurring button</p></li>
+<li><p>Select transaction type (income/expense)</p></li>
+<li><p>Enter the amount</p></li>
+<li><p>Choose category</p></li>
+<li><p>Set recurrence pattern:
+- <strong>Daily</strong>: Every day
+- <strong>Weekly</strong>: Specific day of week
+- <strong>Monthly</strong>: Specific day of month
+- <strong>Yearly</strong>: Specific date</p></li>
+<li><p>Set start date and optional end date</p></li>
+<li><p>Add optional note</p></li>
+</ol>
+<p>### Recurrence Patterns</p>
+<ul class="simple">
+<li><p><strong>Monthly</strong>: Most common for rent, subscriptions, salaries</p></li>
+<li><p><strong>Weekly</strong>: Useful for weekly gym membership, weekly allowances</p></li>
+<li><p><strong>Daily</strong>: Rare, but available for daily expenses</p></li>
+<li><p><strong>Yearly</strong>: For annual insurance, subscriptions</p></li>
+</ul>
+<p>### Managing Recurring Transactions</p>
+<p>#### Viewing All Recurring</p>
+<p>Access all recurring transactions from the dedicated section in the app.</p>
+<p>#### Editing Recurring Transactions</p>
+<p>Modify any recurring transaction to change amount, category, or dates.</p>
+<p>#### Stopping Recurring</p>
+<ul class="simple">
+<li><p><strong>Pause</strong>: Temporarily stop without deleting</p></li>
+<li><p><strong>Delete</strong>: Permanently remove the recurring rule</p></li>
+</ul>
+<p>#### Manual Entry Override</p>
+<p>When a recurring transaction is created, you can:
+- Skip one occurrence
+- Add a one-time adjustment for a specific instance</p>
+<p>## Transaction Data Model</p>
+<p><a href="#id1"><span class="problematic" id="id2">``</span></a>`
+RecurringTransaction {</p>
+<blockquote>
+<div><p>id: String
+amount: double
+categoryId: String
+type: TransactionType (income/expense)
+recurrence: RecurrenceType (daily/weekly/monthly/yearly)
+dayOfWeek: int? (1-7 for weekly)
+dayOfMonth: int? (1-31 for monthly)
+month: int? (1-12 for yearly)
+startDate: DateTime
+endDate: DateTime?
+note: String?
+isActive: bool
+createdAt: DateTime</p>
+</div></blockquote>
+<section id="id3">
+<h1>}<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h1>
+<p>## Related Features</p>
+<ul class="simple">
+<li><p>[Transactions](transactions.rst)</p></li>
+<li><p>[Categories](categories.rst)</p></li>
+<li><p>[Projections](projections.rst)</p></li>
+</ul>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Budget App</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2026, Budget App Team.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 9.1.0</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="_sources/recurring_transactions.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
