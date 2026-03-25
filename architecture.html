@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>&lt;no title&gt; &#8212; Budget App 1.0.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
+    <script src="_static/documentation_options.js?v=8d563738"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <p># Architecture</p>
+<p>## Overview</p>
+<p>Budget App follows <strong>Clean Architecture</strong> principles with clear separation between UI, business logic, and data layers. The architecture ensures maintainability, testability, and scalability.</p>
+<p>## Layer Structure</p>
+<p><code class="docutils literal notranslate"><span class="pre">`</span>
+<span class="pre">lib/</span>
+<span class="pre">├──</span> <span class="pre">core/</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">#</span> <span class="pre">Shared</span> <span class="pre">utilities</span> <span class="pre">and</span> <span class="pre">constants</span>
+<span class="pre">│</span>&#160;&#160; <span class="pre">├──</span> <span class="pre">constants/</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">#</span> <span class="pre">App-wide</span> <span class="pre">constants</span>
+<span class="pre">│</span>&#160;&#160; <span class="pre">├──</span> <span class="pre">theme/</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">#</span> <span class="pre">Material</span> <span class="pre">Design</span> <span class="pre">3</span> <span class="pre">theming</span>
+<span class="pre">│</span>&#160;&#160; <span class="pre">└──</span> <span class="pre">utils/</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">#</span> <span class="pre">Currency,</span> <span class="pre">date,</span> <span class="pre">and</span> <span class="pre">chart</span> <span class="pre">utilities</span>
+<span class="pre">│</span>
+<span class="pre">├──</span> <span class="pre">features/</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">#</span> <span class="pre">Feature</span> <span class="pre">modules</span> <span class="pre">(独立功能模块)</span>
+<span class="pre">│</span>&#160;&#160; <span class="pre">├──</span> <span class="pre">budget/</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">#</span> <span class="pre">Core</span> <span class="pre">budget</span> <span class="pre">functionality</span>
+<span class="pre">│</span>&#160;&#160; <span class="pre">├──</span> <span class="pre">settings/</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">#</span> <span class="pre">App</span> <span class="pre">settings</span>
+<span class="pre">│</span>&#160;&#160; <span class="pre">├──</span> <span class="pre">export/</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">#</span> <span class="pre">Data</span> <span class="pre">export</span>
+<span class="pre">│</span>&#160;&#160; <span class="pre">├──</span> <span class="pre">backup/</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">#</span> <span class="pre">Backup</span> <span class="pre">&amp;</span> <span class="pre">restore</span>
+<span class="pre">│</span>&#160;&#160; <span class="pre">├──</span> <span class="pre">loans/</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">#</span> <span class="pre">Loan</span> <span class="pre">management</span>
+<span class="pre">│</span>&#160;&#160; <span class="pre">├──</span> <span class="pre">emergency_fund/</span>&#160; <span class="pre">#</span> <span class="pre">Emergency</span> <span class="pre">fund</span> <span class="pre">calculator</span>
+<span class="pre">│</span>&#160;&#160; <span class="pre">├──</span> <span class="pre">financial_tools/</span> <span class="pre">#</span> <span class="pre">Financial</span> <span class="pre">calculators</span>
+<span class="pre">│</span>&#160;&#160; <span class="pre">└──</span> <span class="pre">business_tools/</span>&#160; <span class="pre">#</span> <span class="pre">Invoices,</span> <span class="pre">clients,</span> <span class="pre">profiles</span>
+<span class="pre">│</span>
+<span class="pre">└──</span> <span class="pre">shared/</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">#</span> <span class="pre">Shared</span> <span class="pre">widgets</span> <span class="pre">and</span> <span class="pre">repositories</span>
+<span class="pre">`</span></code></p>
+<p>## Each Feature Follows Clean Architecture</p>
+<p><a href="#id1"><span class="problematic" id="id2">``</span></a>`
+feature/
+├── domain/                    # Business Logic Layer
+│   ├── entities/             # Business objects
+│   ├── repositories/         # Repository interfaces
+│   └── usecases/            # Business use cases
+│
+├── data/                     # Data Layer
+│   ├── datasources/          # Local database (SQLite)
+│   ├── models/               # Data models
+│   └── repositories/         # Repository implementations
+│
+└── presentation/             # UI Layer</p>
+<blockquote>
+<div><p>├── bloc/                 # BLoC state management
+├── pages/               # Screen widgets
+└── widgets/             # Reusable UI components</p>
+</div></blockquote>
+<p><a href="#id3"><span class="problematic" id="id4">``</span></a><a href="#id5"><span class="problematic" id="id6">`</span></a></p>
+<p>## Key Components</p>
+<p>### Domain Layer</p>
+<ul class="simple">
+<li><p><strong>Entities</strong>: Pure business objects (Budget, IncomeEntry, ExpenseEntry, Category)</p></li>
+<li><p><strong>Repositories</strong>: Abstract interfaces for data operations</p></li>
+<li><p><strong>Use Cases</strong>: Business logic implementations</p></li>
+</ul>
+<p>### Data Layer</p>
+<ul class="simple">
+<li><p><strong>LocalDatabase</strong>: SQLite database via sqflite package</p></li>
+<li><p><strong>Models</strong>: Database-specific data representations</p></li>
+<li><p><strong>Repository Implementations</strong>: Concrete data access implementations</p></li>
+</ul>
+<p>### Presentation Layer</p>
+<ul class="simple">
+<li><p><strong>BLoC</strong>: State management using flutter_bloc</p></li>
+<li><p><strong>Pages</strong>: Full-screen widgets for each route</p></li>
+<li><p><strong>Widgets</strong>: Reusable UI components</p></li>
+</ul>
+<p>## State Management</p>
+<p>The app uses <strong>BLoC (Business Logic Component)</strong> pattern via flutter_bloc:</p>
+<ul class="simple">
+<li><p><strong>BudgetBloc</strong>: Manages budget CRUD operations</p></li>
+<li><p><strong>NavigationBloc</strong>: Handles period/budget navigation</p></li>
+<li><p><strong>CategoryBloc</strong>: Manages categories</p></li>
+<li><p><strong>ProjectionBloc</strong>: Handles financial projections</p></li>
+<li><p><strong>SettingsBloc</strong>: App configuration state</p></li>
+</ul>
+<p>## Database Schema</p>
+<p>### Main Tables</p>
+<ul class="simple">
+<li><p><strong>budgets</strong>: Budget periods and metadata</p></li>
+<li><p><strong>income_entries</strong>: Income transactions</p></li>
+<li><p><strong>expense_entries</strong>: Expense transactions</p></li>
+<li><p><strong>categories</strong>: Income and expense categories</p></li>
+<li><p><strong>recurring_transactions</strong>: Recurring transaction definitions</p></li>
+<li><p><strong>budget_goals</strong>: Category budget limits</p></li>
+<li><p><strong>invoices</strong>: Business invoices (business tools)</p></li>
+<li><p><strong>clients</strong>: Business clients (business tools)</p></li>
+<li><p><strong>company_profiles</strong>: Business company profiles</p></li>
+</ul>
+<p>### Database Version</p>
+<p>Current schema version: 16</p>
+<p>Migrations are handled in <cite>LocalDatabase._onUpgrade()</cite> following constitution requirements.</p>
+<p>## Theme</p>
+<p>The app uses <strong>Material Design 3</strong> with custom theming:</p>
+<ul class="simple">
+<li><p>Light and dark mode support</p></li>
+<li><p>Custom color scheme for income (green), expenses (red), balance (blue)</p></li>
+<li><p>Accessible color combinations</p></li>
+</ul>
+<p>## Security</p>
+<ul class="simple">
+<li><p><strong>flutter_secure_storage</strong>: Sensitive data encryption</p></li>
+<li><p><strong>local_auth</strong>: Biometric authentication (fingerprint, Face ID)</p></li>
+<li><p><strong>App Lock</strong>: PIN/biometric app protection</p></li>
+</ul>
+<p>## Offline-First Architecture</p>
+<p>All data is stored locally on the device using SQLite. No cloud sync is implemented, ensuring user privacy and offline functionality.</p>
+<p>### Backup Strategy</p>
+<ul class="simple">
+<li><p>Export to local file system (CSV, PDF, Excel)</p></li>
+<li><p>Full database backup and restore</p></li>
+<li><p>Share functionality via system share sheet</p></li>
+</ul>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Budget App</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2026, Budget App Team.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 9.1.0</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="_sources/architecture.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
