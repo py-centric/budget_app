@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>} &#8212; Budget App 1.0.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
+    <script src="_static/documentation_options.js?v=8d563738"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <p># Loans Management</p>
+<p>## Overview</p>
+<p>The loans feature helps you track money lent to others and money borrowed, with payment tracking and reminders.</p>
+<p>## Features</p>
+<p>### Loan Types</p>
+<ul class="simple">
+<li><p><strong>Lent</strong>: Money you loaned to someone</p></li>
+<li><p><strong>Borrowed</strong>: Money you owe to someone</p></li>
+</ul>
+<p>### Creating a Loan</p>
+<ol class="arabic simple">
+<li><p>Navigate to Loans section</p></li>
+<li><p>Tap “Add Loan”</p></li>
+<li><p>Select type (Lent/Borrowed)</p></li>
+<li><p>Enter details:
+- Person/Organization name
+- Total amount
+- Interest rate (optional)
+- Start date
+- Due date (optional)
+- Notes</p></li>
+</ol>
+<p>### Loan Tracking</p>
+<p>#### Payment Tracking</p>
+<ul class="simple">
+<li><p>Record partial payments</p></li>
+<li><p>Track payment history</p></li>
+<li><p>View remaining balance</p></li>
+</ul>
+<p>#### Loan Status</p>
+<ul class="simple">
+<li><p><strong>Active</strong>: Currently outstanding</p></li>
+<li><p><strong>Paid Off</strong>: Fully repaid</p></li>
+<li><p><strong>Overdue</strong>: Past due date</p></li>
+</ul>
+<p>### Loan Details</p>
+<p>For each loan:
+- Total amount and remaining balance
+- Interest rate and total interest
+- Payment history
+- Notes and documents</p>
+<p>## Loan Data Model</p>
+<p><a href="#id1"><span class="problematic" id="id2">``</span></a>`
+Loan {</p>
+<blockquote>
+<div><p>id: String
+type: LoanType (lent/borrowed)
+personName: String
+totalAmount: double
+remainingAmount: double
+interestRate: double?
+startDate: DateTime
+dueDate: DateTime?
+isPaidOff: bool
+notes: String?
+createdAt: DateTime</p>
+</div></blockquote>
+<p>}</p>
+<dl class="simple">
+<dt>LoanPayment {</dt><dd><p>id: String
+loanId: String
+amount: double
+date: DateTime
+note: String?</p>
+</dd>
+</dl>
+<section id="id3">
+<h1>}<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h1>
+<p>## Related Features</p>
+<ul class="simple">
+<li><p>[Transactions](transactions.rst)</p></li>
+<li><p>[Financial Tools](financial_tools.rst)</p></li>
+</ul>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Budget App</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2026, Budget App Team.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 9.1.0</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="_sources/loans.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

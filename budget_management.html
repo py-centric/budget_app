@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>} &#8212; Budget App 1.0.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
+    <script src="_static/documentation_options.js?v=8d563738"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <p># Budget Management</p>
+<p>## Overview</p>
+<p>Budget management is the core feature of the app, allowing users to create, manage, and track multiple budgets across different time periods.</p>
+<p>## Features</p>
+<p>### Create Budget</p>
+<p>When you first open the app, a default budget is created for the current month. You can create additional budgets by:</p>
+<ol class="arabic simple">
+<li><p>Opening the sidebar menu</p></li>
+<li><p>Selecting a different month/year</p></li>
+<li><p>A new budget is automatically created</p></li>
+</ol>
+<p>### Budget Periods</p>
+<ul class="simple">
+<li><p><strong>Monthly Budgets</strong>: Each budget covers a specific month and year</p></li>
+<li><p><strong>Multiple Budgets</strong>: Support for multiple budgets per period</p></li>
+<li><p><strong>Navigation</strong>: Easy switching between periods via sidebar</p></li>
+</ul>
+<p>### Budget Actions</p>
+<p>From the home page app bar:</p>
+<ul class="simple">
+<li><p><strong>Copy Budget</strong>: Duplicate an existing budget to another period</p></li>
+<li><p><strong>Convert Currency</strong>: Convert budget to a different currency</p></li>
+<li><p><strong>Delete Budget</strong>: Remove a budget (with confirmation)</p></li>
+</ul>
+<p>### Budget Fields</p>
+<p>Each budget contains:</p>
+<ul class="simple">
+<li><p><strong>Name</strong>: User-defined budget name</p></li>
+<li><p><strong>Period</strong>: Month and year</p></li>
+<li><p><strong>Currency</strong>: Budget currency (for travel budgets)</p></li>
+<li><p><strong>Target Currency</strong>: For currency conversion</p></li>
+<li><p><strong>Exchange Rate</strong>: User-specified exchange rate</p></li>
+<li><p><strong>Converted Amount</strong>: Calculated converted amount</p></li>
+<li><p><strong>Transactions</strong>: Associated income and expense entries</p></li>
+</ul>
+<p>## Budget Data Model</p>
+<p><a href="#id1"><span class="problematic" id="id2">``</span></a>`
+Budget {</p>
+<blockquote>
+<div><p>id: String
+name: String
+periodMonth: int (1-12)
+periodYear: int
+isActive: bool
+currencyCode: String (ISO 4217)
+targetCurrencyCode: String?
+exchangeRate: double?
+convertedAmount: double?
+createdAt: DateTime</p>
+</div></blockquote>
+<section id="id3">
+<h1>}<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h1>
+<p>## Budget Selection</p>
+<p>The budget selector in the home page allows quick switching between:
+- Different periods
+- Different budgets within the same period</p>
+<p>## Related Features</p>
+<ul class="simple">
+<li><p>[Currency Conversion](currency_conversion.rst)</p></li>
+<li><p>[Transactions](transactions.rst)</p></li>
+<li><p>[Categories](categories.rst)</p></li>
+</ul>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Budget App</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2026, Budget App Team.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 9.1.0</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="_sources/budget_management.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
