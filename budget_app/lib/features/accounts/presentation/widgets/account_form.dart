@@ -32,6 +32,18 @@ class _AccountFormState extends State<AccountForm> {
     'CAD',
     'CHF',
     'CNY',
+    'INR',
+    'MXN',
+    'BRL',
+    'KRW',
+    'SGD',
+    'HKD',
+    'NOK',
+    'SEK',
+    'DKK',
+    'NZD',
+    'ZAR',
+    'THB',
   ];
 
   @override
