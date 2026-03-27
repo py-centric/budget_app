@@ -6,7 +6,7 @@
 
 Enable users to manage multiple bank/savings accounts with CRUD operations and transfers.
 
-**Total Tasks**: 23
+**Total Tasks**: 33
 
 **User Stories**:
 - US1: Add New Bank Account (P1) - Core functionality
@@ -53,6 +53,7 @@ Enable users to manage multiple bank/savings accounts with CRUD operations and t
 
 - [ ] T018 [P] [US3] Add updateAccount method to AccountBloc
 - [ ] T019 [US3] Add deleteAccount method to AccountBloc with confirmation
+- [ ] T019b [US3] Handle account deletion with transfers: cascade delete transfers or show warning in lib/features/accounts/presentation/bloc/account_bloc.dart
 - [ ] T020 [US3] Create edit form in AccountFormWidget (reusable for add/edit)
 - [ ] T021 [US3] Add swipe-to-delete or delete button in AccountsPage
 
@@ -66,12 +67,14 @@ Enable users to manage multiple bank/savings accounts with CRUD operations and t
 - [ ] T025 [US4] Add transfer events/states to AccountBloc
 - [ ] T026 [US4] Create TransferFormWidget in lib/features/accounts/presentation/widgets/transfer_form.dart
 - [ ] T027 [US4] Implement transfer logic that updates both account balances atomically
+- [ ] T027b [US4] Add validation: prevent transfer exceeding source account balance in lib/features/accounts/presentation/bloc/account_bloc.dart
 
 ## Phase 7: Polish & Cross-Cutting
 
 - [ ] T028 Run flutter analyze to ensure no warnings
 - [ ] T029 Verify flutter test passes (if tests exist)
 - [ ] T030 Run flutter build apk --debug to verify compilation
+- [ ] T030b Run flutter run to verify app launches correctly on target device (constitution §9)
 - [ ] T031 Update AGENTS.md with new feature context
 
 ## Dependency Graph
