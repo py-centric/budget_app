@@ -6,7 +6,7 @@
 
 Add searchable currency selector widget and update existing currency fields to use it.
 
-**Total Tasks**: 9
+**Total Tasks**: 11
 
 **User Stories**:
 - US1: Search Currency by Code (P1) - Filter by currency code
@@ -15,7 +15,7 @@ Add searchable currency selector widget and update existing currency fields to u
 
 ## Phase 1: Setup
 
-- [ ] T001 Define shared currency list with code and name in lib/core/constants/app_constants.dart or create lib/shared/currencies.dart
+- [ ] T001 Define shared currency list with code and name mapping in lib/shared/currencies.dart (includes FR-005: shows all when cleared)
 
 ## Phase 2: Foundational
 
@@ -43,12 +43,14 @@ Add searchable currency selector widget and update existing currency fields to u
 
 ## Phase 6: Integration
 
-- [ ] T008 Update account_form.dart to use CurrencySelector
-- [ ] T009 Update duplication_dialog.dart to use CurrencySelector
+- [ ] T008 Update account_form.dart to use CurrencySelector in lib/features/accounts/presentation/widgets/account_form.dart
+- [ ] T009 Update duplication_dialog.dart to use CurrencySelector in lib/features/budget/presentation/widgets/duplication_dialog.dart
+- [ ] T009b Update currency_conversion_dialog.dart to use CurrencySelector in lib/features/budget/presentation/widgets/currency_conversion_dialog.dart
 
 ## Phase 7: Polish
 
-- [ ] T010 Run flutter analyze to verify no warnings
+- [ ] T010 [US3] Implement clear search functionality (shows all currencies when cleared) - handles FR-005
+- [ ] T011 Run flutter analyze to verify no warnings
 
 ## Dependency Graph
 
