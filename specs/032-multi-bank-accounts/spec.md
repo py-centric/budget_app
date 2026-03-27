@@ -69,9 +69,9 @@ As a user, I want to transfer money between my accounts so that I can move funds
 
 ### Edge Cases
 
-- What happens when the user tries to delete an account that has transactions linked to it?
-- How does the system handle zero-balance accounts?
-- What happens if the user tries to transfer more than the available balance?
+- **Delete account with transfers**: Transfers are cascade deleted via foreign key constraint (ON DELETE CASCADE)
+- **Zero-balance accounts**: Allowed - users may have accounts with $0 balance
+- **Transfer exceeds balance**: System MUST prevent transfer and show error message
 
 ## Requirements
 

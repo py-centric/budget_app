@@ -47,7 +47,7 @@ Represents a money transfer between two accounts.
 
 ### Account States
 - Active: Default state when created
-- Deleted: Soft delete when user removes account
+- Deleted: Hard delete with CASCADE removes associated transfers (see FK constraint)
 
 ### Transfer States
 - Created: Initial state
