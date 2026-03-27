@@ -46,8 +46,10 @@ import 'features/emergency_fund/presentation/bloc/emergency_fund_bloc.dart';
 import 'features/emergency_fund/presentation/bloc/emergency_fund_event.dart';
 import 'features/business_tools/domain/repositories/business_repository.dart';
 import 'features/business_tools/data/repositories/business_repository_impl.dart';
-import 'features/business_tools/presentation/bloc/business_bloc.dart';
-import 'features/business_tools/presentation/bloc/business_event.dart';
+import 'features/accounts/domain/repositories/account_repository.dart';
+import 'features/accounts/data/repositories/account_repository_impl.dart';
+import 'features/accounts/presentation/bloc/account_bloc.dart';
+import 'features/accounts/presentation/bloc/account_event.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -67,6 +69,7 @@ void main() async {
   final financialRepository = FinancialRepositoryImpl(localDatabase);
   final emergencyFundRepository = EmergencyFundRepositoryImpl(localDatabase);
   final businessRepository = BusinessRepositoryImpl(localDatabase);
+  final accountRepository = AccountRepositoryImpl(localDatabase);
 
   runApp(
     MultiRepositoryProvider(
@@ -83,6 +86,9 @@ void main() async {
         RepositoryProvider<AppLockRepository>(
           create: (context) =>
               AppLockRepository(authService: AuthServiceImpl()),
+        ),
+        RepositoryProvider<AccountRepository>(
+          create: (context) => accountRepository,
         ),
       ],
       child: BudgetApp(
@@ -204,8 +210,9 @@ class BudgetApp extends StatelessWidget {
                 ..add(LoadEmergencyFund()),
         ),
         BlocProvider(
-          create: (_) =>
-              BusinessBloc(businessRepository)..add(LoadBusinessData()),
+          create: (context) =>
+              AccountBloc(context.read<AccountRepository>())
+                ..add(LoadAccounts()),
         ),
       ],
       child: BlocBuilder<SettingsBloc, SettingsState>(

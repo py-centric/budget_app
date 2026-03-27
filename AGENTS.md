@@ -17,6 +17,8 @@ Auto-generated from all feature plans. Last updated: 2026-03-24
 - N/A (CI/CD infrastructure - no persistent data) (029-github-actions-ci)
 - Dart 3.x + Flutter 3.x, flutter_bloc, sqflite, flutter_secure_storage (existing) (030-budget-reset-options)
 - SQLite database via sqflite (existing - needs cascade delete verification) (030-budget-reset-options)
+- Dart 3.x + flutter_bloc, sqflite, equatable, path_provider (032-multi-bank-accounts)
+- SQLite (sqflite) - local database (032-multi-bank-accounts)
 
 - Dart 3.x (Flutter 3.x) + flutter_bloc, sqflite, flutter_secure_storage, fl_chart (for pie charts) (023-invoice-dashboard-and-payables)
 
@@ -36,9 +38,9 @@ tests/
 Dart 3.x (Flutter 3.x): Follow standard conventions
 
 ## Recent Changes
+- 032-multi-bank-accounts: Added Dart 3.x + flutter_bloc, sqflite, equatable, path_provider
 - 030-budget-reset-options: Added Dart 3.x + Flutter 3.x, flutter_bloc, sqflite, flutter_secure_storage (existing)
 - 029-github-actions-ci: Added YAML (GitHub Actions workflow syntax), Flutter SDK 3.x (pinned stable version) + GitHub Actions (ubuntu-latest runner), Flutter SDK, pub.dev packages
-- 028-db-backup: Added Dart 3.x (Flutter 3.x) + sqflite (existing), path_provider (existing), share_plus (existing from export feature)
 
 
 <!-- MANUAL ADDITIONS START -->
