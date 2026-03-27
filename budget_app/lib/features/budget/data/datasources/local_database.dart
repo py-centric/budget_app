@@ -415,6 +415,41 @@ class LocalDatabase {
       await db.execute('ALTER TABLE budgets ADD COLUMN exchange_rate REAL');
       await db.execute('ALTER TABLE budgets ADD COLUMN converted_amount REAL');
     }
+
+    if (oldVersion < 17) {
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS accounts (
+          id TEXT PRIMARY KEY,
+          name TEXT NOT NULL,
+          type TEXT NOT NULL,
+          balance REAL NOT NULL DEFAULT 0.0,
+          currency TEXT NOT NULL DEFAULT 'USD',
+          created_at INTEGER NOT NULL,
+          updated_at INTEGER NOT NULL
+        )
+      ''');
+
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS transfers (
+          id TEXT PRIMARY KEY,
+          from_account_id TEXT NOT NULL,
+          to_account_id TEXT NOT NULL,
+          amount REAL NOT NULL,
+          date INTEGER NOT NULL,
+          note TEXT,
+          created_at INTEGER NOT NULL,
+          FOREIGN KEY (from_account_id) REFERENCES accounts(id) ON DELETE CASCADE,
+          FOREIGN KEY (to_account_id) REFERENCES accounts(id) ON DELETE CASCADE
+        )
+      ''');
+
+      await db.execute(
+        'CREATE INDEX IF NOT EXISTS idx_transfers_from ON transfers (from_account_id)',
+      );
+      await db.execute(
+        'CREATE INDEX IF NOT EXISTS idx_transfers_to ON transfers (to_account_id)',
+      );
+    }
   }
 
   Future<void> _onCreate(Database db, int version) async {
@@ -686,6 +721,39 @@ class LocalDatabase {
         notes TEXT
       )
     ''');
+
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS accounts (
+        id TEXT PRIMARY KEY,
+        name TEXT NOT NULL,
+        type TEXT NOT NULL,
+        balance REAL NOT NULL DEFAULT 0.0,
+        currency TEXT NOT NULL DEFAULT 'USD',
+        created_at INTEGER NOT NULL,
+        updated_at INTEGER NOT NULL
+      )
+    ''');
+
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS transfers (
+        id TEXT PRIMARY KEY,
+        from_account_id TEXT NOT NULL,
+        to_account_id TEXT NOT NULL,
+        amount REAL NOT NULL,
+        date INTEGER NOT NULL,
+        note TEXT,
+        created_at INTEGER NOT NULL,
+        FOREIGN KEY (from_account_id) REFERENCES accounts(id) ON DELETE CASCADE,
+        FOREIGN KEY (to_account_id) REFERENCES accounts(id) ON DELETE CASCADE
+      )
+    ''');
+
+    await db.execute(
+      'CREATE INDEX IF NOT EXISTS idx_transfers_from ON transfers (from_account_id)',
+    );
+    await db.execute(
+      'CREATE INDEX IF NOT EXISTS idx_transfers_to ON transfers (to_account_id)',
+    );
   }
 
   String _getCategoryIcon(String category) {
