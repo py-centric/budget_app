@@ -4,6 +4,7 @@ import 'package:uuid/uuid.dart';
 import 'package:budget_app/features/accounts/domain/entities/account.dart';
 import 'package:budget_app/features/accounts/presentation/bloc/account_bloc.dart';
 import 'package:budget_app/features/accounts/presentation/bloc/account_event.dart';
+import 'package:budget_app/shared/widgets/currency_selector.dart';
 
 class AccountForm extends StatefulWidget {
   final Account? account;
@@ -22,29 +23,6 @@ class _AccountFormState extends State<AccountForm> {
   late String _currency;
 
   bool get isEditing => widget.account != null;
-
-  final List<String> _currencies = [
-    'USD',
-    'EUR',
-    'GBP',
-    'JPY',
-    'AUD',
-    'CAD',
-    'CHF',
-    'CNY',
-    'INR',
-    'MXN',
-    'BRL',
-    'KRW',
-    'SGD',
-    'HKD',
-    'NOK',
-    'SEK',
-    'DKK',
-    'NZD',
-    'ZAR',
-    'THB',
-  ];
 
   @override
   void initState() {
@@ -138,20 +116,29 @@ class _AccountFormState extends State<AccountForm> {
               },
             ),
             const SizedBox(height: 16),
-            DropdownButtonFormField<String>(
-              value: _currency,
-              decoration: const InputDecoration(
-                labelText: 'Currency',
-                border: OutlineInputBorder(),
-              ),
-              items: _currencies.map((currency) {
-                return DropdownMenuItem(value: currency, child: Text(currency));
-              }).toList(),
-              onChanged: (value) {
-                if (value != null) {
-                  setState(() => _currency = value);
+            InkWell(
+              onTap: () async {
+                final currency = await showCurrencySelector(
+                  context,
+                  initialValue: _currency,
+                );
+                if (currency != null) {
+                  setState(() => _currency = currency.code);
                 }
               },
+              child: InputDecorator(
+                decoration: const InputDecoration(
+                  labelText: 'Currency',
+                  border: OutlineInputBorder(),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(_currency),
+                    const Icon(Icons.arrow_drop_down),
+                  ],
+                ),
+              ),
             ),
             const SizedBox(height: 24),
             FilledButton(
