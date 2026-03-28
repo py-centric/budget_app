@@ -89,22 +89,27 @@ class _CurrencyConversionDialogState extends State<CurrencyConversionDialog> {
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
                 const SizedBox(height: 16),
-                DropdownButtonFormField<String>(
-                  value: _selectedTargetCurrency,
+                InputDecorator(
                   decoration: const InputDecoration(labelText: 'Convert to'),
-                  items: availableTargets.map((currency) {
-                    return DropdownMenuItem(
-                      value: currency['code'],
-                      child: Text(
-                        '${currency['symbol']} ${currency['code']} - ${currency['name']}',
-                      ),
-                    );
-                  }).toList(),
-                  onChanged: (val) {
-                    if (val != null) {
-                      setState(() => _selectedTargetCurrency = val);
-                    }
-                  },
+                  child: DropdownButton<String>(
+                    value: _selectedTargetCurrency,
+                    isDense: true,
+                    isExpanded: true,
+                    underline: const SizedBox(),
+                    items: availableTargets.map((currency) {
+                      return DropdownMenuItem(
+                        value: currency['code'],
+                        child: Text(
+                          '${currency['symbol']} ${currency['code']} - ${currency['name']}',
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: (val) {
+                      if (val != null) {
+                        setState(() => _selectedTargetCurrency = val);
+                      }
+                    },
+                  ),
                 ),
                 const SizedBox(height: 16),
                 TextFormField(

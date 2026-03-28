@@ -76,23 +76,28 @@ class _AccountFormState extends State<AccountForm> {
               },
             ),
             const SizedBox(height: 16),
-            DropdownButtonFormField<AccountType>(
-              value: _selectedType,
+            InputDecorator(
               decoration: const InputDecoration(
                 labelText: 'Account Type',
                 border: OutlineInputBorder(),
               ),
-              items: AccountType.values.map((type) {
-                return DropdownMenuItem(
-                  value: type,
-                  child: Text(type.displayName),
-                );
-              }).toList(),
-              onChanged: (value) {
-                if (value != null) {
-                  setState(() => _selectedType = value);
-                }
-              },
+              child: DropdownButton<AccountType>(
+                value: _selectedType,
+                isDense: true,
+                isExpanded: true,
+                underline: const SizedBox(),
+                items: AccountType.values.map((type) {
+                  return DropdownMenuItem(
+                    value: type,
+                    child: Text(type.displayName),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  if (value != null) {
+                    setState(() => _selectedType = value);
+                  }
+                },
+              ),
             ),
             const SizedBox(height: 16),
             TextFormField(
