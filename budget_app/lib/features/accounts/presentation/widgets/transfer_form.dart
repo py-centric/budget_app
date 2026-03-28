@@ -86,60 +86,52 @@ class _TransferFormState extends State<TransferForm> {
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
                 const SizedBox(height: 16),
-                DropdownButtonFormField<Account>(
-                  value: _fromAccount,
+                InputDecorator(
                   decoration: const InputDecoration(
                     labelText: 'From Account',
                     border: OutlineInputBorder(),
                   ),
-                  items: accounts.map((account) {
-                    return DropdownMenuItem(
-                      value: account,
-                      child: Text(
-                        '${account.name} (\$${account.balance.toStringAsFixed(2)})',
-                      ),
-                    );
-                  }).toList(),
-                  onChanged: (value) {
-                    setState(() => _fromAccount = value);
-                  },
-                  validator: (value) {
-                    if (value == null) {
-                      return 'Please select an account';
-                    }
-                    if (value.id == _toAccount?.id) {
-                      return 'From and To accounts must be different';
-                    }
-                    return null;
-                  },
+                  child: DropdownButton<Account>(
+                    value: _fromAccount,
+                    isDense: true,
+                    isExpanded: true,
+                    underline: const SizedBox(),
+                    items: accounts.map((account) {
+                      return DropdownMenuItem(
+                        value: account,
+                        child: Text(
+                          '${account.name} (\$${account.balance.toStringAsFixed(2)})',
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      setState(() => _fromAccount = value);
+                    },
+                  ),
                 ),
                 const SizedBox(height: 16),
-                DropdownButtonFormField<Account>(
-                  value: _toAccount,
+                InputDecorator(
                   decoration: const InputDecoration(
                     labelText: 'To Account',
                     border: OutlineInputBorder(),
                   ),
-                  items: accounts.map((account) {
-                    return DropdownMenuItem(
-                      value: account,
-                      child: Text(
-                        '${account.name} (\$${account.balance.toStringAsFixed(2)})',
-                      ),
-                    );
-                  }).toList(),
-                  onChanged: (value) {
-                    setState(() => _toAccount = value);
-                  },
-                  validator: (value) {
-                    if (value == null) {
-                      return 'Please select an account';
-                    }
-                    if (value.id == _fromAccount?.id) {
-                      return 'From and To accounts must be different';
-                    }
-                    return null;
-                  },
+                  child: DropdownButton<Account>(
+                    value: _toAccount,
+                    isDense: true,
+                    isExpanded: true,
+                    underline: const SizedBox(),
+                    items: accounts.map((account) {
+                      return DropdownMenuItem(
+                        value: account,
+                        child: Text(
+                          '${account.name} (\$${account.balance.toStringAsFixed(2)})',
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      setState(() => _toAccount = value);
+                    },
+                  ),
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
