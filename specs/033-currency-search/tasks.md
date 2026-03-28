@@ -15,42 +15,42 @@ Add searchable currency selector widget and update existing currency fields to u
 
 ## Phase 1: Setup
 
-- [ ] T001 Define shared currency list with code and name mapping in lib/shared/currencies.dart (includes FR-005: shows all when cleared)
+- [X] T001 Define shared currency list with code and name mapping in lib/shared/currencies.dart (includes FR-005: shows all when cleared)
 
 ## Phase 2: Foundational
 
-- [ ] T002 [P] Create reusable CurrencySelector widget in lib/shared/widgets/currency_selector.dart
+- [X] T002 [P] Create reusable CurrencySelector widget in lib/shared/widgets/currency_selector.dart
 
 ## Phase 3: User Story 1 - Search Currency by Code (P1)
 
 **Independent Test**: Type "USD" in search box and verify USD appears in results
 
-- [ ] T003 [US1] Implement search filtering by currency code in CurrencySelector
-- [ ] T004 [US1] Make search case-insensitive for code matching
+- [X] T003 [US1] Implement search filtering by currency code in CurrencySelector
+- [X] T004 [US1] Make search case-insensitive for code matching
 
 ## Phase 4: User Story 2 - Search Currency by Name (P1)
 
 **Independent Test**: Type "Dollar" and verify USD, CAD, AUD appear
 
-- [ ] T005 [US2] Add currency name to searchable fields in CurrencySelector
+- [X] T005 [US2] Add currency name to searchable fields in CurrencySelector
 
 ## Phase 5: User Story 3 - Select Currency from Results (P1)
 
 **Independent Test**: Search, select currency, verify it's saved
 
-- [ ] T006 [US3] Implement currency selection and callback in CurrencySelector
-- [ ] T007 [US3] Handle "No results" empty state
+- [X] T006 [US3] Implement currency selection and callback in CurrencySelector
+- [X] T007 [US3] Handle "No results" empty state
 
 ## Phase 6: Integration
 
-- [ ] T008 Update account_form.dart to use CurrencySelector in lib/features/accounts/presentation/widgets/account_form.dart
+- [X] T008 Update account_form.dart to use CurrencySelector in lib/features/accounts/presentation/widgets/account_form.dart
 - [ ] T009 Update duplication_dialog.dart to use CurrencySelector in lib/features/budget/presentation/widgets/duplication_dialog.dart
 - [ ] T009b Update currency_conversion_dialog.dart to use CurrencySelector in lib/features/budget/presentation/widgets/currency_conversion_dialog.dart
 
 ## Phase 7: Polish
 
-- [ ] T010 [US3] Implement clear search functionality (shows all currencies when cleared) - handles FR-005
-- [ ] T011 Run flutter analyze to verify no warnings
+- [X] T010 [US3] Implement clear search functionality (shows all currencies when cleared) - handles FR-005
+- [X] T011 Run flutter analyze to verify no warnings
 
 ## Dependency Graph
 
