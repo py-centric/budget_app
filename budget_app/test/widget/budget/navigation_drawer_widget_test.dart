@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:intl/intl.dart';
 import 'package:budget_app/features/budget/domain/entities/budget_period.dart';
 import 'package:budget_app/features/budget/presentation/bloc/navigation_bloc.dart';
 import 'package:budget_app/features/budget/presentation/widgets/navigation_drawer_widget.dart';
@@ -51,8 +50,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Budget App'), findsOneWidget);
-
-    final monthName = DateFormat('MMMM').format(currentPeriod.startDate);
-    expect(find.text(monthName), findsOneWidget);
+    expect(find.text('Manage Categories'), findsOneWidget);
+    expect(find.text('Projections'), findsOneWidget);
   });
 }
