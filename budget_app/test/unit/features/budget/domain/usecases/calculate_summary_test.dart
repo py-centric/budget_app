@@ -2,25 +2,56 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:budget_app/features/budget/domain/usecases/calculate_summary.dart';
 import 'package:budget_app/features/budget/domain/repositories/budget_repository.dart';
+import 'package:budget_app/features/budget/domain/repositories/recurring_repository.dart';
 import 'package:budget_app/features/budget/domain/entities/income_entry.dart';
 import 'package:budget_app/features/budget/domain/entities/expense_entry.dart';
 import 'package:budget_app/features/budget/domain/entities/budget_period.dart';
+import 'package:budget_app/features/budget/domain/entities/recurring_transaction.dart';
+import 'package:budget_app/features/budget/domain/entities/recurring_override.dart';
 
 class MockBudgetRepository extends Mock implements BudgetRepository {}
+
+class MockRecurringRepository extends Mock implements RecurringRepository {}
 
 class FakeBudgetPeriod extends Fake implements BudgetPeriod {}
 
 void main() {
   late CalculateSummary usecase;
   late MockBudgetRepository mockRepository;
+  late MockRecurringRepository mockRecurringRepository;
 
   setUpAll(() {
     registerFallbackValue(const BudgetPeriod(year: 2024, month: 1));
+    registerFallbackValue(
+      RecurringTransaction(
+        id: 'test',
+        budgetId: 'test',
+        type: 'INCOME',
+        amount: 100,
+        categoryId: 'cat',
+        description: 'test',
+        startDate: DateTime.now(),
+        interval: 1,
+        unit: RecurrenceUnit.months,
+      ),
+    );
   });
 
   setUp(() {
     mockRepository = MockBudgetRepository();
-    usecase = CalculateSummary(mockRepository);
+    mockRecurringRepository = MockRecurringRepository();
+    usecase = CalculateSummary(
+      mockRepository,
+      recurringRepository: mockRecurringRepository,
+    );
+
+    // Default stubs for recurring repository to avoid null errors
+    when(
+      () => mockRecurringRepository.getAllRecurringTransactions(),
+    ).thenAnswer((_) async => []);
+    when(
+      () => mockRecurringRepository.getAllOverrides(),
+    ).thenAnswer((_) async => []);
   });
 
   group('CalculateSummary', () {
@@ -181,6 +212,91 @@ void main() {
       expect(result.totalIncome, 0.0);
       expect(result.totalExpenses, 0.0);
       expect(result.balance, 0.0);
+    });
+
+    test('should include recurring transactions in summary', () async {
+      final incomes = <IncomeEntry>[];
+      final expenses = <ExpenseEntry>[];
+      final recurringTemplates = [
+        RecurringTransaction(
+          id: 'rec-1',
+          budgetId: 'b-1',
+          type: 'INCOME',
+          amount: 500.0,
+          categoryId: 'cat-1',
+          description: 'Monthly salary',
+          startDate: DateTime(2024, 1, 1),
+          interval: 1,
+          unit: RecurrenceUnit.months,
+        ),
+      ];
+
+      when(
+        () => mockRepository.getAllIncome(),
+      ).thenAnswer((_) async => incomes);
+      when(
+        () => mockRepository.getAllExpenses(),
+      ).thenAnswer((_) async => expenses);
+      when(
+        () => mockRecurringRepository.getAllRecurringTransactions(),
+      ).thenAnswer((_) async => recurringTemplates);
+      when(
+        () => mockRecurringRepository.getAllOverrides(),
+      ).thenAnswer((_) async => []);
+
+      final result = await usecase.call();
+
+      expect(result.incomeEntries.length, greaterThan(0));
+      expect(result.totalPotentialIncome, greaterThan(0));
+    });
+
+    test('should filter recurring by budgetId', () async {
+      final incomes = <IncomeEntry>[];
+      final expenses = <ExpenseEntry>[];
+      final recurringTemplates = [
+        RecurringTransaction(
+          id: 'rec-1',
+          budgetId: 'b-1',
+          type: 'INCOME',
+          amount: 500.0,
+          categoryId: 'cat-1',
+          description: 'Monthly salary',
+          startDate: DateTime(2024, 1, 1),
+          interval: 1,
+          unit: RecurrenceUnit.months,
+        ),
+        RecurringTransaction(
+          id: 'rec-2',
+          budgetId: 'b-2',
+          type: 'INCOME',
+          amount: 1000.0,
+          categoryId: 'cat-1',
+          description: 'Other income',
+          startDate: DateTime(2024, 1, 1),
+          interval: 1,
+          unit: RecurrenceUnit.months,
+        ),
+      ];
+
+      when(
+        () => mockRepository.getIncomeForBudget('b-1'),
+      ).thenAnswer((_) async => incomes);
+      when(
+        () => mockRepository.getExpensesForBudget('b-1'),
+      ).thenAnswer((_) async => expenses);
+      when(
+        () => mockRecurringRepository.getAllRecurringTransactions(),
+      ).thenAnswer((_) async => recurringTemplates);
+      when(
+        () => mockRecurringRepository.getAllOverrides(),
+      ).thenAnswer((_) async => []);
+
+      final result = await usecase.call(budgetId: 'b-1');
+
+      final recurringIncome = result.incomeEntries.where(
+        (e) => e.id == 'rec-1',
+      );
+      expect(recurringIncome.isNotEmpty, true);
     });
   });
 

@@ -135,7 +135,10 @@ void main() {
       await tester.tap(find.widgetWithText(ElevatedButton, 'Add Expense'));
       await tester.pumpAndSettle();
 
-      expect(find.text('Please enter a valid positive amount'), findsOneWidget);
+      expect(
+        find.text('Please enter a valid positive amount or expression'),
+        findsOneWidget,
+      );
     });
 
     testWidgets('should show validation error for no category selected', (

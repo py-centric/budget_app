@@ -4,7 +4,9 @@ import 'package:budget_app/features/budget/presentation/widgets/slidable_transac
 
 void main() {
   group('SlidableTransactionItem', () {
-    testWidgets('calls onDelete when delete action is tapped', (WidgetTester tester) async {
+    testWidgets('calls onDelete when delete action is tapped', (
+      WidgetTester tester,
+    ) async {
       bool deleteCalled = false;
 
       await tester.pumpWidget(
@@ -39,7 +41,9 @@ void main() {
       expect(deleteCalled, isTrue);
     });
 
-    testWidgets('calls onEdit when edit action is tapped', (WidgetTester tester) async {
+    testWidgets('calls onEdit when edit action is tapped', (
+      WidgetTester tester,
+    ) async {
       bool editCalled = false;
 
       await tester.pumpWidget(
@@ -67,6 +71,58 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(editCalled, isTrue);
+    });
+
+    testWidgets('calls onTap when widget is tapped', (
+      WidgetTester tester,
+    ) async {
+      bool tapCalled = false;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: SlidableTransactionItem(
+              onTap: () {
+                tapCalled = true;
+              },
+              onEdit: () {},
+              onDelete: () {},
+              child: const ListTile(title: Text('Transaction')),
+            ),
+          ),
+        ),
+      );
+
+      await tester.tap(find.text('Transaction'));
+      await tester.pumpAndSettle();
+
+      expect(tapCalled, isTrue);
+    });
+
+    testWidgets('calls onTap even without onEdit callback', (
+      WidgetTester tester,
+    ) async {
+      bool tapCalled = false;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: SlidableTransactionItem(
+              onTap: () {
+                tapCalled = true;
+              },
+              onEdit: () {},
+              onDelete: () {},
+              child: const ListTile(title: Text('Transaction')),
+            ),
+          ),
+        ),
+      );
+
+      await tester.tap(find.text('Transaction'));
+      await tester.pumpAndSettle();
+
+      expect(tapCalled, isTrue);
     });
   });
 }
