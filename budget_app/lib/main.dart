@@ -122,7 +122,10 @@ class BudgetApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final addIncomeUseCase = AddIncome(repository);
     final addExpenseUseCase = AddExpense(repository);
-    final calculateSummaryUseCase = CalculateSummary(repository);
+    final calculateSummaryUseCase = CalculateSummary(
+      repository,
+      recurringRepository: recurringRepository,
+    );
     final getAvailablePeriodsUseCase = GetAvailablePeriods(repository);
     final deleteEntryUseCase = DeleteEntry(repository);
     final updateEntryUseCase = UpdateEntry(repository);
@@ -231,10 +234,20 @@ class BudgetApp extends StatelessWidget {
 
           return BlocBuilder<AppLockBloc, AppLockState>(
             builder: (context, appLockState) {
-              if (appLockState.settings.isEnabled &&
+              // Show lock screen ONLY if lock is actually enabled and user hasn't authenticated yet
+              // Don't show lock screen if:
+              // - Lock is not enabled
+              // - Status is loaded (initial load complete, lock not enabled)
+              // - Status is initial (still loading)
+              // - Status is authenticated
+              final shouldShowLock =
+                  appLockState.settings.isEnabled &&
                   appLockState.status != AppLockStatus.authenticated &&
                   appLockState.status != AppLockStatus.loaded &&
-                  appLockState.status != AppLockStatus.initial) {
+                  appLockState.status != AppLockStatus.initial &&
+                  appLockState.status != AppLockStatus.loading;
+
+              if (shouldShowLock) {
                 return MaterialApp(
                   title: 'Budget App',
                   debugShowCheckedModeBanner: false,
