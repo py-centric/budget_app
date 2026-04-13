@@ -33,7 +33,7 @@ class AuthServiceImpl implements AuthService {
         localizedReason: 'Authenticate to access Budget App',
         options: const AuthenticationOptions(
           stickyAuth: true,
-          biometricOnly: true,
+          biometricOnly: false, // Allow fallback to PIN
         ),
       );
     } catch (e) {
@@ -74,8 +74,19 @@ class AppLockRepository {
     final isBiometricAvailable = await _authService.isBiometricAvailable();
     final hasPin = await _authService.hasPin();
 
+    // Lock is only enabled if user has actually set up a PIN
+    // This prevents the app from launching locked when user hasn't set anything up
+    if (!hasPin) {
+      return const AppLockSettings(
+        isEnabled: false,
+        authMethod: AuthMethod.pin,
+      );
+    }
+
+    // User has PIN set up - lock is enabled
+    // Use biometrics if available, otherwise PIN
     return AppLockSettings(
-      isEnabled: hasPin || isBiometricAvailable,
+      isEnabled: true,
       authMethod: isBiometricAvailable ? AuthMethod.biometrics : AuthMethod.pin,
     );
   }
@@ -91,13 +102,18 @@ class AppLockRepository {
   }
 
   Future<bool> verifyAuth(String? pin) async {
-    if (pin != null) {
+    if (pin != null && pin.isNotEmpty) {
       return await _authService.verifyPin(pin);
     }
+    // If no PIN provided, try biometrics
     return await _authService.authenticateWithBiometrics();
   }
 
   Future<bool> isBiometricAvailable() async {
     return await _authService.isBiometricAvailable();
+  }
+
+  Future<bool> hasPin() async {
+    return await _authService.hasPin();
   }
 }

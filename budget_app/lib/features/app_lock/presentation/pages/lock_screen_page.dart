@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../domain/entities/app_lock_settings.dart';
 import '../bloc/app_lock_bloc.dart';
 import '../bloc/app_lock_event.dart';
 import '../bloc/app_lock_state.dart';
@@ -18,11 +17,17 @@ class LockScreenPage extends StatefulWidget {
 
 class _LockScreenPageState extends State<LockScreenPage>
     with WidgetsBindingObserver {
+  bool _showPinInput = false;
+  bool _hasAttemptedBiometric = false;
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    _tryBiometric();
+    // Delay biometrics attempt slightly to ensure bloc is ready
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _tryBiometric();
+    });
   }
 
   @override
@@ -41,10 +46,28 @@ class _LockScreenPageState extends State<LockScreenPage>
   }
 
   void _tryBiometric() {
+    // Only try biometrics once per page load
+    if (_hasAttemptedBiometric) return;
+    _hasAttemptedBiometric = true;
+
     final state = context.read<AppLockBloc>().state;
-    if (state.settings.authMethod == AuthMethod.biometrics) {
+    // Try biometrics if available - this will show the native biometric prompt
+    if (state.isBiometricAvailable) {
       context.read<AppLockBloc>().add(AppLockAuthenticateWithBiometrics());
     }
+  }
+
+  void _switchToPin() {
+    setState(() {
+      _showPinInput = true;
+    });
+  }
+
+  void _switchToBiometrics() {
+    setState(() {
+      _showPinInput = false;
+    });
+    _tryBiometric();
   }
 
   @override
@@ -55,6 +78,12 @@ class _LockScreenPageState extends State<LockScreenPage>
           widget.onUnlocked();
         } else if (state.status == AppLockStatus.error &&
             state.errorMessage != null) {
+          // If biometrics fails, show PIN option
+          if (state.errorMessage?.contains('Biometric') ?? false) {
+            setState(() {
+              _showPinInput = true;
+            });
+          }
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(state.errorMessage!),
@@ -89,32 +118,38 @@ class _LockScreenPageState extends State<LockScreenPage>
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        state.settings.authMethod == AuthMethod.biometrics
-                            ? 'Use biometrics to unlock'
-                            : 'Enter PIN to unlock',
+                        _showPinInput
+                            ? 'Enter your PIN to unlock'
+                            : 'Use biometrics or PIN to unlock',
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           color: Theme.of(context).colorScheme.onSurfaceVariant,
                         ),
+                        textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 32),
-                      if (state.settings.authMethod == AuthMethod.pin)
+                      // Show PIN input by default, or if biometrics failed
+                      if (_showPinInput || !state.isBiometricAvailable)
                         _buildPinInput()
                       else
                         BiometricButtonWidget(
                           onPressed: _tryBiometric,
                           isAvailable: state.isBiometricAvailable,
                         ),
-                      if (state.settings.authMethod == AuthMethod.biometrics &&
-                          state.isBiometricAvailable) ...[
+                      // Show toggle between PIN and biometrics if biometrics available
+                      if (state.isBiometricAvailable) ...[
                         const SizedBox(height: 16),
-                        TextButton(
-                          onPressed: () {
-                            context.read<AppLockBloc>().add(
-                              const AppLockAuthenticate(),
-                            );
-                          },
-                          child: const Text('Use PIN instead'),
-                        ),
+                        if (_showPinInput)
+                          TextButton.icon(
+                            onPressed: _switchToBiometrics,
+                            icon: const Icon(Icons.fingerprint),
+                            label: const Text('Use Biometrics'),
+                          )
+                        else
+                          TextButton.icon(
+                            onPressed: _switchToPin,
+                            icon: const Icon(Icons.pin),
+                            label: const Text('Use PIN instead'),
+                          ),
                       ],
                     ],
                   );

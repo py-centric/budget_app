@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:file_picker/file_picker.dart';
-import '../../../app_lock/data/repositories/app_lock_repository_impl.dart';
 import '../../../app_lock/domain/entities/app_lock_settings.dart';
 import '../../../app_lock/presentation/bloc/app_lock_bloc.dart';
 import '../../../app_lock/presentation/bloc/app_lock_event.dart';
@@ -174,15 +173,8 @@ class SettingsPage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 16),
-              BlocProvider(
-                create: (context) =>
-                    AppLockBloc(
-                        repository: AppLockRepository(
-                          authService: AuthServiceImpl(),
-                        ),
-                      )
-                      ..add(AppLockLoadSettings())
-                      ..add(AppLockCheckBiometricAvailability()),
+              BlocProvider.value(
+                value: context.read<AppLockBloc>(),
                 child: const _AppLockSection(),
               ),
               const SizedBox(height: 16),
@@ -245,11 +237,14 @@ class _AppLockSection extends StatelessWidget {
                 ),
                 if (state.settings.isEnabled) ...[
                   const SizedBox(height: 8),
-                  Text(
-                    'Tap to ${state.settings.authMethod == AuthMethod.biometrics ? "change to PIN" : "change to biometrics"}',
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.primary,
-                      fontSize: 12,
+                  InkWell(
+                    onTap: () => _showChangeMethodDialog(context, state),
+                    child: Text(
+                      'Tap to ${state.settings.authMethod == AuthMethod.biometrics ? "change to PIN" : "change to biometrics"}',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.primary,
+                        fontSize: 12,
+                      ),
                     ),
                   ),
                 ],
@@ -278,15 +273,52 @@ class _AppLockSection extends StatelessWidget {
   void _showDisableDialog(BuildContext context) {
     showDialog(
       context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: const Text('Disable App Lock'),
-        content: const Text('Enter your PIN to disable app lock:'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(dialogContext).pop(),
-            child: const Text('Cancel'),
+      builder: (dialogContext) {
+        final pinController = TextEditingController();
+        return AlertDialog(
+          title: const Text('Disable App Lock'),
+          content: TextField(
+            controller: pinController,
+            obscureText: true,
+            keyboardType: TextInputType.number,
+            maxLength: 6,
+            decoration: const InputDecoration(
+              labelText: 'Enter PIN',
+              hintText: '6-digit PIN',
+            ),
           ),
-        ],
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                if (pinController.text.length == 6) {
+                  context.read<AppLockBloc>().add(
+                    AppLockDisable(pin: pinController.text),
+                  );
+                  Navigator.of(dialogContext).pop();
+                }
+              },
+              child: const Text('Disable'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showChangeMethodDialog(BuildContext context, AppLockState state) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) => LockSetupDialog(
+        isBiometricAvailable: state.isBiometricAvailable,
+        onComplete: (method, pin) {
+          context.read<AppLockBloc>().add(
+            AppLockEnable(method: method, pin: pin),
+          );
+        },
       ),
     );
   }
