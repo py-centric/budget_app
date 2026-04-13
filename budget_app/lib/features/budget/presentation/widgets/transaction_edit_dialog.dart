@@ -30,20 +30,31 @@ class _TransactionEditDialogState extends State<TransactionEditDialog> {
   late TextEditingController _descriptionController;
   late DateTime _selectedDate;
   late String? _selectedCategoryId;
+  late bool _isPotential;
 
   @override
   void initState() {
     super.initState();
     if (widget.income != null) {
-      _amountController = TextEditingController(text: widget.income!.amount.toString());
-      _descriptionController = TextEditingController(text: widget.income!.description ?? '');
+      _amountController = TextEditingController(
+        text: widget.income!.amount.toString(),
+      );
+      _descriptionController = TextEditingController(
+        text: widget.income!.description ?? '',
+      );
       _selectedDate = widget.income!.date;
       _selectedCategoryId = widget.income!.categoryId;
+      _isPotential = widget.income!.isPotential;
     } else {
-      _amountController = TextEditingController(text: widget.expense!.amount.toString());
-      _descriptionController = TextEditingController(text: widget.expense!.description ?? '');
+      _amountController = TextEditingController(
+        text: widget.expense!.amount.toString(),
+      );
+      _descriptionController = TextEditingController(
+        text: widget.expense!.description ?? '',
+      );
       _selectedDate = widget.expense!.date;
       _selectedCategoryId = widget.expense!.categoryId;
+      _isPotential = widget.expense!.isPotential;
     }
   }
 
@@ -72,7 +83,10 @@ class _TransactionEditDialogState extends State<TransactionEditDialog> {
   Widget build(BuildContext context) {
     final isIncome = widget.income != null;
     final relevantCategories = widget.categories
-        .where((c) => c.type == (isIncome ? CategoryType.income : CategoryType.expense))
+        .where(
+          (c) =>
+              c.type == (isIncome ? CategoryType.income : CategoryType.expense),
+        )
         .toList();
 
     return AlertDialog(
@@ -88,14 +102,17 @@ class _TransactionEditDialogState extends State<TransactionEditDialog> {
                 decoration: const InputDecoration(labelText: 'Amount'),
                 keyboardType: TextInputType.number,
                 validator: (value) {
-                  if (value == null || value.isEmpty) return 'Please enter an amount';
-                  if (double.tryParse(value) == null) return 'Please enter a valid number';
+                  if (value == null || value.isEmpty)
+                    return 'Please enter an amount';
+                  if (double.tryParse(value) == null)
+                    return 'Please enter a valid number';
                   return null;
                 },
               ),
               DropdownButtonFormField<String>(
                 initialValue: _selectedCategoryId,
-                decoration: const InputDecoration(labelText: 'Category'),                items: relevantCategories.map((category) {
+                decoration: const InputDecoration(labelText: 'Category'),
+                items: relevantCategories.map((category) {
                   return DropdownMenuItem(
                     value: category.id,
                     child: Text(category.name),
@@ -114,9 +131,27 @@ class _TransactionEditDialogState extends State<TransactionEditDialog> {
                 decoration: const InputDecoration(labelText: 'Description'),
               ),
               ListTile(
-                title: Text('Date: ${DateFormat('yyyy-MM-dd').format(_selectedDate)}'),
+                title: Text(
+                  'Date: ${DateFormat('yyyy-MM-dd').format(_selectedDate)}',
+                ),
                 trailing: const Icon(Icons.calendar_today),
                 onTap: () => _selectDate(context),
+              ),
+              SwitchListTile(
+                title: Text(
+                  _isPotential ? 'Potential (Not Guaranteed)' : 'Guaranteed',
+                ),
+                subtitle: Text(
+                  _isPotential
+                      ? 'Mark as guaranteed income'
+                      : 'Mark as potential (not guaranteed)',
+                ),
+                value: _isPotential,
+                onChanged: (value) {
+                  setState(() {
+                    _isPotential = value;
+                  });
+                },
               ),
             ],
           ),
@@ -132,11 +167,11 @@ class _TransactionEditDialogState extends State<TransactionEditDialog> {
                 content: 'Are you sure you want to delete this entry?',
                 onConfirm: () {
                   context.read<BudgetBloc>().add(
-                        DeleteEntryEvent(
-                          isIncome ? widget.income!.id : widget.expense!.id,
-                          isIncome ? EntryType.income : EntryType.expense,
-                        ),
-                      );
+                    DeleteEntryEvent(
+                      isIncome ? widget.income!.id : widget.expense!.id,
+                      isIncome ? EntryType.income : EntryType.expense,
+                    ),
+                  );
                   Navigator.pop(context); // Close edit dialog
                 },
               ),
@@ -160,8 +195,11 @@ class _TransactionEditDialogState extends State<TransactionEditDialog> {
                   categoryId: _selectedCategoryId,
                   description: _descriptionController.text,
                   date: _selectedDate,
+                  isPotential: _isPotential,
                 );
-                context.read<BudgetBloc>().add(UpdateIncomeEvent(updatedIncome));
+                context.read<BudgetBloc>().add(
+                  UpdateIncomeEvent(updatedIncome),
+                );
               } else {
                 final updatedExpense = ExpenseEntry(
                   id: widget.expense!.id,
@@ -170,8 +208,11 @@ class _TransactionEditDialogState extends State<TransactionEditDialog> {
                   categoryId: _selectedCategoryId!,
                   description: _descriptionController.text,
                   date: _selectedDate,
+                  isPotential: _isPotential,
                 );
-                context.read<BudgetBloc>().add(UpdateExpenseEvent(updatedExpense));
+                context.read<BudgetBloc>().add(
+                  UpdateExpenseEvent(updatedExpense),
+                );
               }
               Navigator.pop(context);
             }
