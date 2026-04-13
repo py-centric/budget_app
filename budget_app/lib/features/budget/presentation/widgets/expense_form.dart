@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/utils/currency_formatter.dart';
+import '../../../../core/utils/math_expression_parser.dart';
 import '../../../../features/settings/presentation/bloc/settings_bloc.dart';
 import '../../domain/entities/category.dart';
 import '../../domain/entities/recurring_transaction.dart';
@@ -54,7 +55,7 @@ class _ExpenseFormState extends State<ExpenseForm> {
 
   void _submit() {
     if (_formKey.currentState!.validate() && _selectedCategoryId != null) {
-      final amount = double.tryParse(_amountController.text);
+      final amount = MathExpressionParser.evaluate(_amountController.text);
       if (amount != null && amount > 0) {
         widget.onSubmit(
           '',
@@ -106,28 +107,18 @@ class _ExpenseFormState extends State<ExpenseForm> {
               BlocBuilder<SettingsBloc, SettingsState>(
                 builder: (context, settingsState) {
                   final currencyCode = settingsState.settings.currencyCode;
-                  return TextFormField(
+                  return MathTextField(
                     controller: _amountController,
-                    decoration: InputDecoration(
-                      labelText: 'Amount',
-                      prefixText:
-                          '${CurrencyFormatter.getSymbol(currencyCode: currencyCode)} ',
-                    ),
-                    keyboardType: const TextInputType.numberWithOptions(
-                      decimal: true,
-                    ),
-                    inputFormatters: [
-                      FilteringTextInputFormatter.allow(
-                        RegExp(r'^\d+\.?\d{0,2}'),
-                      ),
-                    ],
+                    labelText: 'Amount',
+                    prefixText:
+                        '${CurrencyFormatter.getSymbol(currencyCode: currencyCode)} ',
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter an amount';
                       }
-                      final amount = double.tryParse(value);
+                      final amount = MathExpressionParser.evaluate(value);
                       if (amount == null || amount <= 0) {
-                        return 'Please enter a valid positive amount';
+                        return 'Please enter a valid positive amount or expression';
                       }
                       return null;
                     },
