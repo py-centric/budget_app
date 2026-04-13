@@ -6,6 +6,7 @@ class SlidableTransactionItem extends StatelessWidget {
   final VoidCallback onEdit;
   final VoidCallback onDelete;
   final VoidCallback? onConfirm;
+  final VoidCallback? onTap;
 
   const SlidableTransactionItem({
     super.key,
@@ -13,24 +14,27 @@ class SlidableTransactionItem extends StatelessWidget {
     required this.onEdit,
     required this.onDelete,
     this.onConfirm,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
     return Slidable(
       key: key,
-      startActionPane: onConfirm != null ? ActionPane(
-        motion: const ScrollMotion(),
-        children: [
-          SlidableAction(
-            onPressed: (_) => onConfirm!(),
-            backgroundColor: Colors.green,
-            foregroundColor: Colors.white,
-            icon: Icons.check_circle_outline,
-            label: 'Confirm',
-          ),
-        ],
-      ) : null,
+      startActionPane: onConfirm != null
+          ? ActionPane(
+              motion: const ScrollMotion(),
+              children: [
+                SlidableAction(
+                  onPressed: (_) => onConfirm!(),
+                  backgroundColor: Colors.green,
+                  foregroundColor: Colors.white,
+                  icon: Icons.check_circle_outline,
+                  label: 'Confirm',
+                ),
+              ],
+            )
+          : null,
       endActionPane: ActionPane(
         motion: const ScrollMotion(),
         children: [
@@ -50,7 +54,7 @@ class SlidableTransactionItem extends StatelessWidget {
           ),
         ],
       ),
-      child: child,
+      child: onTap != null ? InkWell(onTap: onTap, child: child) : child,
     );
   }
 }

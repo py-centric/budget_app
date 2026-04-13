@@ -30,7 +30,11 @@ class IncomeList extends StatelessWidget {
       );
     }
 
-    final currencyCode = context.watch<SettingsBloc>().state.settings.currencyCode;
+    final currencyCode = context
+        .watch<SettingsBloc>()
+        .state
+        .settings
+        .currencyCode;
 
     return ListView.builder(
       shrinkWrap: true,
@@ -40,6 +44,7 @@ class IncomeList extends StatelessWidget {
         final entry = entries[index];
         return SlidableTransactionItem(
           key: ValueKey(entry.id),
+          onTap: () => onEdit(entry),
           onEdit: () => onEdit(entry),
           onDelete: () => onDelete(entry),
           onConfirm: entry.isPotential ? () => onConfirm?.call(entry) : null,
@@ -49,20 +54,35 @@ class IncomeList extends StatelessWidget {
               shape: entry.isPotential
                   ? RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
-                      side: BorderSide(color: Colors.green.shade300, width: 1, style: BorderStyle.solid),
+                      side: BorderSide(
+                        color: Colors.green.shade300,
+                        width: 1,
+                        style: BorderStyle.solid,
+                      ),
                     )
                   : null,
               child: ListTile(
                 leading: CircleAvatar(
-                  backgroundColor: entry.isPotential ? Colors.grey.shade200 : Colors.green.shade100,
+                  backgroundColor: entry.isPotential
+                      ? Colors.grey.shade200
+                      : Colors.green.shade100,
                   child: Icon(
-                    entry.isPotential ? Icons.help_outline : Icons.arrow_downward,
-                    color: entry.isPotential ? Colors.grey : Colors.green.shade700,
+                    entry.isPotential
+                        ? Icons.help_outline
+                        : Icons.arrow_downward,
+                    color: entry.isPotential
+                        ? Colors.grey
+                        : Colors.green.shade700,
                   ),
                 ),
                 title: Row(
                   children: [
-                    Text(CurrencyFormatter.format(entry.amount, currencyCode: currencyCode)),
+                    Text(
+                      CurrencyFormatter.format(
+                        entry.amount,
+                        currencyCode: currencyCode,
+                      ),
+                    ),
                     if (entry.isPotential)
                       Padding(
                         padding: const EdgeInsets.only(left: 8.0),
