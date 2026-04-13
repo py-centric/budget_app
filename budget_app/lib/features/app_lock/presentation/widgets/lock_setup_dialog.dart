@@ -34,8 +34,20 @@ class _LockSetupDialogState extends State<LockSetupDialog> {
       ),
       actions: [
         TextButton(
-          onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Cancel'),
+          onPressed: () {
+            if (_selectedMethod != null && _firstPin != null) {
+              // Go back to method selection if user wants to change
+              setState(() {
+                _selectedMethod = null;
+                _firstPin = null;
+                _isConfirming = false;
+                _errorMessage = null;
+              });
+            } else {
+              Navigator.of(context).pop();
+            }
+          },
+          child: Text(_selectedMethod == null ? 'Cancel' : 'Back'),
         ),
       ],
     );
@@ -50,7 +62,7 @@ class _LockSetupDialogState extends State<LockSetupDialog> {
         ListTile(
           leading: const Icon(Icons.pin),
           title: const Text('PIN'),
-          subtitle: const Text('4-6 digit code'),
+          subtitle: const Text('6-digit code'),
           onTap: () {
             setState(() {
               _selectedMethod = AuthMethod.pin;
@@ -76,19 +88,19 @@ class _LockSetupDialogState extends State<LockSetupDialog> {
       mainAxisSize: MainAxisSize.min,
       children: [
         Text(
-          _isConfirming
-              ? 'Enter PIN again to confirm'
-              : 'Enter a 4-6 digit PIN',
+          _isConfirming ? 'Enter PIN again to confirm' : 'Enter a 6-digit PIN',
           style: Theme.of(context).textTheme.bodyMedium,
         ),
         const SizedBox(height: 16),
         PinInputWidget(
+          key: ValueKey(_isConfirming), // Reset widget when toggling confirm
           pinLength: 6,
           onPinComplete: (pin) {
             if (!_isConfirming) {
               setState(() {
                 _firstPin = pin;
                 _isConfirming = true;
+                _errorMessage = null;
               });
             } else {
               if (pin == _firstPin) {
