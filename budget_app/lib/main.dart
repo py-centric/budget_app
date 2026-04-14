@@ -57,6 +57,11 @@ import 'features/savings/domain/repositories/savings_repository.dart';
 import 'features/savings/data/repositories/savings_repository_impl.dart';
 import 'features/savings/presentation/bloc/savings_bloc.dart';
 import 'features/savings/presentation/bloc/savings_event.dart';
+import 'features/reminders/domain/repositories/reminder_repository.dart';
+import 'features/reminders/data/repositories/reminder_repository_impl.dart';
+import 'features/reminders/presentation/bloc/reminder_bloc.dart';
+import 'features/reminders/presentation/bloc/reminder_event.dart';
+import 'core/notifications/notification_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -79,6 +84,9 @@ void main() async {
   final accountRepository = AccountRepositoryImpl(localDatabase);
   final categoryLimitRepository = CategoryLimitRepositoryImpl(localDatabase);
   final savingsRepository = SavingsRepositoryImpl(localDatabase);
+  final reminderRepository = ReminderRepositoryImpl(localDatabase);
+  final notificationService = NotificationService();
+  await notificationService.initialize();
 
   runApp(
     MultiRepositoryProvider(
@@ -105,6 +113,9 @@ void main() async {
         RepositoryProvider<SavingsRepository>(
           create: (context) => savingsRepository,
         ),
+        RepositoryProvider<ReminderRepository>(
+          create: (context) => reminderRepository,
+        ),
       ],
       child: BudgetApp(
         repository: repository,
@@ -112,6 +123,7 @@ void main() async {
         financialRepository: financialRepository,
         emergencyFundRepository: emergencyFundRepository,
         businessRepository: businessRepository,
+        notificationService: notificationService,
       ),
     ),
   );
@@ -123,6 +135,7 @@ class BudgetApp extends StatelessWidget {
   final FinancialRepository financialRepository;
   final EmergencyFundRepository emergencyFundRepository;
   final BusinessRepository businessRepository;
+  final NotificationService notificationService;
 
   const BudgetApp({
     super.key,
@@ -131,6 +144,7 @@ class BudgetApp extends StatelessWidget {
     required this.financialRepository,
     required this.emergencyFundRepository,
     required this.businessRepository,
+    required this.notificationService,
   });
 
   @override
@@ -242,6 +256,13 @@ class BudgetApp extends StatelessWidget {
           create: (context) =>
               SavingsBloc(repository: context.read<SavingsRepository>())
                 ..add(LoadSavingsGoals()),
+        ),
+        BlocProvider(
+          create: (context) => ReminderBloc(
+            repository: context.read<ReminderRepository>(),
+            recurringRepository: recurringRepository,
+            notificationService: notificationService,
+          )..add(LoadReminders()),
         ),
       ],
       child: BlocBuilder<SettingsBloc, SettingsState>(

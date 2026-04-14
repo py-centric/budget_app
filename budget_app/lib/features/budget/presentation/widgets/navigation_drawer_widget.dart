@@ -14,6 +14,9 @@ import 'package:budget_app/features/business_tools/presentation/pages/clients_pa
 import 'package:budget_app/features/business_tools/presentation/pages/profile_settings_page.dart';
 import 'package:budget_app/features/accounts/presentation/pages/accounts_page.dart';
 import 'package:budget_app/features/savings/presentation/pages/savings_goals_page.dart';
+import 'package:budget_app/features/reminders/presentation/pages/reminders_page.dart';
+import 'package:budget_app/features/reminders/presentation/bloc/reminder_bloc.dart';
+import 'package:budget_app/features/reminders/presentation/bloc/reminder_state.dart';
 
 class NavigationDrawerWidget extends StatefulWidget {
   const NavigationDrawerWidget({super.key});
@@ -125,6 +128,55 @@ class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
                     MaterialPageRoute(
                       builder: (context) => const SavingsGoalsPage(),
                     ),
+                  );
+                },
+              ),
+              BlocBuilder<ReminderBloc, ReminderState>(
+                builder: (context, state) {
+                  final unreadCount = state is ReminderLoaded
+                      ? state.unreadCount
+                      : 0;
+                  return ListTile(
+                    leading: Stack(
+                      children: [
+                        const Icon(Icons.notifications),
+                        if (unreadCount > 0)
+                          Positioned(
+                            right: 0,
+                            top: 0,
+                            child: Container(
+                              padding: const EdgeInsets.all(2),
+                              decoration: const BoxDecoration(
+                                color: Colors.red,
+                                shape: BoxShape.circle,
+                              ),
+                              constraints: const BoxConstraints(
+                                minWidth: 14,
+                                minHeight: 14,
+                              ),
+                              child: Text(
+                                unreadCount > 9 ? '9+' : '$unreadCount',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                    title: const Text('Bill Reminders'),
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const RemindersPage(),
+                        ),
+                      );
+                    },
                   );
                 },
               ),
