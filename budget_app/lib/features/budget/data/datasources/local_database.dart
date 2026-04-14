@@ -506,6 +506,28 @@ class LocalDatabase {
         'CREATE INDEX IF NOT EXISTS idx_savings_contributions_goal ON savings_contributions(goal_id)',
       );
     }
+
+    if (oldVersion < 19) {
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS bill_reminders (
+          id TEXT PRIMARY KEY,
+          recurring_transaction_id TEXT NOT NULL,
+          due_date TEXT NOT NULL,
+          days_before_due INTEGER NOT NULL DEFAULT 3,
+          is_notified INTEGER DEFAULT 0,
+          notified_at TEXT,
+          created_at TEXT NOT NULL,
+          FOREIGN KEY (recurring_transaction_id) REFERENCES recurring_transactions(id) ON DELETE CASCADE
+        )
+      ''');
+
+      await db.execute(
+        'CREATE INDEX IF NOT EXISTS idx_bill_reminders_transaction ON bill_reminders(recurring_transaction_id)',
+      );
+      await db.execute(
+        'CREATE INDEX IF NOT EXISTS idx_bill_reminders_due_date ON bill_reminders(due_date)',
+      );
+    }
   }
 
   Future<void> _onCreate(Database db, int version) async {

@@ -21,6 +21,8 @@ Auto-generated from all feature plans. Last updated: 2026-03-24
 - SQLite (sqflite) - local database (032-multi-bank-accounts)
 - Dart 3.x + Flutter (existing), Material Design 3 (033-currency-search)
 - None (static currency list) (033-currency-search)
+- Dart 3.x + flutter_bloc, sqflite, flutter_local_notifications, table_calendar (035-budget-categories-savings)
+- SQLite via sqflite (offline-first per Constitution) (035-budget-categories-savings)
 
 - Dart 3.x (Flutter 3.x) + flutter_bloc, sqflite, flutter_secure_storage, fl_chart (for pie charts) (023-invoice-dashboard-and-payables)
 
@@ -40,9 +42,9 @@ tests/
 Dart 3.x (Flutter 3.x): Follow standard conventions
 
 ## Recent Changes
+- 035-budget-categories-savings: Added Dart 3.x + flutter_bloc, sqflite, flutter_local_notifications, table_calendar
 - 033-currency-search: Added Dart 3.x + Flutter (existing), Material Design 3
 - 032-multi-bank-accounts: Added Dart 3.x + flutter_bloc, sqflite, equatable, path_provider
-- 030-budget-reset-options: Added Dart 3.x + Flutter 3.x, flutter_bloc, sqflite, flutter_secure_storage (existing)
 
 
 <!-- MANUAL ADDITIONS START -->
