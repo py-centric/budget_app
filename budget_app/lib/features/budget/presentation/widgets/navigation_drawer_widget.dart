@@ -18,6 +18,7 @@ import 'package:budget_app/features/reminders/presentation/pages/reminders_page.
 import 'package:budget_app/features/reminders/presentation/bloc/reminder_bloc.dart';
 import 'package:budget_app/features/reminders/presentation/bloc/reminder_state.dart';
 import 'package:budget_app/features/budget/presentation/pages/budget_comparison_page.dart';
+import 'package:budget_app/features/calendar/presentation/pages/calendar_view_page.dart';
 
 class NavigationDrawerWidget extends StatefulWidget {
   const NavigationDrawerWidget({super.key});
@@ -190,6 +191,19 @@ class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => const BudgetComparisonPage(),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.calendar_month),
+                title: const Text('Calendar View'),
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const CalendarViewPage(),
                     ),
                   );
                 },
