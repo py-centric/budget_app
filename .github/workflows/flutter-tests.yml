@@ -1,0 +1,53 @@
+name: Flutter Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    name: Run Flutter Tests
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.0'
+          channel: 'stable'
+
+      - name: Cache Flutter packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.pub-cache
+            budget_app/.dart_tool
+            budget_app/.flutter-plugins
+            budget_app/.packages
+          key: ${{ runner.os }}-flutter-${{ hashFiles('budget_app/pubspec.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-flutter-
+
+      - name: Install dependencies
+        run: cd budget_app && flutter pub get
+
+      - name: Run Flutter analyze
+        run: cd budget_app && flutter analyze
+        continue-on-error: false
+
+      - name: Run Flutter tests
+        run: cd budget_app && flutter test
+        continue-on-error: false
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: budget_app/test_reports/
+          retention-days: 7
