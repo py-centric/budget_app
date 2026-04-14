@@ -17,6 +17,7 @@ import 'package:budget_app/features/savings/presentation/pages/savings_goals_pag
 import 'package:budget_app/features/reminders/presentation/pages/reminders_page.dart';
 import 'package:budget_app/features/reminders/presentation/bloc/reminder_bloc.dart';
 import 'package:budget_app/features/reminders/presentation/bloc/reminder_state.dart';
+import 'package:budget_app/features/budget/presentation/pages/budget_comparison_page.dart';
 
 class NavigationDrawerWidget extends StatefulWidget {
   const NavigationDrawerWidget({super.key});
@@ -177,6 +178,19 @@ class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
                         ),
                       );
                     },
+                  );
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.compare_arrows),
+                title: const Text('Budget Comparison'),
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const BudgetComparisonPage(),
+                    ),
                   );
                 },
               ),

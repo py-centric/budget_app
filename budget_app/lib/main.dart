@@ -62,6 +62,7 @@ import 'features/reminders/data/repositories/reminder_repository_impl.dart';
 import 'features/reminders/presentation/bloc/reminder_bloc.dart';
 import 'features/reminders/presentation/bloc/reminder_event.dart';
 import 'core/notifications/notification_service.dart';
+import 'features/budget/presentation/bloc/budget_comparison_bloc.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -263,6 +264,12 @@ class BudgetApp extends StatelessWidget {
             recurringRepository: recurringRepository,
             notificationService: notificationService,
           )..add(LoadReminders()),
+        ),
+        BlocProvider(
+          create: (context) => BudgetComparisonBloc(
+            budgetRepository: repository,
+            categoryLimitRepository: context.read<CategoryLimitRepository>(),
+          ),
         ),
       ],
       child: BlocBuilder<SettingsBloc, SettingsState>(
