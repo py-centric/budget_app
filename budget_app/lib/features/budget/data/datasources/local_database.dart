@@ -472,6 +472,39 @@ class LocalDatabase {
       await db.execute(
         'CREATE INDEX IF NOT EXISTS idx_category_limits_category ON category_limits(category_id)',
       );
+
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS savings_goals (
+          id TEXT PRIMARY KEY,
+          name TEXT NOT NULL,
+          target_amount REAL NOT NULL,
+          current_amount REAL DEFAULT 0,
+          deadline TEXT,
+          linked_category_id TEXT,
+          icon TEXT,
+          color TEXT,
+          is_completed INTEGER DEFAULT 0,
+          created_at TEXT NOT NULL,
+          updated_at TEXT NOT NULL,
+          FOREIGN KEY (linked_category_id) REFERENCES categories(id)
+        )
+      ''');
+
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS savings_contributions (
+          id TEXT PRIMARY KEY,
+          goal_id TEXT NOT NULL,
+          amount REAL NOT NULL,
+          date TEXT NOT NULL,
+          note TEXT,
+          created_at TEXT NOT NULL,
+          FOREIGN KEY (goal_id) REFERENCES savings_goals(id) ON DELETE CASCADE
+        )
+      ''');
+
+      await db.execute(
+        'CREATE INDEX IF NOT EXISTS idx_savings_contributions_goal ON savings_contributions(goal_id)',
+      );
     }
   }
 
@@ -797,6 +830,39 @@ class LocalDatabase {
     );
     await db.execute(
       'CREATE INDEX IF NOT EXISTS idx_category_limits_category ON category_limits(category_id)',
+    );
+
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS savings_goals (
+        id TEXT PRIMARY KEY,
+        name TEXT NOT NULL,
+        target_amount REAL NOT NULL,
+        current_amount REAL DEFAULT 0,
+        deadline TEXT,
+        linked_category_id TEXT,
+        icon TEXT,
+        color TEXT,
+        is_completed INTEGER DEFAULT 0,
+        created_at TEXT NOT NULL,
+        updated_at TEXT NOT NULL,
+        FOREIGN KEY (linked_category_id) REFERENCES categories(id)
+      )
+    ''');
+
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS savings_contributions (
+        id TEXT PRIMARY KEY,
+        goal_id TEXT NOT NULL,
+        amount REAL NOT NULL,
+        date TEXT NOT NULL,
+        note TEXT,
+        created_at TEXT NOT NULL,
+        FOREIGN KEY (goal_id) REFERENCES savings_goals(id) ON DELETE CASCADE
+      )
+    ''');
+
+    await db.execute(
+      'CREATE INDEX IF NOT EXISTS idx_savings_contributions_goal ON savings_contributions(goal_id)',
     );
   }
 
