@@ -6,6 +6,7 @@ import '../budget_bloc.dart';
 import '../budget_event.dart';
 import '../budget_state.dart';
 import '../bloc/navigation_bloc.dart';
+import '../bloc/category_bloc.dart';
 import '../widgets/income_form.dart';
 import '../widgets/expense_form.dart';
 import '../widgets/income_list.dart';
@@ -19,7 +20,12 @@ import '../widgets/duplication_dialog.dart';
 import '../widgets/budget_selector.dart';
 import '../widgets/currency_conversion_dialog.dart';
 import '../widgets/filter_bar.dart';
+import '../widgets/category_limit_card.dart';
+import '../widgets/category_limit_dialog.dart';
 import '../bloc/projection_bloc.dart';
+import '../bloc/category_limit_bloc.dart';
+import '../bloc/category_limit_event.dart';
+import '../bloc/category_limit_state.dart';
 import '../bloc/projection_event.dart';
 import '../../domain/entities/category.dart';
 import '../../domain/entities/recurring_transaction.dart';
@@ -314,6 +320,8 @@ class _HomePageState extends State<HomePage> {
                       children: [
                         if (summary != null) ...[
                           SummaryCard(summary: summary),
+                          const SizedBox(height: 24),
+                          _buildCategoryLimitsSection(context, summary),
                           const SizedBox(height: 24),
                           Row(
                             children: [
@@ -620,6 +628,165 @@ class _HomePageState extends State<HomePage> {
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: const Text('Cancel'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCategoryLimitsSection(
+    BuildContext context,
+    BudgetSummary summary,
+  ) {
+    final navState = context.read<NavigationBloc>().state;
+    final budgetId = navState.activeBudget?.id;
+
+    if (budgetId == null) {
+      return const SizedBox.shrink();
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Category Limits',
+              style: Theme.of(
+                context,
+              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+            ),
+            TextButton.icon(
+              onPressed: () => _showAddLimitDialog(context, budgetId),
+              icon: const Icon(Icons.add, size: 18),
+              label: const Text('Add Limit'),
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        BlocBuilder<CategoryLimitBloc, CategoryLimitState>(
+          builder: (context, state) {
+            if (state is CategoryLimitLoading) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            if (state is CategoryLimitLoaded) {
+              if (state.limits.isEmpty) {
+                return Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(24),
+                    child: Center(
+                      child: Text(
+                        'No category limits set. Tap "Add Limit" to get started.',
+                        style: TextStyle(color: Colors.grey[600]),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+                );
+              }
+
+              return Column(
+                children: state.limits.map((limitWithSpending) {
+                  return CategoryLimitCard(
+                    limitWithSpending: limitWithSpending,
+                    onEdit: () => _showEditLimitDialog(
+                      context,
+                      budgetId,
+                      limitWithSpending,
+                    ),
+                    onDelete: () =>
+                        _deleteLimit(context, limitWithSpending.limit.id),
+                  );
+                }).toList(),
+              );
+            }
+
+            return const SizedBox.shrink();
+          },
+        ),
+      ],
+    );
+  }
+
+  void _showAddLimitDialog(BuildContext context, String budgetId) {
+    final categoryState = context.read<CategoryBloc>().state;
+    final categories = categoryState is CategoriesLoadedState
+        ? categoryState.categories
+        : <Category>[];
+    final bloc = context.read<CategoryLimitBloc>();
+
+    showDialog(
+      context: context,
+      builder: (dialogContext) => CategoryLimitDialog(
+        categories: categories,
+        onSave: (categoryId, amount, period) {
+          bloc.add(
+            AddCategoryLimit(
+              categoryId: categoryId,
+              amount: amount,
+              period: period,
+              budgetId: budgetId,
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  void _showEditLimitDialog(
+    BuildContext context,
+    String budgetId,
+    CategoryLimitWithSpending limitWithSpending,
+  ) {
+    final categoryState = context.read<CategoryBloc>().state;
+    final categories = categoryState is CategoriesLoadedState
+        ? categoryState.categories
+        : <Category>[];
+    final bloc = context.read<CategoryLimitBloc>();
+
+    showDialog(
+      context: context,
+      builder: (dialogContext) => CategoryLimitDialog(
+        categories: categories,
+        existingLimit: limitWithSpending.limit,
+        onSave: (categoryId, amount, period) {
+          bloc.add(
+            UpdateCategoryLimit(
+              limitWithSpending.limit.copyWith(
+                categoryId: categoryId,
+                amount: amount,
+                period: period,
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  void _deleteLimit(BuildContext context, String limitId) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Delete Limit'),
+        content: const Text(
+          'Are you sure you want to delete this category limit?',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () {
+              context.read<CategoryLimitBloc>().add(
+                DeleteCategoryLimit(limitId),
+              );
+              Navigator.pop(dialogContext);
+            },
+            child: const Text('Delete'),
           ),
         ],
       ),

@@ -50,6 +50,9 @@ import 'features/accounts/domain/repositories/account_repository.dart';
 import 'features/accounts/data/repositories/account_repository_impl.dart';
 import 'features/accounts/presentation/bloc/account_bloc.dart';
 import 'features/accounts/presentation/bloc/account_event.dart';
+import 'features/budget/domain/repositories/category_limit_repository.dart';
+import 'features/budget/data/repositories/category_limit_repository_impl.dart';
+import 'features/budget/presentation/bloc/category_limit_bloc.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -70,6 +73,7 @@ void main() async {
   final emergencyFundRepository = EmergencyFundRepositoryImpl(localDatabase);
   final businessRepository = BusinessRepositoryImpl(localDatabase);
   final accountRepository = AccountRepositoryImpl(localDatabase);
+  final categoryLimitRepository = CategoryLimitRepositoryImpl(localDatabase);
 
   runApp(
     MultiRepositoryProvider(
@@ -89,6 +93,9 @@ void main() async {
         ),
         RepositoryProvider<AccountRepository>(
           create: (context) => accountRepository,
+        ),
+        RepositoryProvider<CategoryLimitRepository>(
+          create: (context) => categoryLimitRepository,
         ),
       ],
       child: BudgetApp(
@@ -216,6 +223,12 @@ class BudgetApp extends StatelessWidget {
           create: (context) =>
               AccountBloc(context.read<AccountRepository>())
                 ..add(LoadAccounts()),
+        ),
+        BlocProvider(
+          create: (context) => CategoryLimitBloc(
+            repository: context.read<CategoryLimitRepository>(),
+            budgetRepository: repository,
+          ),
         ),
       ],
       child: BlocBuilder<SettingsBloc, SettingsState>(
