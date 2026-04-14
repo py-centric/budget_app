@@ -528,6 +528,27 @@ class LocalDatabase {
         'CREATE INDEX IF NOT EXISTS idx_bill_reminders_due_date ON bill_reminders(due_date)',
       );
     }
+
+    if (oldVersion < 20) {
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS transaction_splits (
+          id TEXT PRIMARY KEY,
+          parent_transaction_id TEXT NOT NULL,
+          parent_transaction_type TEXT NOT NULL,
+          category_id TEXT NOT NULL,
+          amount REAL NOT NULL,
+          note TEXT,
+          created_at TEXT NOT NULL
+        )
+      ''');
+
+      await db.execute(
+        'CREATE INDEX IF NOT EXISTS idx_transaction_splits_parent ON transaction_splits(parent_transaction_id)',
+      );
+      await db.execute(
+        'CREATE INDEX IF NOT EXISTS idx_transaction_splits_category ON transaction_splits(category_id)',
+      );
+    }
   }
 
   Future<void> _onCreate(Database db, int version) async {
