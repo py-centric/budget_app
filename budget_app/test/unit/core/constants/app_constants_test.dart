@@ -12,7 +12,7 @@ void main() {
     });
 
     test('should have correct databaseVersion', () {
-      expect(AppConstants.databaseVersion, 17);
+      expect(AppConstants.databaseVersion, 18);
     });
 
     test('should have defaultCategories list', () {

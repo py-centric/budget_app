@@ -450,6 +450,29 @@ class LocalDatabase {
         'CREATE INDEX IF NOT EXISTS idx_transfers_to ON transfers (to_account_id)',
       );
     }
+
+    if (oldVersion < 18) {
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS category_limits (
+          id TEXT PRIMARY KEY,
+          budget_id TEXT NOT NULL,
+          category_id TEXT NOT NULL,
+          amount REAL NOT NULL,
+          period TEXT NOT NULL,
+          created_at TEXT NOT NULL,
+          updated_at TEXT NOT NULL,
+          FOREIGN KEY (budget_id) REFERENCES budgets(id) ON DELETE CASCADE,
+          FOREIGN KEY (category_id) REFERENCES categories(id)
+        )
+      ''');
+
+      await db.execute(
+        'CREATE INDEX IF NOT EXISTS idx_category_limits_budget ON category_limits(budget_id)',
+      );
+      await db.execute(
+        'CREATE INDEX IF NOT EXISTS idx_category_limits_category ON category_limits(category_id)',
+      );
+    }
   }
 
   Future<void> _onCreate(Database db, int version) async {
@@ -753,6 +776,27 @@ class LocalDatabase {
     );
     await db.execute(
       'CREATE INDEX IF NOT EXISTS idx_transfers_to ON transfers (to_account_id)',
+    );
+
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS category_limits (
+        id TEXT PRIMARY KEY,
+        budget_id TEXT NOT NULL,
+        category_id TEXT NOT NULL,
+        amount REAL NOT NULL,
+        period TEXT NOT NULL,
+        created_at TEXT NOT NULL,
+        updated_at TEXT NOT NULL,
+        FOREIGN KEY (budget_id) REFERENCES budgets(id) ON DELETE CASCADE,
+        FOREIGN KEY (category_id) REFERENCES categories(id)
+      )
+    ''');
+
+    await db.execute(
+      'CREATE INDEX IF NOT EXISTS idx_category_limits_budget ON category_limits(budget_id)',
+    );
+    await db.execute(
+      'CREATE INDEX IF NOT EXISTS idx_category_limits_category ON category_limits(category_id)',
     );
   }
 
