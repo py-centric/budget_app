@@ -102,10 +102,12 @@ class _TransactionEditDialogState extends State<TransactionEditDialog> {
                 decoration: const InputDecoration(labelText: 'Amount'),
                 keyboardType: TextInputType.number,
                 validator: (value) {
-                  if (value == null || value.isEmpty)
+                  if (value == null || value.isEmpty) {
                     return 'Please enter an amount';
-                  if (double.tryParse(value) == null)
+                  }
+                  if (double.tryParse(value) == null) {
                     return 'Please enter a valid number';
+                  }
                   return null;
                 },
               ),

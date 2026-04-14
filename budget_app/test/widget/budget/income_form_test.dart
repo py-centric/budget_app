@@ -6,7 +6,6 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:budget_app/features/budget/presentation/widgets/income_form.dart';
 import 'package:budget_app/features/budget/domain/entities/category.dart';
 import 'package:budget_app/features/settings/presentation/bloc/settings_bloc.dart';
-import 'package:budget_app/features/budget/presentation/widgets/split_transaction_dialog.dart';
 
 class MockSettingsBloc extends MockBloc<SettingsEvent, SettingsState>
     implements SettingsBloc {}

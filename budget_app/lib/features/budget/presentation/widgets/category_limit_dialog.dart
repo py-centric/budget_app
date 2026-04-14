@@ -55,7 +55,7 @@ class _CategoryLimitDialogState extends State<CategoryLimitDialog> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             DropdownButtonFormField<String>(
-              value: _selectedCategoryId,
+              initialValue: _selectedCategoryId,
               decoration: const InputDecoration(
                 labelText: 'Category',
                 border: OutlineInputBorder(),
