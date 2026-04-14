@@ -22,6 +22,7 @@ import '../widgets/currency_conversion_dialog.dart';
 import '../widgets/filter_bar.dart';
 import '../widgets/category_limit_card.dart';
 import '../widgets/category_limit_dialog.dart';
+import '../widgets/split_transaction_dialog.dart';
 import '../bloc/projection_bloc.dart';
 import '../bloc/category_limit_bloc.dart';
 import '../bloc/category_limit_event.dart';
@@ -536,6 +537,7 @@ class _HomePageState extends State<HomePage> {
                         RecurrenceUnit? unit,
                         DateTime? endDate,
                         bool isPotential = false,
+                        List<SplitItem>? splits,
                       }) {
                         if (isRecurring && interval != null && unit != null) {
                           context.read<BudgetBloc>().add(
@@ -587,6 +589,7 @@ class _HomePageState extends State<HomePage> {
                         RecurrenceUnit? unit,
                         DateTime? endDate,
                         bool isPotential = false,
+                        List<SplitItem>? splits,
                       }) {
                         if (isRecurring && interval != null && unit != null) {
                           context.read<BudgetBloc>().add(
