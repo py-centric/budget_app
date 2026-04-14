@@ -63,6 +63,7 @@ import 'features/reminders/presentation/bloc/reminder_bloc.dart';
 import 'features/reminders/presentation/bloc/reminder_event.dart';
 import 'core/notifications/notification_service.dart';
 import 'features/budget/presentation/bloc/budget_comparison_bloc.dart';
+import 'features/calendar/presentation/bloc/calendar_bloc.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -270,6 +271,9 @@ class BudgetApp extends StatelessWidget {
             budgetRepository: repository,
             categoryLimitRepository: context.read<CategoryLimitRepository>(),
           ),
+        ),
+        BlocProvider(
+          create: (context) => CalendarBloc(budgetRepository: repository),
         ),
       ],
       child: BlocBuilder<SettingsBloc, SettingsState>(
