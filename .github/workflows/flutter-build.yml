@@ -1,0 +1,86 @@
+name: Build APK
+
+on:
+  push:
+    branches:
+      - 'release/**'
+      - 'hotfix/**'
+  pull_request:
+    branches:
+      - 'release/**'
+      - 'hotfix/**'
+
+env:
+  FLUTTER_VERSION: '3.24.0'
+
+jobs:
+  build:
+    name: Build Release APK
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: 'stable'
+
+      - name: Cache Flutter packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.pub-cache
+            budget_app/.dart_tool
+            budget_app/.flutter-plugins
+            budget_app/.packages
+          key: ${{ runner.os }}-flutter-${{ env.FLUTTER_VERSION }}-${{ hashFiles('budget_app/pubspec.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-flutter-${{ env.FLUTTER_VERSION }}-
+
+      - name: Install dependencies
+        run: cd budget_app && flutter pub get
+
+      - name: Determine build type
+        id: build-type
+        run: |
+          if [[ "${{ github.ref }}" == *"hotfix"* ]]; then
+            echo "type=hotfix" >> $GITHUB_OUTPUT
+          else
+            echo "type=release" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Build debug APK
+        if: steps.build-type.outputs.type == 'release'
+        run: cd budget_app && flutter build apk --debug
+
+      - name: Build hotfix APK
+        if: steps.build-type.outputs.type == 'hotfix'
+        run: cd budget_app && flutter build apk --debug
+
+      - name: Generate artifact name
+        id: artifact
+        run: |
+          BRANCH_NAME=$(echo "${{ github.ref }}" | sed 's/refs\/heads\///' | sed 's/\//-/g')
+          VERSION=$(date +'%Y%m%d-%H%M%S')
+          echo "name=budget_app-${BRANCH_NAME}-${VERSION}" >> $GITHUB_OUTPUT
+          echo "path=budget_app/build/app/outputs/flutter-apk/app-debug.apk" >> $GITHUB_OUTPUT
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.artifact.outputs.name }}
+          path: ${{ steps.artifact.outputs.path }}
+          retention-days: 14
+
+      - name: Upload failure logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-logs
+          path: |
+            budget_app/build/logs/
+            budget_app/.dart_tool/flutter_build/
+          retention-days: 7
