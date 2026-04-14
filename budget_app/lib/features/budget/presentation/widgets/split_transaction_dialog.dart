@@ -263,7 +263,7 @@ class _SplitTransactionDialogState extends State<SplitTransactionDialog> {
               children: [
                 Expanded(
                   child: DropdownButtonFormField<String>(
-                    value: _splits[index].categoryId,
+                    initialValue: _splits[index].categoryId,
                     decoration: const InputDecoration(
                       labelText: 'Category',
                       border: OutlineInputBorder(),
