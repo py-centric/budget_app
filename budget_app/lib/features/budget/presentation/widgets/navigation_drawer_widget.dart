@@ -13,6 +13,7 @@ import 'package:budget_app/features/business_tools/presentation/pages/invoices_p
 import 'package:budget_app/features/business_tools/presentation/pages/clients_page.dart';
 import 'package:budget_app/features/business_tools/presentation/pages/profile_settings_page.dart';
 import 'package:budget_app/features/accounts/presentation/pages/accounts_page.dart';
+import 'package:budget_app/features/savings/presentation/pages/savings_goals_page.dart';
 
 class NavigationDrawerWidget extends StatefulWidget {
   const NavigationDrawerWidget({super.key});
@@ -110,6 +111,19 @@ class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => const AccountsPage(),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.savings),
+                title: const Text('Savings Goals'),
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const SavingsGoalsPage(),
                     ),
                   );
                 },
