@@ -26,9 +26,14 @@ class NotificationService {
       requestBadgePermission: true,
       requestSoundPermission: true,
     );
-    const initSettings = InitializationSettings(
+    final linuxSettings = LinuxInitializationSettings(
+      defaultActionName: 'Open notification',
+      defaultIcon: AssetsLinuxIcon('@mipmap/ic_launcher'),
+    );
+    final initSettings = InitializationSettings(
       android: androidSettings,
       iOS: iosSettings,
+      linux: linuxSettings,
     );
 
     await _notifications.initialize(
