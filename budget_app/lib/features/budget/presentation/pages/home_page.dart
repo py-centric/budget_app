@@ -17,8 +17,8 @@ import '../widgets/delete_confirmation_dialog.dart';
 import '../widgets/home_projection_overview.dart';
 import '../widgets/duplication_dialog.dart';
 import '../widgets/budget_selector.dart';
-import '../widgets/list_header_total.dart';
 import '../widgets/currency_conversion_dialog.dart';
+import '../widgets/filter_bar.dart';
 import '../bloc/projection_bloc.dart';
 import '../bloc/projection_event.dart';
 import '../../domain/entities/category.dart';
@@ -399,108 +399,95 @@ class _HomePageState extends State<HomePage> {
                           const SizedBox(height: 24),
                         ],
                         if (summary != null) ...[
-                          ExpansionTile(
-                            initiallyExpanded: true,
-                            title: ListHeaderTotal(
-                              label: 'Income',
-                              actualTotal: summary.totalIncome,
-                              potentialTotal: summary.totalPotentialIncome,
-                            ),
-                            leading: const Icon(
-                              Icons.arrow_downward,
-                              color: Colors.green,
-                            ),
-                            children: [
-                              IncomeList(
-                                entries: summary.incomeEntries,
-                                onEdit: (entry) {
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) => TransactionEditDialog(
-                                      income: entry,
-                                      categories: _categories,
-                                    ),
+                          FilterBar(
+                            incomeEntries: summary.incomeEntries,
+                            expenseEntries: summary.expenseEntries,
+                            onEditIncome: (entry) {
+                              showDialog(
+                                context: context,
+                                builder: (context) => TransactionEditDialog(
+                                  income: entry,
+                                  categories: _categories,
+                                ),
+                              );
+                            },
+                            onDeleteIncome: (entry) {
+                              showDialog(
+                                context: context,
+                                builder: (context) => DeleteConfirmationDialog(
+                                  title: 'Delete Income',
+                                  content:
+                                      'Are you sure you want to delete this income entry?',
+                                  onConfirm: () {
+                                    context.read<BudgetBloc>().add(
+                                      DeleteEntryEvent(
+                                        entry.id,
+                                        EntryType.income,
+                                      ),
+                                    );
+                                  },
+                                ),
+                              );
+                            },
+                            onConfirmIncome: (entry) {
+                              context.read<BudgetBloc>().add(
+                                ConfirmPotentialTransactionEvent(
+                                  incomeId: entry.id,
+                                ),
+                              );
+                            },
+                            onEditExpense: (entry) {
+                              showDialog(
+                                context: context,
+                                builder: (context) => TransactionEditDialog(
+                                  expense: entry,
+                                  categories: _categories,
+                                ),
+                              );
+                            },
+                            onDeleteExpense: (entry) {
+                              showDialog(
+                                context: context,
+                                builder: (context) => DeleteConfirmationDialog(
+                                  title: 'Delete Expense',
+                                  content:
+                                      'Are you sure you want to delete this expense entry?',
+                                  onConfirm: () {
+                                    context.read<BudgetBloc>().add(
+                                      DeleteEntryEvent(
+                                        entry.id,
+                                        EntryType.expense,
+                                      ),
+                                    );
+                                  },
+                                ),
+                              );
+                            },
+                            onConfirmExpense: (entry) {
+                              context.read<BudgetBloc>().add(
+                                ConfirmPotentialTransactionEvent(
+                                  expenseId: entry.id,
+                                ),
+                              );
+                            },
+                            incomeListBuilder:
+                                (entries, onEdit, onDelete, onConfirm) {
+                                  return IncomeList(
+                                    entries: entries,
+                                    onEdit: onEdit,
+                                    onDelete: onDelete,
+                                    onConfirm: onConfirm,
                                   );
                                 },
-                                onConfirm: (entry) {
-                                  context.read<BudgetBloc>().add(
-                                    ConfirmPotentialTransactionEvent(
-                                      incomeId: entry.id,
-                                    ),
+                            expenseListBuilder:
+                                (entries, onEdit, onDelete, onConfirm) {
+                                  return ExpenseList(
+                                    entries: entries,
+                                    onEdit: onEdit,
+                                    onDelete: onDelete,
+                                    onConfirm: onConfirm,
                                   );
                                 },
-                                onDelete: (entry) {
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) => DeleteConfirmationDialog(
-                                      title: 'Delete Income',
-                                      content:
-                                          'Are you sure you want to delete this income entry?',
-                                      onConfirm: () {
-                                        context.read<BudgetBloc>().add(
-                                          DeleteEntryEvent(
-                                            entry.id,
-                                            EntryType.income,
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 8),
-                          ExpansionTile(
-                            initiallyExpanded: true,
-                            title: ListHeaderTotal(
-                              label: 'Expenses',
-                              actualTotal: summary.totalExpenses,
-                              potentialTotal: summary.totalPotentialExpenses,
-                            ),
-                            leading: const Icon(
-                              Icons.arrow_upward,
-                              color: Colors.red,
-                            ),
-                            children: [
-                              ExpenseList(
-                                entries: summary.expenseEntries,
-                                onEdit: (entry) {
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) => TransactionEditDialog(
-                                      expense: entry,
-                                      categories: _categories,
-                                    ),
-                                  );
-                                },
-                                onConfirm: (entry) {
-                                  context.read<BudgetBloc>().add(
-                                    ConfirmPotentialTransactionEvent(
-                                      expenseId: entry.id,
-                                    ),
-                                  );
-                                },
-                                onDelete: (entry) {
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) => DeleteConfirmationDialog(
-                                      title: 'Delete Expense',
-                                      content:
-                                          'Are you sure you want to delete this expense entry?',
-                                      onConfirm: () {
-                                        context.read<BudgetBloc>().add(
-                                          DeleteEntryEvent(
-                                            entry.id,
-                                            EntryType.expense,
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                  );
-                                },
-                              ),
-                            ],
                           ),
                         ],
                       ],

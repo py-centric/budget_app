@@ -7,7 +7,6 @@ import 'package:budget_app/features/budget/domain/entities/income_entry.dart';
 import 'package:budget_app/features/budget/domain/entities/expense_entry.dart';
 import 'package:budget_app/features/budget/domain/entities/budget_period.dart';
 import 'package:budget_app/features/budget/domain/entities/recurring_transaction.dart';
-import 'package:budget_app/features/budget/domain/entities/recurring_override.dart';
 
 class MockBudgetRepository extends Mock implements BudgetRepository {}
 

@@ -98,7 +98,7 @@ class MathExpressionParser {
           double.tryParse(expr.substring(opIdx + 1, rightEnd)) ?? 0;
       final result = isMult
           ? leftNum * rightNum
-          : (rightNum != 0 ? leftNum / rightNum : 0);
+          : (rightNum != 0 ? leftNum / rightNum : leftNum);
 
       expr =
           expr.substring(0, leftStart) +
@@ -109,6 +109,7 @@ class MathExpressionParser {
     double result = 0;
     String currentNum = '';
     String lastOp = '+';
+    bool isFirstNumber = true;
 
     for (int i = 0; i < expr.length; i++) {
       final char = expr[i];
@@ -118,7 +119,12 @@ class MathExpressionParser {
         currentNum += char;
       } else if ('+-'.contains(char)) {
         final num = double.tryParse(currentNum) ?? 0;
-        result = _applyOperation(result, num, lastOp);
+        if (isFirstNumber) {
+          result = num;
+          isFirstNumber = false;
+        } else {
+          result = _applyOperation(result, num, lastOp);
+        }
         lastOp = char;
         currentNum = '';
       }
@@ -126,7 +132,11 @@ class MathExpressionParser {
 
     if (currentNum.isNotEmpty) {
       final num = double.tryParse(currentNum) ?? 0;
-      result = _applyOperation(result, num, lastOp);
+      if (isFirstNumber) {
+        result = num;
+      } else {
+        result = _applyOperation(result, num, lastOp);
+      }
     }
 
     return result;
