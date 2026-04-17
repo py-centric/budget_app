@@ -11,8 +11,11 @@ class SummaryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isPositive = summary.balance >= 0;
-    final currencyCode = context.watch<SettingsBloc>().state.settings.currencyCode;
+    final currencyCode = context
+        .watch<SettingsBloc>()
+        .state
+        .settings
+        .currencyCode;
 
     return Column(
       children: [
@@ -27,12 +30,20 @@ class SummaryCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12),
                   side: BorderSide(color: Colors.orange.shade200),
                 ),
-                leading: const Icon(Icons.warning_amber_rounded, color: Colors.orange),
+                leading: const Icon(
+                  Icons.warning_amber_rounded,
+                  color: Colors.orange,
+                ),
                 title: Text(
                   '${summary.missedPotentialCount} past-due potential transactions',
-                  style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.orange),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.orange,
+                  ),
                 ),
-                subtitle: const Text('Confirm or delete these hypothetical items.'),
+                subtitle: const Text(
+                  'Confirm or delete these hypothetical items.',
+                ),
               ),
             ),
           ),
@@ -51,14 +62,16 @@ class SummaryCard extends StatelessWidget {
                   children: [
                     _SummaryItem(
                       label: 'Income',
-                      amount: summary.totalIncome,
+                      actualAmount: summary.totalIncome,
+                      projectedAmount: summary.totalPotentialIncome,
                       color: Colors.green,
                       icon: Icons.arrow_downward,
                       currencyCode: currencyCode,
                     ),
                     _SummaryItem(
                       label: 'Expenses',
-                      amount: summary.totalExpenses,
+                      actualAmount: summary.totalExpenses,
+                      projectedAmount: summary.totalPotentialExpenses,
                       color: Colors.red,
                       icon: Icons.arrow_upward,
                       currencyCode: currencyCode,
@@ -66,34 +79,12 @@ class SummaryCard extends StatelessWidget {
                   ],
                 ),
                 const Divider(height: 32),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      isPositive
-                          ? Icons.sentiment_satisfied
-                          : Icons.sentiment_dissatisfied,
-                      color: isPositive ? Colors.green : Colors.red,
-                      size: 32,
-                    ),
-                    const SizedBox(width: 8),
-                    Column(
-                      children: [
-                        Text(
-                          'Balance',
-                          style: Theme.of(context).textTheme.titleMedium,
-                        ),
-                        Text(
-                          CurrencyFormatter.format(summary.balance, currencyCode: currencyCode),
-                          style: Theme.of(context).textTheme.headlineMedium
-                              ?.copyWith(
-                                color: isPositive ? Colors.green : Colors.red,
-                                fontWeight: FontWeight.bold,
-                              ),
-                        ),
-                      ],
-                    ),
-                  ],
+                _BalanceDisplay(
+                  actualBalance: summary.balance,
+                  projectedBalance:
+                      summary.totalPotentialIncome -
+                      summary.totalPotentialExpenses,
+                  currencyCode: currencyCode,
                 ),
               ],
             ),
@@ -101,18 +92,79 @@ class SummaryCard extends StatelessWidget {
         ),
       ],
     );
-  }}
+  }
+}
+
+class _BalanceDisplay extends StatelessWidget {
+  final double actualBalance;
+  final double projectedBalance;
+  final String currencyCode;
+
+  const _BalanceDisplay({
+    required this.actualBalance,
+    required this.projectedBalance,
+    required this.currencyCode,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final isPositive = actualBalance >= 0;
+    final projectedIsPositive = projectedBalance >= 0;
+    final hasProjection = (projectedBalance - actualBalance).abs() > 0.01;
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Column(
+          children: [
+            Icon(
+              isPositive
+                  ? Icons.sentiment_satisfied
+                  : Icons.sentiment_dissatisfied,
+              color: isPositive ? Colors.green : Colors.red,
+              size: 32,
+            ),
+            const SizedBox(height: 8),
+            Text('Balance', style: Theme.of(context).textTheme.titleMedium),
+            Text(
+              CurrencyFormatter.format(
+                actualBalance,
+                currencyCode: currencyCode,
+              ),
+              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                color: isPositive ? Colors.green : Colors.red,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            if (hasProjection) ...[
+              const SizedBox(height: 8),
+              Text(
+                'Projected: ${projectedIsPositive ? '+' : ''}${CurrencyFormatter.format(projectedBalance, currencyCode: currencyCode)}',
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: projectedIsPositive ? Colors.green : Colors.red,
+                ),
+              ),
+            ],
+          ],
+        ),
+      ],
+    );
+  }
+}
 
 class _SummaryItem extends StatelessWidget {
   final String label;
-  final double amount;
+  final double actualAmount;
+  final double projectedAmount;
   final Color color;
   final IconData icon;
   final String currencyCode;
 
   const _SummaryItem({
     required this.label,
-    required this.amount,
+    required this.actualAmount,
+    required this.projectedAmount,
     required this.color,
     required this.icon,
     required this.currencyCode,
@@ -120,18 +172,29 @@ class _SummaryItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final hasProjection = (projectedAmount - actualAmount).abs() > 0.01;
+
     return Column(
       children: [
         Icon(icon, color: color),
         const SizedBox(height: 4),
         Text(label, style: Theme.of(context).textTheme.bodyMedium),
         Text(
-          CurrencyFormatter.format(amount, currencyCode: currencyCode),
+          CurrencyFormatter.format(actualAmount, currencyCode: currencyCode),
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
             color: color,
             fontWeight: FontWeight.bold,
           ),
         ),
+        if (hasProjection) ...[
+          const SizedBox(height: 2),
+          Text(
+            '(${projectedAmount >= 0 ? '+' : ''}${CurrencyFormatter.format(projectedAmount, currencyCode: currencyCode)})',
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: color.withValues(alpha: 0.7),
+            ),
+          ),
+        ],
       ],
     );
   }
