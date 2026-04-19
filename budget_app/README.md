@@ -1,5 +1,7 @@
 # Budget App
 
+> ⚠️ **This project is still in active development.** Some features may be incomplete or subject to change.
+
 A comprehensive personal finance management Flutter application with support for budgets, transactions, loans, invoicing, and more.
 
 ## Features
