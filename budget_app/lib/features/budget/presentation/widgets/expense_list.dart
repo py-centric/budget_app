@@ -36,12 +36,8 @@ class ExpenseList extends StatelessWidget {
         .settings
         .currencyCode;
 
-    return ListView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemCount: entries.length,
-      itemBuilder: (context, index) {
-        final entry = entries[index];
+    return Column(
+      children: entries.map((entry) {
         return SlidableTransactionItem(
           key: ValueKey(entry.id),
           onTap: () => onEdit(entry),
@@ -55,7 +51,7 @@ class ExpenseList extends StatelessWidget {
                   ? RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                       side: BorderSide(
-                        color: Colors.red.shade300,
+                        color: Theme.of(context).colorScheme.error.withValues(alpha: 0.3),
                         width: 1,
                         style: BorderStyle.solid,
                       ),
@@ -64,13 +60,13 @@ class ExpenseList extends StatelessWidget {
               child: ListTile(
                 leading: CircleAvatar(
                   backgroundColor: entry.isPotential
-                      ? Colors.grey.shade200
-                      : Colors.red.shade100,
+                      ? Theme.of(context).colorScheme.surfaceContainerHighest
+                      : Theme.of(context).colorScheme.errorContainer,
                   child: Icon(
                     entry.isPotential ? Icons.help_outline : Icons.arrow_upward,
                     color: entry.isPotential
-                        ? Colors.grey
-                        : Colors.red.shade700,
+                        ? Theme.of(context).colorScheme.outline
+                        : Theme.of(context).colorScheme.onErrorContainer,
                   ),
                 ),
                 title: Row(
@@ -88,7 +84,7 @@ class ExpenseList extends StatelessWidget {
                           '(Potential)',
                           style: TextStyle(
                             fontSize: 12,
-                            color: Colors.grey.shade600,
+                            color: Theme.of(context).colorScheme.onSurfaceVariant,
                             fontStyle: FontStyle.italic,
                           ),
                         ),
@@ -114,7 +110,7 @@ class ExpenseList extends StatelessWidget {
             ),
           ),
         );
-      },
+      }).toList(),
     );
   }
 }
