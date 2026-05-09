@@ -72,15 +72,31 @@ class _CalendarViewPageState extends State<CalendarViewPage> {
               children: [
                 _buildMonthSummary(context, state),
                 Expanded(
-                  child: Row(
-                    children: [
-                      Expanded(flex: 2, child: _buildCalendar(context, state)),
-                      if (_selectedDay != null)
-                        Expanded(
-                          flex: 3,
-                          child: _buildDayDetail(context, state),
-                        ),
-                    ],
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      if (constraints.maxWidth < 600) {
+                        return Column(
+                          children: [
+                            Expanded(child: _buildCalendar(context, state)),
+                            if (_selectedDay != null)
+                              Expanded(child: _buildDayDetail(context, state)),
+                          ],
+                        );
+                      }
+                      return Row(
+                        children: [
+                          Expanded(
+                            flex: 2,
+                            child: _buildCalendar(context, state),
+                          ),
+                          if (_selectedDay != null)
+                            Expanded(
+                              flex: 3,
+                              child: _buildDayDetail(context, state),
+                            ),
+                        ],
+                      );
+                    },
                   ),
                 ),
               ],
