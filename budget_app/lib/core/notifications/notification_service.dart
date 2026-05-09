@@ -26,6 +26,11 @@ class NotificationService {
       requestBadgePermission: true,
       requestSoundPermission: true,
     );
+    const macSettings = DarwinInitializationSettings(
+      requestAlertPermission: true,
+      requestBadgePermission: true,
+      requestSoundPermission: true,
+    );
     final linuxSettings = LinuxInitializationSettings(
       defaultActionName: 'Open notification',
       defaultIcon: AssetsLinuxIcon('@mipmap/ic_launcher'),
@@ -33,6 +38,7 @@ class NotificationService {
     final initSettings = InitializationSettings(
       android: androidSettings,
       iOS: iosSettings,
+      macOS: macSettings,
       linux: linuxSettings,
     );
 
@@ -95,9 +101,16 @@ class NotificationService {
       presentSound: true,
     );
 
+    const macDetails = DarwinNotificationDetails(
+      presentAlert: true,
+      presentBadge: true,
+      presentSound: true,
+    );
+
     const details = NotificationDetails(
       android: androidDetails,
       iOS: iosDetails,
+      macOS: macDetails,
     );
 
     await _notifications.show(
@@ -131,9 +144,16 @@ class NotificationService {
       presentSound: true,
     );
 
+    const macDetails = DarwinNotificationDetails(
+      presentAlert: true,
+      presentBadge: true,
+      presentSound: true,
+    );
+
     const details = NotificationDetails(
       android: androidDetails,
       iOS: iosDetails,
+      macOS: macDetails,
     );
 
     final scheduledDateTime = tz.TZDateTime(
