@@ -36,12 +36,8 @@ class IncomeList extends StatelessWidget {
         .settings
         .currencyCode;
 
-    return ListView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemCount: entries.length,
-      itemBuilder: (context, index) {
-        final entry = entries[index];
+    return Column(
+      children: entries.map((entry) {
         return SlidableTransactionItem(
           key: ValueKey(entry.id),
           onTap: () => onEdit(entry),
@@ -55,7 +51,7 @@ class IncomeList extends StatelessWidget {
                   ? RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                       side: BorderSide(
-                        color: Colors.green.shade300,
+                        color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
                         width: 1,
                         style: BorderStyle.solid,
                       ),
@@ -64,15 +60,15 @@ class IncomeList extends StatelessWidget {
               child: ListTile(
                 leading: CircleAvatar(
                   backgroundColor: entry.isPotential
-                      ? Colors.grey.shade200
-                      : Colors.green.shade100,
+                      ? Theme.of(context).colorScheme.surfaceContainerHighest
+                      : Theme.of(context).colorScheme.primaryContainer,
                   child: Icon(
                     entry.isPotential
                         ? Icons.help_outline
                         : Icons.arrow_downward,
                     color: entry.isPotential
-                        ? Colors.grey
-                        : Colors.green.shade700,
+                        ? Theme.of(context).colorScheme.outline
+                        : Theme.of(context).colorScheme.onPrimaryContainer,
                   ),
                 ),
                 title: Row(
@@ -90,7 +86,7 @@ class IncomeList extends StatelessWidget {
                           '(Potential)',
                           style: TextStyle(
                             fontSize: 12,
-                            color: Colors.grey.shade600,
+                            color: Theme.of(context).colorScheme.onSurfaceVariant,
                             fontStyle: FontStyle.italic,
                           ),
                         ),
@@ -116,7 +112,7 @@ class IncomeList extends StatelessWidget {
             ),
           ),
         );
-      },
+      }).toList(),
     );
   }
 }
