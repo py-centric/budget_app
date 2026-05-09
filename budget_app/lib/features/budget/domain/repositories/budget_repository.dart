@@ -4,6 +4,9 @@ import '../entities/budget_period.dart';
 import '../entities/category.dart';
 import '../entities/budget.dart';
 
+/// Repository interface for budget data access.
+/// Implementations handle persistence of budgets, income, expenses,
+/// and categories via SQLite (offline-first).
 abstract class BudgetRepository {
   Future<void> addIncome(IncomeEntry income);
   Future<void> updateIncome(IncomeEntry income);

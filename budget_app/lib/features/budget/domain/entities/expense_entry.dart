@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 
+/// A single expense transaction within a budget period.
+/// Records money spent or committed, categorized for tracking and summary.
 class ExpenseEntry extends Equatable {
   final String id;
   final String budgetId;

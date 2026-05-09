@@ -2,6 +2,9 @@ import 'package:equatable/equatable.dart';
 import 'package:budget_app/features/budget/domain/usecases/calculate_summary.dart';
 import '../domain/entities/category.dart';
 
+/// Base state for the budget feature's UI layer.
+/// Concrete subclasses represent loading, loaded, error,
+/// and mutation-confirmation states (e.g. IncomeAdded, BudgetDeleted).
 abstract class BudgetState extends Equatable {
   const BudgetState();
 
