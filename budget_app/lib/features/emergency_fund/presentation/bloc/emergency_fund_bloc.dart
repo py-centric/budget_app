@@ -58,7 +58,10 @@ class EmergencyFundBloc extends Bloc<EmergencyFundEvent, EmergencyFundState> {
       final updatedExpense = expense.copyWith(amount: event.amount);
       await _repository.saveExpense(updatedExpense);
     } catch (e) {
-      // Handle error
+      emit(state.copyWith(
+        status: EmergencyFundStatus.failure,
+        errorMessage: 'Failed to update expense: $e',
+      ));
     }
   }
 
@@ -91,7 +94,10 @@ class EmergencyFundBloc extends Bloc<EmergencyFundEvent, EmergencyFundState> {
       );
       await _repository.saveExpense(newExpense);
     } catch (e) {
-      // Handle error
+      emit(state.copyWith(
+        status: EmergencyFundStatus.failure,
+        errorMessage: 'Failed to add expense: $e',
+      ));
     }
   }
 
@@ -102,7 +108,10 @@ class EmergencyFundBloc extends Bloc<EmergencyFundEvent, EmergencyFundState> {
     try {
       await _repository.deleteExpense(event.id);
     } catch (e) {
-      // Handle error
+      emit(state.copyWith(
+        status: EmergencyFundStatus.failure,
+        errorMessage: 'Failed to delete expense: $e',
+      ));
     }
   }
 
