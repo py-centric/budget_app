@@ -29,8 +29,15 @@ Auto-generated from all feature plans. Last updated: 2026-03-24
 ## Project Structure
 
 ```text
-src/
-tests/
+budget_app/
+├── lib/
+│   ├── core/          # Shared utilities, constants, theming
+│   ├── features/      # 13 feature modules (Clean Architecture)
+│   └── shared/        # Cross-feature widgets and models
+└── test/
+    ├── unit/
+    ├── widget/
+    └── integration/
 ```
 
 ## Commands
@@ -49,3 +56,8 @@ Dart 3.x (Flutter 3.x): Follow standard conventions
 
 <!-- MANUAL ADDITIONS START -->
 <!-- MANUAL ADDITIONS END -->
+
+<!-- SPECKIT START -->
+For additional context about technologies to be used, project structure,
+shell commands, and other important information, read the current plan
+<!-- SPECKIT END -->
