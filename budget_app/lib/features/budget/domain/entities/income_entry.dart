@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 
+/// A single income transaction within a budget period.
+/// Records earned or potential money流入 tracked against a budget category.
 class IncomeEntry extends Equatable {
   final String id;
   final String budgetId;

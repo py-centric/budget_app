@@ -16,6 +16,9 @@ import '../domain/usecases/confirm_potential_transaction.dart';
 import 'budget_event.dart';
 import 'budget_state.dart';
 
+/// Business-logic controller for the budget feature.
+/// Dispatches use cases for income/expense CRUD, summary calculations,
+/// budget duplication, and currency conversion. Emits state changes to the UI.
 class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
   final BudgetRepository repository;
   final AddIncome addIncomeUseCase;

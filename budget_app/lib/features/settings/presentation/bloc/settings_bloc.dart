@@ -2,9 +2,11 @@ import 'dart:ui';
 import 'package:equatable/equatable.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:intl/intl.dart';
-import '../../../budget/data/models/user_settings.dart';
+import 'package:budget_app/features/settings/data/models/user_settings.dart';
 
 // Events
+/// Base event for settings changes.
+/// Concrete subclasses represent currency, theme, and initialization actions.
 abstract class SettingsEvent extends Equatable {
   const SettingsEvent();
 
@@ -35,6 +37,8 @@ class InitializeSettingsEvent extends SettingsEvent {
 }
 
 // States
+/// Holds the current application settings (currency, theme, week start day).
+/// Persisted automatically via HydratedBloc.
 class SettingsState extends Equatable {
   final UserSettings settings;
 
@@ -67,6 +71,8 @@ class SettingsState extends Equatable {
 }
 
 // Bloc
+/// Manages user preferences such as currency and theme.
+/// Persists state to disk via HydratedBloc and auto-detects locale currency.
 class SettingsBloc extends HydratedBloc<SettingsEvent, SettingsState> {
   SettingsBloc() : super(const SettingsState()) {
     on<UpdateCurrencyEvent>((event, emit) {
