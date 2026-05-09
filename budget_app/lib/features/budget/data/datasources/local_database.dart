@@ -39,6 +39,9 @@ class LocalDatabase {
       version: AppConstants.databaseVersion,
       onCreate: _onCreate,
       onUpgrade: _onUpgrade,
+      onConfigure: (db) async {
+        await db.execute('PRAGMA foreign_keys = ON');
+      },
     );
   }
 
@@ -907,6 +910,45 @@ class LocalDatabase {
     await db.execute(
       'CREATE INDEX IF NOT EXISTS idx_savings_contributions_goal ON savings_contributions(goal_id)',
     );
+
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS bill_reminders (
+        id TEXT PRIMARY KEY,
+        recurring_transaction_id TEXT NOT NULL,
+        due_date TEXT NOT NULL,
+        days_before_due INTEGER NOT NULL DEFAULT 3,
+        is_notified INTEGER DEFAULT 0,
+        notified_at TEXT,
+        created_at TEXT NOT NULL,
+        FOREIGN KEY (recurring_transaction_id) REFERENCES recurring_transactions(id) ON DELETE CASCADE
+      )
+    ''');
+
+    await db.execute(
+      'CREATE INDEX IF NOT EXISTS idx_bill_reminders_transaction ON bill_reminders(recurring_transaction_id)',
+    );
+    await db.execute(
+      'CREATE INDEX IF NOT EXISTS idx_bill_reminders_due_date ON bill_reminders(due_date)',
+    );
+
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS transaction_splits (
+        id TEXT PRIMARY KEY,
+        parent_transaction_id TEXT NOT NULL,
+        parent_transaction_type TEXT NOT NULL,
+        category_id TEXT NOT NULL,
+        amount REAL NOT NULL,
+        note TEXT,
+        created_at TEXT NOT NULL
+      )
+    ''');
+
+    await db.execute(
+      'CREATE INDEX IF NOT EXISTS idx_transaction_splits_parent ON transaction_splits(parent_transaction_id)',
+    );
+    await db.execute(
+      'CREATE INDEX IF NOT EXISTS idx_transaction_splits_category ON transaction_splits(category_id)',
+    );
   }
 
   String _getCategoryIcon(String category) {
@@ -1234,9 +1276,20 @@ class LocalDatabase {
     await db.delete('recurring_overrides');
     await db.delete('saved_calculations');
     await db.delete('emergency_expenses');
-    await db.delete('loan_calculations');
-    await db.delete('net_worth_items');
-    await db.delete('settings');
+    await db.delete('accounts');
+    await db.delete('transfers');
+    await db.delete('category_limits');
+    await db.delete('savings_goals');
+    await db.delete('savings_contributions');
+    await db.delete('bill_reminders');
+    await db.delete('transaction_splits');
+    await db.delete('budget_goals');
+    await db.delete('company_profiles');
+    await db.delete('invoices');
+    await db.delete('invoice_items');
+    await db.delete('invoice_payments');
+    await db.delete('clients');
+    await db.delete('received_invoices');
   }
 
   // Saved Calculations
