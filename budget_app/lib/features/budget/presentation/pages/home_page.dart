@@ -7,8 +7,7 @@ import '../budget_event.dart';
 import '../budget_state.dart';
 import '../bloc/navigation_bloc.dart';
 import '../bloc/category_bloc.dart';
-import '../widgets/income_form.dart';
-import '../widgets/expense_form.dart';
+import '../widgets/transaction_form.dart';
 import '../widgets/income_list.dart';
 import '../widgets/expense_list.dart';
 import '../widgets/summary_card.dart';
@@ -191,7 +190,7 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
         drawer: const NavigationDrawerWidget(),
-        body: BlocConsumer<BudgetBloc, BudgetState>(
+        body: BlocListener<BudgetBloc, BudgetState>(
           listener: (context, state) {
             if (state is CategoriesLoaded) {
               setState(() {
@@ -257,7 +256,17 @@ class _HomePageState extends State<HomePage> {
               }
             }
           },
-          builder: (context, state) {
+          child: BlocBuilder<BudgetBloc, BudgetState>(
+            buildWhen: (previous, current) {
+              if (current is BudgetInitial ||
+                  current is BudgetLoading ||
+                  current is BudgetError) {
+                return true;
+              }
+              if (current is SummaryLoaded) return true;
+              return false;
+            },
+            builder: (context, state) {
             if (_lastSummary == null &&
                 (state is BudgetInitial || state is BudgetLoading)) {
               return const Center(
@@ -305,10 +314,6 @@ class _HomePageState extends State<HomePage> {
               );
             }
 
-            final summary = state is SummaryLoaded
-                ? state.summary
-                : _lastSummary;
-
             return Column(
               children: [
                 if (state is BudgetLoading) const LinearProgressIndicator(),
@@ -319,186 +324,206 @@ class _HomePageState extends State<HomePage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        if (summary != null) ...[
-                          SummaryCard(summary: summary),
-                          const SizedBox(height: 24),
-                          _buildCategoryLimitsSection(context, summary),
-                          const SizedBox(height: 24),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: ElevatedButton.icon(
-                                  onPressed: () {
-                                    final budgetId = context
-                                        .read<NavigationBloc>()
-                                        .state
-                                        .activeBudget
-                                        ?.id;
-                                    if (budgetId == null) {
-                                      ScaffoldMessenger.of(
-                                        context,
-                                      ).showSnackBar(
-                                        const SnackBar(
-                                          content: Text('No active budget'),
+                        BlocBuilder<BudgetBloc, BudgetState>(
+                          buildWhen: (previous, current) =>
+                              current is SummaryLoaded || current is BudgetError,
+                          builder: (context, state) {
+                            final s = state is SummaryLoaded
+                                ? state.summary
+                                : _lastSummary;
+                            if (s == null) return const SizedBox.shrink();
+                            return Column(
+                              children: [
+                                SummaryCard(summary: s),
+                                const SizedBox(height: 24),
+                                _buildCategoryLimitsSection(context, s),
+                                const SizedBox(height: 24),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: ElevatedButton.icon(
+                                        onPressed: () {
+                                          final budgetId = context
+                                              .read<NavigationBloc>()
+                                              .state
+                                              .activeBudget
+                                              ?.id;
+                                          if (budgetId == null) {
+                                            ScaffoldMessenger.of(
+                                              context,
+                                            ).showSnackBar(
+                                              const SnackBar(
+                                                content: Text('No active budget'),
+                                              ),
+                                            );
+                                            return;
+                                          }
+                                          setState(() {
+                                            _showIncomeForm = true;
+                                          });
+                                          _showTransactionDialog(context, budgetId);
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.green,
+                                          foregroundColor: Colors.white,
+                                          padding: const EdgeInsets.symmetric(
+                                            vertical: 16,
+                                          ),
+                                          textStyle: const TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        icon: const Icon(Icons.add),
+                                        label: const Text('Add Income'),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 16),
+                                    Expanded(
+                                      child: ElevatedButton.icon(
+                                        onPressed: () {
+                                          final budgetId = context
+                                              .read<NavigationBloc>()
+                                              .state
+                                              .activeBudget
+                                              ?.id;
+                                          if (budgetId == null) {
+                                            ScaffoldMessenger.of(
+                                              context,
+                                            ).showSnackBar(
+                                              const SnackBar(
+                                                content: Text('No active budget'),
+                                              ),
+                                            );
+                                            return;
+                                          }
+                                          setState(() {
+                                            _showIncomeForm = false;
+                                          });
+                                          _showTransactionDialog(context, budgetId);
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.red,
+                                          foregroundColor: Colors.white,
+                                          padding: const EdgeInsets.symmetric(
+                                            vertical: 16,
+                                          ),
+                                          textStyle: const TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        icon: const Icon(Icons.remove),
+                                        label: const Text('Add Expense'),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 24),
+                              ],
+                            );
+                          },
+                        ),
+                        BlocBuilder<BudgetBloc, BudgetState>(
+                          buildWhen: (previous, current) =>
+                              current is SummaryLoaded,
+                          builder: (context, state) {
+                            final s = state is SummaryLoaded
+                                ? state.summary
+                                : _lastSummary;
+                            if (s == null) return const SizedBox.shrink();
+                            return FilterBar(
+                              incomeEntries: s.incomeEntries,
+                              expenseEntries: s.expenseEntries,
+                              onEditIncome: (entry) {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => TransactionEditDialog(
+                                    income: entry,
+                                    categories: _categories,
+                                  ),
+                                );
+                              },
+                              onDeleteIncome: (entry) {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => DeleteConfirmationDialog(
+                                    title: 'Delete Income',
+                                    content:
+                                        'Are you sure you want to delete this income entry?',
+                                    onConfirm: () {
+                                      context.read<BudgetBloc>().add(
+                                        DeleteEntryEvent(
+                                          entry.id,
+                                          EntryType.income,
                                         ),
                                       );
-                                      return;
-                                    }
-                                    setState(() {
-                                      _showIncomeForm = true;
-                                    });
-                                    _showTransactionDialog(context, budgetId);
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.green,
-                                    foregroundColor: Colors.white,
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 16,
-                                    ),
-                                    textStyle: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                    },
                                   ),
-                                  icon: const Icon(Icons.add),
-                                  label: const Text('Add Income'),
-                                ),
-                              ),
-                              const SizedBox(width: 16),
-                              Expanded(
-                                child: ElevatedButton.icon(
-                                  onPressed: () {
-                                    final budgetId = context
-                                        .read<NavigationBloc>()
-                                        .state
-                                        .activeBudget
-                                        ?.id;
-                                    if (budgetId == null) {
-                                      ScaffoldMessenger.of(
-                                        context,
-                                      ).showSnackBar(
-                                        const SnackBar(
-                                          content: Text('No active budget'),
+                                );
+                              },
+                              onConfirmIncome: (entry) {
+                                context.read<BudgetBloc>().add(
+                                  ConfirmPotentialTransactionEvent(
+                                    incomeId: entry.id,
+                                  ),
+                                );
+                              },
+                              onEditExpense: (entry) {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => TransactionEditDialog(
+                                    expense: entry,
+                                    categories: _categories,
+                                  ),
+                                );
+                              },
+                              onDeleteExpense: (entry) {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => DeleteConfirmationDialog(
+                                    title: 'Delete Expense',
+                                    content:
+                                        'Are you sure you want to delete this expense entry?',
+                                    onConfirm: () {
+                                      context.read<BudgetBloc>().add(
+                                        DeleteEntryEvent(
+                                          entry.id,
+                                          EntryType.expense,
                                         ),
                                       );
-                                      return;
-                                    }
-                                    setState(() {
-                                      _showIncomeForm = false;
-                                    });
-                                    _showTransactionDialog(context, budgetId);
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.red,
-                                    foregroundColor: Colors.white,
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 16,
-                                    ),
-                                    textStyle: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                    },
                                   ),
-                                  icon: const Icon(Icons.remove),
-                                  label: const Text('Add Expense'),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 24),
-                        ],
-                        if (summary != null) ...[
-                          FilterBar(
-                            incomeEntries: summary.incomeEntries,
-                            expenseEntries: summary.expenseEntries,
-                            onEditIncome: (entry) {
-                              showDialog(
-                                context: context,
-                                builder: (context) => TransactionEditDialog(
-                                  income: entry,
-                                  categories: _categories,
-                                ),
-                              );
-                            },
-                            onDeleteIncome: (entry) {
-                              showDialog(
-                                context: context,
-                                builder: (context) => DeleteConfirmationDialog(
-                                  title: 'Delete Income',
-                                  content:
-                                      'Are you sure you want to delete this income entry?',
-                                  onConfirm: () {
-                                    context.read<BudgetBloc>().add(
-                                      DeleteEntryEvent(
-                                        entry.id,
-                                        EntryType.income,
-                                      ),
+                                );
+                              },
+                              onConfirmExpense: (entry) {
+                                context.read<BudgetBloc>().add(
+                                  ConfirmPotentialTransactionEvent(
+                                    expenseId: entry.id,
+                                  ),
+                                );
+                              },
+                              incomeListBuilder:
+                                  (entries, onEdit, onDelete, onConfirm) {
+                                    return IncomeList(
+                                      entries: entries,
+                                      onEdit: onEdit,
+                                      onDelete: onDelete,
+                                      onConfirm: onConfirm,
                                     );
                                   },
-                                ),
-                              );
-                            },
-                            onConfirmIncome: (entry) {
-                              context.read<BudgetBloc>().add(
-                                ConfirmPotentialTransactionEvent(
-                                  incomeId: entry.id,
-                                ),
-                              );
-                            },
-                            onEditExpense: (entry) {
-                              showDialog(
-                                context: context,
-                                builder: (context) => TransactionEditDialog(
-                                  expense: entry,
-                                  categories: _categories,
-                                ),
-                              );
-                            },
-                            onDeleteExpense: (entry) {
-                              showDialog(
-                                context: context,
-                                builder: (context) => DeleteConfirmationDialog(
-                                  title: 'Delete Expense',
-                                  content:
-                                      'Are you sure you want to delete this expense entry?',
-                                  onConfirm: () {
-                                    context.read<BudgetBloc>().add(
-                                      DeleteEntryEvent(
-                                        entry.id,
-                                        EntryType.expense,
-                                      ),
+                              expenseListBuilder:
+                                  (entries, onEdit, onDelete, onConfirm) {
+                                    return ExpenseList(
+                                      entries: entries,
+                                      onEdit: onEdit,
+                                      onDelete: onDelete,
+                                      onConfirm: onConfirm,
                                     );
                                   },
-                                ),
-                              );
-                            },
-                            onConfirmExpense: (entry) {
-                              context.read<BudgetBloc>().add(
-                                ConfirmPotentialTransactionEvent(
-                                  expenseId: entry.id,
-                                ),
-                              );
-                            },
-                            incomeListBuilder:
-                                (entries, onEdit, onDelete, onConfirm) {
-                                  return IncomeList(
-                                    entries: entries,
-                                    onEdit: onEdit,
-                                    onDelete: onDelete,
-                                    onConfirm: onConfirm,
-                                  );
-                                },
-                            expenseListBuilder:
-                                (entries, onEdit, onDelete, onConfirm) {
-                                  return ExpenseList(
-                                    entries: entries,
-                                    onEdit: onEdit,
-                                    onDelete: onDelete,
-                                    onConfirm: onConfirm,
-                                  );
-                                },
-                          ),
-                        ],
+                            );
+                          },
+                        ),
                       ],
                     ),
                   ),
@@ -507,6 +532,7 @@ class _HomePageState extends State<HomePage> {
             );
           },
         ),
+      ),
       ),
     );
   }
@@ -520,110 +546,77 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              if (_showIncomeForm)
-                IncomeForm(
-                  categories: _categories
-                      .where((c) => c.type == CategoryType.income)
-                      .toList(),
-                  onSubmit:
-                      (
-                        id,
-                        amount,
-                        categoryId,
-                        description,
-                        date, {
-                        bool isRecurring = false,
-                        int? interval,
-                        RecurrenceUnit? unit,
-                        DateTime? endDate,
-                        bool isPotential = false,
-                        List<SplitItem>? splits,
-                      }) {
-                        if (isRecurring && interval != null && unit != null) {
-                          context.read<BudgetBloc>().add(
-                            SaveRecurringTransactionEvent(
-                              RecurringTransaction(
-                                id: _uuid.v4(),
-                                budgetId: budgetId,
-                                type: 'INCOME',
-                                amount: amount,
-                                categoryId: categoryId,
-                                description: description ?? 'Recurring Income',
-                                startDate: date,
-                                endDate: endDate,
-                                interval: interval,
-                                unit: unit,
-                              ),
-                            ),
-                          );
-                        } else {
-                          context.read<BudgetBloc>().add(
-                            AddIncomeEvent(
-                              id: id,
-                              budgetId: budgetId,
-                              amount: amount,
-                              categoryId: categoryId,
-                              description: description,
-                              date: date,
-                              isPotential: isPotential,
-                            ),
-                          );
-                        }
-                        Navigator.pop(context);
-                      },
-                )
-              else
-                ExpenseForm(
-                  categories: _categories
-                      .where((c) => c.type == CategoryType.expense)
-                      .toList(),
-                  onSubmit:
-                      (
-                        id,
-                        amount,
-                        categoryId,
-                        description,
-                        date, {
-                        bool isRecurring = false,
-                        int? interval,
-                        RecurrenceUnit? unit,
-                        DateTime? endDate,
-                        bool isPotential = false,
-                        List<SplitItem>? splits,
-                      }) {
-                        if (isRecurring && interval != null && unit != null) {
-                          context.read<BudgetBloc>().add(
-                            SaveRecurringTransactionEvent(
-                              RecurringTransaction(
-                                id: _uuid.v4(),
-                                budgetId: budgetId,
-                                type: 'EXPENSE',
-                                amount: amount,
-                                categoryId: categoryId,
-                                description: description ?? 'Recurring Expense',
-                                startDate: date,
-                                endDate: endDate,
-                                interval: interval,
-                                unit: unit,
-                              ),
-                            ),
-                          );
-                        } else {
-                          context.read<BudgetBloc>().add(
-                            AddExpenseEvent(
-                              id: id,
-                              budgetId: budgetId,
-                              amount: amount,
-                              category: categoryId,
-                              description: description,
-                              date: date,
-                              isPotential: isPotential,
-                            ),
-                          );
-                        }
-                        Navigator.pop(context);
-                      },
-                ),
+              TransactionForm(
+                isIncome: _showIncomeForm,
+                categories: _categories
+                    .where(
+                      (c) => c.type ==
+                          (_showIncomeForm
+                              ? CategoryType.income
+                              : CategoryType.expense),
+                    )
+                    .toList(),
+                onSubmit: (
+                  id,
+                  amount,
+                  categoryId,
+                  description,
+                  date, {
+                  bool isRecurring = false,
+                  int? interval,
+                  RecurrenceUnit? unit,
+                  DateTime? endDate,
+                  bool isPotential = false,
+                  List<SplitItem>? splits,
+                }) {
+                  if (isRecurring && interval != null && unit != null) {
+                    context.read<BudgetBloc>().add(
+                      SaveRecurringTransactionEvent(
+                        RecurringTransaction(
+                          id: _uuid.v4(),
+                          budgetId: budgetId,
+                          type: _showIncomeForm ? 'INCOME' : 'EXPENSE',
+                          amount: amount,
+                          categoryId: categoryId,
+                          description: description ??
+                              (_showIncomeForm
+                                  ? 'Recurring Income'
+                                  : 'Recurring Expense'),
+                          startDate: date,
+                          endDate: endDate,
+                          interval: interval,
+                          unit: unit,
+                        ),
+                      ),
+                    );
+                  } else if (_showIncomeForm) {
+                    context.read<BudgetBloc>().add(
+                      AddIncomeEvent(
+                        id: id,
+                        budgetId: budgetId,
+                        amount: amount,
+                        categoryId: categoryId,
+                        description: description,
+                        date: date,
+                        isPotential: isPotential,
+                      ),
+                    );
+                  } else {
+                    context.read<BudgetBloc>().add(
+                      AddExpenseEvent(
+                        id: id,
+                        budgetId: budgetId,
+                        amount: amount,
+                        category: categoryId,
+                        description: description,
+                        date: date,
+                        isPotential: isPotential,
+                      ),
+                    );
+                  }
+                  Navigator.pop(context);
+                },
+              ),
             ],
           ),
         ),
