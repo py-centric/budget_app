@@ -186,15 +186,16 @@ class AppModule {
 
   /// Returns the list of [BlocProvider]s for the app.
   List<BlocProvider> get blocProviders => [
-    BlocProvider(
+    BlocProvider<SettingsBloc>(
+      create: (_) => SettingsBloc()..add(const InitializeSettingsEvent()),
+      lazy: false,
+    ),
+    BlocProvider<AppLockBloc>(
       create: (context) =>
           AppLockBloc(repository: context.read<AppLockRepository>())
             ..add(AppLockLoadSettings()),
     ),
-    BlocProvider(
-      create: (_) => SettingsBloc()..add(const InitializeSettingsEvent()),
-    ),
-    BlocProvider(
+    BlocProvider<FinancialBloc>(
       create: (_) => FinancialBloc(
         repository: financialRepository,
         calculateNetWorth: calculateNetWorthUseCase,
@@ -202,13 +203,13 @@ class AppModule {
         calculateCompoundInterest: calculateCompoundInterestUseCase,
       ),
     ),
-    BlocProvider(
+    BlocProvider<NavigationBloc>(
       create: (_) => NavigationBloc(
         getAvailablePeriodsUseCase: getAvailablePeriodsUseCase,
         budgetRepository: budgetRepository,
       )..add(const LoadAvailablePeriods()),
     ),
-    BlocProvider(
+    BlocProvider<BudgetBloc>(
       create: (_) => BudgetBloc(
         repository: budgetRepository,
         addIncomeUseCase: addIncomeUseCase,
@@ -221,7 +222,7 @@ class AppModule {
         confirmPotentialTransactionUseCase: confirmPotentialTransactionUseCase,
       ),
     ),
-    BlocProvider(
+    BlocProvider<CategoryBloc>(
       create: (_) => CategoryBloc(
         repository: budgetRepository,
         addCategoryUseCase: addCategoryUseCase,
@@ -229,46 +230,46 @@ class AppModule {
         reassignAndDeleteCategoryUseCase: reassignAndDeleteCategoryUseCase,
       )..add(LoadCategories()),
     ),
-    BlocProvider(
+    BlocProvider<ProjectionBloc>(
       create: (_) => ProjectionBloc(
         calculateProjection: calculateProjectionUseCase,
         applyRecurringOverride: applyRecurringOverrideUseCase,
         emergencyFundRepository: emergencyFundRepository,
       )..add(const LoadProjection()),
     ),
-    BlocProvider(
+    BlocProvider<EmergencyFundBloc>(
       create: (_) =>
           EmergencyFundBloc(emergencyFundRepository)..add(LoadEmergencyFund()),
     ),
-    BlocProvider(
+    BlocProvider<AccountBloc>(
       create: (context) =>
           AccountBloc(context.read<AccountRepository>())..add(LoadAccounts()),
     ),
-    BlocProvider(
+    BlocProvider<CategoryLimitBloc>(
       create: (context) => CategoryLimitBloc(
         repository: context.read<CategoryLimitRepository>(),
         budgetRepository: budgetRepository,
       ),
     ),
-    BlocProvider(
+    BlocProvider<SavingsBloc>(
       create: (context) =>
           SavingsBloc(repository: context.read<SavingsRepository>())
             ..add(LoadSavingsGoals()),
     ),
-    BlocProvider(
+    BlocProvider<ReminderBloc>(
       create: (context) => ReminderBloc(
         repository: context.read<ReminderRepository>(),
         recurringRepository: recurringRepository,
         notificationService: notificationService,
       )..add(LoadReminders()),
     ),
-    BlocProvider(
+    BlocProvider<BudgetComparisonBloc>(
       create: (context) => BudgetComparisonBloc(
         budgetRepository: budgetRepository,
         categoryLimitRepository: context.read<CategoryLimitRepository>(),
       ),
     ),
-    BlocProvider(
+    BlocProvider<CalendarBloc>(
       create: (context) =>
           CalendarBloc(getCalendarData: GetCalendarData(budgetRepository)),
     ),
