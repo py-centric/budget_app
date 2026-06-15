@@ -1,4 +1,8 @@
 import 'package:equatable/equatable.dart';
+import '../../domain/entities/calendar_event.dart';
+
+/// Re-export domain entity so state consumers can use it.
+export '../../domain/entities/calendar_event.dart';
 
 abstract class CalendarState extends Equatable {
   const CalendarState();
@@ -14,11 +18,11 @@ class CalendarLoading extends CalendarState {}
 class CalendarLoaded extends CalendarState {
   final int year;
   final int month;
-  final Map<DateTime, List<CalendarTransaction>> transactionsByDate;
+  final Map<DateTime, List<CalendarEvent>> transactionsByDate;
   final Map<DateTime, double> runningBalances;
   final Map<DateTime, double> endOfDayBalances;
   final DateTime? selectedDate;
-  final List<CalendarTransaction> selectedDayTransactions;
+  final List<CalendarEvent> selectedDayTransactions;
   final double monthStartBalance;
   final double monthEndBalance;
 
@@ -55,35 +59,4 @@ class CalendarError extends CalendarState {
 
   @override
   List<Object?> get props => [message];
-}
-
-class CalendarTransaction extends Equatable {
-  final String id;
-  final double amount;
-  final String description;
-  final DateTime date;
-  final bool isExpense;
-  final String? categoryName;
-  final String? categoryIcon;
-
-  const CalendarTransaction({
-    required this.id,
-    required this.amount,
-    required this.description,
-    required this.date,
-    required this.isExpense,
-    this.categoryName,
-    this.categoryIcon,
-  });
-
-  @override
-  List<Object?> get props => [
-    id,
-    amount,
-    description,
-    date,
-    isExpense,
-    categoryName,
-    categoryIcon,
-  ];
 }

@@ -1,24 +1,24 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:budget_app/features/budget/domain/repositories/budget_repository.dart';
-import 'calendar_event.dart';
+import 'package:budget_app/features/budget/domain/usecases/get_calendar_data.dart';
+import 'calendar_event.dart' as events;
 import 'calendar_state.dart';
 
-class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
-  final BudgetRepository _budgetRepository;
+class CalendarBloc extends Bloc<events.CalendarEvent, CalendarState> {
+  final GetCalendarData _getCalendarData;
 
   int? _currentYear;
   int? _currentMonth;
 
-  CalendarBloc({required BudgetRepository budgetRepository})
-    : _budgetRepository = budgetRepository,
+  CalendarBloc({required GetCalendarData getCalendarData})
+    : _getCalendarData = getCalendarData,
       super(CalendarInitial()) {
-    on<LoadCalendarMonth>(_onLoadCalendarMonth);
-    on<SelectCalendarDay>(_onSelectCalendarDay);
-    on<RefreshCalendar>(_onRefreshCalendar);
+    on<events.LoadCalendarMonth>(_onLoadCalendarMonth);
+    on<events.SelectCalendarDay>(_onSelectCalendarDay);
+    on<events.RefreshCalendar>(_onRefreshCalendar);
   }
 
   Future<void> _onLoadCalendarMonth(
-    LoadCalendarMonth event,
+    events.LoadCalendarMonth event,
     Emitter<CalendarState> emit,
   ) async {
     emit(CalendarLoading());
@@ -35,7 +35,7 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
   }
 
   Future<void> _onSelectCalendarDay(
-    SelectCalendarDay event,
+    events.SelectCalendarDay event,
     Emitter<CalendarState> emit,
   ) async {
     final currentState = state;
@@ -66,11 +66,11 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
   }
 
   Future<void> _onRefreshCalendar(
-    RefreshCalendar event,
+    events.RefreshCalendar event,
     Emitter<CalendarState> emit,
   ) async {
     if (_currentYear != null && _currentMonth != null) {
-      add(LoadCalendarMonth(year: _currentYear!, month: _currentMonth!));
+      add(events.LoadCalendarMonth(year: _currentYear!, month: _currentMonth!));
     }
   }
 
@@ -78,27 +78,14 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
     final firstDay = DateTime(year, month, 1);
     final lastDay = DateTime(year, month + 1, 0);
 
-    final monthStart = DateTime(year, month, 1);
-    final monthEnd = DateTime(year, month, lastDay.day, 23, 59, 59);
+    final monthData = await _getCalendarData.forMonth(year, month);
 
-    final allIncomes = await _budgetRepository.getAllIncome();
-    final allExpenses = await _budgetRepository.getAllExpenses();
-    final categories = await _budgetRepository.getCategories();
+    final allTransactions = <CalendarEvent>[];
+    final categories = monthData.categories;
 
-    final monthIncomes = allIncomes.where((i) {
-      return i.date.isAfter(monthStart.subtract(const Duration(days: 1))) &&
-          i.date.isBefore(monthEnd.add(const Duration(days: 1)));
-    }).toList();
-
-    final monthExpenses = allExpenses.where((e) {
-      return e.date.isAfter(monthStart.subtract(const Duration(days: 1))) &&
-          e.date.isBefore(monthEnd.add(const Duration(days: 1)));
-    }).toList();
-
-    final allTransactions = <CalendarTransaction>[];
-    for (final income in monthIncomes) {
+    for (final income in monthData.incomes) {
       allTransactions.add(
-        CalendarTransaction(
+        CalendarEvent(
           id: income.id,
           amount: income.amount,
           description: income.description ?? 'Income',
@@ -109,9 +96,9 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
         ),
       );
     }
-    for (final expense in monthExpenses) {
+    for (final expense in monthData.expenses) {
       allTransactions.add(
-        CalendarTransaction(
+        CalendarEvent(
           id: expense.id,
           amount: expense.amount,
           description: expense.description ?? 'Expense',
@@ -123,7 +110,7 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
       );
     }
 
-    final transactionsByDate = <DateTime, List<CalendarTransaction>>{};
+    final transactionsByDate = <DateTime, List<CalendarEvent>>{};
     for (final transaction in allTransactions) {
       final normalizedDate = DateTime(
         transaction.date.year,
@@ -134,6 +121,7 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
       transactionsByDate[normalizedDate]!.add(transaction);
     }
 
+    // Compute running balances
     final runningBalances = <DateTime, double>{};
     final endOfDayBalances = <DateTime, double>{};
 
@@ -142,15 +130,7 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
       final currentDate = DateTime(year, month, day);
 
       if (day == 1) {
-        final monthIncomesBefore = allIncomes.where(
-          (i) => i.date.isBefore(firstDay),
-        );
-        final monthExpensesBefore = allExpenses.where(
-          (e) => e.date.isBefore(firstDay),
-        );
-        runningTotal =
-            monthIncomesBefore.fold<double>(0, (sum, i) => sum + i.amount) -
-            monthExpensesBefore.fold<double>(0, (sum, e) => sum + e.amount);
+        runningTotal = await _computeStartingBalance(year, month);
       }
 
       runningBalances[currentDate] = runningTotal;
@@ -177,13 +157,28 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
       runningBalances: runningBalances,
       endOfDayBalances: endOfDayBalances,
       selectedDate: null,
-      selectedDayTransactions: [],
+      selectedDayTransactions: const [],
       monthStartBalance: monthStartBalance,
       monthEndBalance: monthEndBalance,
     );
   }
 
-  String? _getCategoryName(String? categoryId, List<dynamic> categories) {
+  Future<double> _computeStartingBalance(int year, int month) async {
+    final firstDay = DateTime(year, month, 1);
+    final expensesBefore = await _getCalendarData.getExpensesBefore(firstDay);
+    final incomesBefore = await _getCalendarData.getIncomesBefore(firstDay);
+
+    double total = 0;
+    for (final e in expensesBefore) {
+      total -= e.amount;
+    }
+    for (final i in incomesBefore) {
+      total += i.amount;
+    }
+    return total;
+  }
+
+  String? _getCategoryName(dynamic categoryId, List<dynamic> categories) {
     if (categoryId == null) return null;
     try {
       final category = categories.firstWhere((c) => c.id == categoryId);
@@ -193,7 +188,7 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
     }
   }
 
-  String? _getCategoryIcon(String? categoryId, List<dynamic> categories) {
+  String? _getCategoryIcon(dynamic categoryId, List<dynamic> categories) {
     if (categoryId == null) return null;
     try {
       final category = categories.firstWhere((c) => c.id == categoryId);
