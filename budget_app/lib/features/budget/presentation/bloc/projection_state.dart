@@ -50,12 +50,12 @@ class ProjectionLoaded extends ProjectionState {
 
   @override
   List<Object?> get props => [
-    points, 
-    isWeekly, 
-    settings, 
-    showActuals, 
-    showPotential, 
-    emergencyFundTarget
+    points,
+    isWeekly,
+    settings,
+    showActuals,
+    showPotential,
+    emergencyFundTarget,
   ];
 }
 

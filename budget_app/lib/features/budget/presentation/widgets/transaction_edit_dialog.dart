@@ -4,8 +4,8 @@ import 'package:intl/intl.dart';
 import '../../domain/entities/income_entry.dart';
 import '../../domain/entities/expense_entry.dart';
 import '../../domain/entities/category.dart';
-import '../budget_bloc.dart';
-import '../budget_event.dart';
+import '../bloc/budget_bloc.dart';
+import '../bloc/budget_event.dart';
 import 'delete_confirmation_dialog.dart';
 
 class TransactionEditDialog extends StatefulWidget {

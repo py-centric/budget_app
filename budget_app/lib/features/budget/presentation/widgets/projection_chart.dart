@@ -25,10 +25,14 @@ class ProjectionChart extends StatelessWidget {
       return const Center(child: Text('No data for projection.'));
     }
 
-    final currencyCode = context.watch<SettingsBloc>().state.settings.currencyCode;
+    final currencyCode = context
+        .watch<SettingsBloc>()
+        .state
+        .settings
+        .currencyCode;
 
     // Prepare data
-    final filteredPoints = isWeekly 
+    final filteredPoints = isWeekly
         ? points.where((p) => p.isWeekEnding || p == points.last).toList()
         : points;
 
@@ -36,18 +40,26 @@ class ProjectionChart extends StatelessWidget {
       return const Center(child: Text('Not enough data to display chart.'));
     }
 
-    double minActual = filteredPoints.map((p) => p.actualBalance).reduce((a, b) => a < b ? a : b);
-    double maxActual = filteredPoints.map((p) => p.actualBalance).reduce((a, b) => a > b ? a : b);
-    double minPotential = showPotential 
-        ? filteredPoints.map((p) => p.potentialBalance).reduce((a, b) => a < b ? a : b)
+    final double minActual = filteredPoints
+        .map((p) => p.actualBalance)
+        .reduce((a, b) => a < b ? a : b);
+    final double maxActual = filteredPoints
+        .map((p) => p.actualBalance)
+        .reduce((a, b) => a > b ? a : b);
+    final double minPotential = showPotential
+        ? filteredPoints
+              .map((p) => p.potentialBalance)
+              .reduce((a, b) => a < b ? a : b)
         : minActual;
-    double maxPotential = showPotential 
-        ? filteredPoints.map((p) => p.potentialBalance).reduce((a, b) => a > b ? a : b)
+    final double maxPotential = showPotential
+        ? filteredPoints
+              .map((p) => p.potentialBalance)
+              .reduce((a, b) => a > b ? a : b)
         : maxActual;
 
     double minBalance = minActual < minPotential ? minActual : minPotential;
     double maxBalance = maxActual > maxPotential ? maxActual : maxPotential;
-    
+
     // Add some padding to Y axis
     minBalance = minBalance < 0 ? minBalance * 1.1 : minBalance * 0.9;
     maxBalance = maxBalance > 0 ? maxBalance * 1.1 : maxBalance * 1.1;
@@ -76,18 +88,28 @@ class ProjectionChart extends StatelessWidget {
           gridData: FlGridData(
             show: true,
             drawVerticalLine: true,
-            horizontalInterval: (maxBalance - minBalance) / 5 == 0 ? 1 : (maxBalance - minBalance) / 5,
-            verticalInterval: actualSpots.length > 5 ? (actualSpots.length / 5).floorToDouble() : 1,
+            horizontalInterval: (maxBalance - minBalance) / 5 == 0
+                ? 1
+                : (maxBalance - minBalance) / 5,
+            verticalInterval: actualSpots.length > 5
+                ? (actualSpots.length / 5).floorToDouble()
+                : 1,
           ),
           titlesData: FlTitlesData(
             show: true,
-            rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-            topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+            rightTitles: const AxisTitles(
+              sideTitles: SideTitles(showTitles: false),
+            ),
+            topTitles: const AxisTitles(
+              sideTitles: SideTitles(showTitles: false),
+            ),
             bottomTitles: AxisTitles(
               sideTitles: SideTitles(
                 showTitles: true,
                 reservedSize: 30,
-                interval: actualSpots.length > 5 ? (actualSpots.length / 5).floorToDouble() : 1,
+                interval: actualSpots.length > 5
+                    ? (actualSpots.length / 5).floorToDouble()
+                    : 1,
                 getTitlesWidget: (value, meta) {
                   final index = value.toInt();
                   if (index >= 0 && index < filteredPoints.length) {
@@ -107,11 +129,15 @@ class ProjectionChart extends StatelessWidget {
             leftTitles: AxisTitles(
               sideTitles: SideTitles(
                 showTitles: true,
-                interval: (maxBalance - minBalance) / 5 == 0 ? 1 : (maxBalance - minBalance) / 5,
+                interval: (maxBalance - minBalance) / 5 == 0
+                    ? 1
+                    : (maxBalance - minBalance) / 5,
                 reservedSize: 42,
                 getTitlesWidget: (value, meta) {
                   return Text(
-                    NumberFormat.compactSimpleCurrency(name: currencyCode).format(value),
+                    NumberFormat.compactSimpleCurrency(
+                      name: currencyCode,
+                    ).format(value),
                     style: const TextStyle(fontSize: 10),
                   );
                 },
@@ -173,11 +199,18 @@ class ProjectionChart extends StatelessWidget {
                 return touchedSpots.map((spot) {
                   final date = filteredPoints[spot.x.toInt()].date;
                   final formattedDate = DateFormat('MMM dd, yyyy').format(date);
-                  final formattedBalance = CurrencyFormatter.format(spot.y, currencyCode: currencyCode);
+                  final formattedBalance = CurrencyFormatter.format(
+                    spot.y,
+                    currencyCode: currencyCode,
+                  );
                   final label = spot.barIndex == 0 ? 'Actual' : 'Potential';
                   return LineTooltipItem(
                     '$formattedDate\n$label: $formattedBalance',
-                    TextStyle(color: spot.barIndex == 0 ? Colors.white : Colors.blue.shade100),
+                    TextStyle(
+                      color: spot.barIndex == 0
+                          ? Colors.white
+                          : Colors.blue.shade100,
+                    ),
                   );
                 }).toList();
               },

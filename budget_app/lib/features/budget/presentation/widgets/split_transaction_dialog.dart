@@ -188,9 +188,7 @@ class _SplitTransactionDialogState extends State<SplitTransactionDialog> {
               child: ListView.builder(
                 shrinkWrap: true,
                 itemCount: _splits.length,
-                itemBuilder: (context, index) {
-                  return _buildSplitRow(context, index);
-                },
+                itemBuilder: _buildSplitRow,
               ),
             ),
             const SizedBox(height: 8),

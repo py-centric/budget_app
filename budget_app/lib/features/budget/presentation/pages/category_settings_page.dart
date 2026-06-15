@@ -17,22 +17,37 @@ class CategorySettingsPage extends StatelessWidget {
             return const Center(child: CircularProgressIndicator());
           }
           if (state is CategoriesLoadedState) {
-            final incomeCategories = state.categories.where((c) => c.type == CategoryType.income).toList();
-            final expenseCategories = state.categories.where((c) => c.type == CategoryType.expense).toList();
+            final incomeCategories = state.categories
+                .where((c) => c.type == CategoryType.income)
+                .toList();
+            final expenseCategories = state.categories
+                .where((c) => c.type == CategoryType.expense)
+                .toList();
 
             return DefaultTabController(
               length: 2,
               child: Column(
                 children: [
                   const TabBar(
-                    tabs: [Tab(text: 'Income'), Tab(text: 'Expense')],
+                    tabs: [
+                      Tab(text: 'Income'),
+                      Tab(text: 'Expense'),
+                    ],
                     labelColor: Colors.black,
                   ),
                   Expanded(
                     child: TabBarView(
                       children: [
-                        _buildCategoryList(context, incomeCategories, CategoryType.income),
-                        _buildCategoryList(context, expenseCategories, CategoryType.expense),
+                        _buildCategoryList(
+                          context,
+                          incomeCategories,
+                          CategoryType.income,
+                        ),
+                        _buildCategoryList(
+                          context,
+                          expenseCategories,
+                          CategoryType.expense,
+                        ),
                       ],
                     ),
                   ),
@@ -50,7 +65,11 @@ class CategorySettingsPage extends StatelessWidget {
     );
   }
 
-  Widget _buildCategoryList(BuildContext context, List<Category> categories, CategoryType type) {
+  Widget _buildCategoryList(
+    BuildContext context,
+    List<Category> categories,
+    CategoryType type,
+  ) {
     return ListView.builder(
       itemCount: categories.length,
       itemBuilder: (context, index) {
@@ -64,10 +83,15 @@ class CategorySettingsPage extends StatelessWidget {
                 context: context,
                 builder: (dialogContext) => CategoryDeleteDialog(
                   category: category,
-                  availableCategories: categories.where((c) => c.id != category.id).toList(),
+                  availableCategories: categories
+                      .where((c) => c.id != category.id)
+                      .toList(),
                   onConfirm: (reassignedId) {
                     context.read<CategoryBloc>().add(
-                      RemoveCategory(id: category.id, reassignedId: reassignedId),
+                      RemoveCategory(
+                        id: category.id,
+                        reassignedId: reassignedId,
+                      ),
                     );
                   },
                 ),
@@ -98,20 +122,32 @@ class CategorySettingsPage extends StatelessWidget {
               DropdownButton<CategoryType>(
                 value: selectedType,
                 items: const [
-                  DropdownMenuItem(value: CategoryType.income, child: Text('Income')),
-                  DropdownMenuItem(value: CategoryType.expense, child: Text('Expense')),
+                  DropdownMenuItem(
+                    value: CategoryType.income,
+                    child: Text('Income'),
+                  ),
+                  DropdownMenuItem(
+                    value: CategoryType.expense,
+                    child: Text('Expense'),
+                  ),
                 ],
                 onChanged: (value) => setState(() => selectedType = value!),
               ),
             ],
           ),
           actions: [
-            TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancel'),
+            ),
             TextButton(
               onPressed: () {
                 if (nameController.text.isNotEmpty) {
                   context.read<CategoryBloc>().add(
-                    CreateCategory(name: nameController.text, type: selectedType),
+                    CreateCategory(
+                      name: nameController.text,
+                      type: selectedType,
+                    ),
                   );
                   Navigator.pop(context);
                 }

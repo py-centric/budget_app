@@ -50,7 +50,9 @@ class ProjectionPage extends StatelessWidget {
                       Switch(
                         value: state.isWeekly,
                         onChanged: (_) {
-                          context.read<ProjectionBloc>().add(ToggleProjectionGranularity());
+                          context.read<ProjectionBloc>().add(
+                            const ToggleProjectionGranularity(),
+                          );
                         },
                       ),
                       Text(state.isWeekly ? 'Weekly' : 'Daily'),
@@ -66,13 +68,24 @@ class ProjectionPage extends StatelessWidget {
                       DropdownButton<String>(
                         value: state.settings.defaultProjectionHorizon,
                         items: const [
-                          DropdownMenuItem(value: 'MONTH', child: Text('Current Month')),
-                          DropdownMenuItem(value: '30_DAYS', child: Text('30 Days')),
-                          DropdownMenuItem(value: '90_DAYS', child: Text('90 Days')),
+                          DropdownMenuItem(
+                            value: 'MONTH',
+                            child: Text('Current Month'),
+                          ),
+                          DropdownMenuItem(
+                            value: '30_DAYS',
+                            child: Text('30 Days'),
+                          ),
+                          DropdownMenuItem(
+                            value: '90_DAYS',
+                            child: Text('90 Days'),
+                          ),
                         ],
                         onChanged: (val) {
                           if (val != null) {
-                            context.read<ProjectionBloc>().add(ChangeProjectionHorizon(val));
+                            context.read<ProjectionBloc>().add(
+                              ChangeProjectionHorizon(val),
+                            );
                           }
                         },
                       ),
@@ -88,14 +101,18 @@ class ProjectionPage extends StatelessWidget {
                       Switch(
                         value: state.showActuals,
                         onChanged: (_) {
-                          context.read<ProjectionBloc>().add(const ToggleShowActuals());
+                          context.read<ProjectionBloc>().add(
+                            const ToggleShowActuals(),
+                          );
                         },
                       ),
                       const Text('Show Potential:'),
                       Switch(
                         value: state.showPotential,
                         onChanged: (_) {
-                          context.read<ProjectionBloc>().add(const ToggleShowPotential());
+                          context.read<ProjectionBloc>().add(
+                            const ToggleShowPotential(),
+                          );
                         },
                       ),
                     ],
@@ -122,7 +139,9 @@ class ProjectionPage extends StatelessWidget {
                           instance: instance,
                           originalDate: originalDate,
                           onSave: (override) {
-                            context.read<ProjectionBloc>().add(SaveOverride(override));
+                            context.read<ProjectionBloc>().add(
+                              SaveOverride(override),
+                            );
                           },
                         ),
                       );

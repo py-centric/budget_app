@@ -25,12 +25,18 @@ class NavigationState extends Equatable {
       currentPeriod: currentPeriod ?? this.currentPeriod,
       availablePeriods: availablePeriods ?? this.availablePeriods,
       activeBudget: activeBudget ?? this.activeBudget,
-      availableBudgetsForPeriod: availableBudgetsForPeriod ?? this.availableBudgetsForPeriod,
+      availableBudgetsForPeriod:
+          availableBudgetsForPeriod ?? this.availableBudgetsForPeriod,
     );
   }
 
   @override
-  List<Object?> get props => [currentPeriod, availablePeriods, activeBudget, availableBudgetsForPeriod];
+  List<Object?> get props => [
+    currentPeriod,
+    availablePeriods,
+    activeBudget,
+    availableBudgetsForPeriod,
+  ];
 
   Map<String, dynamic> toMap() {
     return {
