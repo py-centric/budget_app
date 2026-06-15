@@ -51,9 +51,7 @@ void main() {
     });
 
     test('inequality works correctly', () {
-      expect(testContribution, isNot(
-        testContribution.copyWith(amount: 600.0),
-      ));
+      expect(testContribution, isNot(testContribution.copyWith(amount: 600.0)));
     });
   });
 }

@@ -19,8 +19,8 @@ import 'package:budget_app/features/budget/domain/usecases/apply_recurring_overr
 import 'package:budget_app/features/budget/domain/usecases/get_available_periods.dart';
 import 'package:budget_app/features/budget/domain/usecases/duplicate_budget.dart';
 import 'package:budget_app/features/budget/domain/usecases/confirm_potential_transaction.dart';
-import 'package:budget_app/features/budget/presentation/budget_bloc.dart';
-import 'package:budget_app/features/budget/presentation/budget_event.dart';
+import 'package:budget_app/features/budget/presentation/bloc/budget_bloc.dart';
+import 'package:budget_app/features/budget/presentation/bloc/budget_event.dart';
 import 'package:budget_app/features/budget/presentation/bloc/navigation_bloc.dart';
 import 'package:budget_app/features/budget/presentation/bloc/projection_bloc.dart';
 import 'package:budget_app/features/budget/presentation/pages/home_page.dart';

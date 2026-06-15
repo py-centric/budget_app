@@ -4,7 +4,7 @@ import 'package:budget_app/features/budget/data/models/user_settings.dart';
 void main() {
   group('UserSettings', () {
     test('should create with default values', () {
-      final settings = UserSettings();
+      const settings = UserSettings();
 
       expect(settings.weekStartDay, 1);
       expect(settings.defaultProjectionHorizon, 'MONTH');
@@ -29,7 +29,7 @@ void main() {
     });
 
     test('should convert to map', () {
-      final settings = UserSettings(
+      const settings = UserSettings(
         weekStartDay: 0,
         defaultProjectionHorizon: 'YEAR',
         currencyCode: 'GBP',
@@ -45,7 +45,7 @@ void main() {
     });
 
     test('should copy with new values', () {
-      final settings = UserSettings();
+      const settings = UserSettings();
       final newSettings = settings.copyWith(
         currencyCode: 'JPY',
         themeMode: 'dark',

@@ -39,8 +39,8 @@ void main() {
         'emits configured state with configuration',
         build: () => ExportBloc(exportService: mockExportService),
         act: (bloc) => bloc.add(
-          ExportConfigure(
-            const ExportConfiguration(
+          const ExportConfigure(
+            ExportConfiguration(
               period: ExportPeriod.currentMonth,
               format: ExportFormat.csv,
             ),

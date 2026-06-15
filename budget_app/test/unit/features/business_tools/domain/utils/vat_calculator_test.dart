@@ -38,7 +38,7 @@ void main() {
       final summary = VatCalculator.calculateSummary(items);
 
       expect(summary.length, 2);
-      
+
       // 20% group: Net = 200 + 50 = 250, VAT = 40 + 10 = 50, Gross = 300
       final vat20 = summary.firstWhere((s) => s.rate == 20);
       expect(vat20.netAmount, 250);

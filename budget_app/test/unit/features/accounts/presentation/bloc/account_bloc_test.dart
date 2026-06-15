@@ -119,7 +119,7 @@ void main() {
           return accountBloc;
         },
         act: (bloc) => bloc.add(const DeleteAccount('1')),
-        expect: () => [AccountLoaded(accounts: const [], totalBalance: 0.0)],
+        expect: () => [const AccountLoaded(accounts: [], totalBalance: 0.0)],
       );
     });
 

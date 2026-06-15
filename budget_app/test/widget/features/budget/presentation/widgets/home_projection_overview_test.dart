@@ -10,8 +10,11 @@ import 'package:budget_app/features/budget/presentation/bloc/projection_state.da
 import 'package:budget_app/features/budget/data/models/user_settings.dart';
 import 'package:budget_app/features/settings/presentation/bloc/settings_bloc.dart';
 
-class MockProjectionBloc extends MockBloc<ProjectionEvent, ProjectionState> implements ProjectionBloc {}
-class MockSettingsBloc extends MockBloc<SettingsEvent, SettingsState> implements SettingsBloc {}
+class MockProjectionBloc extends MockBloc<ProjectionEvent, ProjectionState>
+    implements ProjectionBloc {}
+
+class MockSettingsBloc extends MockBloc<SettingsEvent, SettingsState>
+    implements SettingsBloc {}
 
 void main() {
   late MockProjectionBloc mockProjectionBloc;
@@ -35,7 +38,9 @@ void main() {
     );
   }
 
-  testWidgets('HomeProjectionOverview displays loading state', (WidgetTester tester) async {
+  testWidgets('HomeProjectionOverview displays loading state', (
+    WidgetTester tester,
+  ) async {
     when(() => mockProjectionBloc.state).thenReturn(ProjectionLoading());
 
     await tester.pumpWidget(createWidgetUnderTest());
@@ -43,13 +48,17 @@ void main() {
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
   });
 
-  testWidgets('HomeProjectionOverview displays loaded state', (WidgetTester tester) async {
-    when(() => mockProjectionBloc.state).thenReturn(const ProjectionLoaded(
-      points: [],
-      isWeekly: false,
-      settings: UserSettings(),
-      showActuals: false,
-    ));
+  testWidgets('HomeProjectionOverview displays loaded state', (
+    WidgetTester tester,
+  ) async {
+    when(() => mockProjectionBloc.state).thenReturn(
+      const ProjectionLoaded(
+        points: [],
+        isWeekly: false,
+        settings: UserSettings(),
+        showActuals: false,
+      ),
+    );
 
     await tester.pumpWidget(createWidgetUnderTest());
 

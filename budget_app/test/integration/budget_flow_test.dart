@@ -20,8 +20,8 @@ import 'package:budget_app/features/budget/domain/usecases/apply_recurring_overr
 import 'package:budget_app/features/budget/domain/usecases/get_available_periods.dart';
 import 'package:budget_app/features/budget/domain/usecases/duplicate_budget.dart';
 import 'package:budget_app/features/budget/domain/usecases/confirm_potential_transaction.dart';
-import 'package:budget_app/features/budget/presentation/budget_bloc.dart';
-import 'package:budget_app/features/budget/presentation/budget_event.dart';
+import 'package:budget_app/features/budget/presentation/bloc/budget_bloc.dart';
+import 'package:budget_app/features/budget/presentation/bloc/budget_event.dart';
 import 'package:budget_app/features/budget/presentation/bloc/navigation_bloc.dart';
 import 'package:budget_app/features/budget/presentation/bloc/projection_bloc.dart';
 import 'package:budget_app/features/budget/presentation/pages/home_page.dart';
@@ -30,22 +30,41 @@ import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:bloc_test/bloc_test.dart';
 
 class MockBudgetRepository extends Mock implements BudgetRepository {}
+
 class MockRecurringRepository extends Mock implements RecurringRepository {}
-class MockEmergencyFundRepository extends Mock implements EmergencyFundRepository {}
+
+class MockEmergencyFundRepository extends Mock
+    implements EmergencyFundRepository {}
+
 class MockAddIncome extends Mock implements AddIncome {}
+
 class MockAddExpense extends Mock implements AddExpense {}
+
 class MockCalculateSummary extends Mock implements CalculateSummary {}
+
 class MockDeleteEntry extends Mock implements DeleteEntry {}
+
 class MockUpdateEntry extends Mock implements UpdateEntry {}
-class MockSaveRecurringTransaction extends Mock implements SaveRecurringTransaction {}
+
+class MockSaveRecurringTransaction extends Mock
+    implements SaveRecurringTransaction {}
+
 class MockDuplicateBudget extends Mock implements DuplicateBudget {}
-class MockConfirmPotentialTransaction extends Mock implements ConfirmPotentialTransaction {}
+
+class MockConfirmPotentialTransaction extends Mock
+    implements ConfirmPotentialTransaction {}
+
 class MockGetAvailablePeriods extends Mock implements GetAvailablePeriods {}
+
 class MockStorage extends Mock implements Storage {}
-class MockSettingsBloc extends MockBloc<SettingsEvent, SettingsState> implements SettingsBloc {}
+
+class MockSettingsBloc extends MockBloc<SettingsEvent, SettingsState>
+    implements SettingsBloc {}
 
 class FakeIncomeEntry extends Fake implements IncomeEntry {}
+
 class FakeExpenseEntry extends Fake implements ExpenseEntry {}
+
 class FakeBudgetPeriod extends Fake implements BudgetPeriod {}
 
 void main() {
@@ -85,33 +104,41 @@ void main() {
     mockConfirmPotentialTransaction = MockConfirmPotentialTransaction();
     mockStorage = MockStorage();
     mockSettingsBloc = MockSettingsBloc();
-    
-    when(() => mockStorage.write(any(), any<dynamic>())).thenAnswer((_) async {});
+
+    when(
+      () => mockStorage.write(any(), any<dynamic>()),
+    ).thenAnswer((_) async {});
     HydratedBloc.storage = mockStorage;
 
     when(() => mockSettingsBloc.state).thenReturn(const SettingsState());
-    when(() => mockEmergencyFundRepository.watchTotalTarget()).thenAnswer((_) => Stream.fromIterable([0.0]));
+    when(
+      () => mockEmergencyFundRepository.watchTotalTarget(),
+    ).thenAnswer((_) => Stream.fromIterable([0.0]));
   });
 
   group('Integration Test: Full User Flow', () {
     testWidgets('should add income and display in summary', (
       WidgetTester tester,
     ) async {
-      when(
-        () => mockRepository.getCategories(),
-      ).thenAnswer(
+      when(() => mockRepository.getCategories()).thenAnswer(
         (_) async => [
           const Category(id: '1', name: 'Food', type: CategoryType.expense),
-          const Category(id: '2', name: 'Transport', type: CategoryType.expense),
+          const Category(
+            id: '2',
+            name: 'Transport',
+            type: CategoryType.expense,
+          ),
         ],
       );
       when(() => mockRepository.getAllIncome()).thenAnswer((_) async => []);
       when(() => mockRepository.getAllExpenses()).thenAnswer((_) async => []);
       when(() => mockAddIncome.call(any())).thenAnswer((_) async {});
-      when(() => mockCalculateSummary.call(
-        period: any(named: 'period'),
-        budgetId: any(named: 'budgetId'),
-      )).thenAnswer(
+      when(
+        () => mockCalculateSummary.call(
+          period: any(named: 'period'),
+          budgetId: any(named: 'budgetId'),
+        ),
+      ).thenAnswer(
         (_) async => BudgetSummary(
           totalIncome: 1000.0,
           totalExpenses: 0.0,
@@ -130,11 +157,20 @@ void main() {
           expenseEntries: [],
         ),
       );
-      when(() => mockGetAvailablePeriods.call()).thenAnswer((_) async => [BudgetPeriod.current()]);
-      when(() => mockRepository.getBudgetsForPeriod(any())).thenAnswer((_) async => []);
+      when(
+        () => mockGetAvailablePeriods.call(),
+      ).thenAnswer((_) async => [BudgetPeriod.current()]);
+      when(
+        () => mockRepository.getBudgetsForPeriod(any()),
+      ).thenAnswer((_) async => []);
 
-      final calculateProjection = CalculateProjection(mockRepository, mockRecurringRepository);
-      final applyRecurringOverride = ApplyRecurringOverride(mockRecurringRepository);
+      final calculateProjection = CalculateProjection(
+        mockRepository,
+        mockRecurringRepository,
+      );
+      final applyRecurringOverride = ApplyRecurringOverride(
+        mockRecurringRepository,
+      );
 
       await tester.pumpWidget(
         MaterialApp(
@@ -142,19 +178,22 @@ void main() {
             providers: [
               BlocProvider<SettingsBloc>.value(value: mockSettingsBloc),
               BlocProvider<BudgetBloc>(
-                create: (_) => BudgetBloc(
-                  repository: mockRepository,
-                  addIncomeUseCase: mockAddIncome,
-                  addExpenseUseCase: mockAddExpense,
-                  calculateSummaryUseCase: mockCalculateSummary,
-                  deleteEntryUseCase: mockDeleteEntry,
-                  updateEntryUseCase: mockUpdateEntry,
-                  saveRecurringTransactionUseCase: mockSaveRecurringTransaction,
-                  duplicateBudgetUseCase: mockDuplicateBudget,
-                  confirmPotentialTransactionUseCase: mockConfirmPotentialTransaction,
-                )
-                ..add(const LoadSummaryEvent())
-                ..add(const LoadCategoriesEvent()),
+                create: (_) =>
+                    BudgetBloc(
+                        repository: mockRepository,
+                        addIncomeUseCase: mockAddIncome,
+                        addExpenseUseCase: mockAddExpense,
+                        calculateSummaryUseCase: mockCalculateSummary,
+                        deleteEntryUseCase: mockDeleteEntry,
+                        updateEntryUseCase: mockUpdateEntry,
+                        saveRecurringTransactionUseCase:
+                            mockSaveRecurringTransaction,
+                        duplicateBudgetUseCase: mockDuplicateBudget,
+                        confirmPotentialTransactionUseCase:
+                            mockConfirmPotentialTransaction,
+                      )
+                      ..add(const LoadSummaryEvent())
+                      ..add(const LoadCategoriesEvent()),
               ),
               BlocProvider<NavigationBloc>(
                 create: (_) => NavigationBloc(

@@ -8,7 +8,8 @@ import 'package:budget_app/features/emergency_fund/presentation/bloc/emergency_f
 import 'package:budget_app/features/emergency_fund/presentation/bloc/emergency_fund_event.dart';
 import 'package:budget_app/features/emergency_fund/presentation/bloc/emergency_fund_state.dart';
 
-class MockEmergencyFundRepository extends Mock implements EmergencyFundRepository {}
+class MockEmergencyFundRepository extends Mock
+    implements EmergencyFundRepository {}
 
 class FakeEmergencyExpense extends Fake implements EmergencyExpense {}
 
@@ -39,8 +40,9 @@ void main() {
 
   setUp(() {
     mockRepository = MockEmergencyFundRepository();
-    when(() => mockRepository.watchTotalTarget())
-        .thenAnswer((_) => const Stream<double>.empty());
+    when(
+      () => mockRepository.watchTotalTarget(),
+    ).thenAnswer((_) => const Stream<double>.empty());
     emergencyFundBloc = EmergencyFundBloc(mockRepository);
   });
 
@@ -57,41 +59,47 @@ void main() {
       blocTest<EmergencyFundBloc, EmergencyFundState>(
         'emits [loading, success] with expenses when load succeeds',
         build: () {
-          when(() => mockRepository.getExpenses())
-              .thenAnswer((_) async => testExpenses);
-          when(() => mockRepository.getAverageMonthlySpending())
-              .thenAnswer((_) async => 2100.0);
+          when(
+            () => mockRepository.getExpenses(),
+          ).thenAnswer((_) async => testExpenses);
+          when(
+            () => mockRepository.getAverageMonthlySpending(),
+          ).thenAnswer((_) async => 2100.0);
           return emergencyFundBloc;
         },
         act: (bloc) => bloc.add(LoadEmergencyFund()),
         expect: () => [
           isA<EmergencyFundState>().having(
-            (s) => s.status, 'status', EmergencyFundStatus.loading,
+            (s) => s.status,
+            'status',
+            EmergencyFundStatus.loading,
           ),
-          isA<EmergencyFundState>().having(
-            (s) => s.status, 'status', EmergencyFundStatus.success,
-          ).having(
-            (s) => s.expenses.length, 'expense count', 2,
-          ).having(
-            (s) => s.averageMonthlySpending, 'avg monthly', 2100.0,
-          ),
+          isA<EmergencyFundState>()
+              .having((s) => s.status, 'status', EmergencyFundStatus.success)
+              .having((s) => s.expenses.length, 'expense count', 2)
+              .having((s) => s.averageMonthlySpending, 'avg monthly', 2100.0),
         ],
       );
 
       blocTest<EmergencyFundBloc, EmergencyFundState>(
         'emits [loading, failure] when load fails',
         build: () {
-          when(() => mockRepository.getExpenses())
-              .thenThrow(Exception('Database error'));
+          when(
+            () => mockRepository.getExpenses(),
+          ).thenThrow(Exception('Database error'));
           return emergencyFundBloc;
         },
         act: (bloc) => bloc.add(LoadEmergencyFund()),
         expect: () => [
           isA<EmergencyFundState>().having(
-            (s) => s.status, 'status', EmergencyFundStatus.loading,
+            (s) => s.status,
+            'status',
+            EmergencyFundStatus.loading,
           ),
           isA<EmergencyFundState>().having(
-            (s) => s.status, 'status', EmergencyFundStatus.failure,
+            (s) => s.status,
+            'status',
+            EmergencyFundStatus.failure,
           ),
         ],
       );
@@ -101,19 +109,19 @@ void main() {
       blocTest<EmergencyFundBloc, EmergencyFundState>(
         'emits state with calculated living expenses',
         build: () {
-          when(() => mockRepository.getExpenses())
-              .thenAnswer((_) async => testExpenses);
-          when(() => mockRepository.getAverageMonthlySpending())
-              .thenAnswer((_) async => 2100.0);
+          when(
+            () => mockRepository.getExpenses(),
+          ).thenAnswer((_) async => testExpenses);
+          when(
+            () => mockRepository.getAverageMonthlySpending(),
+          ).thenAnswer((_) async => 2100.0);
           return emergencyFundBloc;
         },
         act: (bloc) => bloc.add(const CalculateLivingExpenses(6)),
         expect: () => [
-          isA<EmergencyFundState>().having(
-            (s) => s.calculatedLivingExpenses, '6 months', 12600.0,
-          ).having(
-            (s) => s.averageMonthlySpending, 'avg monthly', 2100.0,
-          ),
+          isA<EmergencyFundState>()
+              .having((s) => s.calculatedLivingExpenses, '6 months', 12600.0)
+              .having((s) => s.averageMonthlySpending, 'avg monthly', 2100.0),
         ],
       );
     });
@@ -122,17 +130,20 @@ void main() {
       blocTest<EmergencyFundBloc, EmergencyFundState>(
         'saves updated expense amount',
         build: () {
-          when(() => mockRepository.getExpenses())
-              .thenAnswer((_) async => testExpenses);
-          when(() => mockRepository.getAverageMonthlySpending())
-              .thenAnswer((_) async => 2100.0);
-          when(() => mockRepository.saveExpense(any()))
-              .thenAnswer((_) async {});
+          when(
+            () => mockRepository.getExpenses(),
+          ).thenAnswer((_) async => testExpenses);
+          when(
+            () => mockRepository.getAverageMonthlySpending(),
+          ).thenAnswer((_) async => 2100.0);
+          when(
+            () => mockRepository.saveExpense(any()),
+          ).thenAnswer((_) async {});
           return emergencyFundBloc;
         },
         act: (bloc) {
           bloc.add(LoadEmergencyFund());
-          bloc.add(const UpdateExpenseAmount(id: '1', amount: 1600.0));
+          bloc.add(const UpdateExpenseAmount('1', 1600.0));
         },
         expect: () => [
           isA<EmergencyFundState>(),
@@ -147,23 +158,28 @@ void main() {
       blocTest<EmergencyFundBloc, EmergencyFundState>(
         'emits failure when save fails',
         build: () {
-          when(() => mockRepository.getExpenses())
-              .thenAnswer((_) async => testExpenses);
-          when(() => mockRepository.getAverageMonthlySpending())
-              .thenAnswer((_) async => 2100.0);
-          when(() => mockRepository.saveExpense(any()))
-              .thenThrow(Exception('Save failed'));
+          when(
+            () => mockRepository.getExpenses(),
+          ).thenAnswer((_) async => testExpenses);
+          when(
+            () => mockRepository.getAverageMonthlySpending(),
+          ).thenAnswer((_) async => 2100.0);
+          when(
+            () => mockRepository.saveExpense(any()),
+          ).thenThrow(Exception('Save failed'));
           return emergencyFundBloc;
         },
         act: (bloc) {
           bloc.add(LoadEmergencyFund());
-          bloc.add(const UpdateExpenseAmount(id: '1', amount: 1600.0));
+          bloc.add(const UpdateExpenseAmount('1', 1600.0));
         },
         expect: () => [
           isA<EmergencyFundState>(),
           isA<EmergencyFundState>(),
           isA<EmergencyFundState>().having(
-            (s) => s.status, 'status', EmergencyFundStatus.failure,
+            (s) => s.status,
+            'status',
+            EmergencyFundStatus.failure,
           ),
         ],
       );
@@ -173,12 +189,15 @@ void main() {
       blocTest<EmergencyFundBloc, EmergencyFundState>(
         'saves new expense and reloads',
         build: () {
-          when(() => mockRepository.getExpenses())
-              .thenAnswer((_) async => testExpenses);
-          when(() => mockRepository.getAverageMonthlySpending())
-              .thenAnswer((_) async => 2100.0);
-          when(() => mockRepository.saveExpense(any()))
-              .thenAnswer((_) async {});
+          when(
+            () => mockRepository.getExpenses(),
+          ).thenAnswer((_) async => testExpenses);
+          when(
+            () => mockRepository.getAverageMonthlySpending(),
+          ).thenAnswer((_) async => 2100.0);
+          when(
+            () => mockRepository.saveExpense(any()),
+          ).thenAnswer((_) async {});
           return emergencyFundBloc;
         },
         act: (bloc) {
@@ -198,12 +217,15 @@ void main() {
       blocTest<EmergencyFundBloc, EmergencyFundState>(
         'emits failure when add fails',
         build: () {
-          when(() => mockRepository.getExpenses())
-              .thenAnswer((_) async => testExpenses);
-          when(() => mockRepository.getAverageMonthlySpending())
-              .thenAnswer((_) async => 2100.0);
-          when(() => mockRepository.saveExpense(any()))
-              .thenThrow(Exception('Add failed'));
+          when(
+            () => mockRepository.getExpenses(),
+          ).thenAnswer((_) async => testExpenses);
+          when(
+            () => mockRepository.getAverageMonthlySpending(),
+          ).thenAnswer((_) async => 2100.0);
+          when(
+            () => mockRepository.saveExpense(any()),
+          ).thenThrow(Exception('Add failed'));
           return emergencyFundBloc;
         },
         act: (bloc) {
@@ -214,7 +236,9 @@ void main() {
           isA<EmergencyFundState>(),
           isA<EmergencyFundState>(),
           isA<EmergencyFundState>().having(
-            (s) => s.status, 'status', EmergencyFundStatus.failure,
+            (s) => s.status,
+            'status',
+            EmergencyFundStatus.failure,
           ),
         ]),
       );
@@ -224,12 +248,15 @@ void main() {
       blocTest<EmergencyFundBloc, EmergencyFundState>(
         'deletes expense',
         build: () {
-          when(() => mockRepository.getExpenses())
-              .thenAnswer((_) async => testExpenses);
-          when(() => mockRepository.getAverageMonthlySpending())
-              .thenAnswer((_) async => 2100.0);
-          when(() => mockRepository.deleteExpense(any()))
-              .thenAnswer((_) async {});
+          when(
+            () => mockRepository.getExpenses(),
+          ).thenAnswer((_) async => testExpenses);
+          when(
+            () => mockRepository.getAverageMonthlySpending(),
+          ).thenAnswer((_) async => 2100.0);
+          when(
+            () => mockRepository.deleteExpense(any()),
+          ).thenAnswer((_) async {});
           return emergencyFundBloc;
         },
         act: (bloc) {
@@ -249,12 +276,15 @@ void main() {
       blocTest<EmergencyFundBloc, EmergencyFundState>(
         'emits failure when delete fails',
         build: () {
-          when(() => mockRepository.getExpenses())
-              .thenAnswer((_) async => testExpenses);
-          when(() => mockRepository.getAverageMonthlySpending())
-              .thenAnswer((_) async => 2100.0);
-          when(() => mockRepository.deleteExpense(any()))
-              .thenThrow(Exception('Delete failed'));
+          when(
+            () => mockRepository.getExpenses(),
+          ).thenAnswer((_) async => testExpenses);
+          when(
+            () => mockRepository.getAverageMonthlySpending(),
+          ).thenAnswer((_) async => 2100.0);
+          when(
+            () => mockRepository.deleteExpense(any()),
+          ).thenThrow(Exception('Delete failed'));
           return emergencyFundBloc;
         },
         act: (bloc) {
@@ -265,7 +295,9 @@ void main() {
           isA<EmergencyFundState>(),
           isA<EmergencyFundState>(),
           isA<EmergencyFundState>().having(
-            (s) => s.status, 'status', EmergencyFundStatus.failure,
+            (s) => s.status,
+            'status',
+            EmergencyFundStatus.failure,
           ),
         ]),
       );

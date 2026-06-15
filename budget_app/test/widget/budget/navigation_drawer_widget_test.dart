@@ -20,12 +20,15 @@ void main() {
   setUp(() {
     mockNavigationBloc = MockNavigationBloc();
     mockReminderBloc = MockReminderBloc();
-    currentPeriod = BudgetPeriod(year: 2024, month: 1);
+    currentPeriod = const BudgetPeriod(year: 2024, month: 1);
 
     when(() => mockNavigationBloc.state).thenReturn(
       NavigationState(
         currentPeriod: currentPeriod,
-        availablePeriods: [currentPeriod, BudgetPeriod(year: 2024, month: 2)],
+        availablePeriods: [
+          currentPeriod,
+          const BudgetPeriod(year: 2024, month: 2),
+        ],
       ),
     );
     when(

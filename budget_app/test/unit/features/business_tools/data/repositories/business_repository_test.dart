@@ -10,6 +10,7 @@ import 'package:budget_app/features/business_tools/domain/entities/received_invo
 import 'package:budget_app/features/business_tools/data/models/received_invoice_model.dart';
 
 class MockLocalDatabase extends Mock implements LocalDatabase {}
+
 class MockDatabase extends Mock implements Database {}
 
 void main() {
@@ -25,7 +26,7 @@ void main() {
   });
 
   group('Client CRUD', () {
-    final tClient = Client(
+    const tClient = Client(
       id: '1',
       name: 'Test Client',
       address: '123 Test St',
@@ -34,7 +35,9 @@ void main() {
     final tClientModel = ClientModel.fromEntity(tClient);
 
     test('should get clients from database', () async {
-      when(() => mockDb.query('clients')).thenAnswer((_) async => [tClientModel.toMap()]);
+      when(
+        () => mockDb.query('clients'),
+      ).thenAnswer((_) async => [tClientModel.toMap()]);
 
       final result = await repository.getClients();
 
@@ -44,9 +47,16 @@ void main() {
     });
 
     test('should insert client if not exists', () async {
-      when(() => mockDb.query('clients', where: any(named: 'where'), whereArgs: any(named: 'whereArgs')))
-          .thenAnswer((_) async => []);
-      when(() => mockDb.insert('clients', tClientModel.toMap())).thenAnswer((_) async => 1);
+      when(
+        () => mockDb.query(
+          'clients',
+          where: any(named: 'where'),
+          whereArgs: any(named: 'whereArgs'),
+        ),
+      ).thenAnswer((_) async => []);
+      when(
+        () => mockDb.insert('clients', tClientModel.toMap()),
+      ).thenAnswer((_) async => 1);
 
       await repository.saveClient(tClient);
 
@@ -54,23 +64,48 @@ void main() {
     });
 
     test('should update client if exists', () async {
-      when(() => mockDb.query('clients', where: any(named: 'where'), whereArgs: any(named: 'whereArgs')))
-          .thenAnswer((_) async => [tClientModel.toMap()]);
-      when(() => mockDb.update('clients', tClientModel.toMap(), where: any(named: 'where'), whereArgs: any(named: 'whereArgs')))
-          .thenAnswer((_) async => 1);
+      when(
+        () => mockDb.query(
+          'clients',
+          where: any(named: 'where'),
+          whereArgs: any(named: 'whereArgs'),
+        ),
+      ).thenAnswer((_) async => [tClientModel.toMap()]);
+      when(
+        () => mockDb.update(
+          'clients',
+          tClientModel.toMap(),
+          where: any(named: 'where'),
+          whereArgs: any(named: 'whereArgs'),
+        ),
+      ).thenAnswer((_) async => 1);
 
       await repository.saveClient(tClient);
 
-      verify(() => mockDb.update('clients', tClientModel.toMap(), where: any(named: 'where'), whereArgs: any(named: 'whereArgs'))).called(1);
+      verify(
+        () => mockDb.update(
+          'clients',
+          tClientModel.toMap(),
+          where: any(named: 'where'),
+          whereArgs: any(named: 'whereArgs'),
+        ),
+      ).called(1);
     });
 
     test('should delete client', () async {
-      when(() => mockDb.delete('clients', where: any(named: 'where'), whereArgs: any(named: 'whereArgs')))
-          .thenAnswer((_) async => 1);
+      when(
+        () => mockDb.delete(
+          'clients',
+          where: any(named: 'where'),
+          whereArgs: any(named: 'whereArgs'),
+        ),
+      ).thenAnswer((_) async => 1);
 
       await repository.deleteClient('1');
 
-      verify(() => mockDb.delete('clients', where: 'id = ?', whereArgs: ['1'])).called(1);
+      verify(
+        () => mockDb.delete('clients', where: 'id = ?', whereArgs: ['1']),
+      ).called(1);
     });
   });
 
@@ -84,11 +119,14 @@ void main() {
       status: ReceivedInvoiceStatus.unpaid,
       balanceDue: 100,
     );
-    final tReceivedInvoiceModel = ReceivedInvoiceModel.fromEntity(tReceivedInvoice);
+    final tReceivedInvoiceModel = ReceivedInvoiceModel.fromEntity(
+      tReceivedInvoice,
+    );
 
     test('should get received invoices from database', () async {
-      when(() => mockDb.query('received_invoices', orderBy: any(named: 'orderBy')))
-          .thenAnswer((_) async => [tReceivedInvoiceModel.toMap()]);
+      when(
+        () => mockDb.query('received_invoices', orderBy: any(named: 'orderBy')),
+      ).thenAnswer((_) async => [tReceivedInvoiceModel.toMap()]);
 
       final result = await repository.getReceivedInvoices();
 
@@ -97,22 +135,42 @@ void main() {
     });
 
     test('should save received invoice', () async {
-      when(() => mockDb.query('received_invoices', where: any(named: 'where'), whereArgs: any(named: 'whereArgs')))
-          .thenAnswer((_) async => []);
-      when(() => mockDb.insert('received_invoices', tReceivedInvoiceModel.toMap())).thenAnswer((_) async => 1);
+      when(
+        () => mockDb.query(
+          'received_invoices',
+          where: any(named: 'where'),
+          whereArgs: any(named: 'whereArgs'),
+        ),
+      ).thenAnswer((_) async => []);
+      when(
+        () => mockDb.insert('received_invoices', tReceivedInvoiceModel.toMap()),
+      ).thenAnswer((_) async => 1);
 
       await repository.saveReceivedInvoice(tReceivedInvoice);
 
-      verify(() => mockDb.insert('received_invoices', tReceivedInvoiceModel.toMap())).called(1);
+      verify(
+        () => mockDb.insert('received_invoices', tReceivedInvoiceModel.toMap()),
+      ).called(1);
     });
 
     test('should delete received invoice', () async {
-      when(() => mockDb.delete('received_invoices', where: any(named: 'where'), whereArgs: any(named: 'whereArgs')))
-          .thenAnswer((_) async => 1);
+      when(
+        () => mockDb.delete(
+          'received_invoices',
+          where: any(named: 'where'),
+          whereArgs: any(named: 'whereArgs'),
+        ),
+      ).thenAnswer((_) async => 1);
 
       await repository.deleteReceivedInvoice('1');
 
-      verify(() => mockDb.delete('received_invoices', where: 'id = ?', whereArgs: ['1'])).called(1);
+      verify(
+        () => mockDb.delete(
+          'received_invoices',
+          where: 'id = ?',
+          whereArgs: ['1'],
+        ),
+      ).called(1);
     });
   });
 }

@@ -95,7 +95,7 @@ void main() {
       expect(instances.length, 3); // March, April, June (May deleted)
       expect(instances[0].date, DateTime(2026, 3, 1));
       expect(instances[0].amount, 50.0);
-      
+
       expect(instances[1].date, DateTime(2026, 4, 1));
       expect(instances[1].amount, 75.0);
       expect(instances[1].isOverride, true);
@@ -127,7 +127,10 @@ void main() {
       expect(instances.length, 3);
       expect(instances[0].date, DateTime(2026, 1, 31));
       expect(instances[1].date, DateTime(2026, 2, 28)); // Feb 2026 has 28 days
-      expect(instances[2].date, DateTime(2026, 3, 28)); // Should it be 31 or 28? 
+      expect(
+        instances[2].date,
+        DateTime(2026, 3, 28),
+      ); // Should it be 31 or 28?
       // Current logic: targetDay = date.day > lastDay ? lastDay : date.day;
       // In the loop, date updates to Feb 28. Then next month calculates from Feb 28.
       // So March will be 28. This is a known limitation of simple addition.

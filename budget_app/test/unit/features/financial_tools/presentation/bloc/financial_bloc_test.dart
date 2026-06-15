@@ -10,6 +10,7 @@ import 'package:budget_app/features/financial_tools/domain/entities/financial_to
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 
 class MockFinancialRepository extends Mock implements FinancialRepository {}
+
 class MockStorage extends Mock implements Storage {}
 
 void main() {
@@ -20,7 +21,7 @@ void main() {
   setUp(() {
     mockRepository = MockFinancialRepository();
     mockStorage = MockStorage();
-    
+
     when(() => mockStorage.read(any())).thenReturn(null);
     when(() => mockStorage.write(any(), any())).thenAnswer((_) async {});
     HydratedBloc.storage = mockStorage;
@@ -45,32 +46,36 @@ void main() {
     blocTest<FinancialBloc, FinancialState>(
       'emits updated state when Net Worth assets are added',
       build: () => financialBloc,
-      act: (bloc) => bloc.add(const UpdateNetWorthAssetsEvent([
-        FinancialToolEntry(label: 'Cash', value: 1000)
-      ])),
+      act: (bloc) => bloc.add(
+        const UpdateNetWorthAssetsEvent([
+          FinancialToolEntry(label: 'Cash', value: 1000),
+        ]),
+      ),
       expect: () => [
-        const FinancialState(netWorthAssets: [
-          FinancialToolEntry(label: 'Cash', value: 1000)
-        ])
+        const FinancialState(
+          netWorthAssets: [FinancialToolEntry(label: 'Cash', value: 1000)],
+        ),
       ],
     );
 
     blocTest<FinancialBloc, FinancialState>(
       'emits updated state when Loan params are updated',
       build: () => financialBloc,
-      act: (bloc) => bloc.add(const UpdateLoanParamsEvent(
-        principal: 5000,
-        rate: 10,
-        years: 3,
-        interestType: InterestType.simple,
-      )),
+      act: (bloc) => bloc.add(
+        const UpdateLoanParamsEvent(
+          principal: 5000,
+          rate: 10,
+          years: 3,
+          interestType: InterestType.simple,
+        ),
+      ),
       expect: () => [
         const FinancialState(
           loanPrincipal: 5000,
           loanRate: 10,
           loanYears: 3,
           loanInterestType: InterestType.simple,
-        )
+        ),
       ],
     );
   });

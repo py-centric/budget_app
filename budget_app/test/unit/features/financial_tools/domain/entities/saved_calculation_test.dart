@@ -8,7 +8,7 @@ void main() {
         id: '1',
         type: 'loan',
         name: 'My Loan',
-        data: {'principal': 100000, 'rate': 5.0, 'term': 360},
+        data: const {'principal': 100000, 'rate': 5.0, 'term': 360},
         createdAt: DateTime(2024, 1, 15),
       );
 
@@ -25,7 +25,7 @@ void main() {
         id: '2',
         type: 'savings',
         name: 'Emergency Fund',
-        data: {'monthly': 500},
+        data: const {'monthly': 500},
         createdAt: DateTime(2024, 3, 1),
       );
 
@@ -40,7 +40,7 @@ void main() {
         id: '1',
         type: 'loan',
         name: 'Test',
-        data: {},
+        data: const {},
         createdAt: DateTime(2024, 1, 1),
       );
 
@@ -48,7 +48,7 @@ void main() {
         id: '1',
         type: 'loan',
         name: 'Test',
-        data: {},
+        data: const {},
         createdAt: DateTime(2024, 1, 1),
       );
 
@@ -60,7 +60,7 @@ void main() {
         id: '1',
         type: 'loan',
         name: 'Test 1',
-        data: {},
+        data: const {},
         createdAt: DateTime(2024, 1, 1),
       );
 
@@ -68,7 +68,7 @@ void main() {
         id: '2',
         type: 'loan',
         name: 'Test 2',
-        data: {},
+        data: const {},
         createdAt: DateTime(2024, 1, 1),
       );
 

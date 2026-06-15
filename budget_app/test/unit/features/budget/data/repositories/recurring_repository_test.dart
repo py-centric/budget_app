@@ -3,7 +3,6 @@ import 'package:budget_app/features/budget/domain/entities/recurring_transaction
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 void main() {
-
   setUpAll(() {
     sqfliteFfiInit();
     databaseFactory = databaseFactoryFfi;
@@ -11,7 +10,7 @@ void main() {
 
   setUp(() async {
     // Use in-memory database for testing
-    // Actually, LocalDatabase.instance uses a file. 
+    // Actually, LocalDatabase.instance uses a file.
     // For a real test, I'd mock the database.
     // I'll skip the real DB test here to avoid messing with user data.
   });

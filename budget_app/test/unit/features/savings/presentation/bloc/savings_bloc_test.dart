@@ -47,33 +47,31 @@ void main() {
       blocTest<SavingsBloc, SavingsState>(
         'emits [SavingsLoading, SavingsLoaded] when load succeeds',
         build: () {
-          when(() => mockRepository.getAllGoals())
-              .thenAnswer((_) async => [testGoal]);
-          when(() => mockRepository.getContributionsForGoal(any()))
-              .thenAnswer((_) async => []);
+          when(
+            () => mockRepository.getAllGoals(),
+          ).thenAnswer((_) async => [testGoal]);
+          when(
+            () => mockRepository.getContributionsForGoal(any()),
+          ).thenAnswer((_) async => []);
           return savingsBloc;
         },
         act: (bloc) => bloc.add(LoadSavingsGoals()),
         expect: () => [
           isA<SavingsLoading>(),
-          isA<SavingsLoaded>().having(
-            (s) => s.goals.length, 'goal count', 1,
-          ),
+          isA<SavingsLoaded>().having((s) => s.goals.length, 'goal count', 1),
         ],
       );
 
       blocTest<SavingsBloc, SavingsState>(
         'emits [SavingsLoading, SavingsError] when load fails',
         build: () {
-          when(() => mockRepository.getAllGoals())
-              .thenThrow(Exception('Database error'));
+          when(
+            () => mockRepository.getAllGoals(),
+          ).thenThrow(Exception('Database error'));
           return savingsBloc;
         },
         act: (bloc) => bloc.add(LoadSavingsGoals()),
-        expect: () => [
-          isA<SavingsLoading>(),
-          isA<SavingsError>(),
-        ],
+        expect: () => [isA<SavingsLoading>(), isA<SavingsError>()],
       );
     });
 
@@ -81,21 +79,20 @@ void main() {
       blocTest<SavingsBloc, SavingsState>(
         'saves goal and reloads',
         build: () {
-          when(() => mockRepository.saveGoal(any()))
-              .thenAnswer((_) async {});
-          when(() => mockRepository.getAllGoals())
-              .thenAnswer((_) async => [testGoal]);
-          when(() => mockRepository.getContributionsForGoal(any()))
-              .thenAnswer((_) async => []);
+          when(() => mockRepository.saveGoal(any())).thenAnswer((_) async {});
+          when(
+            () => mockRepository.getAllGoals(),
+          ).thenAnswer((_) async => [testGoal]);
+          when(
+            () => mockRepository.getContributionsForGoal(any()),
+          ).thenAnswer((_) async => []);
           return savingsBloc;
         },
         act: (bloc) => bloc.add(
           const AddSavingsGoal(name: 'New Goal', targetAmount: 1000.0),
         ),
-        expect: () => containsAll([
-          isA<SavingsLoading>(),
-          isA<SavingsLoaded>(),
-        ]),
+        expect: () =>
+            containsAll([isA<SavingsLoading>(), isA<SavingsLoaded>()]),
         verify: (bloc) {
           verify(() => mockRepository.saveGoal(any())).called(1);
         },
@@ -106,19 +103,18 @@ void main() {
       blocTest<SavingsBloc, SavingsState>(
         'updates goal and reloads',
         build: () {
-          when(() => mockRepository.saveGoal(any()))
-              .thenAnswer((_) async {});
-          when(() => mockRepository.getAllGoals())
-              .thenAnswer((_) async => [testGoal]);
-          when(() => mockRepository.getContributionsForGoal(any()))
-              .thenAnswer((_) async => []);
+          when(() => mockRepository.saveGoal(any())).thenAnswer((_) async {});
+          when(
+            () => mockRepository.getAllGoals(),
+          ).thenAnswer((_) async => [testGoal]);
+          when(
+            () => mockRepository.getContributionsForGoal(any()),
+          ).thenAnswer((_) async => []);
           return savingsBloc;
         },
         act: (bloc) => bloc.add(UpdateSavingsGoal(testGoal)),
-        expect: () => containsAll([
-          isA<SavingsLoading>(),
-          isA<SavingsLoaded>(),
-        ]),
+        expect: () =>
+            containsAll([isA<SavingsLoading>(), isA<SavingsLoaded>()]),
         verify: (bloc) {
           verify(() => mockRepository.saveGoal(any())).called(1);
         },
@@ -129,19 +125,16 @@ void main() {
       blocTest<SavingsBloc, SavingsState>(
         'deletes goal and reloads',
         build: () {
-          when(() => mockRepository.deleteGoal(any()))
-              .thenAnswer((_) async {});
-          when(() => mockRepository.getAllGoals())
-              .thenAnswer((_) async => []);
-          when(() => mockRepository.getContributionsForGoal(any()))
-              .thenAnswer((_) async => []);
+          when(() => mockRepository.deleteGoal(any())).thenAnswer((_) async {});
+          when(() => mockRepository.getAllGoals()).thenAnswer((_) async => []);
+          when(
+            () => mockRepository.getContributionsForGoal(any()),
+          ).thenAnswer((_) async => []);
           return savingsBloc;
         },
         act: (bloc) => bloc.add(const DeleteSavingsGoal('1')),
-        expect: () => containsAll([
-          isA<SavingsLoading>(),
-          isA<SavingsLoaded>(),
-        ]),
+        expect: () =>
+            containsAll([isA<SavingsLoading>(), isA<SavingsLoaded>()]),
         verify: (bloc) {
           verify(() => mockRepository.deleteGoal('1')).called(1);
         },
@@ -152,16 +145,19 @@ void main() {
       blocTest<SavingsBloc, SavingsState>(
         'adds contribution and updates goal current amount',
         build: () {
-          when(() => mockRepository.addContribution(any()))
-              .thenAnswer((_) async {});
-          when(() => mockRepository.getGoalById(any()))
-              .thenAnswer((_) async => testGoal);
-          when(() => mockRepository.saveGoal(any()))
-              .thenAnswer((_) async {});
-          when(() => mockRepository.getAllGoals())
-              .thenAnswer((_) async => [testGoal]);
-          when(() => mockRepository.getContributionsForGoal(any()))
-              .thenAnswer((_) async => []);
+          when(
+            () => mockRepository.addContribution(any()),
+          ).thenAnswer((_) async {});
+          when(
+            () => mockRepository.getGoalById(any()),
+          ).thenAnswer((_) async => testGoal);
+          when(() => mockRepository.saveGoal(any())).thenAnswer((_) async {});
+          when(
+            () => mockRepository.getAllGoals(),
+          ).thenAnswer((_) async => [testGoal]);
+          when(
+            () => mockRepository.getContributionsForGoal(any()),
+          ).thenAnswer((_) async => []);
           return savingsBloc;
         },
         act: (bloc) => bloc.add(
@@ -171,10 +167,8 @@ void main() {
             date: DateTime(2026, 5, 1),
           ),
         ),
-        expect: () => containsAll([
-          isA<SavingsLoading>(),
-          isA<SavingsLoaded>(),
-        ]),
+        expect: () =>
+            containsAll([isA<SavingsLoading>(), isA<SavingsLoaded>()]),
         verify: (bloc) {
           verify(() => mockRepository.addContribution(any())).called(1);
           verify(() => mockRepository.saveGoal(any())).called(1);
@@ -194,25 +188,26 @@ void main() {
       blocTest<SavingsBloc, SavingsState>(
         'deletes contribution and updates goal',
         build: () {
-          when(() => mockRepository.getContributionsForGoal(any()))
-              .thenAnswer((_) async => [testContribution]);
-          when(() => mockRepository.deleteContribution(any()))
-              .thenAnswer((_) async {});
-          when(() => mockRepository.getGoalById(any()))
-              .thenAnswer((_) async => testGoal);
-          when(() => mockRepository.saveGoal(any()))
-              .thenAnswer((_) async {});
-          when(() => mockRepository.getAllGoals())
-              .thenAnswer((_) async => [testGoal]);
+          when(
+            () => mockRepository.getContributionsForGoal(any()),
+          ).thenAnswer((_) async => [testContribution]);
+          when(
+            () => mockRepository.deleteContribution(any()),
+          ).thenAnswer((_) async {});
+          when(
+            () => mockRepository.getGoalById(any()),
+          ).thenAnswer((_) async => testGoal);
+          when(() => mockRepository.saveGoal(any())).thenAnswer((_) async {});
+          when(
+            () => mockRepository.getAllGoals(),
+          ).thenAnswer((_) async => [testGoal]);
           return savingsBloc;
         },
         act: (bloc) => bloc.add(
           const DeleteContribution(contributionId: 'c1', goalId: '1'),
         ),
-        expect: () => containsAll([
-          isA<SavingsLoading>(),
-          isA<SavingsLoaded>(),
-        ]),
+        expect: () =>
+            containsAll([isA<SavingsLoading>(), isA<SavingsLoaded>()]),
         verify: (bloc) {
           verify(() => mockRepository.deleteContribution('c1')).called(1);
         },

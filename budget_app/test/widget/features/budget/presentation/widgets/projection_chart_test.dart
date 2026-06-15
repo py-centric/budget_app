@@ -7,7 +7,8 @@ import 'package:budget_app/features/budget/presentation/widgets/projection_chart
 import 'package:budget_app/features/budget/domain/entities/projection_point.dart';
 import 'package:budget_app/features/settings/presentation/bloc/settings_bloc.dart';
 
-class MockSettingsBloc extends MockBloc<SettingsEvent, SettingsState> implements SettingsBloc {}
+class MockSettingsBloc extends MockBloc<SettingsEvent, SettingsState>
+    implements SettingsBloc {}
 
 void main() {
   late MockSettingsBloc mockSettingsBloc;
@@ -17,7 +18,9 @@ void main() {
     when(() => mockSettingsBloc.state).thenReturn(const SettingsState());
   });
 
-  testWidgets('ProjectionChart displays correctly with data', (WidgetTester tester) async {
+  testWidgets('ProjectionChart displays correctly with data', (
+    WidgetTester tester,
+  ) async {
     final points = [
       ProjectionPoint(
         date: DateTime(2026, 3, 1),
@@ -56,10 +59,7 @@ void main() {
         home: Scaffold(
           body: BlocProvider<SettingsBloc>.value(
             value: mockSettingsBloc,
-            child: ProjectionChart(
-              points: points,
-              isWeekly: false,
-            ),
+            child: ProjectionChart(points: points, isWeekly: false),
           ),
         ),
       ),
@@ -72,15 +72,12 @@ void main() {
     expect(find.byType(ProjectionChart), findsOneWidget);
   });
 
-  testWidgets('ProjectionChart displays empty state when no data', (WidgetTester tester) async {
+  testWidgets('ProjectionChart displays empty state when no data', (
+    WidgetTester tester,
+  ) async {
     await tester.pumpWidget(
       const MaterialApp(
-        home: Scaffold(
-          body: ProjectionChart(
-            points: [],
-            isWeekly: false,
-          ),
-        ),
+        home: Scaffold(body: ProjectionChart(points: [], isWeekly: false)),
       ),
     );
 

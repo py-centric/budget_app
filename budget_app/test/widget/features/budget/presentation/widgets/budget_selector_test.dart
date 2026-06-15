@@ -10,21 +10,35 @@ class MockNavigationBloc extends Mock implements NavigationBloc {}
 
 void main() {
   late MockNavigationBloc mockNavigationBloc;
-  final budget1 = const Budget(id: '1', name: 'Main Budget', periodMonth: 1, periodYear: 2026);
-  final budget2 = const Budget(id: '2', name: 'Alt Plan', periodMonth: 1, periodYear: 2026);
+  const budget1 = Budget(
+    id: '1',
+    name: 'Main Budget',
+    periodMonth: 1,
+    periodYear: 2026,
+  );
+  const budget2 = Budget(
+    id: '2',
+    name: 'Alt Plan',
+    periodMonth: 1,
+    periodYear: 2026,
+  );
 
   setUp(() {
     mockNavigationBloc = MockNavigationBloc();
-    when(() => mockNavigationBloc.stream).thenAnswer((_) => const Stream.empty());
+    when(
+      () => mockNavigationBloc.stream,
+    ).thenAnswer((_) => const Stream.empty());
   });
 
-  testWidgets('BudgetSelector renders correctly and switches budgets', (WidgetTester tester) async {
+  testWidgets('BudgetSelector renders correctly and switches budgets', (
+    WidgetTester tester,
+  ) async {
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
           body: BlocProvider<NavigationBloc>.value(
             value: mockNavigationBloc,
-            child: BudgetSelector(
+            child: const BudgetSelector(
               budgets: [budget1, budget2],
               activeBudget: budget1,
             ),
@@ -47,16 +61,18 @@ void main() {
     await tester.tap(find.text('Alt Plan').last);
     await tester.pumpAndSettle();
 
-    verify(() => mockNavigationBloc.add(ChangeBudget(budget2))).called(1);
+    verify(() => mockNavigationBloc.add(const ChangeBudget(budget2))).called(1);
   });
 
-  testWidgets('BudgetSelector hides when only one budget exists', (WidgetTester tester) async {
+  testWidgets('BudgetSelector hides when only one budget exists', (
+    WidgetTester tester,
+  ) async {
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
           body: BlocProvider<NavigationBloc>.value(
             value: mockNavigationBloc,
-            child: BudgetSelector(
+            child: const BudgetSelector(
               budgets: [budget1],
               activeBudget: budget1,
             ),

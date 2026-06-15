@@ -1,10 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:budget_app/features/calendar/presentation/bloc/calendar_state.dart';
+import 'package:budget_app/features/calendar/domain/entities/calendar_event.dart';
 
 void main() {
-  group('CalendarTransaction', () {
-    test('creates CalendarTransaction with correct values', () {
-      final transaction = CalendarTransaction(
+  group('CalendarEvent', () {
+    test('creates CalendarEvent with correct values', () {
+      final transaction = CalendarEvent(
         id: '1',
         amount: 100.0,
         description: 'Test',
@@ -24,14 +24,14 @@ void main() {
     });
 
     test('equality works correctly', () {
-      final a = CalendarTransaction(
+      final a = CalendarEvent(
         id: '1',
         amount: 100.0,
         description: 'Test',
         date: DateTime(2026, 5, 1),
         isExpense: false,
       );
-      final b = CalendarTransaction(
+      final b = CalendarEvent(
         id: '1',
         amount: 100.0,
         description: 'Test',
@@ -43,14 +43,14 @@ void main() {
     });
 
     test('inequality works correctly', () {
-      final a = CalendarTransaction(
+      final a = CalendarEvent(
         id: '1',
         amount: 100.0,
         description: 'Test',
         date: DateTime(2026, 5, 1),
         isExpense: false,
       );
-      final b = CalendarTransaction(
+      final b = CalendarEvent(
         id: '2',
         amount: 200.0,
         description: 'Different',

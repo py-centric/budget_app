@@ -28,7 +28,7 @@ void main() {
         id: '1',
         type: 'loan',
         name: 'My Loan',
-        data: {'principal': 100000},
+        data: const {'principal': 100000},
         createdAt: DateTime(2024, 1, 1),
       );
 
@@ -43,14 +43,14 @@ void main() {
           id: '1',
           type: 'loan',
           name: 'Loan 1',
-          data: {},
+          data: const {},
           createdAt: DateTime(2024, 1, 1),
         ),
         SavedCalculation(
           id: '2',
           type: 'savings',
           name: 'Savings 1',
-          data: {},
+          data: const {},
           createdAt: DateTime(2024, 1, 2),
         ),
       ];
