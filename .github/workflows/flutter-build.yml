@@ -52,9 +52,13 @@ jobs:
             echo "type=release" >> $GITHUB_OUTPUT
           fi
 
-      - name: Build debug APK
+      - name: Build release APK
         if: steps.build-type.outputs.type == 'release'
-        run: cd budget_app && flutter build apk --debug
+        run: cd budget_app && flutter build apk --release
+
+      - name: Build release App Bundle
+        if: steps.build-type.outputs.type == 'release'
+        run: cd budget_app && flutter build appbundle --release
 
       - name: Build hotfix APK
         if: steps.build-type.outputs.type == 'hotfix'
@@ -65,14 +69,27 @@ jobs:
         run: |
           BRANCH_NAME=$(echo "${{ github.ref }}" | sed 's/refs\/heads\///' | sed 's/\//-/g')
           VERSION=$(date +'%Y%m%d-%H%M%S')
+          if [[ "${{ steps.build-type.outputs.type }}" == "release" ]]; then
+            echo "apk_path=budget_app/build/app/outputs/flutter-apk/app-release.apk" >> $GITHUB_OUTPUT
+            echo "bundle_path=budget_app/build/app/outputs/bundle/release/app-release.aab" >> $GITHUB_OUTPUT
+          else
+            echo "apk_path=budget_app/build/app/outputs/flutter-apk/app-debug.apk" >> $GITHUB_OUTPUT
+          fi
           echo "name=budget_app-${BRANCH_NAME}-${VERSION}" >> $GITHUB_OUTPUT
-          echo "path=budget_app/build/app/outputs/flutter-apk/app-debug.apk" >> $GITHUB_OUTPUT
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ steps.artifact.outputs.name }}
-          path: ${{ steps.artifact.outputs.path }}
+          name: ${{ steps.artifact.outputs.name }}-apk
+          path: ${{ steps.artifact.outputs.apk_path }}
+          retention-days: 14
+
+      - name: Upload App Bundle artifact
+        if: steps.build-type.outputs.type == 'release'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.artifact.outputs.name }}-aab
+          path: ${{ steps.artifact.outputs.bundle_path }}
           retention-days: 14
 
       - name: Upload failure logs
