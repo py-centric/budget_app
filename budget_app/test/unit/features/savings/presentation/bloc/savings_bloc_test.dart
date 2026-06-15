@@ -12,6 +12,8 @@ class MockSavingsRepository extends Mock implements SavingsRepository {}
 
 class FakeSavingsGoal extends Fake implements SavingsGoal {}
 
+class FakeSavingsContribution extends Fake implements SavingsContribution {}
+
 void main() {
   late SavingsBloc savingsBloc;
   late MockSavingsRepository mockRepository;
@@ -27,6 +29,7 @@ void main() {
 
   setUpAll(() {
     registerFallbackValue(FakeSavingsGoal());
+    registerFallbackValue(FakeSavingsContribution());
   });
 
   setUp(() {

@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'package:crypto/crypto.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -119,20 +121,34 @@ void main() {
     });
 
     group('verifyPin', () {
+      const testSalt = 'dGVzdC1zYWx0';
+      const testPin = '1234';
+      late String expectedHash;
+
+      setUp(() {
+        expectedHash = sha256.convert(utf8.encode('$testPin$testSalt')).toString();
+      });
+
       test('returns true when PIN matches', () async {
         when(
-          () => mockStorage.read(key: any(named: 'key')),
-        ).thenAnswer((_) async => '1234');
+          () => mockStorage.read(key: 'app_lock_pin_hash'),
+        ).thenAnswer((_) async => expectedHash);
+        when(
+          () => mockStorage.read(key: 'app_lock_pin_salt'),
+        ).thenAnswer((_) async => testSalt);
 
-        final result = await authService.verifyPin('1234');
+        final result = await authService.verifyPin(testPin);
 
         expect(result, true);
       });
 
       test('returns false when PIN does not match', () async {
         when(
-          () => mockStorage.read(key: any(named: 'key')),
-        ).thenAnswer((_) async => '1234');
+          () => mockStorage.read(key: 'app_lock_pin_hash'),
+        ).thenAnswer((_) async => expectedHash);
+        when(
+          () => mockStorage.read(key: 'app_lock_pin_salt'),
+        ).thenAnswer((_) async => testSalt);
 
         final result = await authService.verifyPin('5678');
 
@@ -141,7 +157,10 @@ void main() {
 
       test('returns false when no PIN stored', () async {
         when(
-          () => mockStorage.read(key: any(named: 'key')),
+          () => mockStorage.read(key: 'app_lock_pin_hash'),
+        ).thenAnswer((_) async => null);
+        when(
+          () => mockStorage.read(key: 'app_lock_pin_salt'),
         ).thenAnswer((_) async => null);
 
         final result = await authService.verifyPin('1234');
@@ -151,7 +170,7 @@ void main() {
     });
 
     group('savePin', () {
-      test('saves PIN to storage', () async {
+      test('saves PIN hash and salt to storage', () async {
         when(
           () => mockStorage.write(
             key: any(named: 'key'),
@@ -162,7 +181,10 @@ void main() {
         await authService.savePin('1234');
 
         verify(
-          () => mockStorage.write(key: 'app_lock_pin', value: '1234'),
+          () => mockStorage.write(key: 'app_lock_pin_hash', value: any(named: 'value')),
+        ).called(1);
+        verify(
+          () => mockStorage.write(key: 'app_lock_pin_salt', value: any(named: 'value')),
         ).called(1);
       });
     });
@@ -170,8 +192,8 @@ void main() {
     group('hasPin', () {
       test('returns true when PIN exists', () async {
         when(
-          () => mockStorage.read(key: any(named: 'key')),
-        ).thenAnswer((_) async => '1234');
+          () => mockStorage.read(key: 'app_lock_pin_hash'),
+        ).thenAnswer((_) async => 'some-hash-value');
 
         final result = await authService.hasPin();
 
@@ -180,7 +202,7 @@ void main() {
 
       test('returns false when no PIN', () async {
         when(
-          () => mockStorage.read(key: any(named: 'key')),
+          () => mockStorage.read(key: 'app_lock_pin_hash'),
         ).thenAnswer((_) async => null);
 
         final result = await authService.hasPin();
@@ -190,7 +212,7 @@ void main() {
 
       test('returns false when PIN is empty', () async {
         when(
-          () => mockStorage.read(key: any(named: 'key')),
+          () => mockStorage.read(key: 'app_lock_pin_hash'),
         ).thenAnswer((_) async => '');
 
         final result = await authService.hasPin();
@@ -200,14 +222,15 @@ void main() {
     });
 
     group('clearPin', () {
-      test('deletes PIN from storage', () async {
+      test('deletes PIN hash and salt from storage', () async {
         when(
           () => mockStorage.delete(key: any(named: 'key')),
         ).thenAnswer((_) async {});
 
         await authService.clearPin();
 
-        verify(() => mockStorage.delete(key: 'app_lock_pin')).called(1);
+        verify(() => mockStorage.delete(key: 'app_lock_pin_hash')).called(1);
+        verify(() => mockStorage.delete(key: 'app_lock_pin_salt')).called(1);
       });
     });
   });

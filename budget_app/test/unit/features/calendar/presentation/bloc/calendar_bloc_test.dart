@@ -94,38 +94,38 @@ void main() {
     });
 
     group('SelectCalendarDay', () {
-      blocTest<CalendarBloc, CalendarState>(
-        'emits loaded state with selected date when day selected',
-        build: () {
-          when(() => mockGetCalendarData.forMonth(any(), any())).thenAnswer(
-            (_) async => const CalendarMonthData(
-              incomes: [],
-              expenses: [],
-              categories: [],
-            ),
-          );
-          when(
-            () => mockGetCalendarData.getExpensesBefore(any()),
-          ).thenAnswer((_) async => []);
-          when(
-            () => mockGetCalendarData.getIncomesBefore(any()),
-          ).thenAnswer((_) async => []);
-          return calendarBloc;
-        },
-        act: (bloc) {
-          bloc.add(const events.LoadCalendarMonth(year: 2026, month: 5));
-          bloc.add(events.SelectCalendarDay(DateTime(2026, 5, 15)));
-        },
-        expect: () => [
-          isA<CalendarLoading>(),
-          isA<CalendarLoaded>(),
-          isA<CalendarLoaded>().having(
-            (s) => s.selectedDate,
-            'selectedDate',
-            DateTime(2026, 5, 15),
+      test('emits loaded state with selected date when day selected', () async {
+        when(() => mockGetCalendarData.forMonth(any(), any())).thenAnswer(
+          (_) async => const CalendarMonthData(
+            incomes: [],
+            expenses: [],
+            categories: [],
           ),
-        ],
-      );
+        );
+        when(
+          () => mockGetCalendarData.getExpensesBefore(any()),
+        ).thenAnswer((_) async => []);
+        when(
+          () => mockGetCalendarData.getIncomesBefore(any()),
+        ).thenAnswer((_) async => []);
+
+        final states = <CalendarState>[];
+        calendarBloc.stream.listen(states.add);
+
+        calendarBloc.add(const events.LoadCalendarMonth(year: 2026, month: 5));
+        await Future.delayed(const Duration(milliseconds: 100));
+        calendarBloc.add(events.SelectCalendarDay(DateTime(2026, 5, 15)));
+        await Future.delayed(const Duration(milliseconds: 50));
+
+        expect(states.length, 3);
+        expect(states[0], isA<CalendarLoading>());
+        expect(states[1], isA<CalendarLoaded>());
+        expect(states[2], isA<CalendarLoaded>().having(
+          (s) => s.selectedDate,
+          'selectedDate',
+          DateTime(2026, 5, 15),
+        ));
+      });
 
       blocTest<CalendarBloc, CalendarState>(
         'does nothing when not in loaded state',
