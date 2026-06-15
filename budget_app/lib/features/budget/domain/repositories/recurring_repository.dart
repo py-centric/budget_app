@@ -6,7 +6,7 @@ abstract class RecurringRepository {
   Future<void> deleteRecurringTransaction(String id);
   Future<List<RecurringTransaction>> getAllRecurringTransactions();
   Future<RecurringTransaction?> getRecurringTransactionById(String id);
-  
+
   Future<void> saveRecurringOverride(RecurringOverride override);
   Future<void> deleteRecurringOverride(String id);
   Future<List<RecurringOverride>> getOverridesForTemplate(String templateId);

@@ -12,7 +12,9 @@ class CategoryModel extends Category {
     return CategoryModel(
       id: map['id'] as String,
       name: map['name'] as String,
-      type: map['type'] == 'income' ? CategoryType.income : CategoryType.expense,
+      type: map['type'] == 'income'
+          ? CategoryType.income
+          : CategoryType.expense,
       icon: map['icon'] as String?,
     );
   }

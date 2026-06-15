@@ -29,14 +29,14 @@ class ProjectionPoint extends Equatable {
 
   @override
   List<Object?> get props => [
-        date,
-        balance,
-        netChange,
-        actualBalance,
-        potentialBalance,
-        netChangeActual,
-        netChangePotential,
-        isWeekEnding,
-        recurringInstances,
-      ];
+    date,
+    balance,
+    netChange,
+    actualBalance,
+    potentialBalance,
+    netChangeActual,
+    netChangePotential,
+    isWeekEnding,
+    recurringInstances,
+  ];
 }

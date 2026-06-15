@@ -5,7 +5,7 @@ class BudgetPeriod extends Equatable implements Comparable<BudgetPeriod> {
   final int month;
 
   const BudgetPeriod({required this.year, required this.month})
-      : assert(month >= 1 && month <= 12, 'Month must be between 1 and 12');
+    : assert(month >= 1 && month <= 12, 'Month must be between 1 and 12');
 
   factory BudgetPeriod.current() {
     final now = DateTime.now();
@@ -36,7 +36,7 @@ class BudgetPeriod extends Equatable implements Comparable<BudgetPeriod> {
   }
 
   DateTime get startDate => DateTime(year, month, 1);
-  
+
   DateTime get endDate => DateTime(year, month + 1, 0, 23, 59, 59, 999);
 
   @override

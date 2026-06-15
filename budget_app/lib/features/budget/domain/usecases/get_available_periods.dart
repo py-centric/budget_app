@@ -8,7 +8,7 @@ class GetAvailablePeriods {
 
   Future<List<BudgetPeriod>> call() async {
     final periods = await _repository.getAvailablePeriods();
-    
+
     final currentPeriod = BudgetPeriod.current();
     final nextPeriod = currentPeriod.next;
 
