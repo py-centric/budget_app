@@ -45,7 +45,7 @@ abstract class BaseRepository<T> {
   Future<List<T>> getAll({String? orderBy}) async {
     final db = await this.db;
     final maps = await db.query(tableName, orderBy: orderBy);
-    return maps.map((m) => fromMap(m)).toList();
+    return maps.map(fromMap).toList();
   }
 
   /// Insert a row from a raw column-value [map].
@@ -72,11 +72,7 @@ abstract class BaseRepository<T> {
   /// Delete the record identified by [id] (defaults to column `'id'`).
   Future<void> delete(String id, {String idColumn = 'id'}) async {
     final db = await this.db;
-    await db.delete(
-      tableName,
-      where: '$idColumn = ?',
-      whereArgs: [id],
-    );
+    await db.delete(tableName, where: '$idColumn = ?', whereArgs: [id]);
   }
 
   /// Custom query — returns raw maps for repositories that need

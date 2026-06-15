@@ -1,5 +1,4 @@
 import 'base_repository.dart';
-import 'package:budget_app/features/budget/data/datasources/local_database.dart';
 
 /// A higher-level CRUD repository that works directly with entities
 /// instead of raw maps.
@@ -25,15 +24,14 @@ class CrudRepository<T> extends BaseRepository<T> {
   final String Function(T) _getId;
 
   CrudRepository(
-    LocalDatabase localDatabase,
-    String tableName,
+    super.localDatabase,
+    super.tableName,
     T Function(Map<String, dynamic>) fromMap,
     Map<String, dynamic> Function(T) toMap,
     String Function(T) getId,
   ) : _fromMap = fromMap,
       _toMap = toMap,
-      _getId = getId,
-      super(localDatabase, tableName);
+      _getId = getId;
 
   @override
   T fromMap(Map<String, dynamic> map) => _fromMap(map);
