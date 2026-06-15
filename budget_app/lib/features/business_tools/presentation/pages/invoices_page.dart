@@ -16,7 +16,8 @@ class InvoicesPage extends StatefulWidget {
   State<InvoicesPage> createState() => _InvoicesPageState();
 }
 
-class _InvoicesPageState extends State<InvoicesPage> with SingleTickerProviderStateMixin {
+class _InvoicesPageState extends State<InvoicesPage>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   @override
@@ -77,16 +78,22 @@ class _InvoicesPageState extends State<InvoicesPage> with SingleTickerProviderSt
           if (_tabController.index == 0) {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const InvoiceBuilderPage()),
+              MaterialPageRoute(
+                builder: (context) => const InvoiceBuilderPage(),
+              ),
             );
           } else {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const ReceivedInvoiceEditPage()),
+              MaterialPageRoute(
+                builder: (context) => const ReceivedInvoiceEditPage(),
+              ),
             );
           }
         },
-        tooltip: _tabController.index == 0 ? 'Create Invoice' : 'Add Received Invoice',
+        tooltip: _tabController.index == 0
+            ? 'Create Invoice'
+            : 'Add Received Invoice',
         child: const Icon(Icons.add),
       ),
     );

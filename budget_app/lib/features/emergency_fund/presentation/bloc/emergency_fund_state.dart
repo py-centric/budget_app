@@ -32,8 +32,10 @@ class EmergencyFundState extends Equatable {
       status: status ?? this.status,
       expenses: expenses ?? this.expenses,
       totalTarget: totalTarget ?? this.totalTarget,
-      averageMonthlySpending: averageMonthlySpending ?? this.averageMonthlySpending,
-      calculatedLivingExpenses: calculatedLivingExpenses ?? this.calculatedLivingExpenses,
+      averageMonthlySpending:
+          averageMonthlySpending ?? this.averageMonthlySpending,
+      calculatedLivingExpenses:
+          calculatedLivingExpenses ?? this.calculatedLivingExpenses,
       errorMessage: errorMessage ?? this.errorMessage,
     );
   }

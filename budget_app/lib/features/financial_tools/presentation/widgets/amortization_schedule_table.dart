@@ -23,12 +23,35 @@ class AmortizationScheduleTable extends StatelessWidget {
         DataColumn(label: Text('Balance')),
       ],
       rows: schedule.map((p) {
-        return DataRow(cells: [
-          DataCell(Text(p.month.toString())),
-          DataCell(Text(CurrencyFormatter.format(p.principalPaid, currencyCode: currencyCode))),
-          DataCell(Text(CurrencyFormatter.format(p.interestPaid, currencyCode: currencyCode))),
-          DataCell(Text(CurrencyFormatter.format(p.remainingBalance, currencyCode: currencyCode))),
-        ]);
+        return DataRow(
+          cells: [
+            DataCell(Text(p.month.toString())),
+            DataCell(
+              Text(
+                CurrencyFormatter.format(
+                  p.principalPaid,
+                  currencyCode: currencyCode,
+                ),
+              ),
+            ),
+            DataCell(
+              Text(
+                CurrencyFormatter.format(
+                  p.interestPaid,
+                  currencyCode: currencyCode,
+                ),
+              ),
+            ),
+            DataCell(
+              Text(
+                CurrencyFormatter.format(
+                  p.remainingBalance,
+                  currencyCode: currencyCode,
+                ),
+              ),
+            ),
+          ],
+        );
       }).toList(),
     );
   }

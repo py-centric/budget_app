@@ -22,15 +22,11 @@ class PdfPreviewPage extends StatelessWidget {
     final generatePdf = GenerateInvoicePdf();
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Invoice Preview - ${invoice.invoiceNumber}'),
-      ),
+      appBar: AppBar(title: Text('Invoice Preview - ${invoice.invoiceNumber}')),
       body: PdfPreview(
-        build: (format) => generatePdf.execute(
-          invoice: invoice,
-          items: items,
-          profile: profile,
-        ).then((doc) => doc.save()),
+        build: (format) => generatePdf
+            .execute(invoice: invoice, items: items, profile: profile)
+            .then((doc) => doc.save()),
         canDebug: false,
       ),
     );

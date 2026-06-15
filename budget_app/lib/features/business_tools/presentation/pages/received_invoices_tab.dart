@@ -6,6 +6,7 @@ import '../bloc/business_event.dart';
 import '../bloc/business_state.dart';
 import 'received_invoice_edit_page.dart';
 import '../../../../core/utils/currency_formatter.dart';
+import '../../../../shared/widgets/empty_state_widget.dart';
 
 class ReceivedInvoicesTab extends StatelessWidget {
   const ReceivedInvoicesTab({super.key});
@@ -19,7 +20,10 @@ class ReceivedInvoicesTab extends StatelessWidget {
         }
 
         if (state.receivedInvoices.isEmpty) {
-          return const Center(child: Text('No received invoices recorded.'));
+          return const EmptyStateWidget(
+            message: 'No received invoices recorded.',
+            icon: Icons.receipt_long,
+          );
         }
 
         final dateFormat = DateFormat('yyyy-MM-dd');
@@ -53,7 +57,8 @@ class ReceivedInvoicesTab extends StatelessWidget {
                 onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => ReceivedInvoiceEditPage(invoice: invoice),
+                    builder: (context) =>
+                        ReceivedInvoiceEditPage(invoice: invoice),
                   ),
                 ),
                 onLongPress: () => _confirmDelete(context, invoice.id),
@@ -72,7 +77,10 @@ class ReceivedInvoicesTab extends StatelessWidget {
         title: const Text('Delete Received Invoice'),
         content: const Text('Are you sure you want to delete this invoice?'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Cancel'),
+          ),
           TextButton(
             onPressed: () {
               context.read<BusinessBloc>().add(DeleteReceivedInvoice(id));

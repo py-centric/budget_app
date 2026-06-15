@@ -11,9 +11,7 @@ class ClientsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Clients'),
-      ),
+      appBar: AppBar(title: const Text('Clients')),
       body: BlocBuilder<BusinessBloc, BusinessState>(
         builder: (context, state) {
           if (state.status == BusinessStatus.loading) {
@@ -31,7 +29,9 @@ class ClientsPage extends StatelessWidget {
               return ListTile(
                 leading: const Icon(Icons.person),
                 title: Text(client.name),
-                subtitle: Text(client.email ?? client.phone ?? 'No contact info'),
+                subtitle: Text(
+                  client.email ?? client.phone ?? 'No contact info',
+                ),
                 onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -64,7 +64,10 @@ class ClientsPage extends StatelessWidget {
         title: const Text('Delete Client'),
         content: const Text('Are you sure you want to delete this client?'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Cancel'),
+          ),
           TextButton(
             onPressed: () {
               context.read<BusinessBloc>().add(DeleteClient(clientId));

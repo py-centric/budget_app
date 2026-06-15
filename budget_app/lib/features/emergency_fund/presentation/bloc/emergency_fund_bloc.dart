@@ -29,23 +29,27 @@ class EmergencyFundBloc extends Bloc<EmergencyFundEvent, EmergencyFundState> {
     if (state.status == EmergencyFundStatus.initial) {
       emit(state.copyWith(status: EmergencyFundStatus.loading));
     }
-    
+
     try {
       final expenses = await _repository.getExpenses();
       final average = await _repository.getAverageMonthlySpending();
       final total = expenses.fold<double>(0, (sum, item) => sum + item.amount);
-      
-      emit(state.copyWith(
-        status: EmergencyFundStatus.success,
-        expenses: expenses,
-        averageMonthlySpending: average,
-        totalTarget: total,
-      ));
+
+      emit(
+        state.copyWith(
+          status: EmergencyFundStatus.success,
+          expenses: expenses,
+          averageMonthlySpending: average,
+          totalTarget: total,
+        ),
+      );
     } catch (e) {
-      emit(state.copyWith(
-        status: EmergencyFundStatus.failure,
-        errorMessage: e.toString(),
-      ));
+      emit(
+        state.copyWith(
+          status: EmergencyFundStatus.failure,
+          errorMessage: e.toString(),
+        ),
+      );
     }
   }
 
@@ -58,10 +62,12 @@ class EmergencyFundBloc extends Bloc<EmergencyFundEvent, EmergencyFundState> {
       final updatedExpense = expense.copyWith(amount: event.amount);
       await _repository.saveExpense(updatedExpense);
     } catch (e) {
-      emit(state.copyWith(
-        status: EmergencyFundStatus.failure,
-        errorMessage: 'Failed to update expense: $e',
-      ));
+      emit(
+        state.copyWith(
+          status: EmergencyFundStatus.failure,
+          errorMessage: 'Failed to update expense: $e',
+        ),
+      );
     }
   }
 
@@ -72,7 +78,9 @@ class EmergencyFundBloc extends Bloc<EmergencyFundEvent, EmergencyFundState> {
     try {
       // Check if an expense with the same categoryType already exists
       if (event.categoryType != null) {
-        final existingIndex = state.expenses.indexWhere((e) => e.categoryType == event.categoryType);
+        final existingIndex = state.expenses.indexWhere(
+          (e) => e.categoryType == event.categoryType,
+        );
         if (existingIndex != -1) {
           final existing = state.expenses[existingIndex];
           final updated = existing.copyWith(
@@ -94,10 +102,12 @@ class EmergencyFundBloc extends Bloc<EmergencyFundEvent, EmergencyFundState> {
       );
       await _repository.saveExpense(newExpense);
     } catch (e) {
-      emit(state.copyWith(
-        status: EmergencyFundStatus.failure,
-        errorMessage: 'Failed to add expense: $e',
-      ));
+      emit(
+        state.copyWith(
+          status: EmergencyFundStatus.failure,
+          errorMessage: 'Failed to add expense: $e',
+        ),
+      );
     }
   }
 
@@ -108,10 +118,12 @@ class EmergencyFundBloc extends Bloc<EmergencyFundEvent, EmergencyFundState> {
     try {
       await _repository.deleteExpense(event.id);
     } catch (e) {
-      emit(state.copyWith(
-        status: EmergencyFundStatus.failure,
-        errorMessage: 'Failed to delete expense: $e',
-      ));
+      emit(
+        state.copyWith(
+          status: EmergencyFundStatus.failure,
+          errorMessage: 'Failed to delete expense: $e',
+        ),
+      );
     }
   }
 
@@ -121,10 +133,12 @@ class EmergencyFundBloc extends Bloc<EmergencyFundEvent, EmergencyFundState> {
   ) async {
     final average = await _repository.getAverageMonthlySpending();
     final total = average * event.months;
-    emit(state.copyWith(
-      averageMonthlySpending: average,
-      calculatedLivingExpenses: total,
-    ));
+    emit(
+      state.copyWith(
+        averageMonthlySpending: average,
+        calculatedLivingExpenses: total,
+      ),
+    );
   }
 
   @override

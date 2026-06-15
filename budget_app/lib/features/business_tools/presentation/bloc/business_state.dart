@@ -57,22 +57,26 @@ class BusinessState extends Equatable {
       summary: summary ?? this.summary,
       filterRange: filterRange ?? this.filterRange,
       errorMessage: errorMessage ?? this.errorMessage,
-      lastSavedInvoice: clearLastSavedInvoice ? null : (lastSavedInvoice ?? this.lastSavedInvoice),
-      lastSavedItems: clearLastSavedInvoice ? null : (lastSavedItems ?? this.lastSavedItems),
+      lastSavedInvoice: clearLastSavedInvoice
+          ? null
+          : (lastSavedInvoice ?? this.lastSavedInvoice),
+      lastSavedItems: clearLastSavedInvoice
+          ? null
+          : (lastSavedItems ?? this.lastSavedItems),
     );
   }
 
   @override
   List<Object?> get props => [
-        status,
-        profiles,
-        clients,
-        invoices,
-        receivedInvoices,
-        summary,
-        filterRange,
-        errorMessage,
-        lastSavedInvoice,
-        lastSavedItems,
-      ];
+    status,
+    profiles,
+    clients,
+    invoices,
+    receivedInvoices,
+    summary,
+    filterRange,
+    errorMessage,
+    lastSavedInvoice,
+    lastSavedItems,
+  ];
 }

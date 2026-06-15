@@ -40,17 +40,24 @@ class _LoanCalculatorPageState extends State<LoanCalculatorPage> {
   }
 
   void _update({InterestType? type}) {
-    context.read<FinancialBloc>().add(UpdateLoanParamsEvent(
-      principal: double.tryParse(_principalController.text),
-      rate: double.tryParse(_rateController.text),
-      years: int.tryParse(_yearsController.text),
-      interestType: type ?? context.read<FinancialBloc>().state.loanInterestType,
-    ));
+    context.read<FinancialBloc>().add(
+      UpdateLoanParamsEvent(
+        principal: double.tryParse(_principalController.text),
+        rate: double.tryParse(_rateController.text),
+        years: int.tryParse(_yearsController.text),
+        interestType:
+            type ?? context.read<FinancialBloc>().state.loanInterestType,
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    final currencyCode = context.watch<SettingsBloc>().state.settings.currencyCode;
+    final currencyCode = context
+        .watch<SettingsBloc>()
+        .state
+        .settings
+        .currencyCode;
 
     return Scaffold(
       appBar: AppBar(
@@ -59,17 +66,31 @@ class _LoanCalculatorPageState extends State<LoanCalculatorPage> {
           IconButton(
             icon: const Icon(Icons.save),
             onPressed: () {
-              final TextEditingController nameController = TextEditingController(text: 'Loan ${_principalController.text}');
+              final TextEditingController nameController =
+                  TextEditingController(
+                    text: 'Loan ${_principalController.text}',
+                  );
               showDialog(
                 context: context,
                 builder: (context) => AlertDialog(
                   title: const Text('Save Loan'),
-                  content: TextField(controller: nameController, decoration: const InputDecoration(labelText: 'Name')),
+                  content: TextField(
+                    controller: nameController,
+                    decoration: const InputDecoration(labelText: 'Name'),
+                  ),
                   actions: [
-                    TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text('Cancel'),
+                    ),
                     ElevatedButton(
                       onPressed: () {
-                        context.read<FinancialBloc>().add(SaveCalculationEvent(name: nameController.text, type: 'LOAN'));
+                        context.read<FinancialBloc>().add(
+                          SaveCalculationEvent(
+                            name: nameController.text,
+                            type: 'LOAN',
+                          ),
+                        );
                         Navigator.pop(context);
                       },
                       child: const Text('Save'),
@@ -89,22 +110,29 @@ class _LoanCalculatorPageState extends State<LoanCalculatorPage> {
             years: state.loanYears,
             type: state.loanInterestType,
           );
-          final monthlyPayment = context.read<FinancialBloc>().calculateAmortization.calculateMonthlyPayment(
-            principal: state.loanPrincipal,
-            annualRate: state.loanRate,
-            years: state.loanYears,
-            type: state.loanInterestType,
-          );
+          final monthlyPayment = context
+              .read<FinancialBloc>()
+              .calculateAmortization
+              .calculateMonthlyPayment(
+                principal: state.loanPrincipal,
+                annualRate: state.loanRate,
+                years: state.loanYears,
+                type: state.loanInterestType,
+              );
 
-          final extraMonthly = double.tryParse(_extraPaymentController.text) ?? 0;
+          final extraMonthly =
+              double.tryParse(_extraPaymentController.text) ?? 0;
           final totalMonthly = monthlyPayment + extraMonthly;
-          
-          final int reducedMonths = context.read<FinancialBloc>().calculateAmortization.calculateReducedTerm(
-            principal: state.loanPrincipal,
-            annualRate: state.loanRate,
-            monthlyPayment: totalMonthly,
-          );
-          
+
+          final int reducedMonths = context
+              .read<FinancialBloc>()
+              .calculateAmortization
+              .calculateReducedTerm(
+                principal: state.loanPrincipal,
+                annualRate: state.loanRate,
+                monthlyPayment: totalMonthly,
+              );
+
           final int originalMonths = state.loanYears * 12;
           final int monthsSaved = originalMonths - reducedMonths;
 
@@ -156,8 +184,14 @@ class _LoanCalculatorPageState extends State<LoanCalculatorPage> {
                       const SizedBox(height: 16),
                       SegmentedButton<InterestType>(
                         segments: const [
-                          ButtonSegment(value: InterestType.compound, label: Text('Compound')),
-                          ButtonSegment(value: InterestType.simple, label: Text('Simple')),
+                          ButtonSegment(
+                            value: InterestType.compound,
+                            label: Text('Compound'),
+                          ),
+                          ButtonSegment(
+                            value: InterestType.simple,
+                            label: Text('Simple'),
+                          ),
                         ],
                         selected: {state.loanInterestType},
                         onSelectionChanged: (Set<InterestType> newSelection) {
@@ -177,8 +211,14 @@ class _LoanCalculatorPageState extends State<LoanCalculatorPage> {
                     children: [
                       const Text('Standard Monthly Payment'),
                       Text(
-                        CurrencyFormatter.format(monthlyPayment, currencyCode: currencyCode),
-                        style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                        CurrencyFormatter.format(
+                          monthlyPayment,
+                          currencyCode: currencyCode,
+                        ),
+                        style: const TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ],
                   ),
@@ -191,8 +231,14 @@ class _LoanCalculatorPageState extends State<LoanCalculatorPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Payoff Projection', style: Theme.of(context).textTheme.titleMedium),
-                      const Text('See how extra payments reduce your term.', style: TextStyle(color: Colors.grey, fontSize: 12)),
+                      Text(
+                        'Payoff Projection',
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                      const Text(
+                        'See how extra payments reduce your term.',
+                        style: TextStyle(color: Colors.grey, fontSize: 12),
+                      ),
                       const SizedBox(height: 16),
                       TextField(
                         controller: _extraPaymentController,
@@ -215,7 +261,10 @@ class _LoanCalculatorPageState extends State<LoanCalculatorPage> {
                           ),
                           child: Row(
                             children: [
-                              const Icon(Icons.timer_outlined, color: Colors.green),
+                              const Icon(
+                                Icons.timer_outlined,
+                                color: Colors.green,
+                              ),
                               const SizedBox(width: 12),
                               Expanded(
                                 child: Column(
@@ -223,12 +272,18 @@ class _LoanCalculatorPageState extends State<LoanCalculatorPage> {
                                   children: [
                                     Text(
                                       'New Term: $reducedMonths months',
-                                      style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.green),
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.green,
+                                      ),
                                     ),
                                     if (monthsSaved > 0)
                                       Text(
                                         'You save $monthsSaved months! (${(monthsSaved / 12).toStringAsFixed(1)} years)',
-                                        style: TextStyle(fontSize: 12, color: Colors.green.shade700),
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.green.shade700,
+                                        ),
                                       ),
                                   ],
                                 ),
@@ -250,14 +305,23 @@ class _LoanCalculatorPageState extends State<LoanCalculatorPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Detailed Schedule', style: Theme.of(context).textTheme.titleMedium),
-                  Switch(value: _showTable, onChanged: (v) => setState(() => _showTable = v)),
+                  Text(
+                    'Detailed Schedule',
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  Switch(
+                    value: _showTable,
+                    onChanged: (v) => setState(() => _showTable = v),
+                  ),
                 ],
               ),
               if (_showTable)
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
-                  child: AmortizationScheduleTable(schedule: schedule, currencyCode: currencyCode),
+                  child: AmortizationScheduleTable(
+                    schedule: schedule,
+                    currencyCode: currencyCode,
+                  ),
                 ),
             ],
           );

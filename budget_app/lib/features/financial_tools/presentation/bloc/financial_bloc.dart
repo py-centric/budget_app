@@ -34,7 +34,12 @@ class UpdateLoanParamsEvent extends FinancialEvent {
   final double? rate;
   final int? years;
   final InterestType? interestType;
-  const UpdateLoanParamsEvent({this.principal, this.rate, this.years, this.interestType});
+  const UpdateLoanParamsEvent({
+    this.principal,
+    this.rate,
+    this.years,
+    this.interestType,
+  });
   @override
   List<Object?> get props => [principal, rate, years, interestType];
 }
@@ -45,7 +50,13 @@ class UpdateSavingsParamsEvent extends FinancialEvent {
   final double? rate;
   final int? years;
   final InterestType? interestType;
-  const UpdateSavingsParamsEvent({this.initial, this.monthly, this.rate, this.years, this.interestType});
+  const UpdateSavingsParamsEvent({
+    this.initial,
+    this.monthly,
+    this.rate,
+    this.years,
+    this.interestType,
+  });
   @override
   List<Object?> get props => [initial, monthly, rate, years, interestType];
 }
@@ -73,7 +84,7 @@ class DeleteSavedCalculationEvent extends FinancialEvent {
 class FinancialState extends Equatable {
   final List<FinancialToolEntry> netWorthAssets;
   final List<FinancialToolEntry> netWorthLiabilities;
-  
+
   // Loan
   final double loanPrincipal;
   final double loanRate;
@@ -109,8 +120,14 @@ class FinancialState extends Equatable {
   });
 
   double get netWorth {
-    final assetsTotal = netWorthAssets.fold<double>(0, (sum, e) => sum + e.value);
-    final liabilitiesTotal = netWorthLiabilities.fold<double>(0, (sum, e) => sum + e.value);
+    final assetsTotal = netWorthAssets.fold<double>(
+      0,
+      (sum, e) => sum + e.value,
+    );
+    final liabilitiesTotal = netWorthLiabilities.fold<double>(
+      0,
+      (sum, e) => sum + e.value,
+    );
     return assetsTotal - liabilitiesTotal;
   }
 
@@ -150,10 +167,20 @@ class FinancialState extends Equatable {
 
   @override
   List<Object?> get props => [
-    netWorthAssets, netWorthLiabilities, 
-    loanPrincipal, loanRate, loanYears, loanInterestType,
-    savingsInitial, savingsMonthly, savingsRate, savingsYears, savingsInterestType,
-    savedCalculations, isLoading, error
+    netWorthAssets,
+    netWorthLiabilities,
+    loanPrincipal,
+    loanRate,
+    loanYears,
+    loanInterestType,
+    savingsInitial,
+    savingsMonthly,
+    savingsRate,
+    savingsYears,
+    savingsInterestType,
+    savedCalculations,
+    isLoading,
+    error,
   ];
 
   Map<String, dynamic> toMap() {
@@ -222,22 +249,26 @@ class FinancialBloc extends HydratedBloc<FinancialEvent, FinancialState> {
     });
 
     on<UpdateLoanParamsEvent>((event, emit) {
-      emit(state.copyWith(
-        loanPrincipal: event.principal,
-        loanRate: event.rate,
-        loanYears: event.years,
-        loanInterestType: event.interestType,
-      ));
+      emit(
+        state.copyWith(
+          loanPrincipal: event.principal,
+          loanRate: event.rate,
+          loanYears: event.years,
+          loanInterestType: event.interestType,
+        ),
+      );
     });
 
     on<UpdateSavingsParamsEvent>((event, emit) {
-      emit(state.copyWith(
-        savingsInitial: event.initial,
-        savingsMonthly: event.monthly,
-        savingsRate: event.rate,
-        savingsYears: event.years,
-        savingsInterestType: event.interestType,
-      ));
+      emit(
+        state.copyWith(
+          savingsInitial: event.initial,
+          savingsMonthly: event.monthly,
+          savingsRate: event.rate,
+          savingsYears: event.years,
+          savingsInterestType: event.interestType,
+        ),
+      );
     });
 
     on<LoadSavedCalculationsEvent>(_onLoadSavedCalculations);
@@ -245,7 +276,10 @@ class FinancialBloc extends HydratedBloc<FinancialEvent, FinancialState> {
     on<DeleteSavedCalculationEvent>(_onDeleteSavedCalculation);
   }
 
-  Future<void> _onLoadSavedCalculations(LoadSavedCalculationsEvent event, Emitter<FinancialState> emit) async {
+  Future<void> _onLoadSavedCalculations(
+    LoadSavedCalculationsEvent event,
+    Emitter<FinancialState> emit,
+  ) async {
     emit(state.copyWith(isLoading: true));
     try {
       final calculations = await repository.getSavedCalculations();
@@ -255,13 +289,18 @@ class FinancialBloc extends HydratedBloc<FinancialEvent, FinancialState> {
     }
   }
 
-  Future<void> _onSaveCalculation(SaveCalculationEvent event, Emitter<FinancialState> emit) async {
+  Future<void> _onSaveCalculation(
+    SaveCalculationEvent event,
+    Emitter<FinancialState> emit,
+  ) async {
     try {
       Map<String, dynamic> data = {};
       if (event.type == 'NET_WORTH') {
         data = {
           'assets': state.netWorthAssets.map((e) => e.toMap()).toList(),
-          'liabilities': state.netWorthLiabilities.map((e) => e.toMap()).toList(),
+          'liabilities': state.netWorthLiabilities
+              .map((e) => e.toMap())
+              .toList(),
           'total': state.netWorth,
         };
       } else if (event.type == 'LOAN') {
@@ -309,7 +348,10 @@ class FinancialBloc extends HydratedBloc<FinancialEvent, FinancialState> {
     }
   }
 
-  Future<void> _onDeleteSavedCalculation(DeleteSavedCalculationEvent event, Emitter<FinancialState> emit) async {
+  Future<void> _onDeleteSavedCalculation(
+    DeleteSavedCalculationEvent event,
+    Emitter<FinancialState> emit,
+  ) async {
     try {
       await repository.deleteCalculation(event.id);
       add(const LoadSavedCalculationsEvent());

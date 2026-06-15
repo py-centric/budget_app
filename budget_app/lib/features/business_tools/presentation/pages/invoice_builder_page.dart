@@ -22,17 +22,19 @@ class InvoiceBuilderPage extends StatefulWidget {
 }
 
 class _InvoiceBuilderPageState extends State<InvoiceBuilderPage> {
-  final _invoiceNumberController = TextEditingController(text: 'INV-${DateFormat('yyyyMMdd-HHmm').format(DateTime.now())}');
+  final _invoiceNumberController = TextEditingController(
+    text: 'INV-${DateFormat('yyyyMMdd-HHmm').format(DateTime.now())}',
+  );
   final _clientNameController = TextEditingController();
   final _clientDetailsController = TextEditingController();
   final _notesController = TextEditingController();
-  
+
   // Banking overrides
   final _bankNameController = TextEditingController();
   final _bankIbanController = TextEditingController();
   final _bankBicController = TextEditingController();
   final _bankHolderController = TextEditingController();
-  
+
   CompanyProfile? _selectedProfile;
   Client? _selectedClient;
   final List<InvoiceItem> _items = [];
@@ -57,7 +59,9 @@ class _InvoiceBuilderPageState extends State<InvoiceBuilderPage> {
     final state = context.read<BusinessBloc>().state;
     if (state.profiles.isNotEmpty) {
       if (widget.initialInvoice != null) {
-        final matches = state.profiles.where((p) => p.id == widget.initialInvoice!.profileId);
+        final matches = state.profiles.where(
+          (p) => p.id == widget.initialInvoice!.profileId,
+        );
         if (matches.isNotEmpty) {
           _selectedProfile = matches.first;
         }
@@ -88,20 +92,27 @@ class _InvoiceBuilderPageState extends State<InvoiceBuilderPage> {
       setState(() {
         _selectedClient = client;
         _clientNameController.text = client.name;
-        _clientDetailsController.text = '${client.address}\n${client.taxId != null ? 'Tax ID: ${client.taxId}' : ''}'.trim();
+        _clientDetailsController.text =
+            '${client.address}\n${client.taxId != null ? 'Tax ID: ${client.taxId}' : ''}'
+                .trim();
       });
     }
   }
 
-  double get _subTotal => _items.fold(0, (sum, item) => sum + (item.quantity * item.rate));
-  double get _taxTotal => _items.fold(0, (sum, item) => sum + (item.quantity * item.rate * (item.taxRate / 100)));
+  double get _subTotal =>
+      _items.fold(0, (sum, item) => sum + (item.quantity * item.rate));
+  double get _taxTotal => _items.fold(
+    0,
+    (sum, item) => sum + (item.quantity * item.rate * (item.taxRate / 100)),
+  );
   double get _grandTotal => _subTotal + _taxTotal;
 
   @override
   Widget build(BuildContext context) {
     return BlocListener<BusinessBloc, BusinessState>(
       listenWhen: (previous, current) =>
-          (current.lastSavedInvoice != null && previous.lastSavedInvoice == null) ||
+          (current.lastSavedInvoice != null &&
+              previous.lastSavedInvoice == null) ||
           (previous.profiles.isEmpty && current.profiles.isNotEmpty),
       listener: (context, state) {
         if (state.lastSavedInvoice != null && state.lastSavedItems != null) {
@@ -114,7 +125,9 @@ class _InvoiceBuilderPageState extends State<InvoiceBuilderPage> {
               builder: (context) => PdfPreviewPage(
                 invoice: invoice,
                 items: items,
-                profile: state.profiles.firstWhere((p) => p.id == invoice.profileId),
+                profile: state.profiles.firstWhere(
+                  (p) => p.id == invoice.profileId,
+                ),
               ),
             ),
           );
@@ -128,16 +141,16 @@ class _InvoiceBuilderPageState extends State<InvoiceBuilderPage> {
         appBar: AppBar(
           title: const Text('New Invoice'),
           actions: [
-            IconButton(
-              icon: const Icon(Icons.save),
-              onPressed: _saveInvoice,
-            ),
+            IconButton(icon: const Icon(Icons.save), onPressed: _saveInvoice),
           ],
         ),
         body: BlocBuilder<BusinessBloc, BusinessState>(
           builder: (context, state) {
-            if (_selectedClient == null && widget.initialInvoice?.clientId != null) {
-              _selectedClient = state.clients.where((c) => c.id == widget.initialInvoice!.clientId).firstOrNull;
+            if (_selectedClient == null &&
+                widget.initialInvoice?.clientId != null) {
+              _selectedClient = state.clients
+                  .where((c) => c.id == widget.initialInvoice!.clientId)
+                  .firstOrNull;
             }
 
             return SingleChildScrollView(
@@ -155,7 +168,10 @@ class _InvoiceBuilderPageState extends State<InvoiceBuilderPage> {
                   const SizedBox(height: 32),
                   TextField(
                     controller: _notesController,
-                    decoration: const InputDecoration(labelText: 'Notes / Footer', border: OutlineInputBorder()),
+                    decoration: const InputDecoration(
+                      labelText: 'Notes / Footer',
+                      border: OutlineInputBorder(),
+                    ),
                     maxLines: 3,
                   ),
                 ],
@@ -173,11 +189,16 @@ class _InvoiceBuilderPageState extends State<InvoiceBuilderPage> {
         DropdownButtonFormField<CompanyProfile>(
           initialValue: _selectedProfile,
           decoration: const InputDecoration(labelText: 'Sender Profile'),
-          items: state.profiles.map((p) => DropdownMenuItem(value: p, child: Text(p.name))).toList(),
+          items: state.profiles
+              .map((p) => DropdownMenuItem(value: p, child: Text(p.name)))
+              .toList(),
           onChanged: _onProfileChanged,
         ),
         const SizedBox(height: 16),
-        TextField(controller: _invoiceNumberController, decoration: const InputDecoration(labelText: 'Invoice Number')),
+        TextField(
+          controller: _invoiceNumberController,
+          decoration: const InputDecoration(labelText: 'Invoice Number'),
+        ),
         const SizedBox(height: 16),
         Row(
           children: [
@@ -200,7 +221,9 @@ class _InvoiceBuilderPageState extends State<InvoiceBuilderPage> {
         const SizedBox(height: 16),
         TextField(
           controller: _clientDetailsController,
-          decoration: const InputDecoration(labelText: 'Client Details (Address, etc)'),
+          decoration: const InputDecoration(
+            labelText: 'Client Details (Address, etc)',
+          ),
           maxLines: 2,
         ),
       ],
@@ -211,13 +234,25 @@ class _InvoiceBuilderPageState extends State<InvoiceBuilderPage> {
     return ExpansionTile(
       title: const Text('Banking Details (Overrides)'),
       children: [
-        TextField(controller: _bankNameController, decoration: const InputDecoration(labelText: 'Bank Name')),
+        TextField(
+          controller: _bankNameController,
+          decoration: const InputDecoration(labelText: 'Bank Name'),
+        ),
         const SizedBox(height: 8),
-        TextField(controller: _bankHolderController, decoration: const InputDecoration(labelText: 'Account Holder')),
+        TextField(
+          controller: _bankHolderController,
+          decoration: const InputDecoration(labelText: 'Account Holder'),
+        ),
         const SizedBox(height: 8),
-        TextField(controller: _bankIbanController, decoration: const InputDecoration(labelText: 'IBAN')),
+        TextField(
+          controller: _bankIbanController,
+          decoration: const InputDecoration(labelText: 'IBAN'),
+        ),
         const SizedBox(height: 8),
-        TextField(controller: _bankBicController, decoration: const InputDecoration(labelText: 'BIC/SWIFT')),
+        TextField(
+          controller: _bankBicController,
+          decoration: const InputDecoration(labelText: 'BIC/SWIFT'),
+        ),
         const SizedBox(height: 16),
       ],
     );
@@ -231,7 +266,11 @@ class _InvoiceBuilderPageState extends State<InvoiceBuilderPage> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text('Items', style: Theme.of(context).textTheme.titleLarge),
-            TextButton.icon(onPressed: _addItem, icon: const Icon(Icons.add), label: const Text('Add Item')),
+            TextButton.icon(
+              onPressed: _addItem,
+              icon: const Icon(Icons.add),
+              label: const Text('Add Item'),
+            ),
           ],
         ),
         ListView.builder(
@@ -242,9 +281,14 @@ class _InvoiceBuilderPageState extends State<InvoiceBuilderPage> {
             final item = _items[index];
             return ListTile(
               title: Text(item.description),
-              subtitle: Text('${item.quantity} x \$${item.rate.toStringAsFixed(2)} (${item.taxRate}% VAT)'),
+              subtitle: Text(
+                '${item.quantity} x \$${item.rate.toStringAsFixed(2)} (${item.taxRate}% VAT)',
+              ),
               trailing: IconButton(
-                icon: const Icon(Icons.remove_circle_outline, color: Colors.red),
+                icon: const Icon(
+                  Icons.remove_circle_outline,
+                  color: Colors.red,
+                ),
                 onPressed: () => setState(() => _items.removeAt(index)),
               ),
             );
@@ -261,16 +305,29 @@ class _InvoiceBuilderPageState extends State<InvoiceBuilderPage> {
         _summaryRow('Sub-total', currencyFormat.format(_subTotal)),
         _summaryRow('Tax Total', currencyFormat.format(_taxTotal)),
         const Divider(),
-        _summaryRow('Grand Total', currencyFormat.format(_grandTotal), isBold: true),
+        _summaryRow(
+          'Grand Total',
+          currencyFormat.format(_grandTotal),
+          isBold: true,
+        ),
       ],
     );
   }
 
   Widget _summaryRow(String label, String value, {bool isBold = false}) {
-    final style = TextStyle(fontWeight: isBold ? FontWeight.bold : null, fontSize: isBold ? 18 : 14);
+    final style = TextStyle(
+      fontWeight: isBold ? FontWeight.bold : null,
+      fontSize: isBold ? 18 : 14,
+    );
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text(label, style: style), Text(value, style: style)]),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(label, style: style),
+          Text(value, style: style),
+        ],
+      ),
     );
   }
 
@@ -278,7 +335,9 @@ class _InvoiceBuilderPageState extends State<InvoiceBuilderPage> {
     final descController = TextEditingController();
     final qtyController = TextEditingController(text: '1');
     final rateController = TextEditingController();
-    final taxController = TextEditingController(text: _selectedProfile?.defaultVatRate.toString() ?? '20');
+    final taxController = TextEditingController(
+      text: _selectedProfile?.defaultVatRate.toString() ?? '20',
+    );
 
     showDialog(
       context: context,
@@ -287,29 +346,49 @@ class _InvoiceBuilderPageState extends State<InvoiceBuilderPage> {
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            TextField(controller: descController, decoration: const InputDecoration(labelText: 'Description')),
-            TextField(controller: qtyController, decoration: const InputDecoration(labelText: 'Quantity'), keyboardType: TextInputType.number),
-            TextField(controller: rateController, decoration: const InputDecoration(labelText: 'Rate'), keyboardType: TextInputType.number),
-            TextField(controller: taxController, decoration: const InputDecoration(labelText: 'Tax Rate (%)'), keyboardType: TextInputType.number),
+            TextField(
+              controller: descController,
+              decoration: const InputDecoration(labelText: 'Description'),
+            ),
+            TextField(
+              controller: qtyController,
+              decoration: const InputDecoration(labelText: 'Quantity'),
+              keyboardType: TextInputType.number,
+            ),
+            TextField(
+              controller: rateController,
+              decoration: const InputDecoration(labelText: 'Rate'),
+              keyboardType: TextInputType.number,
+            ),
+            TextField(
+              controller: taxController,
+              decoration: const InputDecoration(labelText: 'Tax Rate (%)'),
+              keyboardType: TextInputType.number,
+            ),
           ],
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
           ElevatedButton(
             onPressed: () {
               final qty = double.tryParse(qtyController.text) ?? 0.0;
               final rate = double.tryParse(rateController.text) ?? 0.0;
               final tax = double.tryParse(taxController.text) ?? 0.0;
               setState(() {
-                _items.add(InvoiceItem(
-                  id: const Uuid().v4(),
-                  invoiceId: '', // Set when saving
-                  description: descController.text,
-                  quantity: qty,
-                  rate: rate,
-                  taxRate: tax,
-                  total: qty * rate,
-                ));
+                _items.add(
+                  InvoiceItem(
+                    id: const Uuid().v4(),
+                    invoiceId: '', // Set when saving
+                    description: descController.text,
+                    quantity: qty,
+                    rate: rate,
+                    taxRate: tax,
+                    total: qty * rate,
+                  ),
+                );
               });
               Navigator.pop(context);
             },
@@ -321,8 +400,16 @@ class _InvoiceBuilderPageState extends State<InvoiceBuilderPage> {
   }
 
   void _saveInvoice() {
-    if (_selectedProfile == null || _clientNameController.text.isEmpty || _items.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please fill all required fields and add at least one item.')));
+    if (_selectedProfile == null ||
+        _clientNameController.text.isEmpty ||
+        _items.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Please fill all required fields and add at least one item.',
+          ),
+        ),
+      );
       return;
     }
 
@@ -347,7 +434,9 @@ class _InvoiceBuilderPageState extends State<InvoiceBuilderPage> {
       bankHolder: _bankHolderController.text,
     );
 
-    final finalItems = _items.map((it) => it.copyWith(invoiceId: invoiceId)).toList();
+    final finalItems = _items
+        .map((it) => it.copyWith(invoiceId: invoiceId))
+        .toList();
     context.read<BusinessBloc>().add(SaveInvoice(invoice, finalItems));
   }
 }

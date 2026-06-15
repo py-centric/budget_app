@@ -24,7 +24,9 @@ class _ExpenseItemTileState extends State<ExpenseItemTile> {
   void initState() {
     super.initState();
     _controller = TextEditingController(
-      text: widget.expense.amount > 0 ? widget.expense.amount.toStringAsFixed(2) : '',
+      text: widget.expense.amount > 0
+          ? widget.expense.amount.toStringAsFixed(2)
+          : '',
     );
   }
 
@@ -32,7 +34,9 @@ class _ExpenseItemTileState extends State<ExpenseItemTile> {
   void didUpdateWidget(ExpenseItemTile oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.expense.amount != widget.expense.amount) {
-      final text = widget.expense.amount > 0 ? widget.expense.amount.toStringAsFixed(2) : '';
+      final text = widget.expense.amount > 0
+          ? widget.expense.amount.toStringAsFixed(2)
+          : '';
       if (_controller.text != text) {
         _controller.text = text;
       }
@@ -49,7 +53,9 @@ class _ExpenseItemTileState extends State<ExpenseItemTile> {
   Widget build(BuildContext context) {
     return ListTile(
       title: Text(widget.expense.name),
-      subtitle: widget.expense.isSuggestion ? const Text('Suggested', style: TextStyle(fontSize: 12)) : null,
+      subtitle: widget.expense.isSuggestion
+          ? const Text('Suggested', style: TextStyle(fontSize: 12))
+          : null,
       trailing: SizedBox(
         width: 120,
         child: Row(
@@ -58,7 +64,9 @@ class _ExpenseItemTileState extends State<ExpenseItemTile> {
             Expanded(
               child: TextField(
                 controller: _controller,
-                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                keyboardType: const TextInputType.numberWithOptions(
+                  decimal: true,
+                ),
                 decoration: InputDecoration(
                   prefixText: '\$',
                   hintText: '0.00',

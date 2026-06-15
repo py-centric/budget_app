@@ -21,8 +21,12 @@ class InvoiceDashboard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-        border: Border(bottom: BorderSide(color: Theme.of(context).dividerColor)),
+        color: Theme.of(
+          context,
+        ).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+        border: Border(
+          bottom: BorderSide(color: Theme.of(context).dividerColor),
+        ),
       ),
       child: Column(
         children: [
@@ -48,15 +52,9 @@ class InvoiceDashboard extends StatelessWidget {
             children: [
               Expanded(
                 flex: 2,
-                child: SizedBox(
-                  height: 120,
-                  child: _buildPieChart(),
-                ),
+                child: SizedBox(height: 120, child: _buildPieChart()),
               ),
-              Expanded(
-                flex: 3,
-                child: _buildLegend(),
-              ),
+              Expanded(flex: 3, child: _buildLegend()),
               IconButton(
                 icon: const Icon(Icons.filter_list),
                 onPressed: () => _selectRange(context),
@@ -76,7 +74,12 @@ class InvoiceDashboard extends StatelessWidget {
     );
   }
 
-  Widget _buildStatCard(BuildContext context, String label, double amount, Color color) {
+  Widget _buildStatCard(
+    BuildContext context,
+    String label,
+    double amount,
+    Color color,
+  ) {
     return Expanded(
       child: Card(
         elevation: 0,
@@ -90,9 +93,9 @@ class InvoiceDashboard extends StatelessWidget {
               Text(
                 CurrencyFormatter.format(amount),
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      color: color,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  color: color,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ],
           ),
@@ -102,7 +105,8 @@ class InvoiceDashboard extends StatelessWidget {
   }
 
   Widget _buildPieChart() {
-    final total = summary.paidCount + summary.unpaidCount + summary.partialCount;
+    final total =
+        summary.paidCount + summary.unpaidCount + summary.partialCount;
     if (total == 0) {
       return const Center(child: Text('No data'));
     }
@@ -141,8 +145,14 @@ class InvoiceDashboard extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         _LegendItem(color: Colors.green, label: 'Paid (${summary.paidCount})'),
-        _LegendItem(color: Colors.red, label: 'Unpaid (${summary.unpaidCount})'),
-        _LegendItem(color: Colors.orange, label: 'Partial (${summary.partialCount})'),
+        _LegendItem(
+          color: Colors.red,
+          label: 'Unpaid (${summary.unpaidCount})',
+        ),
+        _LegendItem(
+          color: Colors.orange,
+          label: 'Partial (${summary.partialCount})',
+        ),
       ],
     );
   }

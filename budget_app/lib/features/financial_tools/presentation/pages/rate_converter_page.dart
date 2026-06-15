@@ -15,7 +15,7 @@ class _RateConverterPageState extends State<RateConverterPage> {
   final _solverPrincipalController = TextEditingController(text: '10000');
   final _solverMonthsController = TextEditingController(text: '12');
   final _solverPaymentController = TextEditingController(text: '900');
-  
+
   final _convSimpleController = TextEditingController(text: '10');
   final _convCompoundController = TextEditingController(text: '10.47');
 
@@ -58,7 +58,11 @@ class _RateConverterPageState extends State<RateConverterPage> {
 
   @override
   Widget build(BuildContext context) {
-    final currencyCode = context.watch<SettingsBloc>().state.settings.currencyCode;
+    final currencyCode = context
+        .watch<SettingsBloc>()
+        .state
+        .settings
+        .currencyCode;
 
     return Scaffold(
       appBar: AppBar(title: const Text('Rate Converter & Solver')),
@@ -80,8 +84,14 @@ class _RateConverterPageState extends State<RateConverterPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Loan Interest Solver', style: Theme.of(context).textTheme.titleLarge),
-            const Text('Find the effective rate of a loan.', style: TextStyle(color: Colors.grey)),
+            Text(
+              'Loan Interest Solver',
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+            const Text(
+              'Find the effective rate of a loan.',
+              style: TextStyle(color: Colors.grey),
+            ),
             const SizedBox(height: 16),
             TextField(
               controller: _solverPrincipalController,
@@ -94,7 +104,9 @@ class _RateConverterPageState extends State<RateConverterPage> {
                 Expanded(
                   child: TextField(
                     controller: _solverMonthsController,
-                    decoration: const InputDecoration(labelText: 'Term (Months)'),
+                    decoration: const InputDecoration(
+                      labelText: 'Term (Months)',
+                    ),
                     keyboardType: TextInputType.number,
                     onChanged: (_) => _solve(),
                   ),
@@ -103,7 +115,9 @@ class _RateConverterPageState extends State<RateConverterPage> {
                 Expanded(
                   child: TextField(
                     controller: _solverPaymentController,
-                    decoration: const InputDecoration(labelText: 'Monthly Payment'),
+                    decoration: const InputDecoration(
+                      labelText: 'Monthly Payment',
+                    ),
                     keyboardType: TextInputType.number,
                     onChanged: (_) => _solve(),
                   ),
@@ -123,7 +137,10 @@ class _RateConverterPageState extends State<RateConverterPage> {
                   const Text('Effective Annual Rate (Compounded Monthly)'),
                   Text(
                     '${_solvedRate.toStringAsFixed(2)}%',
-                    style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ],
               ),
@@ -141,8 +158,14 @@ class _RateConverterPageState extends State<RateConverterPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Rate Converter', style: Theme.of(context).textTheme.titleLarge),
-            const Text('Convert between Simple and Compound EAR.', style: TextStyle(color: Colors.grey)),
+            Text(
+              'Rate Converter',
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+            const Text(
+              'Convert between Simple and Compound EAR.',
+              style: TextStyle(color: Colors.grey),
+            ),
             const SizedBox(height: 16),
             TextField(
               controller: _convSimpleController,
@@ -157,7 +180,10 @@ class _RateConverterPageState extends State<RateConverterPage> {
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: Text(
                 '= ${_convertedCompound.toStringAsFixed(4)}% EAR',
-                style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blue,
+                ),
               ),
             ),
             const Divider(),
@@ -174,7 +200,10 @@ class _RateConverterPageState extends State<RateConverterPage> {
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: Text(
                 '= ${_convertedSimple.toStringAsFixed(4)}% Simple',
-                style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.green),
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.green,
+                ),
               ),
             ),
           ],

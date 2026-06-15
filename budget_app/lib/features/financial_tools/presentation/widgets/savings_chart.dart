@@ -12,10 +12,16 @@ class SavingsChart extends StatelessWidget {
     if (schedule.isEmpty) return const SizedBox.shrink();
 
     final List<AmortizationPoint> sampledPoints = schedule.length > 60
-        ? schedule.asMap().entries
-            .where((e) => e.key % (schedule.length / 12).floor() == 0 || e.key == schedule.length - 1)
-            .map((e) => e.value)
-            .toList()
+        ? schedule
+              .asMap()
+              .entries
+              .where(
+                (e) =>
+                    e.key % (schedule.length / 12).floor() == 0 ||
+                    e.key == schedule.length - 1,
+              )
+              .map((e) => e.value)
+              .toList()
         : schedule;
 
     final List<FlSpot> valueSpots = sampledPoints.map((p) {
@@ -46,8 +52,12 @@ class SavingsChart extends StatelessWidget {
             ),
           ],
           titlesData: FlTitlesData(
-            rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-            topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+            rightTitles: const AxisTitles(
+              sideTitles: SideTitles(showTitles: false),
+            ),
+            topTitles: const AxisTitles(
+              sideTitles: SideTitles(showTitles: false),
+            ),
             bottomTitles: AxisTitles(
               axisNameWidget: const Text('Months'),
               sideTitles: SideTitles(
