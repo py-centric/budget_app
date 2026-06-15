@@ -27,8 +27,14 @@ class VatCalculator {
       final rate = entry.key;
       final groupItems = entry.value;
 
-      final netAmount = groupItems.fold<double>(0, (sum, it) => sum + (it.quantity * it.rate));
-      final vatAmount = groupItems.fold<double>(0, (sum, it) => sum + (it.quantity * it.rate * (it.taxRate / 100)));
+      final netAmount = groupItems.fold<double>(
+        0,
+        (sum, it) => sum + (it.quantity * it.rate),
+      );
+      final vatAmount = groupItems.fold<double>(
+        0,
+        (sum, it) => sum + (it.quantity * it.rate * (it.taxRate / 100)),
+      );
 
       return VatSummary(
         rate: rate,
@@ -36,7 +42,6 @@ class VatCalculator {
         vatAmount: vatAmount,
         grossAmount: netAmount + vatAmount,
       );
-    }).toList()
-      ..sort((a, b) => b.rate.compareTo(a.rate));
+    }).toList()..sort((a, b) => b.rate.compareTo(a.rate));
   }
 }

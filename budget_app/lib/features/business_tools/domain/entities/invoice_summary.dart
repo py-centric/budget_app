@@ -17,10 +17,10 @@ class InvoiceSummary extends Equatable {
 
   @override
   List<Object?> get props => [
-        totalReceivables,
-        totalPayables,
-        paidCount,
-        unpaidCount,
-        partialCount,
-      ];
+    totalReceivables,
+    totalPayables,
+    paidCount,
+    unpaidCount,
+    partialCount,
+  ];
 }

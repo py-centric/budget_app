@@ -13,7 +13,12 @@ class Logger {
   void error(String message, [Object? error, StackTrace? stackTrace]) =>
       _log(LogLevel.error, message, error, stackTrace);
 
-  void _log(LogLevel level, String message, [Object? error, StackTrace? stackTrace]) {
+  void _log(
+    LogLevel level,
+    String message, [
+    Object? error,
+    StackTrace? stackTrace,
+  ]) {
     developer.log(
       message,
       name: tag,

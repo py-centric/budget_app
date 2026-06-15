@@ -21,7 +21,7 @@ class BusinessRepositoryImpl implements BusinessRepository {
   @override
   Future<List<CompanyProfile>> getProfiles() async {
     final maps = await _localDatabase.getCompanyProfiles();
-    return maps.map((map) => CompanyProfileModel.fromMap(map)).toList();
+    return maps.map(CompanyProfileModel.fromMap).toList();
   }
 
   @override
@@ -44,16 +44,25 @@ class BusinessRepositoryImpl implements BusinessRepository {
   Future<List<Client>> getClients() async {
     final db = await _localDatabase.database;
     final maps = await db.query('clients');
-    return maps.map((map) => ClientModel.fromMap(map)).toList();
+    return maps.map(ClientModel.fromMap).toList();
   }
 
   @override
   Future<void> saveClient(Client client) async {
     final db = await _localDatabase.database;
     final model = ClientModel.fromEntity(client);
-    final existing = await db.query('clients', where: 'id = ?', whereArgs: [model.id]);
+    final existing = await db.query(
+      'clients',
+      where: 'id = ?',
+      whereArgs: [model.id],
+    );
     if (existing.isNotEmpty) {
-      await db.update('clients', model.toMap(), where: 'id = ?', whereArgs: [model.id]);
+      await db.update(
+        'clients',
+        model.toMap(),
+        where: 'id = ?',
+        whereArgs: [model.id],
+      );
     } else {
       await db.insert('clients', model.toMap());
     }
@@ -68,7 +77,7 @@ class BusinessRepositoryImpl implements BusinessRepository {
   @override
   Future<List<Invoice>> getInvoices() async {
     final maps = await _localDatabase.getInvoices();
-    return maps.map((map) => InvoiceModel.fromMap(map)).toList();
+    return maps.map(InvoiceModel.fromMap).toList();
   }
 
   @override
@@ -83,7 +92,7 @@ class BusinessRepositoryImpl implements BusinessRepository {
   Future<void> saveInvoice(Invoice invoice, List<InvoiceItem> items) async {
     final invoiceModel = InvoiceModel.fromEntity(invoice);
     final existing = await _localDatabase.getInvoices();
-    
+
     if (existing.any((e) => e['id'] == invoiceModel.id)) {
       await _localDatabase.updateInvoice(invoiceModel.toMap());
     } else {
@@ -107,16 +116,25 @@ class BusinessRepositoryImpl implements BusinessRepository {
   Future<List<ReceivedInvoice>> getReceivedInvoices() async {
     final db = await _localDatabase.database;
     final maps = await db.query('received_invoices', orderBy: 'date DESC');
-    return maps.map((map) => ReceivedInvoiceModel.fromMap(map)).toList();
+    return maps.map(ReceivedInvoiceModel.fromMap).toList();
   }
 
   @override
   Future<void> saveReceivedInvoice(ReceivedInvoice invoice) async {
     final db = await _localDatabase.database;
     final model = ReceivedInvoiceModel.fromEntity(invoice);
-    final existing = await db.query('received_invoices', where: 'id = ?', whereArgs: [model.id]);
+    final existing = await db.query(
+      'received_invoices',
+      where: 'id = ?',
+      whereArgs: [model.id],
+    );
     if (existing.isNotEmpty) {
-      await db.update('received_invoices', model.toMap(), where: 'id = ?', whereArgs: [model.id]);
+      await db.update(
+        'received_invoices',
+        model.toMap(),
+        where: 'id = ?',
+        whereArgs: [model.id],
+      );
     } else {
       await db.insert('received_invoices', model.toMap());
     }
@@ -131,32 +149,32 @@ class BusinessRepositoryImpl implements BusinessRepository {
   @override
   Future<List<InvoiceItem>> getInvoiceItems(String invoiceId) async {
     final maps = await _localDatabase.getInvoiceItems(invoiceId);
-    return maps.map((map) => InvoiceItemModel.fromMap(map)).toList();
+    return maps.map(InvoiceItemModel.fromMap).toList();
   }
 
   @override
   Future<List<InvoicePayment>> getInvoicePayments(String invoiceId) async {
     final maps = await _localDatabase.getInvoicePayments(invoiceId);
-    return maps.map((map) => InvoicePaymentModel.fromMap(map)).toList();
+    return maps.map(InvoicePaymentModel.fromMap).toList();
   }
 
   @override
   Future<void> savePayment(InvoicePayment payment) async {
     final model = InvoicePaymentModel.fromEntity(payment);
     await _localDatabase.insertInvoicePayment(model.toMap());
-    
+
     // Update invoice balance and status
     final invoice = await getInvoice(payment.invoiceId);
     if (invoice != null) {
       final payments = await getInvoicePayments(payment.invoiceId);
       final totalPaid = payments.fold<double>(0, (sum, p) => sum + p.amount);
       final newBalance = invoice.grandTotal - totalPaid;
-      
+
       final updatedInvoice = invoice.copyWith(
         balanceDue: newBalance,
         status: newBalance <= 0 ? InvoiceStatus.paid : invoice.status,
       );
-      
+
       final items = await getInvoiceItems(payment.invoiceId);
       await saveInvoice(updatedInvoice, items);
     }

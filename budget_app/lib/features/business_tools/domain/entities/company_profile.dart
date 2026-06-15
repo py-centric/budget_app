@@ -69,19 +69,19 @@ class CompanyProfile extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        name,
-        address,
-        taxId,
-        logoPath,
-        paymentInfo,
-        defaultVatRate,
-        bankName,
-        bankIban,
-        bankBic,
-        bankHolder,
-        primaryColor,
-        fontFamily,
-        logoOnRight,
-      ];
+    id,
+    name,
+    address,
+    taxId,
+    logoPath,
+    paymentInfo,
+    defaultVatRate,
+    bankName,
+    bankIban,
+    bankBic,
+    bankHolder,
+    primaryColor,
+    fontFamily,
+    logoOnRight,
+  ];
 }

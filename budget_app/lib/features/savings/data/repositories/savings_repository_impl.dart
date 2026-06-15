@@ -15,7 +15,7 @@ class SavingsRepositoryImpl implements SavingsRepository {
   Future<List<SavingsGoal>> getAllGoals() async {
     final db = await _database.database;
     final maps = await db.query('savings_goals', orderBy: 'created_at DESC');
-    return maps.map((map) => SavingsGoalModel.fromMap(map)).toList();
+    return maps.map(SavingsGoalModel.fromMap).toList();
   }
 
   @override
@@ -102,7 +102,7 @@ class SavingsRepositoryImpl implements SavingsRepository {
       whereArgs: [goalId],
       orderBy: 'date DESC',
     );
-    return maps.map((map) => SavingsContributionModel.fromMap(map)).toList();
+    return maps.map(SavingsContributionModel.fromMap).toList();
   }
 
   @override

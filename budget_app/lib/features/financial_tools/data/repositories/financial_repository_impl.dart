@@ -17,7 +17,7 @@ class FinancialRepositoryImpl implements FinancialRepository {
   @override
   Future<List<SavedCalculation>> getSavedCalculations() async {
     final maps = await _localDatabase.getSavedCalculations();
-    return maps.map<SavedCalculation>((map) => SavedCalculationModel.fromMap(map)).toList();
+    return maps.map<SavedCalculation>(SavedCalculationModel.fromMap).toList();
   }
 
   @override

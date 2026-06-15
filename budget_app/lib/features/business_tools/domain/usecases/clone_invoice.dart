@@ -18,7 +18,8 @@ class CloneInvoice {
 
     final newInvoiceId = const Uuid().v4();
     final newDate = DateTime.now();
-    final newInvoiceNumber = 'INV-${DateFormat('yyyyMMdd-HHmm').format(newDate)}';
+    final newInvoiceNumber =
+        'INV-${DateFormat('yyyyMMdd-HHmm').format(newDate)}';
 
     final clonedInvoice = sourceInvoice.copyWith(
       id: newInvoiceId,
@@ -28,10 +29,12 @@ class CloneInvoice {
       balanceDue: sourceInvoice.grandTotal, // Reset balance due to full amount
     );
 
-    final clonedItems = sourceItems.map((item) => item.copyWith(
-      id: const Uuid().v4(),
-      invoiceId: newInvoiceId,
-    )).toList();
+    final clonedItems = sourceItems
+        .map(
+          (item) =>
+              item.copyWith(id: const Uuid().v4(), invoiceId: newInvoiceId),
+        )
+        .toList();
 
     await _repository.saveInvoice(clonedInvoice, clonedItems);
   }

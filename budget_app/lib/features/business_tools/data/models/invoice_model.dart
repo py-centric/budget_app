@@ -29,7 +29,9 @@ class InvoiceModel extends Invoice {
       date: DateTime.parse(map['date'] as String),
       clientName: map['client_name'] as String,
       clientDetails: map['client_details'] as String,
-      status: InvoiceStatus.values.firstWhere((e) => e.toString() == map['status']),
+      status: InvoiceStatus.values.firstWhere(
+        (e) => e.toString() == map['status'],
+      ),
       subTotal: (map['sub_total'] as num).toDouble(),
       taxTotal: (map['tax_total'] as num).toDouble(),
       grandTotal: (map['grand_total'] as num).toDouble(),

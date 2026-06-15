@@ -20,7 +20,9 @@ class ReceivedInvoiceModel extends ReceivedInvoice {
       vendorName: map['vendor_name'] as String,
       invoiceNumber: map['invoice_number'] as String?,
       date: DateTime.parse(map['date'] as String),
-      dueDate: map['due_date'] != null ? DateTime.parse(map['due_date'] as String) : null,
+      dueDate: map['due_date'] != null
+          ? DateTime.parse(map['due_date'] as String)
+          : null,
       amount: (map['amount'] as num).toDouble(),
       taxAmount: (map['tax_amount'] as num).toDouble(),
       status: ReceivedInvoiceStatus.values.firstWhere(

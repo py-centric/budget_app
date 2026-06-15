@@ -16,31 +16,41 @@ class CalculateAmortization {
     return _calculateCompound(principal, annualRate, years);
   }
 
-  List<AmortizationPoint> _calculateSimple(double principal, double annualRate, int years) {
+  List<AmortizationPoint> _calculateSimple(
+    double principal,
+    double annualRate,
+    int years,
+  ) {
     final int months = years * 12;
     final double totalInterest = principal * (annualRate / 100) * years;
     final double monthlyInterest = totalInterest / months;
     final double monthlyPrincipal = principal / months;
 
-    List<AmortizationPoint> schedule = [];
+    final List<AmortizationPoint> schedule = [];
     double currentBalance = principal;
 
     for (int i = 1; i <= months; i++) {
       currentBalance -= monthlyPrincipal;
-      schedule.add(AmortizationPoint(
-        month: i,
-        principalPaid: monthlyPrincipal,
-        interestPaid: monthlyInterest,
-        remainingBalance: max(0, currentBalance),
-      ));
+      schedule.add(
+        AmortizationPoint(
+          month: i,
+          principalPaid: monthlyPrincipal,
+          interestPaid: monthlyInterest,
+          remainingBalance: max(0, currentBalance),
+        ),
+      );
     }
     return schedule;
   }
 
-  List<AmortizationPoint> _calculateCompound(double principal, double annualRate, int years) {
+  List<AmortizationPoint> _calculateCompound(
+    double principal,
+    double annualRate,
+    int years,
+  ) {
     final int months = years * 12;
     final double monthlyRate = annualRate / 12 / 100;
-    
+
     if (monthlyRate == 0) {
       return List.generate(months, (index) {
         final month = index + 1;
@@ -54,10 +64,11 @@ class CalculateAmortization {
       });
     }
 
-    final double monthlyPayment = (principal * monthlyRate * pow(1 + monthlyRate, months)) /
+    final double monthlyPayment =
+        (principal * monthlyRate * pow(1 + monthlyRate, months)) /
         (pow(1 + monthlyRate, months) - 1);
 
-    List<AmortizationPoint> schedule = [];
+    final List<AmortizationPoint> schedule = [];
     double currentBalance = principal;
 
     for (int i = 1; i <= months; i++) {
@@ -65,12 +76,14 @@ class CalculateAmortization {
       final double principalPaid = monthlyPayment - interestPaid;
       currentBalance -= principalPaid;
 
-      schedule.add(AmortizationPoint(
-        month: i,
-        principalPaid: principalPaid,
-        interestPaid: interestPaid,
-        remainingBalance: max(0, currentBalance),
-      ));
+      schedule.add(
+        AmortizationPoint(
+          month: i,
+          principalPaid: principalPaid,
+          interestPaid: interestPaid,
+          remainingBalance: max(0, currentBalance),
+        ),
+      );
     }
 
     return schedule;

@@ -15,7 +15,7 @@ class LoanRepositoryImpl implements LoanRepository {
   Future<List<Loan>> getLoans() async {
     final db = await _localDatabase.database;
     final maps = await db.query('loans', orderBy: 'loan_date DESC');
-    return maps.map((map) => LoanModel.fromMap(map)).toList();
+    return maps.map(LoanModel.fromMap).toList();
   }
 
   @override
@@ -57,7 +57,7 @@ class LoanRepositoryImpl implements LoanRepository {
     final db = await _localDatabase.database;
 
     final allLoans = await db.query('loans');
-    final loans = allLoans.map((map) => LoanModel.fromMap(map)).toList();
+    final loans = allLoans.map(LoanModel.fromMap).toList();
 
     double totalOutstanding = 0;
     int settledCount = 0;
@@ -95,7 +95,7 @@ class LoanRepositoryImpl implements LoanRepository {
       whereArgs: [direction.name],
       orderBy: 'loan_date DESC',
     );
-    return maps.map((map) => LoanModel.fromMap(map)).toList();
+    return maps.map(LoanModel.fromMap).toList();
   }
 
   @override
@@ -107,7 +107,7 @@ class LoanRepositoryImpl implements LoanRepository {
       whereArgs: [1],
       orderBy: 'loan_date DESC',
     );
-    return maps.map((map) => LoanModel.fromMap(map)).toList();
+    return maps.map(LoanModel.fromMap).toList();
   }
 
   @override
@@ -119,7 +119,7 @@ class LoanRepositoryImpl implements LoanRepository {
       whereArgs: [loanId],
       orderBy: 'payment_date DESC',
     );
-    return maps.map((map) => LoanPaymentModel.fromMap(map)).toList();
+    return maps.map(LoanPaymentModel.fromMap).toList();
   }
 
   @override

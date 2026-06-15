@@ -55,15 +55,15 @@ class ReceivedInvoice extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        vendorName,
-        invoiceNumber,
-        date,
-        dueDate,
-        amount,
-        taxAmount,
-        status,
-        balanceDue,
-        notes,
-      ];
+    id,
+    vendorName,
+    invoiceNumber,
+    date,
+    dueDate,
+    amount,
+    taxAmount,
+    status,
+    balanceDue,
+    notes,
+  ];
 }

@@ -14,5 +14,10 @@ class AmortizationPoint extends Equatable {
   });
 
   @override
-  List<Object?> get props => [month, principalPaid, interestPaid, remainingBalance];
+  List<Object?> get props => [
+    month,
+    principalPaid,
+    interestPaid,
+    remainingBalance,
+  ];
 }

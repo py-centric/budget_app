@@ -6,21 +6,25 @@ class AppTheme {
   AppTheme._();
 
   static ThemeData get lightTheme {
-    return AppThemeExtensions.extend(_baseTheme(
-      ColorScheme.fromSeed(
-        seedColor: Colors.green,
-        brightness: Brightness.light,
+    return AppThemeExtensions.extend(
+      _baseTheme(
+        ColorScheme.fromSeed(
+          seedColor: Colors.green,
+          brightness: Brightness.light,
+        ),
       ),
-    ));
+    );
   }
 
   static ThemeData get darkTheme {
-    return AppThemeExtensions.extend(_baseTheme(
-      ColorScheme.fromSeed(
-        seedColor: Colors.green,
-        brightness: Brightness.dark,
+    return AppThemeExtensions.extend(
+      _baseTheme(
+        ColorScheme.fromSeed(
+          seedColor: Colors.green,
+          brightness: Brightness.dark,
+        ),
       ),
-    ));
+    );
   }
 
   static ThemeData _baseTheme(ColorScheme colorScheme) {
@@ -28,13 +32,13 @@ class AppTheme {
       useMaterial3: true,
       colorScheme: colorScheme,
       appBarTheme: const AppBarTheme(centerTitle: true, elevation: 0),
-      cardTheme: CardThemeData(
+      cardTheme: const CardThemeData(
         elevation: 2,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(AppRadius.md)),
         ),
       ),
-      inputDecorationTheme: InputDecorationTheme(
+      inputDecorationTheme: const InputDecorationTheme(
         border: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(AppRadius.sm)),
         ),
@@ -46,20 +50,20 @@ class AppTheme {
             horizontal: AppSpacing.lg,
             vertical: AppSpacing.sm + AppSpacing.xs,
           ),
-          shape: RoundedRectangleBorder(
+          shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(AppRadius.sm)),
           ),
         ),
       ),
-      drawerTheme: DrawerThemeData(
-        shape: const RoundedRectangleBorder(
+      drawerTheme: const DrawerThemeData(
+        shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
             topRight: Radius.circular(AppRadius.lg),
             bottomRight: Radius.circular(AppRadius.lg),
           ),
         ),
       ),
-      listTileTheme: ListTileThemeData(
+      listTileTheme: const ListTileThemeData(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(AppRadius.sm)),
         ),
