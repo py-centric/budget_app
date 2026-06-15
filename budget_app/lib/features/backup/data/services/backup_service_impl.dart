@@ -7,6 +7,7 @@ import 'package:share_plus/share_plus.dart';
 import '../../domain/entities/import_result.dart';
 import '../../domain/services/backup_service.dart';
 import '../../../budget/data/datasources/local_database.dart';
+import '../../../../core/constants/app_constants.dart';
 
 class BackupServiceImpl implements BackupService {
   @override
@@ -62,8 +63,11 @@ class BackupServiceImpl implements BackupService {
 
         final db2 = await openDatabase(
           currentDbPath,
-          version: 1,
+          version: AppConstants.databaseVersion,
           readOnly: false,
+          onConfigure: (db) async {
+            await db.execute('PRAGMA foreign_keys = ON');
+          },
         );
 
         final tables = await db2.rawQuery(

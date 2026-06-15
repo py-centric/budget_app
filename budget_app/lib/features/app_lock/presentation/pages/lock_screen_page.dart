@@ -84,6 +84,7 @@ class _LockScreenPageState extends State<LockScreenPage>
               _showPinInput = true;
             });
           }
+          if (!context.mounted) return;
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(state.errorMessage!),

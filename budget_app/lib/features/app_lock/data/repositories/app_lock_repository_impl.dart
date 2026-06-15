@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:math';
+import 'package:crypto/crypto.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:local_auth/local_auth.dart';
 import '../../domain/entities/app_lock_settings.dart';
@@ -7,13 +10,27 @@ class AuthServiceImpl implements AuthService {
   final FlutterSecureStorage _secureStorage;
   final LocalAuthentication _localAuth;
 
-  static const String _pinKey = 'app_lock_pin';
+  static const String _pinHashKey = 'app_lock_pin_hash';
+  static const String _pinSaltKey = 'app_lock_pin_salt';
 
   AuthServiceImpl({
     FlutterSecureStorage? secureStorage,
     LocalAuthentication? localAuth,
   }) : _secureStorage = secureStorage ?? const FlutterSecureStorage(),
        _localAuth = localAuth ?? LocalAuthentication();
+
+  /// Generates a cryptographically random salt.
+  String _generateSalt() {
+    final random = Random.secure();
+    final bytes = List<int>.generate(16, (_) => random.nextInt(256));
+    return base64.encode(bytes);
+  }
+
+  /// Hashes [pin] with the given [salt] using SHA-256.
+  String _hashPin(String pin, String salt) {
+    final bytes = utf8.encode(pin + salt);
+    return sha256.convert(bytes).toString();
+  }
 
   @override
   Future<bool> isBiometricAvailable() async {
@@ -43,24 +60,30 @@ class AuthServiceImpl implements AuthService {
 
   @override
   Future<bool> verifyPin(String pin) async {
-    final storedPin = await _secureStorage.read(key: _pinKey);
-    return storedPin == pin;
+    final storedHash = await _secureStorage.read(key: _pinHashKey);
+    final storedSalt = await _secureStorage.read(key: _pinSaltKey);
+    if (storedHash == null || storedSalt == null) return false;
+    return storedHash == _hashPin(pin, storedSalt);
   }
 
   @override
   Future<void> savePin(String pin) async {
-    await _secureStorage.write(key: _pinKey, value: pin);
+    final salt = _generateSalt();
+    final hash = _hashPin(pin, salt);
+    await _secureStorage.write(key: _pinHashKey, value: hash);
+    await _secureStorage.write(key: _pinSaltKey, value: salt);
   }
 
   @override
   Future<bool> hasPin() async {
-    final pin = await _secureStorage.read(key: _pinKey);
-    return pin != null && pin.isNotEmpty;
+    final hash = await _secureStorage.read(key: _pinHashKey);
+    return hash != null && hash.isNotEmpty;
   }
 
   @override
   Future<void> clearPin() async {
-    await _secureStorage.delete(key: _pinKey);
+    await _secureStorage.delete(key: _pinHashKey);
+    await _secureStorage.delete(key: _pinSaltKey);
   }
 }
 
