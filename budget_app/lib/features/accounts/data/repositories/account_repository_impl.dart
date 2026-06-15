@@ -14,7 +14,7 @@ class AccountRepositoryImpl implements AccountRepository {
   Future<List<Account>> getAllAccounts() async {
     final db = await _localDatabase.database;
     final maps = await db.query('accounts', orderBy: 'name ASC');
-    return maps.map((map) => AccountModel.fromMap(map)).toList();
+    return maps.map(AccountModel.fromMap).toList();
   }
 
   @override
@@ -66,7 +66,7 @@ class AccountRepositoryImpl implements AccountRepository {
       whereArgs: [accountId, accountId],
       orderBy: 'date DESC',
     );
-    return maps.map((map) => TransferModel.fromMap(map)).toList();
+    return maps.map(TransferModel.fromMap).toList();
   }
 
   @override

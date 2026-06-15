@@ -25,18 +25,16 @@ class RecurringRepositoryImpl implements RecurringRepository {
   @override
   Future<void> deleteRecurringTransaction(String id) async {
     final db = await _localDatabase.database;
-    await db.delete(
-      'recurring_transactions',
-      where: 'id = ?',
-      whereArgs: [id],
-    );
+    await db.delete('recurring_transactions', where: 'id = ?', whereArgs: [id]);
   }
 
   @override
   Future<List<RecurringTransaction>> getAllRecurringTransactions() async {
     final db = await _localDatabase.database;
     final maps = await db.query('recurring_transactions');
-    return maps.map<RecurringTransaction>((map) => RecurringTransactionModel.fromMap(map)).toList();
+    return maps
+        .map<RecurringTransaction>(RecurringTransactionModel.fromMap)
+        .toList();
   }
 
   @override
@@ -65,28 +63,26 @@ class RecurringRepositoryImpl implements RecurringRepository {
   @override
   Future<void> deleteRecurringOverride(String id) async {
     final db = await _localDatabase.database;
-    await db.delete(
-      'recurring_overrides',
-      where: 'id = ?',
-      whereArgs: [id],
-    );
+    await db.delete('recurring_overrides', where: 'id = ?', whereArgs: [id]);
   }
 
   @override
-  Future<List<RecurringOverride>> getOverridesForTemplate(String templateId) async {
+  Future<List<RecurringOverride>> getOverridesForTemplate(
+    String templateId,
+  ) async {
     final db = await _localDatabase.database;
     final maps = await db.query(
       'recurring_overrides',
       where: 'recurring_transaction_id = ?',
       whereArgs: [templateId],
     );
-    return maps.map<RecurringOverride>((map) => RecurringOverrideModel.fromMap(map)).toList();
+    return maps.map<RecurringOverride>(RecurringOverrideModel.fromMap).toList();
   }
 
   @override
   Future<List<RecurringOverride>> getAllOverrides() async {
     final db = await _localDatabase.database;
     final maps = await db.query('recurring_overrides');
-    return maps.map<RecurringOverride>((map) => RecurringOverrideModel.fromMap(map)).toList();
+    return maps.map<RecurringOverride>(RecurringOverrideModel.fromMap).toList();
   }
 }

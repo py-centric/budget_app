@@ -46,13 +46,13 @@ class BudgetRepositoryImpl implements BudgetRepository {
   @override
   Future<List<IncomeEntry>> getAllIncome() async {
     final maps = await _localDatabase.getAllIncome();
-    return maps.map((map) => IncomeEntry.fromMap(map)).toList();
+    return maps.map(IncomeEntry.fromMap).toList();
   }
 
   @override
   Future<List<ExpenseEntry>> getAllExpenses() async {
     final maps = await _localDatabase.getAllExpenses();
-    return maps.map((map) => ExpenseEntry.fromMap(map)).toList();
+    return maps.map(ExpenseEntry.fromMap).toList();
   }
 
   @override
@@ -61,7 +61,7 @@ class BudgetRepositoryImpl implements BudgetRepository {
       period.year,
       period.month,
     );
-    return maps.map((map) => IncomeEntry.fromMap(map)).toList();
+    return maps.map(IncomeEntry.fromMap).toList();
   }
 
   @override
@@ -70,7 +70,7 @@ class BudgetRepositoryImpl implements BudgetRepository {
       period.year,
       period.month,
     );
-    return maps.map((map) => ExpenseEntry.fromMap(map)).toList();
+    return maps.map(ExpenseEntry.fromMap).toList();
   }
 
   @override
@@ -82,7 +82,7 @@ class BudgetRepositoryImpl implements BudgetRepository {
       start.toIso8601String(),
       end.toIso8601String(),
     );
-    return maps.map((map) => IncomeEntry.fromMap(map)).toList();
+    return maps.map(IncomeEntry.fromMap).toList();
   }
 
   @override
@@ -94,31 +94,31 @@ class BudgetRepositoryImpl implements BudgetRepository {
       start.toIso8601String(),
       end.toIso8601String(),
     );
-    return maps.map((map) => ExpenseEntry.fromMap(map)).toList();
+    return maps.map(ExpenseEntry.fromMap).toList();
   }
 
   @override
   Future<List<IncomeEntry>> getIncomeBefore(DateTime date) async {
     final maps = await _localDatabase.getIncomeBefore(date.toIso8601String());
-    return maps.map((map) => IncomeEntry.fromMap(map)).toList();
+    return maps.map(IncomeEntry.fromMap).toList();
   }
 
   @override
   Future<List<ExpenseEntry>> getExpensesBefore(DateTime date) async {
     final maps = await _localDatabase.getExpensesBefore(date.toIso8601String());
-    return maps.map((map) => ExpenseEntry.fromMap(map)).toList();
+    return maps.map(ExpenseEntry.fromMap).toList();
   }
 
   @override
   Future<List<IncomeEntry>> getIncomeForBudget(String budgetId) async {
     final maps = await _localDatabase.getIncomeForBudget(budgetId);
-    return maps.map((map) => IncomeEntry.fromMap(map)).toList();
+    return maps.map(IncomeEntry.fromMap).toList();
   }
 
   @override
   Future<List<ExpenseEntry>> getExpensesForBudget(String budgetId) async {
     final maps = await _localDatabase.getExpensesForBudget(budgetId);
-    return maps.map((map) => ExpenseEntry.fromMap(map)).toList();
+    return maps.map(ExpenseEntry.fromMap).toList();
   }
 
   @override
@@ -127,7 +127,7 @@ class BudgetRepositoryImpl implements BudgetRepository {
       period.year,
       period.month,
     );
-    return maps.map<Budget>((map) => BudgetModel.fromMap(map)).toList();
+    return maps.map<Budget>(BudgetModel.fromMap).toList();
   }
 
   @override
@@ -155,7 +155,7 @@ class BudgetRepositoryImpl implements BudgetRepository {
   @override
   Future<List<Category>> getCategories() async {
     final maps = await _localDatabase.getCategories();
-    return maps.map<Category>((map) => CategoryModel.fromMap(map)).toList();
+    return maps.map<Category>(CategoryModel.fromMap).toList();
   }
 
   @override
@@ -163,7 +163,7 @@ class BudgetRepositoryImpl implements BudgetRepository {
     final maps = await _localDatabase.getCategoriesByType(
       type == CategoryType.income ? 'income' : 'expense',
     );
-    return maps.map<Category>((map) => CategoryModel.fromMap(map)).toList();
+    return maps.map<Category>(CategoryModel.fromMap).toList();
   }
 
   @override

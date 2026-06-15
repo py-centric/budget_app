@@ -16,7 +16,7 @@ class CategoryLimitRepositoryImpl implements CategoryLimitRepository {
       where: 'budget_id = ?',
       whereArgs: [budgetId],
     );
-    return maps.map((map) => CategoryLimitModel.fromMap(map)).toList();
+    return maps.map(CategoryLimitModel.fromMap).toList();
   }
 
   @override
