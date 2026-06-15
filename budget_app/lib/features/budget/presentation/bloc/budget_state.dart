@@ -1,10 +1,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:budget_app/features/budget/domain/usecases/calculate_summary.dart';
-import '../domain/entities/category.dart';
+import '../../domain/entities/category.dart';
 
 /// Base state for the budget feature's UI layer.
-/// Concrete subclasses represent loading, loaded, error,
-/// and mutation-confirmation states (e.g. IncomeAdded, BudgetDeleted).
 abstract class BudgetState extends Equatable {
   const BudgetState();
 
@@ -20,20 +18,10 @@ class BudgetLoading extends BudgetState {
   const BudgetLoading();
 }
 
-class IncomeAdded extends BudgetState {
-  const IncomeAdded();
-}
-
-class ExpenseAdded extends BudgetState {
-  const ExpenseAdded();
-}
-
-class EntryDeleted extends BudgetState {
-  const EntryDeleted();
-}
-
-class EntryUpdated extends BudgetState {
-  const EntryUpdated();
+/// Consolidated one-shot success state replacing IncomeAdded, ExpenseAdded,
+/// EntryDeleted, EntryUpdated, BudgetDeleted, BudgetsCleared, and FactoryResetComplete.
+class OperationSuccess extends BudgetState {
+  const OperationSuccess();
 }
 
 class SummaryLoaded extends BudgetState {
@@ -61,18 +49,6 @@ class BudgetError extends BudgetState {
 
   @override
   List<Object?> get props => [message];
-}
-
-class BudgetDeleted extends BudgetState {
-  const BudgetDeleted();
-}
-
-class BudgetsCleared extends BudgetState {
-  const BudgetsCleared();
-}
-
-class FactoryResetComplete extends BudgetState {
-  const FactoryResetComplete();
 }
 
 class BudgetConverted extends BudgetState {

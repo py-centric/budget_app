@@ -1,10 +1,10 @@
 import 'package:equatable/equatable.dart';
-import '../domain/entities/budget_period.dart';
-import '../domain/entities/income_entry.dart';
-import '../domain/entities/expense_entry.dart';
-import '../domain/entities/recurring_transaction.dart';
+import '../../domain/entities/budget_period.dart';
+import '../../domain/entities/income_entry.dart';
+import '../../domain/entities/expense_entry.dart';
+import '../../domain/entities/recurring_transaction.dart';
 
-import '../domain/entities/budget.dart';
+import '../../domain/entities/budget.dart';
 
 abstract class BudgetEvent extends Equatable {
   const BudgetEvent();

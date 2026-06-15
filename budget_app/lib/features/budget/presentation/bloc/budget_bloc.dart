@@ -1,18 +1,18 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uuid/uuid.dart';
 
-import '../domain/entities/income_entry.dart';
-import '../domain/entities/expense_entry.dart';
-import '../domain/entities/budget_period.dart';
-import '../domain/repositories/budget_repository.dart';
-import '../domain/usecases/add_income.dart';
-import '../domain/usecases/add_expense.dart';
-import '../domain/usecases/calculate_summary.dart';
-import '../domain/usecases/delete_entry.dart' as usecase;
-import '../domain/usecases/update_entry.dart';
-import '../domain/usecases/duplicate_budget.dart';
-import '../domain/usecases/save_recurring_transaction.dart';
-import '../domain/usecases/confirm_potential_transaction.dart';
+import '../../domain/entities/income_entry.dart';
+import '../../domain/entities/expense_entry.dart';
+import '../../domain/entities/budget_period.dart';
+import '../../domain/repositories/budget_repository.dart';
+import '../../domain/usecases/add_income.dart';
+import '../../domain/usecases/add_expense.dart';
+import '../../domain/usecases/calculate_summary.dart';
+import '../../domain/usecases/delete_entry.dart' as usecase;
+import '../../domain/usecases/update_entry.dart';
+import '../../domain/usecases/duplicate_budget.dart';
+import '../../domain/usecases/save_recurring_transaction.dart';
+import '../../domain/usecases/confirm_potential_transaction.dart';
 import 'budget_event.dart';
 import 'budget_state.dart';
 
@@ -68,7 +68,7 @@ class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
         incomeId: event.incomeId,
         expenseId: event.expenseId,
       );
-      emit(const EntryUpdated()); // Or a new state if preferred
+      emit(const OperationSuccess()); // Or a new state if preferred
       // Refresh summary
     } catch (e) {
       emit(BudgetError(e.toString()));
@@ -128,7 +128,7 @@ class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
         isPotential: event.isPotential,
       );
       await addIncomeUseCase(income);
-      emit(const IncomeAdded());
+      emit(const OperationSuccess());
       add(
         LoadSummaryEvent(
           period: BudgetPeriod.fromDate(event.date),
@@ -155,7 +155,7 @@ class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
         isPotential: event.isPotential,
       );
       await addExpenseUseCase(expense);
-      emit(const ExpenseAdded());
+      emit(const OperationSuccess());
       add(
         LoadSummaryEvent(
           period: BudgetPeriod.fromDate(event.date),
@@ -206,7 +206,7 @@ class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
             ? usecase.EntryType.income
             : usecase.EntryType.expense,
       );
-      emit(const EntryDeleted()); // Trigger reload in UI
+      emit(const OperationSuccess()); // Trigger reload in UI
     } catch (e) {
       emit(BudgetError(e.toString()));
     }
@@ -218,7 +218,7 @@ class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
   ) async {
     try {
       await updateEntryUseCase(income: event.income);
-      emit(const EntryUpdated());
+      emit(const OperationSuccess());
       add(
         LoadSummaryEvent(
           period: BudgetPeriod.fromDate(event.income.date),
@@ -236,7 +236,7 @@ class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
   ) async {
     try {
       await updateEntryUseCase(expense: event.expense);
-      emit(const EntryUpdated());
+      emit(const OperationSuccess());
       add(
         LoadSummaryEvent(
           period: BudgetPeriod.fromDate(event.expense.date),
@@ -254,7 +254,7 @@ class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
   ) async {
     try {
       await repository.deleteBudget(event.budgetId);
-      emit(const BudgetDeleted());
+      emit(const OperationSuccess());
     } catch (e) {
       emit(BudgetError(e.toString()));
     }
@@ -266,7 +266,7 @@ class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
   ) async {
     try {
       await repository.clearAllBudgets();
-      emit(const BudgetsCleared());
+      emit(const OperationSuccess());
     } catch (e) {
       emit(BudgetError(e.toString()));
     }
@@ -278,7 +278,7 @@ class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
   ) async {
     try {
       await repository.factoryReset();
-      emit(const FactoryResetComplete());
+      emit(const OperationSuccess());
     } catch (e) {
       emit(BudgetError(e.toString()));
     }
