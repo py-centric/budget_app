@@ -10,8 +10,8 @@ import '../../../backup/data/services/backup_service_impl.dart';
 import '../../../backup/presentation/bloc/backup_bloc.dart';
 import '../../../backup/presentation/bloc/backup_event.dart';
 import '../../../backup/presentation/bloc/backup_state.dart';
-import '../../../budget/presentation/budget_bloc.dart';
-import '../../../budget/presentation/budget_event.dart';
+import '../../../budget/presentation/bloc/budget_bloc.dart';
+import '../../../budget/presentation/bloc/budget_event.dart';
 import '../bloc/settings_bloc.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -496,7 +496,7 @@ class _FactoryResetSection extends StatelessWidget {
           TextButton(
             onPressed: () {
               Navigator.of(dialogContext).pop();
-              context.read<BudgetBloc>().add(FactoryResetEvent());
+              context.read<BudgetBloc>().add(const FactoryResetEvent());
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                   content: Text('Factory reset complete'),
