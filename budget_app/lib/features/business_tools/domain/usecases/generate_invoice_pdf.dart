@@ -13,7 +13,9 @@ class GenerateInvoicePdf {
     required List<InvoiceItem> items,
     required CompanyProfile profile,
   }) async {
-    final primaryColor = profile.primaryColor != null ? PdfColor.fromInt(profile.primaryColor!) : PdfColors.blue600;
+    final primaryColor = profile.primaryColor != null
+        ? PdfColor.fromInt(profile.primaryColor!)
+        : PdfColors.blue600;
 
     // Load font
     final font = await _getFont(profile.fontFamily);
@@ -73,13 +75,30 @@ class GenerateInvoicePdf {
     }
   }
 
-  pw.Widget _buildHeader(Invoice invoice, CompanyProfile profile, pw.ImageProvider? logo, DateFormat df, PdfColor primaryColor) {
-    final logoWidget = (logo != null) ? pw.Image(logo, width: 60, height: 60) : pw.SizedBox();
+  pw.Widget _buildHeader(
+    Invoice invoice,
+    CompanyProfile profile,
+    pw.ImageProvider? logo,
+    DateFormat df,
+    PdfColor primaryColor,
+  ) {
+    final logoWidget = (logo != null)
+        ? pw.Image(logo, width: 60, height: 60)
+        : pw.SizedBox();
 
     final infoColumn = pw.Column(
-      crossAxisAlignment: profile.logoOnRight ? pw.CrossAxisAlignment.start : pw.CrossAxisAlignment.end,
+      crossAxisAlignment: profile.logoOnRight
+          ? pw.CrossAxisAlignment.start
+          : pw.CrossAxisAlignment.end,
       children: [
-        pw.Text('INVOICE', style: pw.TextStyle(fontSize: 30, fontWeight: pw.FontWeight.bold, color: primaryColor)),
+        pw.Text(
+          'INVOICE',
+          style: pw.TextStyle(
+            fontSize: 30,
+            fontWeight: pw.FontWeight.bold,
+            color: primaryColor,
+          ),
+        ),
         pw.Text('Number: ${invoice.invoiceNumber}'),
         pw.Text('Date: ${df.format(invoice.date)}'),
         pw.Text('Status: ${invoice.status.name.toUpperCase()}'),
@@ -87,11 +106,17 @@ class GenerateInvoicePdf {
     );
 
     final profileColumn = pw.Column(
-      crossAxisAlignment: profile.logoOnRight ? pw.CrossAxisAlignment.end : pw.CrossAxisAlignment.start,
+      crossAxisAlignment: profile.logoOnRight
+          ? pw.CrossAxisAlignment.end
+          : pw.CrossAxisAlignment.start,
       children: [
-        pw.Text(profile.name, style: pw.TextStyle(fontSize: 20, fontWeight: pw.FontWeight.bold)),
+        pw.Text(
+          profile.name,
+          style: pw.TextStyle(fontSize: 20, fontWeight: pw.FontWeight.bold),
+        ),
         pw.Text(profile.address),
-        if (profile.taxId != null && profile.taxId!.isNotEmpty) pw.Text('Tax ID: ${profile.taxId}'),
+        if (profile.taxId != null && profile.taxId!.isNotEmpty)
+          pw.Text('Tax ID: ${profile.taxId}'),
       ],
     );
 
@@ -103,20 +128,12 @@ class GenerateInvoicePdf {
           profileColumn,
           pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.end,
-            children: [
-              logoWidget,
-              pw.SizedBox(height: 10),
-              infoColumn,
-            ],
+            children: [logoWidget, pw.SizedBox(height: 10), infoColumn],
           ),
         ] else ...[
           pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
-            children: [
-              logoWidget,
-              pw.SizedBox(height: 10),
-              profileColumn,
-            ],
+            children: [logoWidget, pw.SizedBox(height: 10), profileColumn],
           ),
           infoColumn,
         ],
@@ -128,27 +145,41 @@ class GenerateInvoicePdf {
     return pw.Column(
       crossAxisAlignment: pw.CrossAxisAlignment.start,
       children: [
-        pw.Text('BILL TO:', style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+        pw.Text(
+          'BILL TO:',
+          style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
+        ),
         pw.Text(invoice.clientName),
         pw.Text(invoice.clientDetails),
       ],
     );
   }
 
-  pw.Widget _buildItemsTable(List<InvoiceItem> items, NumberFormat cf, PdfColor primaryColor) {
+  pw.Widget _buildItemsTable(
+    List<InvoiceItem> items,
+    NumberFormat cf,
+    PdfColor primaryColor,
+  ) {
     final headers = ['Description', 'Qty', 'Rate', 'Tax %', 'Total'];
-    final data = items.map((it) => [
-      it.description,
-      it.quantity.toString(),
-      cf.format(it.rate),
-      '${it.taxRate}%',
-      cf.format(it.total),
-    ]).toList();
+    final data = items
+        .map(
+          (it) => [
+            it.description,
+            it.quantity.toString(),
+            cf.format(it.rate),
+            '${it.taxRate}%',
+            cf.format(it.total),
+          ],
+        )
+        .toList();
 
     return pw.TableHelper.fromTextArray(
       headers: headers,
       data: data,
-      headerStyle: pw.TextStyle(fontWeight: pw.FontWeight.bold, color: PdfColors.white),
+      headerStyle: pw.TextStyle(
+        fontWeight: pw.FontWeight.bold,
+        color: PdfColors.white,
+      ),
       headerDecoration: pw.BoxDecoration(color: primaryColor),
       cellAlignment: pw.Alignment.centerLeft,
       columnWidths: {
@@ -167,7 +198,11 @@ class GenerateInvoicePdf {
     );
   }
 
-  pw.Widget _buildSummary(Invoice invoice, NumberFormat cf, PdfColor primaryColor) {
+  pw.Widget _buildSummary(
+    Invoice invoice,
+    NumberFormat cf,
+    PdfColor primaryColor,
+  ) {
     return pw.Align(
       alignment: pw.Alignment.centerRight,
       child: pw.SizedBox(
@@ -177,22 +212,42 @@ class GenerateInvoicePdf {
             _summaryRow('Sub-total', cf.format(invoice.subTotal)),
             _summaryRow('Tax Total', cf.format(invoice.taxTotal)),
             pw.Divider(color: primaryColor),
-            _summaryRow('Grand Total', cf.format(invoice.grandTotal), isBold: true),
+            _summaryRow(
+              'Grand Total',
+              cf.format(invoice.grandTotal),
+              isBold: true,
+            ),
             if (invoice.balanceDue > 0)
-              _summaryRow('Balance Due', cf.format(invoice.balanceDue), isBold: true, color: PdfColors.red),
+              _summaryRow(
+                'Balance Due',
+                cf.format(invoice.balanceDue),
+                isBold: true,
+                color: PdfColors.red,
+              ),
           ],
         ),
       ),
     );
   }
 
-  pw.Widget _summaryRow(String label, String value, {bool isBold = false, PdfColor? color}) {
-    final style = pw.TextStyle(fontWeight: isBold ? pw.FontWeight.bold : null, color: color);
+  pw.Widget _summaryRow(
+    String label,
+    String value, {
+    bool isBold = false,
+    PdfColor? color,
+  }) {
+    final style = pw.TextStyle(
+      fontWeight: isBold ? pw.FontWeight.bold : null,
+      color: color,
+    );
     return pw.Padding(
       padding: const pw.EdgeInsets.symmetric(vertical: 2),
       child: pw.Row(
         mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-        children: [pw.Text(label, style: style), pw.Text(value, style: style)],
+        children: [
+          pw.Text(label, style: style),
+          pw.Text(value, style: style),
+        ],
       ),
     );
   }
@@ -201,16 +256,23 @@ class GenerateInvoicePdf {
     return pw.Column(
       crossAxisAlignment: pw.CrossAxisAlignment.start,
       children: [
-        pw.Text('VAT SUMMARY:', style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+        pw.Text(
+          'VAT SUMMARY:',
+          style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
+        ),
         pw.SizedBox(height: 5),
         pw.TableHelper.fromTextArray(
           headers: ['Rate %', 'Net Amount', 'VAT Amount', 'Gross Amount'],
-          data: summary.map((s) => [
-            '${s.rate}%',
-            cf.format(s.netAmount),
-            cf.format(s.vatAmount),
-            cf.format(s.grossAmount),
-          ]).toList(),
+          data: summary
+              .map(
+                (s) => [
+                  '${s.rate}%',
+                  cf.format(s.netAmount),
+                  cf.format(s.vatAmount),
+                  cf.format(s.grossAmount),
+                ],
+              )
+              .toList(),
           headerStyle: pw.TextStyle(fontWeight: pw.FontWeight.bold),
           headerDecoration: const pw.BoxDecoration(color: PdfColors.grey200),
           cellAlignment: pw.Alignment.centerRight,
@@ -221,18 +283,33 @@ class GenerateInvoicePdf {
   }
 
   pw.Widget _buildBankingInfo(Invoice invoice, CompanyProfile profile) {
-    final bankName = (invoice.bankName != null && invoice.bankName!.isNotEmpty) ? invoice.bankName : profile.bankName;
-    final bankIban = (invoice.bankIban != null && invoice.bankIban!.isNotEmpty) ? invoice.bankIban : profile.bankIban;
-    final bankBic = (invoice.bankBic != null && invoice.bankBic!.isNotEmpty) ? invoice.bankBic : profile.bankBic;
-    final bankHolder = (invoice.bankHolder != null && invoice.bankHolder!.isNotEmpty) ? invoice.bankHolder : profile.bankHolder;
+    final bankName = (invoice.bankName != null && invoice.bankName!.isNotEmpty)
+        ? invoice.bankName
+        : profile.bankName;
+    final bankIban = (invoice.bankIban != null && invoice.bankIban!.isNotEmpty)
+        ? invoice.bankIban
+        : profile.bankIban;
+    final bankBic = (invoice.bankBic != null && invoice.bankBic!.isNotEmpty)
+        ? invoice.bankBic
+        : profile.bankBic;
+    final bankHolder =
+        (invoice.bankHolder != null && invoice.bankHolder!.isNotEmpty)
+        ? invoice.bankHolder
+        : profile.bankHolder;
 
-    if (bankName == null && bankIban == null && bankBic == null && bankHolder == null) {
+    if (bankName == null &&
+        bankIban == null &&
+        bankBic == null &&
+        bankHolder == null) {
       if (profile.paymentInfo != null && profile.paymentInfo!.isNotEmpty) {
         return pw.Column(
           crossAxisAlignment: pw.CrossAxisAlignment.start,
           children: [
             pw.SizedBox(height: 20),
-            pw.Text('PAYMENT INFORMATION:', style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+            pw.Text(
+              'PAYMENT INFORMATION:',
+              style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
+            ),
             pw.Text(profile.paymentInfo!),
           ],
         );
@@ -244,11 +321,16 @@ class GenerateInvoicePdf {
       crossAxisAlignment: pw.CrossAxisAlignment.start,
       children: [
         pw.SizedBox(height: 20),
-        pw.Text('BANKING DETAILS:', style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
-        if (bankHolder != null && bankHolder.isNotEmpty) pw.Text('Account Holder: $bankHolder'),
+        pw.Text(
+          'BANKING DETAILS:',
+          style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
+        ),
+        if (bankHolder != null && bankHolder.isNotEmpty)
+          pw.Text('Account Holder: $bankHolder'),
         if (bankName != null && bankName.isNotEmpty) pw.Text('Bank: $bankName'),
         if (bankIban != null && bankIban.isNotEmpty) pw.Text('IBAN: $bankIban'),
-        if (bankBic != null && bankBic.isNotEmpty) pw.Text('BIC/SWIFT: $bankBic'),
+        if (bankBic != null && bankBic.isNotEmpty)
+          pw.Text('BIC/SWIFT: $bankBic'),
       ],
     );
   }

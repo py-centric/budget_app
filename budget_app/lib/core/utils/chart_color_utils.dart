@@ -9,18 +9,18 @@ class ChartColorUtils {
     double threshold = 0.0,
   }) {
     if (maxY <= minY) return [0.0, 1.0];
-    
+
     // If all values are above threshold
     if (minY >= threshold) return [0.0, 1.0];
-    
+
     // If all values are below threshold
     if (maxY <= threshold) return [0.0, 1.0];
 
     final stop = (threshold - minY) / (maxY - minY);
-    
+
     // Ensure stop is within bounds and provides a sharp transition
     final safeStop = stop.clamp(0.0, 1.0);
-    
+
     return [0.0, safeStop, safeStop, 1.0];
   }
 
@@ -34,7 +34,7 @@ class ChartColorUtils {
   }) {
     if (minY >= threshold) return [positiveColor, positiveColor];
     if (maxY <= threshold) return [negativeColor, negativeColor];
-    
+
     return [negativeColor, negativeColor, positiveColor, positiveColor];
   }
 }

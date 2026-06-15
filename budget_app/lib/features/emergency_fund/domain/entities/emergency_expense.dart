@@ -36,5 +36,12 @@ class EmergencyExpense extends Equatable {
   }
 
   @override
-  List<Object?> get props => [id, name, amount, isSuggestion, categoryType, sortOrder];
+  List<Object?> get props => [
+    id,
+    name,
+    amount,
+    isSuggestion,
+    categoryType,
+    sortOrder,
+  ];
 }

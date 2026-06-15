@@ -40,5 +40,13 @@ class InvoiceItem extends Equatable {
   }
 
   @override
-  List<Object?> get props => [id, invoiceId, description, quantity, rate, taxRate, total];
+  List<Object?> get props => [
+    id,
+    invoiceId,
+    description,
+    quantity,
+    rate,
+    taxRate,
+    total,
+  ];
 }

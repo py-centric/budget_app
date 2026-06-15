@@ -13,7 +13,7 @@ class EmergencyFundRepositoryImpl implements EmergencyFundRepository {
   @override
   Future<List<EmergencyExpense>> getExpenses() async {
     final maps = await _localDatabase.getEmergencyExpenses();
-    final expenses = maps.map((map) => EmergencyExpenseModel.fromMap(map)).toList();
+    final expenses = maps.map(EmergencyExpenseModel.fromMap).toList();
     _updateTotalTarget(expenses);
     return expenses;
   }

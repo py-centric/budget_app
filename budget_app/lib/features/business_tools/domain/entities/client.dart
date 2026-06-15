@@ -53,15 +53,15 @@ class Client extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        name,
-        address,
-        taxId,
-        primaryContact,
-        email,
-        phone,
-        website,
-        industry,
-        notes,
-      ];
+    id,
+    name,
+    address,
+    taxId,
+    primaryContact,
+    email,
+    phone,
+    website,
+    industry,
+    notes,
+  ];
 }

@@ -9,8 +9,14 @@ class CalculateInvoiceStats {
     required List<Invoice> outgoingInvoices,
     required List<ReceivedInvoice> receivedInvoices,
   }) {
-    double totalReceivables = outgoingInvoices.fold(0, (sum, inv) => sum + inv.balanceDue);
-    double totalPayables = receivedInvoices.fold(0, (sum, inv) => sum + inv.balanceDue);
+    final double totalReceivables = outgoingInvoices.fold(
+      0,
+      (sum, inv) => sum + inv.balanceDue,
+    );
+    final double totalPayables = receivedInvoices.fold(
+      0,
+      (sum, inv) => sum + inv.balanceDue,
+    );
 
     int paidCount = 0;
     int unpaidCount = 0;
