@@ -9,7 +9,8 @@ import 'package:budget_app/features/budget/domain/usecases/calculate_summary.dar
 import 'package:budget_app/features/budget/presentation/widgets/summary_card.dart';
 import 'package:budget_app/features/settings/presentation/bloc/settings_bloc.dart';
 
-class MockSettingsBloc extends MockBloc<SettingsEvent, SettingsState> implements SettingsBloc {}
+class MockSettingsBloc extends MockBloc<SettingsEvent, SettingsState>
+    implements SettingsBloc {}
 
 void main() {
   late MockSettingsBloc mockSettingsBloc;
@@ -41,7 +42,12 @@ void main() {
         totalPotentialIncome: 1000.0,
         totalPotentialExpenses: 300.0,
         incomeEntries: [
-          IncomeEntry(id: '1', budgetId: 'default', amount: 1000.0, date: DateTime(2026, 1, 15)),
+          IncomeEntry(
+            id: '1',
+            budgetId: 'default',
+            amount: 1000.0,
+            date: DateTime(2026, 1, 15),
+          ),
         ],
         expenseEntries: [
           ExpenseEntry(
@@ -75,7 +81,12 @@ void main() {
         totalPotentialIncome: 500.0,
         totalPotentialExpenses: 800.0,
         incomeEntries: [
-          IncomeEntry(id: '1', budgetId: 'default', amount: 500.0, date: DateTime(2026, 1, 15)),
+          IncomeEntry(
+            id: '1',
+            budgetId: 'default',
+            amount: 500.0,
+            date: DateTime(2026, 1, 15),
+          ),
         ],
         expenseEntries: [
           ExpenseEntry(
@@ -105,7 +116,12 @@ void main() {
         totalPotentialIncome: 500.0,
         totalPotentialExpenses: 500.0,
         incomeEntries: [
-          IncomeEntry(id: '1', budgetId: 'default', amount: 500.0, date: DateTime(2026, 1, 15)),
+          IncomeEntry(
+            id: '1',
+            budgetId: 'default',
+            amount: 500.0,
+            date: DateTime(2026, 1, 15),
+          ),
         ],
         expenseEntries: [
           ExpenseEntry(
@@ -124,7 +140,7 @@ void main() {
     });
 
     testWidgets('should handle empty entries', (WidgetTester tester) async {
-      final summary = BudgetSummary(
+      const summary = BudgetSummary(
         totalIncome: 0.0,
         totalExpenses: 0.0,
         balance: 0.0,
@@ -140,4 +156,3 @@ void main() {
     });
   });
 }
-

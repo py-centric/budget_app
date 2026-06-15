@@ -19,7 +19,7 @@ void main() {
     test(
       'should return periods from repository with current and next period added',
       () async {
-        final existingPeriod = BudgetPeriod(year: 2024, month: 1);
+        const existingPeriod = BudgetPeriod(year: 2024, month: 1);
         when(
           () => mockRepository.getAvailablePeriods(),
         ).thenAnswer((_) async => [existingPeriod]);
@@ -33,8 +33,8 @@ void main() {
     );
 
     test('should sort periods in descending order', () async {
-      final period1 = BudgetPeriod(year: 2026, month: 3);
-      final period2 = BudgetPeriod(year: 2026, month: 1);
+      const period1 = BudgetPeriod(year: 2026, month: 3);
+      const period2 = BudgetPeriod(year: 2026, month: 1);
 
       when(
         () => mockRepository.getAvailablePeriods(),

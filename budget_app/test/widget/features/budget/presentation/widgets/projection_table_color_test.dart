@@ -7,7 +7,8 @@ import 'package:budget_app/features/budget/presentation/widgets/projection_table
 import 'package:budget_app/features/budget/domain/entities/projection_point.dart';
 import 'package:budget_app/features/settings/presentation/bloc/settings_bloc.dart';
 
-class MockSettingsBloc extends MockBloc<SettingsEvent, SettingsState> implements SettingsBloc {}
+class MockSettingsBloc extends MockBloc<SettingsEvent, SettingsState>
+    implements SettingsBloc {}
 
 void main() {
   late MockSettingsBloc mockSettingsBloc;
@@ -17,7 +18,9 @@ void main() {
     when(() => mockSettingsBloc.state).thenReturn(const SettingsState());
   });
 
-  testWidgets('ProjectionTable displays negative balances in red', (WidgetTester tester) async {
+  testWidgets('ProjectionTable displays negative balances in red', (
+    WidgetTester tester,
+  ) async {
     final points = [
       ProjectionPoint(
         date: DateTime(2026, 3, 1),
@@ -46,10 +49,7 @@ void main() {
         home: Scaffold(
           body: BlocProvider<SettingsBloc>.value(
             value: mockSettingsBloc,
-            child: ProjectionTable(
-              points: points,
-              isWeekly: false,
-            ),
+            child: ProjectionTable(points: points, isWeekly: false),
           ),
         ),
       ),
@@ -71,7 +71,7 @@ void main() {
         expect(widget.style?.color, isNull);
       }
     }
-    
+
     for (final widget in negativeWidgets) {
       expect(widget.style?.color, Colors.red);
     }

@@ -5,9 +5,9 @@ import 'package:mocktail/mocktail.dart';
 import 'package:budget_app/features/budget/presentation/widgets/transaction_edit_dialog.dart';
 import 'package:budget_app/features/budget/domain/entities/income_entry.dart';
 import 'package:budget_app/features/budget/domain/entities/category.dart';
-import 'package:budget_app/features/budget/presentation/budget_bloc.dart';
-import 'package:budget_app/features/budget/presentation/budget_event.dart';
-import 'package:budget_app/features/budget/presentation/budget_state.dart';
+import 'package:budget_app/features/budget/presentation/bloc/budget_bloc.dart';
+import 'package:budget_app/features/budget/presentation/bloc/budget_event.dart';
+import 'package:budget_app/features/budget/presentation/bloc/budget_state.dart';
 
 class MockBudgetBloc extends Mock implements BudgetBloc {}
 

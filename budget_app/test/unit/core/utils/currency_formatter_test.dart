@@ -24,7 +24,10 @@ void main() {
     test('should parse valid strings correctly', () {
       expect(CurrencyFormatter.parse('1234.56'), 1234.56);
       expect(CurrencyFormatter.parse('\$1,234.56'), 1234.56);
-      expect(CurrencyFormatter.parse('1234,56'), 123456); // Current logic strips commas
+      expect(
+        CurrencyFormatter.parse('1234,56'),
+        123456,
+      ); // Current logic strips commas
     });
 
     test('should return null for invalid strings', () {

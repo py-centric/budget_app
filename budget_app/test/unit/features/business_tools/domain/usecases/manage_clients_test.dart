@@ -15,11 +15,7 @@ void main() {
     usecase = ManageClients(mockRepository);
   });
 
-  final tClient = Client(
-    id: '1',
-    name: 'Test',
-    address: '123',
-  );
+  const tClient = Client(id: '1', name: 'Test', address: '123');
 
   test('should call saveClient on the repository', () async {
     when(() => mockRepository.saveClient(tClient)).thenAnswer((_) async {});

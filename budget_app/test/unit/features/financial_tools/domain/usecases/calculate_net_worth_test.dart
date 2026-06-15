@@ -6,7 +6,7 @@ void main() {
     final calculateNetWorth = CalculateNetWorth();
     final assets = [1000.0, 5000.0, 200.0];
     final liabilities = [500.0, 1200.0];
-    
+
     // Total Assets: 6200, Total Liabilities: 1700
     // Net Worth: 4500
     final result = calculateNetWorth(assets, liabilities);

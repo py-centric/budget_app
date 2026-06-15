@@ -17,9 +17,9 @@ import 'package:budget_app/features/budget/domain/usecases/update_entry.dart';
 import 'package:budget_app/features/budget/domain/usecases/duplicate_budget.dart';
 import 'package:budget_app/features/budget/domain/usecases/save_recurring_transaction.dart';
 import 'package:budget_app/features/budget/domain/usecases/confirm_potential_transaction.dart';
-import 'package:budget_app/features/budget/presentation/budget_bloc.dart';
-import 'package:budget_app/features/budget/presentation/budget_event.dart';
-import 'package:budget_app/features/budget/presentation/budget_state.dart';
+import 'package:budget_app/features/budget/presentation/bloc/budget_bloc.dart';
+import 'package:budget_app/features/budget/presentation/bloc/budget_event.dart';
+import 'package:budget_app/features/budget/presentation/bloc/budget_state.dart';
 
 class MockBudgetRepository extends Mock implements BudgetRepository {}
 
@@ -65,8 +65,8 @@ void main() {
   late MockDuplicateBudget mockDuplicateBudget;
   late MockConfirmPotentialTransaction mockConfirmPotentialTransaction;
 
-  final testPeriod = BudgetPeriod(year: 2024, month: 1);
-  final testBudget = Budget(
+  const testPeriod = BudgetPeriod(year: 2024, month: 1);
+  const testBudget = Budget(
     id: 'budget-1',
     name: 'Test Budget',
     periodMonth: 1,
@@ -152,11 +152,8 @@ void main() {
           ).thenAnswer((_) async => testSummary);
           return budgetBloc;
         },
-        act: (bloc) => bloc.add(LoadSummaryEvent(period: testPeriod)),
-        expect: () => [
-          const BudgetLoading(),
-          SummaryLoaded(testSummary),
-        ],
+        act: (bloc) => bloc.add(const LoadSummaryEvent(period: testPeriod)),
+        expect: () => [const BudgetLoading(), SummaryLoaded(testSummary)],
         verify: (_) {
           verify(
             () => mockCalculateSummary(
@@ -178,17 +175,14 @@ void main() {
           ).thenThrow(Exception('Failed to load summary'));
           return budgetBloc;
         },
-        act: (bloc) => bloc.add(LoadSummaryEvent(period: testPeriod)),
-        expect: () => [
-          const BudgetLoading(),
-          isA<BudgetError>(),
-        ],
+        act: (bloc) => bloc.add(const LoadSummaryEvent(period: testPeriod)),
+        expect: () => [const BudgetLoading(), isA<BudgetError>()],
       );
     });
 
     group('AddIncomeEvent', () {
       blocTest<BudgetBloc, BudgetState>(
-        'emits [IncomeAdded, BudgetLoading, SummaryLoaded] on success',
+        'emits [OperationSuccess, BudgetLoading, SummaryLoaded] on success',
         build: () {
           when(() => mockAddIncome(any())).thenAnswer((_) async {});
           when(
@@ -210,7 +204,7 @@ void main() {
           ),
         ),
         expect: () => [
-          const IncomeAdded(),
+          const OperationSuccess(),
           const BudgetLoading(),
           SummaryLoaded(testSummary),
         ],
@@ -228,7 +222,7 @@ void main() {
 
     group('AddExpenseEvent', () {
       blocTest<BudgetBloc, BudgetState>(
-        'emits [ExpenseAdded, BudgetLoading, SummaryLoaded] on success',
+        'emits [OperationSuccess, BudgetLoading, SummaryLoaded] on success',
         build: () {
           when(() => mockAddExpense(any())).thenAnswer((_) async {});
           when(
@@ -250,7 +244,7 @@ void main() {
           ),
         ),
         expect: () => [
-          const ExpenseAdded(),
+          const OperationSuccess(),
           const BudgetLoading(),
           SummaryLoaded(testSummary),
         ],
@@ -268,17 +262,14 @@ void main() {
 
     group('DeleteEntryEvent', () {
       blocTest<BudgetBloc, BudgetState>(
-        'emits [EntryDeleted] on success',
+        'emits [OperationSuccess] on success',
         build: () {
           when(() => mockDeleteEntry(any(), any())).thenAnswer((_) async {});
           return budgetBloc;
         },
-        act: (bloc) => bloc.add(
-          DeleteEntryEvent('income-1', EntryType.income),
-        ),
-        expect: () => [
-          const EntryDeleted(),
-        ],
+        act: (bloc) =>
+            bloc.add(const DeleteEntryEvent('income-1', EntryType.income)),
+        expect: () => [const OperationSuccess()],
         verify: (_) {
           verify(() => mockDeleteEntry(any(), any())).called(1);
         },
@@ -287,7 +278,7 @@ void main() {
 
     group('UpdateIncomeEvent', () {
       blocTest<BudgetBloc, BudgetState>(
-        'emits [EntryUpdated, BudgetLoading, SummaryLoaded] on success',
+        'emits [OperationSuccess, BudgetLoading, SummaryLoaded] on success',
         build: () {
           when(
             () => mockUpdateEntry(
@@ -305,7 +296,7 @@ void main() {
         },
         act: (bloc) => bloc.add(UpdateIncomeEvent(testIncomeEntry)),
         expect: () => [
-          const EntryUpdated(),
+          const OperationSuccess(),
           const BudgetLoading(),
           SummaryLoaded(testSummary),
         ],
@@ -347,16 +338,13 @@ void main() {
           return budgetBloc;
         },
         act: (bloc) => bloc.add(
-          DuplicateBudgetEvent(
+          const DuplicateBudgetEvent(
             sourceBudget: testBudget,
             targetPeriod: testPeriod,
             newName: 'Copy of Test Budget',
           ),
         ),
-        expect: () => [
-          const BudgetLoading(),
-          SummaryLoaded(testSummary),
-        ],
+        expect: () => [const BudgetLoading(), SummaryLoaded(testSummary)],
         verify: (_) {
           verify(
             () => mockDuplicateBudget(

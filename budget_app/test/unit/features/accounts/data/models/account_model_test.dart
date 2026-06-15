@@ -44,7 +44,7 @@ void main() {
 
     test('should create AccountModel fromMap with different types', () {
       expect(
-        AccountModel.fromMap({
+        AccountModel.fromMap(const {
           'id': '1',
           'name': 'Test',
           'type': 'checking',
@@ -57,7 +57,7 @@ void main() {
       );
 
       expect(
-        AccountModel.fromMap({
+        AccountModel.fromMap(const {
           'id': '1',
           'name': 'Test',
           'type': 'savings',
@@ -70,7 +70,7 @@ void main() {
       );
 
       expect(
-        AccountModel.fromMap({
+        AccountModel.fromMap(const {
           'id': '1',
           'name': 'Test',
           'type': 'investment',
@@ -83,7 +83,7 @@ void main() {
       );
 
       expect(
-        AccountModel.fromMap({
+        AccountModel.fromMap(const {
           'id': '1',
           'name': 'Test',
           'type': 'other',
