@@ -9,7 +9,8 @@ class LivingExpensesCalculator extends StatefulWidget {
   const LivingExpensesCalculator({super.key});
 
   @override
-  State<LivingExpensesCalculator> createState() => _LivingExpensesCalculatorState();
+  State<LivingExpensesCalculator> createState() =>
+      _LivingExpensesCalculatorState();
 }
 
 class _LivingExpensesCalculatorState extends State<LivingExpensesCalculator> {
@@ -34,8 +35,8 @@ class _LivingExpensesCalculatorState extends State<LivingExpensesCalculator> {
     return BlocBuilder<EmergencyFundBloc, EmergencyFundState>(
       builder: (context, state) {
         final currencyFormat = NumberFormat.currency(symbol: '\$');
-        final currentAverage = _isManual 
-            ? (double.tryParse(_manualController.text) ?? 0.0) 
+        final currentAverage = _isManual
+            ? (double.tryParse(_manualController.text) ?? 0.0)
             : state.averageMonthlySpending;
         final total = currentAverage * _selectedMonths;
 
@@ -67,7 +68,9 @@ class _LivingExpensesCalculatorState extends State<LivingExpensesCalculator> {
                   ],
                 ),
                 Text(
-                  _isManual ? 'Manual Input' : 'Automatic (Last 3 months average)',
+                  _isManual
+                      ? 'Manual Input'
+                      : 'Automatic (Last 3 months average)',
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
                 const SizedBox(height: 16),
@@ -78,7 +81,9 @@ class _LivingExpensesCalculatorState extends State<LivingExpensesCalculator> {
                       labelText: 'Average Monthly Spending',
                       prefixText: '\$',
                     ),
-                    keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                    keyboardType: const TextInputType.numberWithOptions(
+                      decimal: true,
+                    ),
                     onChanged: (value) {
                       if ((double.tryParse(value) ?? 0.0) >= 0) {
                         setState(() {});
@@ -111,13 +116,16 @@ class _LivingExpensesCalculatorState extends State<LivingExpensesCalculator> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text('Calculated Goal:', style: TextStyle(fontWeight: FontWeight.bold)),
+                    const Text(
+                      'Calculated Goal:',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
                     Text(
                       currencyFormat.format(total),
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                            color: Theme.of(context).colorScheme.primary,
-                            fontWeight: FontWeight.bold,
-                          ),
+                        color: Theme.of(context).colorScheme.primary,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ],
                 ),
@@ -125,12 +133,12 @@ class _LivingExpensesCalculatorState extends State<LivingExpensesCalculator> {
                 ElevatedButton(
                   onPressed: () {
                     context.read<EmergencyFundBloc>().add(
-                          AddCustomExpense(
-                            'Living Expenses ($_selectedMonths ${_selectedMonths == 1 ? 'Month' : 'Months'})',
-                            total,
-                            categoryType: 'living_expenses',
-                          ),
-                        );
+                      AddCustomExpense(
+                        'Living Expenses ($_selectedMonths ${_selectedMonths == 1 ? 'Month' : 'Months'})',
+                        total,
+                        categoryType: 'living_expenses',
+                      ),
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     minimumSize: const Size(double.infinity, 40),

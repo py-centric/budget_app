@@ -49,15 +49,21 @@ class EmergencyCalculatorScreen extends StatelessWidget {
                     children: [
                       Text(
                         'Target Emergency Fund',
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              color: Theme.of(context).colorScheme.onPrimaryContainer,
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.onPrimaryContainer,
                             ),
                       ),
                       const SizedBox(height: 8),
                       Text(
                         currencyFormat.format(state.totalTarget),
-                        style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                              color: Theme.of(context).colorScheme.onPrimaryContainer,
+                        style: Theme.of(context).textTheme.headlineLarge
+                            ?.copyWith(
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.onPrimaryContainer,
                               fontWeight: FontWeight.bold,
                             ),
                       ),
@@ -65,12 +71,8 @@ class EmergencyCalculatorScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              const SliverToBoxAdapter(
-                child: LivingExpensesCalculator(),
-              ),
-              const SliverToBoxAdapter(
-                child: InsuranceSection(),
-              ),
+              const SliverToBoxAdapter(child: LivingExpensesCalculator()),
+              const SliverToBoxAdapter(child: InsuranceSection()),
               SliverToBoxAdapter(
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
@@ -94,25 +96,22 @@ class EmergencyCalculatorScreen extends StatelessWidget {
                   ),
                 ),
               SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) {
-                    final expense = state.expenses[index];
-                    return ExpenseItemTile(
-                      expense: expense,
-                      onAmountChanged: (amount) {
-                        context.read<EmergencyFundBloc>().add(
-                              UpdateExpenseAmount(expense.id, amount),
-                            );
-                      },
-                      onDelete: () {
-                        context.read<EmergencyFundBloc>().add(
-                              DeleteExpense(expense.id),
-                            );
-                      },
-                    );
-                  },
-                  childCount: state.expenses.length,
-                ),
+                delegate: SliverChildBuilderDelegate((context, index) {
+                  final expense = state.expenses[index];
+                  return ExpenseItemTile(
+                    expense: expense,
+                    onAmountChanged: (amount) {
+                      context.read<EmergencyFundBloc>().add(
+                        UpdateExpenseAmount(expense.id, amount),
+                      );
+                    },
+                    onDelete: () {
+                      context.read<EmergencyFundBloc>().add(
+                        DeleteExpense(expense.id),
+                      );
+                    },
+                  );
+                }, childCount: state.expenses.length),
               ),
               SliverToBoxAdapter(
                 child: Padding(
@@ -127,9 +126,7 @@ class EmergencyCalculatorScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              const SliverToBoxAdapter(
-                child: SizedBox(height: 32),
-              ),
+              const SliverToBoxAdapter(child: SizedBox(height: 32)),
             ],
           );
         },
@@ -163,8 +160,8 @@ class EmergencyCalculatorScreen extends StatelessWidget {
                 title: Text(suggestion['name'] as String),
                 onTap: () {
                   context.read<EmergencyFundBloc>().add(
-                        AddCustomExpense(suggestion['name'] as String, 0.0),
-                      );
+                    AddCustomExpense(suggestion['name'] as String, 0.0),
+                  );
                   Navigator.pop(dialogContext);
                 },
               );
@@ -206,7 +203,9 @@ class EmergencyCalculatorScreen extends StatelessWidget {
                 labelText: 'Amount',
                 prefixText: '\$',
               ),
-              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
             ),
           ],
         ),
@@ -220,7 +219,9 @@ class EmergencyCalculatorScreen extends StatelessWidget {
               final name = nameController.text.trim();
               final amount = double.tryParse(amountController.text) ?? 0.0;
               if (name.isNotEmpty && amount >= 0) {
-                context.read<EmergencyFundBloc>().add(AddCustomExpense(name, amount));
+                context.read<EmergencyFundBloc>().add(
+                  AddCustomExpense(name, amount),
+                );
                 Navigator.pop(dialogContext);
               }
             },

@@ -12,9 +12,7 @@ class ToolsHubPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Financial Tools'),
-      ),
+      appBar: AppBar(title: const Text('Financial Tools')),
       body: GridView.count(
         padding: const EdgeInsets.all(16),
         crossAxisCount: 2,
@@ -25,40 +23,60 @@ class ToolsHubPage extends StatelessWidget {
             title: 'Net Worth Calculator',
             icon: Icons.account_balance,
             color: Colors.blue,
-            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const NetWorthCalculatorPage())),
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const NetWorthCalculatorPage()),
+            ),
           ),
           _ToolCard(
             title: 'Loan Amortization',
             icon: Icons.real_estate_agent,
             color: Colors.orange,
-            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const LoanCalculatorPage())),
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const LoanCalculatorPage()),
+            ),
           ),
           _ToolCard(
             title: 'Savings Goals',
             icon: Icons.savings,
             color: Colors.green,
-            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const SavingsCalculatorPage())),
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const SavingsCalculatorPage()),
+            ),
           ),
           _ToolCard(
             title: 'Rate Converter',
             icon: Icons.percent,
             color: Colors.purple,
-            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const RateConverterPage())),
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const RateConverterPage()),
+            ),
           ),
           _ToolCard(
             title: 'Emergency Fund',
             icon: Icons.health_and_safety,
             color: Colors.red,
-            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const EmergencyCalculatorScreen())),
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => const EmergencyCalculatorScreen(),
+              ),
+            ),
           ),
           _ToolCard(
             title: 'Saved Calculations',
             icon: Icons.bookmark,
             color: Colors.teal,
-            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const SavedCalculationsPage())),
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const SavedCalculationsPage()),
+            ),
           ),
-          ],
-          ),
+        ],
+      ),
     );
   }
 }
@@ -69,7 +87,12 @@ class _ToolCard extends StatelessWidget {
   final Color color;
   final VoidCallback onTap;
 
-  const _ToolCard({required this.title, required this.icon, required this.color, required this.onTap});
+  const _ToolCard({
+    required this.title,
+    required this.icon,
+    required this.color,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {

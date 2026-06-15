@@ -31,7 +31,9 @@ class _ClientEditPageState extends State<ClientEditPage> {
     _nameController = TextEditingController(text: widget.client?.name);
     _addressController = TextEditingController(text: widget.client?.address);
     _taxIdController = TextEditingController(text: widget.client?.taxId);
-    _primaryContactController = TextEditingController(text: widget.client?.primaryContact);
+    _primaryContactController = TextEditingController(
+      text: widget.client?.primaryContact,
+    );
     _emailController = TextEditingController(text: widget.client?.email);
     _phoneController = TextEditingController(text: widget.client?.phone);
     _websiteController = TextEditingController(text: widget.client?.website);
@@ -59,10 +61,7 @@ class _ClientEditPageState extends State<ClientEditPage> {
       appBar: AppBar(
         title: Text(widget.client == null ? 'Add Client' : 'Edit Client'),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.save),
-            onPressed: _saveClient,
-          ),
+          IconButton(icon: const Icon(Icons.save), onPressed: _saveClient),
         ],
       ),
       body: SingleChildScrollView(
@@ -70,29 +69,68 @@ class _ClientEditPageState extends State<ClientEditPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            TextField(controller: _nameController, decoration: const InputDecoration(labelText: 'Company/Client Name *')),
+            TextField(
+              controller: _nameController,
+              decoration: const InputDecoration(
+                labelText: 'Company/Client Name *',
+              ),
+            ),
             const SizedBox(height: 16),
-            TextField(controller: _addressController, decoration: const InputDecoration(labelText: 'Billing Address *'), maxLines: 3),
+            TextField(
+              controller: _addressController,
+              decoration: const InputDecoration(labelText: 'Billing Address *'),
+              maxLines: 3,
+            ),
             const SizedBox(height: 16),
-            TextField(controller: _taxIdController, decoration: const InputDecoration(labelText: 'Tax/VAT ID')),
+            TextField(
+              controller: _taxIdController,
+              decoration: const InputDecoration(labelText: 'Tax/VAT ID'),
+            ),
             const SizedBox(height: 16),
             const Divider(),
-            const Text('Contact Information', style: TextStyle(fontWeight: FontWeight.bold)),
+            const Text(
+              'Contact Information',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 8),
-            TextField(controller: _primaryContactController, decoration: const InputDecoration(labelText: 'Primary Contact Person')),
+            TextField(
+              controller: _primaryContactController,
+              decoration: const InputDecoration(
+                labelText: 'Primary Contact Person',
+              ),
+            ),
             const SizedBox(height: 16),
-            TextField(controller: _emailController, decoration: const InputDecoration(labelText: 'Email Address')),
+            TextField(
+              controller: _emailController,
+              decoration: const InputDecoration(labelText: 'Email Address'),
+            ),
             const SizedBox(height: 16),
-            TextField(controller: _phoneController, decoration: const InputDecoration(labelText: 'Phone Number')),
+            TextField(
+              controller: _phoneController,
+              decoration: const InputDecoration(labelText: 'Phone Number'),
+            ),
             const SizedBox(height: 16),
             const Divider(),
-            const Text('Additional Details', style: TextStyle(fontWeight: FontWeight.bold)),
+            const Text(
+              'Additional Details',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 8),
-            TextField(controller: _websiteController, decoration: const InputDecoration(labelText: 'Website')),
+            TextField(
+              controller: _websiteController,
+              decoration: const InputDecoration(labelText: 'Website'),
+            ),
             const SizedBox(height: 16),
-            TextField(controller: _industryController, decoration: const InputDecoration(labelText: 'Industry')),
+            TextField(
+              controller: _industryController,
+              decoration: const InputDecoration(labelText: 'Industry'),
+            ),
             const SizedBox(height: 16),
-            TextField(controller: _notesController, decoration: const InputDecoration(labelText: 'Internal Notes'), maxLines: 3),
+            TextField(
+              controller: _notesController,
+              decoration: const InputDecoration(labelText: 'Internal Notes'),
+              maxLines: 3,
+            ),
           ],
         ),
       ),
@@ -101,7 +139,9 @@ class _ClientEditPageState extends State<ClientEditPage> {
 
   void _saveClient() {
     if (_nameController.text.isEmpty || _addressController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Name and Address are required.')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Name and Address are required.')),
+      );
       return;
     }
 

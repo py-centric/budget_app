@@ -10,9 +10,7 @@ class BusinessToolsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Business Tools'),
-      ),
+      appBar: AppBar(title: const Text('Business Tools')),
       body: GridView.count(
         padding: const EdgeInsets.all(16),
         crossAxisCount: 2,
@@ -23,25 +21,43 @@ class BusinessToolsPage extends StatelessWidget {
             title: 'VAT Calculator',
             icon: Icons.calculate,
             color: Colors.blue,
-            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const VatCalculatorPage())),
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const VatCalculatorPage(),
+              ),
+            ),
           ),
           _BusinessToolCard(
             title: 'New Invoice',
             icon: Icons.add_chart,
             color: Colors.green,
-            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const InvoiceBuilderPage())),
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const InvoiceBuilderPage(),
+              ),
+            ),
           ),
           _BusinessToolCard(
             title: 'Invoices',
             icon: Icons.history,
             color: Colors.orange,
-            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const InvoicesPage())),
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const InvoicesPage()),
+            ),
           ),
           _BusinessToolCard(
             title: 'Business Profiles',
             icon: Icons.business,
             color: Colors.purple,
-            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const ProfileSettingsPage())),
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const ProfileSettingsPage(),
+              ),
+            ),
           ),
         ],
       ),

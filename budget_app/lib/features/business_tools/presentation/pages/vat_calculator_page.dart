@@ -62,7 +62,7 @@ class _VatCalculatorPageState extends State<VatCalculatorPage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             SegmentedButton<bool>(
-              segments: [
+              segments: const [
                 ButtonSegment(
                   value: true,
                   label: Text('Add VAT'),
@@ -90,17 +90,21 @@ class _VatCalculatorPageState extends State<VatCalculatorPage> {
                 prefixText: '\$ ',
                 border: const OutlineInputBorder(),
               ),
-              keyboardType: TextInputType.numberWithOptions(decimal: true),
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
             ),
             const SizedBox(height: 16),
             TextField(
               controller: _rateController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'VAT Rate (%)',
                 suffixText: '%',
                 border: OutlineInputBorder(),
               ),
-              keyboardType: TextInputType.numberWithOptions(decimal: true),
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
             ),
             const SizedBox(height: 32),
             if (_result != null) ...[

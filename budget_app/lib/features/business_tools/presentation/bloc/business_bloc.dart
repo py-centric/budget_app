@@ -24,7 +24,10 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
     on<ClearLastSavedInvoice>(_onClearLastSavedInvoice);
   }
 
-  Future<void> _onLoadBusinessData(LoadBusinessData event, Emitter<BusinessState> emit) async {
+  Future<void> _onLoadBusinessData(
+    LoadBusinessData event,
+    Emitter<BusinessState> emit,
+  ) async {
     emit(state.copyWith(status: BusinessStatus.loading));
     try {
       final profiles = await _repository.getProfiles();
@@ -37,20 +40,30 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
         receivedInvoices: receivedInvoices,
       );
 
-      emit(state.copyWith(
-        status: BusinessStatus.success,
-        profiles: profiles,
-        clients: clients,
-        invoices: invoices,
-        receivedInvoices: receivedInvoices,
-        summary: summary,
-      ));
+      emit(
+        state.copyWith(
+          status: BusinessStatus.success,
+          profiles: profiles,
+          clients: clients,
+          invoices: invoices,
+          receivedInvoices: receivedInvoices,
+          summary: summary,
+        ),
+      );
     } catch (e) {
-      emit(state.copyWith(status: BusinessStatus.failure, errorMessage: e.toString()));
+      emit(
+        state.copyWith(
+          status: BusinessStatus.failure,
+          errorMessage: e.toString(),
+        ),
+      );
     }
   }
 
-  Future<void> _onSaveProfile(SaveProfile event, Emitter<BusinessState> emit) async {
+  Future<void> _onSaveProfile(
+    SaveProfile event,
+    Emitter<BusinessState> emit,
+  ) async {
     try {
       await _repository.saveProfile(event.profile);
       add(LoadBusinessData());
@@ -59,7 +72,10 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
     }
   }
 
-  Future<void> _onDeleteProfile(DeleteProfile event, Emitter<BusinessState> emit) async {
+  Future<void> _onDeleteProfile(
+    DeleteProfile event,
+    Emitter<BusinessState> emit,
+  ) async {
     try {
       await _repository.deleteProfile(event.id);
       add(LoadBusinessData());
@@ -68,7 +84,10 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
     }
   }
 
-  Future<void> _onSaveClient(SaveClient event, Emitter<BusinessState> emit) async {
+  Future<void> _onSaveClient(
+    SaveClient event,
+    Emitter<BusinessState> emit,
+  ) async {
     try {
       await _repository.saveClient(event.client);
       add(LoadBusinessData());
@@ -77,7 +96,10 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
     }
   }
 
-  Future<void> _onDeleteClient(DeleteClient event, Emitter<BusinessState> emit) async {
+  Future<void> _onDeleteClient(
+    DeleteClient event,
+    Emitter<BusinessState> emit,
+  ) async {
     try {
       await _repository.deleteClient(event.id);
       add(LoadBusinessData());
@@ -86,7 +108,10 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
     }
   }
 
-  Future<void> _onSaveReceivedInvoice(SaveReceivedInvoice event, Emitter<BusinessState> emit) async {
+  Future<void> _onSaveReceivedInvoice(
+    SaveReceivedInvoice event,
+    Emitter<BusinessState> emit,
+  ) async {
     try {
       await _repository.saveReceivedInvoice(event.invoice);
       add(LoadBusinessData());
@@ -95,7 +120,10 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
     }
   }
 
-  Future<void> _onDeleteReceivedInvoice(DeleteReceivedInvoice event, Emitter<BusinessState> emit) async {
+  Future<void> _onDeleteReceivedInvoice(
+    DeleteReceivedInvoice event,
+    Emitter<BusinessState> emit,
+  ) async {
     try {
       await _repository.deleteReceivedInvoice(event.id);
       add(LoadBusinessData());
@@ -108,7 +136,10 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
     emit(state.copyWith(filterRange: event.range));
   }
 
-  Future<void> _onSaveInvoice(SaveInvoice event, Emitter<BusinessState> emit) async {
+  Future<void> _onSaveInvoice(
+    SaveInvoice event,
+    Emitter<BusinessState> emit,
+  ) async {
     try {
       await _repository.saveInvoice(event.invoice, event.items);
       final profiles = await _repository.getProfiles();
@@ -121,22 +152,27 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
         receivedInvoices: receivedInvoices,
       );
 
-      emit(state.copyWith(
-        status: BusinessStatus.success,
-        profiles: profiles,
-        clients: clients,
-        invoices: invoices,
-        receivedInvoices: receivedInvoices,
-        summary: summary,
-        lastSavedInvoice: event.invoice,
-        lastSavedItems: event.items,
-      ));
+      emit(
+        state.copyWith(
+          status: BusinessStatus.success,
+          profiles: profiles,
+          clients: clients,
+          invoices: invoices,
+          receivedInvoices: receivedInvoices,
+          summary: summary,
+          lastSavedInvoice: event.invoice,
+          lastSavedItems: event.items,
+        ),
+      );
     } catch (e) {
       emit(state.copyWith(errorMessage: e.toString()));
     }
   }
 
-  Future<void> _onDeleteInvoice(DeleteInvoice event, Emitter<BusinessState> emit) async {
+  Future<void> _onDeleteInvoice(
+    DeleteInvoice event,
+    Emitter<BusinessState> emit,
+  ) async {
     try {
       await _repository.deleteInvoice(event.id);
       add(LoadBusinessData());
@@ -145,7 +181,10 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
     }
   }
 
-  Future<void> _onCloneInvoice(CloneInvoiceEvent event, Emitter<BusinessState> emit) async {
+  Future<void> _onCloneInvoice(
+    CloneInvoiceEvent event,
+    Emitter<BusinessState> emit,
+  ) async {
     try {
       final cloneUseCase = CloneInvoice(_repository);
       await cloneUseCase.execute(event.id);
@@ -155,7 +194,10 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
     }
   }
 
-  Future<void> _onAddPayment(AddPayment event, Emitter<BusinessState> emit) async {
+  Future<void> _onAddPayment(
+    AddPayment event,
+    Emitter<BusinessState> emit,
+  ) async {
     try {
       await _repository.savePayment(event.payment);
       add(LoadBusinessData());
@@ -164,7 +206,10 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
     }
   }
 
-  void _onClearLastSavedInvoice(ClearLastSavedInvoice event, Emitter<BusinessState> emit) {
+  void _onClearLastSavedInvoice(
+    ClearLastSavedInvoice event,
+    Emitter<BusinessState> emit,
+  ) {
     emit(state.copyWith(clearLastSavedInvoice: true));
   }
 }

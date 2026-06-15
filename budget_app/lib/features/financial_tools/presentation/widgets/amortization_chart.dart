@@ -13,17 +13,26 @@ class AmortizationChart extends StatelessWidget {
 
     // To keep chart performance good, sample data if too many points
     final List<AmortizationPoint> sampledPoints = schedule.length > 60
-        ? schedule.asMap().entries
-            .where((e) => e.key % (schedule.length / 12).floor() == 0 || e.key == schedule.length - 1)
-            .map((e) => e.value)
-            .toList()
+        ? schedule
+              .asMap()
+              .entries
+              .where(
+                (e) =>
+                    e.key % (schedule.length / 12).floor() == 0 ||
+                    e.key == schedule.length - 1,
+              )
+              .map((e) => e.value)
+              .toList()
         : schedule;
 
     final List<FlSpot> balanceSpots = sampledPoints.map((p) {
       return FlSpot(p.month.toDouble(), p.remainingBalance);
     }).toList();
 
-    final maxBalance = schedule.first.remainingBalance + schedule.first.principalPaid + schedule.first.interestPaid;
+    final maxBalance =
+        schedule.first.remainingBalance +
+        schedule.first.principalPaid +
+        schedule.first.interestPaid;
 
     return Padding(
       padding: const EdgeInsets.only(top: 16, right: 16),
@@ -47,8 +56,12 @@ class AmortizationChart extends StatelessWidget {
             ),
           ],
           titlesData: FlTitlesData(
-            rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-            topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+            rightTitles: const AxisTitles(
+              sideTitles: SideTitles(showTitles: false),
+            ),
+            topTitles: const AxisTitles(
+              sideTitles: SideTitles(showTitles: false),
+            ),
             bottomTitles: AxisTitles(
               axisNameWidget: const Text('Months'),
               sideTitles: SideTitles(

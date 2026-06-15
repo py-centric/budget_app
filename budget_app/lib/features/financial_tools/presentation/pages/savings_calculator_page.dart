@@ -39,18 +39,25 @@ class _SavingsCalculatorPageState extends State<SavingsCalculatorPage> {
   }
 
   void _update({InterestType? type}) {
-    context.read<FinancialBloc>().add(UpdateSavingsParamsEvent(
-      initial: double.tryParse(_initialController.text),
-      monthly: double.tryParse(_monthlyController.text),
-      rate: double.tryParse(_rateController.text),
-      years: int.tryParse(_yearsController.text),
-      interestType: type ?? context.read<FinancialBloc>().state.savingsInterestType,
-    ));
+    context.read<FinancialBloc>().add(
+      UpdateSavingsParamsEvent(
+        initial: double.tryParse(_initialController.text),
+        monthly: double.tryParse(_monthlyController.text),
+        rate: double.tryParse(_rateController.text),
+        years: int.tryParse(_yearsController.text),
+        interestType:
+            type ?? context.read<FinancialBloc>().state.savingsInterestType,
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    final currencyCode = context.watch<SettingsBloc>().state.settings.currencyCode;
+    final currencyCode = context
+        .watch<SettingsBloc>()
+        .state
+        .settings
+        .currencyCode;
 
     return Scaffold(
       appBar: AppBar(
@@ -59,17 +66,29 @@ class _SavingsCalculatorPageState extends State<SavingsCalculatorPage> {
           IconButton(
             icon: const Icon(Icons.save),
             onPressed: () {
-              final TextEditingController nameController = TextEditingController(text: 'Savings Plan');
+              final TextEditingController nameController =
+                  TextEditingController(text: 'Savings Plan');
               showDialog(
                 context: context,
                 builder: (context) => AlertDialog(
                   title: const Text('Save Savings Plan'),
-                  content: TextField(controller: nameController, decoration: const InputDecoration(labelText: 'Name')),
+                  content: TextField(
+                    controller: nameController,
+                    decoration: const InputDecoration(labelText: 'Name'),
+                  ),
                   actions: [
-                    TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text('Cancel'),
+                    ),
                     ElevatedButton(
                       onPressed: () {
-                        context.read<FinancialBloc>().add(SaveCalculationEvent(name: nameController.text, type: 'SAVINGS'));
+                        context.read<FinancialBloc>().add(
+                          SaveCalculationEvent(
+                            name: nameController.text,
+                            type: 'SAVINGS',
+                          ),
+                        );
                         Navigator.pop(context);
                       },
                       child: const Text('Save'),
@@ -83,20 +102,25 @@ class _SavingsCalculatorPageState extends State<SavingsCalculatorPage> {
       ),
       body: BlocBuilder<FinancialBloc, FinancialState>(
         builder: (context, state) {
-          final schedule = context.read<FinancialBloc>().calculateCompoundInterest(
-            initialDeposit: state.savingsInitial,
-            monthlyContribution: state.savingsMonthly,
-            annualRate: state.savingsRate,
-            years: state.savingsYears,
-            type: state.savingsInterestType,
-          );
-          final futureValue = context.read<FinancialBloc>().calculateCompoundInterest.calculateFutureValue(
-            initialDeposit: state.savingsInitial,
-            monthlyContribution: state.savingsMonthly,
-            annualRate: state.savingsRate,
-            years: state.savingsYears,
-            type: state.savingsInterestType,
-          );
+          final schedule = context
+              .read<FinancialBloc>()
+              .calculateCompoundInterest(
+                initialDeposit: state.savingsInitial,
+                monthlyContribution: state.savingsMonthly,
+                annualRate: state.savingsRate,
+                years: state.savingsYears,
+                type: state.savingsInterestType,
+              );
+          final futureValue = context
+              .read<FinancialBloc>()
+              .calculateCompoundInterest
+              .calculateFutureValue(
+                initialDeposit: state.savingsInitial,
+                monthlyContribution: state.savingsMonthly,
+                annualRate: state.savingsRate,
+                years: state.savingsYears,
+                type: state.savingsInterestType,
+              );
 
           return ListView(
             padding: const EdgeInsets.all(16),
@@ -164,8 +188,14 @@ class _SavingsCalculatorPageState extends State<SavingsCalculatorPage> {
                       const SizedBox(height: 16),
                       SegmentedButton<InterestType>(
                         segments: const [
-                          ButtonSegment(value: InterestType.compound, label: Text('Compound')),
-                          ButtonSegment(value: InterestType.simple, label: Text('Simple')),
+                          ButtonSegment(
+                            value: InterestType.compound,
+                            label: Text('Compound'),
+                          ),
+                          ButtonSegment(
+                            value: InterestType.simple,
+                            label: Text('Simple'),
+                          ),
                         ],
                         selected: {state.savingsInterestType},
                         onSelectionChanged: (Set<InterestType> newSelection) {
@@ -185,18 +215,22 @@ class _SavingsCalculatorPageState extends State<SavingsCalculatorPage> {
                     children: [
                       const Text('Estimated Future Value'),
                       Text(
-                        CurrencyFormatter.format(futureValue, currencyCode: currencyCode),
-                        style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Colors.green),
+                        CurrencyFormatter.format(
+                          futureValue,
+                          currencyCode: currencyCode,
+                        ),
+                        style: const TextStyle(
+                          fontSize: 32,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.green,
+                        ),
                       ),
                     ],
                   ),
                 ),
               ),
               const SizedBox(height: 24),
-              SizedBox(
-                height: 250,
-                child: SavingsChart(schedule: schedule),
-              ),
+              SizedBox(height: 250, child: SavingsChart(schedule: schedule)),
             ],
           );
         },

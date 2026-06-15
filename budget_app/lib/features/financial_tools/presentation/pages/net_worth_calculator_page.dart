@@ -26,27 +26,47 @@ class _NetWorthCalculatorPageState extends State<NetWorthCalculatorPage> {
           children: [
             TextField(
               controller: _nameController,
-              decoration: const InputDecoration(labelText: 'Name (e.g. Cash, Loan)'),
+              decoration: const InputDecoration(
+                labelText: 'Name (e.g. Cash, Loan)',
+              ),
             ),
             TextField(
               controller: _valueController,
               decoration: const InputDecoration(labelText: 'Value'),
-              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
             ),
           ],
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
           ElevatedButton(
             onPressed: () {
               final val = double.tryParse(_valueController.text) ?? 0;
               if (_nameController.text.isNotEmpty) {
-                final entry = FinancialToolEntry(label: _nameController.text, value: val);
+                final entry = FinancialToolEntry(
+                  label: _nameController.text,
+                  value: val,
+                );
                 final bloc = context.read<FinancialBloc>();
                 if (isAsset) {
-                  bloc.add(UpdateNetWorthAssetsEvent([...bloc.state.netWorthAssets, entry]));
+                  bloc.add(
+                    UpdateNetWorthAssetsEvent([
+                      ...bloc.state.netWorthAssets,
+                      entry,
+                    ]),
+                  );
                 } else {
-                  bloc.add(UpdateNetWorthLiabilitiesEvent([...bloc.state.netWorthLiabilities, entry]));
+                  bloc.add(
+                    UpdateNetWorthLiabilitiesEvent([
+                      ...bloc.state.netWorthLiabilities,
+                      entry,
+                    ]),
+                  );
                 }
                 _nameController.clear();
                 _valueController.clear();
@@ -73,13 +93,18 @@ class _NetWorthCalculatorPageState extends State<NetWorthCalculatorPage> {
           decoration: const InputDecoration(labelText: 'Snapshot Name'),
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
           ElevatedButton(
             onPressed: () {
-              context.read<FinancialBloc>().add(SaveCalculationEvent(
-                name: snapshotNameController.text,
-                type: 'NET_WORTH',
-              ));
+              context.read<FinancialBloc>().add(
+                SaveCalculationEvent(
+                  name: snapshotNameController.text,
+                  type: 'NET_WORTH',
+                ),
+              );
               Navigator.pop(context);
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('Snapshot saved successfully!')),
@@ -94,7 +119,11 @@ class _NetWorthCalculatorPageState extends State<NetWorthCalculatorPage> {
 
   @override
   Widget build(BuildContext context) {
-    final currencyCode = context.watch<SettingsBloc>().state.settings.currencyCode;
+    final currencyCode = context
+        .watch<SettingsBloc>()
+        .state
+        .settings
+        .currencyCode;
 
     return Scaffold(
       appBar: AppBar(
@@ -118,11 +147,20 @@ class _NetWorthCalculatorPageState extends State<NetWorthCalculatorPage> {
                   padding: const EdgeInsets.all(24.0),
                   child: Column(
                     children: [
-                      const Text('Total Net Worth', style: TextStyle(fontSize: 18)),
+                      const Text(
+                        'Total Net Worth',
+                        style: TextStyle(fontSize: 18),
+                      ),
                       const SizedBox(height: 8),
                       Text(
-                        CurrencyFormatter.format(state.netWorth, currencyCode: currencyCode),
-                        style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+                        CurrencyFormatter.format(
+                          state.netWorth,
+                          currencyCode: currencyCode,
+                        ),
+                        style: const TextStyle(
+                          fontSize: 32,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ],
                   ),
@@ -136,8 +174,12 @@ class _NetWorthCalculatorPageState extends State<NetWorthCalculatorPage> {
                 Colors.green,
                 () => _addEntry(true),
                 (index) {
-                  final list = List<FinancialToolEntry>.from(state.netWorthAssets)..removeAt(index);
-                  context.read<FinancialBloc>().add(UpdateNetWorthAssetsEvent(list));
+                  final list = List<FinancialToolEntry>.from(
+                    state.netWorthAssets,
+                  )..removeAt(index);
+                  context.read<FinancialBloc>().add(
+                    UpdateNetWorthAssetsEvent(list),
+                  );
                 },
                 currencyCode,
               ),
@@ -149,8 +191,12 @@ class _NetWorthCalculatorPageState extends State<NetWorthCalculatorPage> {
                 Colors.red,
                 () => _addEntry(false),
                 (index) {
-                  final list = List<FinancialToolEntry>.from(state.netWorthLiabilities)..removeAt(index);
-                  context.read<FinancialBloc>().add(UpdateNetWorthLiabilitiesEvent(list));
+                  final list = List<FinancialToolEntry>.from(
+                    state.netWorthLiabilities,
+                  )..removeAt(index);
+                  context.read<FinancialBloc>().add(
+                    UpdateNetWorthLiabilitiesEvent(list),
+                  );
                 },
                 currencyCode,
               ),
@@ -180,16 +226,25 @@ class _NetWorthCalculatorPageState extends State<NetWorthCalculatorPage> {
           children: [
             Text(
               '$title (${CurrencyFormatter.format(total, currencyCode: currencyCode)})',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(color: color),
+              style: Theme.of(
+                context,
+              ).textTheme.titleLarge?.copyWith(color: color),
             ),
-            IconButton(onPressed: onAdd, icon: const Icon(Icons.add_circle_outline), color: color),
+            IconButton(
+              onPressed: onAdd,
+              icon: const Icon(Icons.add_circle_outline),
+              color: color,
+            ),
           ],
         ),
         const Divider(),
         if (entries.isEmpty)
           const Padding(
             padding: EdgeInsets.symmetric(vertical: 8.0),
-            child: Text('No items added yet.', style: TextStyle(fontStyle: FontStyle.italic, color: Colors.grey)),
+            child: Text(
+              'No items added yet.',
+              style: TextStyle(fontStyle: FontStyle.italic, color: Colors.grey),
+            ),
           ),
         ...entries.asMap().entries.map((entry) {
           return ListTile(
@@ -198,7 +253,10 @@ class _NetWorthCalculatorPageState extends State<NetWorthCalculatorPage> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  CurrencyFormatter.format(entry.value.value, currencyCode: currencyCode),
+                  CurrencyFormatter.format(
+                    entry.value.value,
+                    currencyCode: currencyCode,
+                  ),
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
                 IconButton(
