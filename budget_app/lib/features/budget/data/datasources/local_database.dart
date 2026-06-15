@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:path/path.dart' as p;
@@ -7,6 +8,8 @@ class LocalDatabase {
   static Database? _database;
   static final LocalDatabase instance = LocalDatabase._internal();
   static bool _initialized = false;
+  static final Completer<Database> _databaseCompleter = Completer<Database>();
+  static bool _databaseCompleterUsed = false;
 
   LocalDatabase._internal();
 
@@ -25,9 +28,14 @@ class LocalDatabase {
   Future<Database> get database async {
     if (_database != null) return _database!;
 
-    await initialize();
-    _database = await _initDatabase();
-    return _database!;
+    if (!_databaseCompleterUsed) {
+      _databaseCompleterUsed = true;
+      await initialize();
+      _database = await _initDatabase();
+      _databaseCompleter.complete(_database);
+    }
+
+    return _databaseCompleter.future;
   }
 
   Future<Database> _initDatabase() async {
@@ -552,6 +560,60 @@ class LocalDatabase {
         'CREATE INDEX IF NOT EXISTS idx_transaction_splits_category ON transaction_splits(category_id)',
       );
     }
+
+    if (oldVersion < 21) {
+      // Add missing indexes on category_id columns (M7)
+      await db.execute(
+        'CREATE INDEX IF NOT EXISTS idx_expense_category ON expense_entries (category_id)',
+      );
+      await db.execute(
+        'CREATE INDEX IF NOT EXISTS idx_income_category ON income_entries (category_id)',
+      );
+
+      // Drop legacy NOT NULL `category` column from expense_entries (N5)
+      // SQLite requires table recreation to drop a column.
+      // Step 1: Create new table without the legacy column
+      await db.execute('''
+        CREATE TABLE expense_entries_new (
+          id TEXT PRIMARY KEY,
+          budget_id TEXT NOT NULL,
+          amount REAL NOT NULL,
+          description TEXT,
+          date TEXT NOT NULL,
+          period_month INTEGER,
+          period_year INTEGER,
+          category_id TEXT,
+          is_potential INTEGER NOT NULL DEFAULT 0,
+          FOREIGN KEY (budget_id) REFERENCES budgets (id) ON DELETE CASCADE
+        )
+      ''');
+      // Step 2: Copy data
+      await db.execute('''
+        INSERT INTO expense_entries_new
+        SELECT id, budget_id, amount, description, date,
+               period_month, period_year, category_id, is_potential
+        FROM expense_entries
+      ''');
+      // Step 3: Drop old table
+      await db.execute('DROP TABLE expense_entries');
+      // Step 4: Rename new table
+      await db.execute(
+        'ALTER TABLE expense_entries_new RENAME TO expense_entries',
+      );
+      // Step 5: Recreate indexes
+      await db.execute(
+        'CREATE INDEX idx_expense_period ON expense_entries (period_year, period_month)',
+      );
+      await db.execute(
+        'CREATE INDEX idx_expense_date ON expense_entries (date)',
+      );
+      await db.execute(
+        'CREATE INDEX idx_expense_budget ON expense_entries (budget_id)',
+      );
+      await db.execute(
+        'CREATE INDEX IF NOT EXISTS idx_expense_category ON expense_entries (category_id)',
+      );
+    }
   }
 
   Future<void> _onCreate(Database db, int version) async {
@@ -596,7 +658,6 @@ class LocalDatabase {
         id TEXT PRIMARY KEY,
         budget_id TEXT NOT NULL,
         amount REAL NOT NULL,
-        category TEXT NOT NULL,
         description TEXT,
         date TEXT NOT NULL,
         period_month INTEGER,
@@ -612,6 +673,12 @@ class LocalDatabase {
     await db.execute('CREATE INDEX idx_expense_date ON expense_entries (date)');
     await db.execute(
       'CREATE INDEX idx_expense_budget ON expense_entries (budget_id)',
+    );
+    await db.execute(
+      'CREATE INDEX idx_expense_category ON expense_entries (category_id)',
+    );
+    await db.execute(
+      'CREATE INDEX idx_income_category ON income_entries (category_id)',
     );
 
     await db.execute('''
@@ -989,7 +1056,42 @@ class LocalDatabase {
 
   Future<int> deleteCategory(String id) async {
     final db = await database;
-    return await db.delete('categories', where: 'id = ?', whereArgs: [id]);
+    return await db.transaction((txn) async {
+      // Null out category_id references in expense_entries and income_entries
+      // to avoid foreign key violations before deleting the category.
+      await txn.update(
+        'expense_entries',
+        {'category_id': null},
+        where: 'category_id = ?',
+        whereArgs: [id],
+      );
+      await txn.update(
+        'income_entries',
+        {'category_id': null},
+        where: 'category_id = ?',
+        whereArgs: [id],
+      );
+      // Also null out references in transaction_splits and savings_goals
+      await txn.update(
+        'transaction_splits',
+        {'category_id': null},
+        where: 'category_id = ?',
+        whereArgs: [id],
+      );
+      await txn.update(
+        'savings_goals',
+        {'linked_category_id': null},
+        where: 'linked_category_id = ?',
+        whereArgs: [id],
+      );
+      // Delete category_limits that reference this category
+      await txn.delete(
+        'category_limits',
+        where: 'category_id = ?',
+        whereArgs: [id],
+      );
+      return await txn.delete('categories', where: 'id = ?', whereArgs: [id]);
+    });
   }
 
   Future<int> reassignCategory(String oldId, String newId) async {
@@ -1268,28 +1370,42 @@ class LocalDatabase {
 
   Future<void> factoryReset() async {
     final db = await database;
-    await db.delete('budgets');
-    await db.delete('income_entries');
-    await db.delete('expense_entries');
-    await db.delete('categories');
-    await db.delete('recurring_transactions');
-    await db.delete('recurring_overrides');
-    await db.delete('saved_calculations');
-    await db.delete('emergency_expenses');
-    await db.delete('accounts');
-    await db.delete('transfers');
-    await db.delete('category_limits');
-    await db.delete('savings_goals');
-    await db.delete('savings_contributions');
-    await db.delete('bill_reminders');
-    await db.delete('transaction_splits');
-    await db.delete('budget_goals');
-    await db.delete('company_profiles');
-    await db.delete('invoices');
-    await db.delete('invoice_items');
-    await db.delete('invoice_payments');
-    await db.delete('clients');
-    await db.delete('received_invoices');
+    await db.transaction((txn) async {
+      // Delete in dependency order: child tables first, then parents.
+      // Disable FK checks briefly to avoid ordering issues, then re-enable.
+      await txn.execute('PRAGMA foreign_keys = OFF');
+
+      try {
+        // Child tables (no dependents)
+        await txn.delete('recurring_overrides');
+        await txn.delete('bill_reminders');
+        await txn.delete('savings_contributions');
+        await txn.delete('transaction_splits');
+        await txn.delete('transfers');
+        await txn.delete('invoice_items');
+        await txn.delete('invoice_payments');
+        await txn.delete('budget_goals');
+        await txn.delete('income_entries');
+        await txn.delete('expense_entries');
+        await txn.delete('category_limits');
+
+        // Parent / leaf tables
+        await txn.delete('recurring_transactions');
+        await txn.delete('savings_goals');
+        await txn.delete('categories');
+        await txn.delete('budgets');
+        await txn.delete('accounts');
+        await txn.delete('invoices');
+        await txn.delete('clients');
+        await txn.delete('company_profiles');
+        await txn.delete('received_invoices');
+        await txn.delete('saved_calculations');
+        await txn.delete('emergency_expenses');
+        await txn.delete('metadata');
+      } finally {
+        await txn.execute('PRAGMA foreign_keys = ON');
+      }
+    });
   }
 
   // Saved Calculations

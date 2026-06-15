@@ -50,7 +50,6 @@ class ExpenseEntry extends Equatable {
       'id': id,
       'budget_id': budgetId,
       'amount': amount,
-      'category': categoryId, // Satisfy legacy NOT NULL constraint
       'category_id': categoryId,
       'description': description,
       'date': date.toIso8601String(),
@@ -62,16 +61,16 @@ class ExpenseEntry extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        budgetId,
-        amount,
-        categoryId,
-        description,
-        date,
-        periodMonth,
-        periodYear,
-        categoryName,
-        categoryIcon,
-        isPotential,
-      ];
+    id,
+    budgetId,
+    amount,
+    categoryId,
+    description,
+    date,
+    periodMonth,
+    periodYear,
+    categoryName,
+    categoryIcon,
+    isPotential,
+  ];
 }
