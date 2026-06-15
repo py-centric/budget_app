@@ -17,13 +17,11 @@ class YearGroupHeader extends StatelessWidget {
     return ListTile(
       title: Text(
         year.toString(),
-        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-          fontWeight: FontWeight.bold,
-        ),
+        style: Theme.of(
+          context,
+        ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
       ),
-      trailing: Icon(
-        isExpanded ? Icons.expand_less : Icons.expand_more,
-      ),
+      trailing: Icon(isExpanded ? Icons.expand_less : Icons.expand_more),
       onTap: onTap,
     );
   }

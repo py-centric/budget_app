@@ -35,13 +35,16 @@ abstract class CategoryState extends Equatable {
 }
 
 class CategoryInitial extends CategoryState {}
+
 class CategoryLoading extends CategoryState {}
+
 class CategoriesLoadedState extends CategoryState {
   final List<Category> categories;
   const CategoriesLoadedState(this.categories);
   @override
   List<Object?> get props => [categories];
 }
+
 class CategoryError extends CategoryState {
   final String message;
   const CategoryError(this.message);
@@ -66,7 +69,10 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
     on<RemoveCategory>(_onRemoveCategory);
   }
 
-  Future<void> _onLoadCategories(LoadCategories event, Emitter<CategoryState> emit) async {
+  Future<void> _onLoadCategories(
+    LoadCategories event,
+    Emitter<CategoryState> emit,
+  ) async {
     emit(CategoryLoading());
     try {
       final categories = await repository.getCategories();
@@ -76,7 +82,10 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
     }
   }
 
-  Future<void> _onCreateCategory(CreateCategory event, Emitter<CategoryState> emit) async {
+  Future<void> _onCreateCategory(
+    CreateCategory event,
+    Emitter<CategoryState> emit,
+  ) async {
     final name = event.name.trim();
     if (name.isEmpty) {
       emit(const CategoryError('Category name cannot be empty.'));
@@ -85,7 +94,10 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
 
     try {
       final categories = await repository.getCategories();
-      if (categories.any((c) => c.name.toLowerCase() == name.toLowerCase() && c.type == event.type)) {
+      if (categories.any(
+        (c) =>
+            c.name.toLowerCase() == name.toLowerCase() && c.type == event.type,
+      )) {
         emit(const CategoryError('Category already exists.'));
         return;
       }
@@ -103,7 +115,10 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
     }
   }
 
-  Future<void> _onRemoveCategory(RemoveCategory event, Emitter<CategoryState> emit) async {
+  Future<void> _onRemoveCategory(
+    RemoveCategory event,
+    Emitter<CategoryState> emit,
+  ) async {
     try {
       if (event.reassignedId != null) {
         await reassignAndDeleteCategoryUseCase(event.id, event.reassignedId!);

@@ -22,11 +22,11 @@ class NavigationBloc extends HydratedBloc<NavigationEvent, NavigationState> {
       emit(state.copyWith(currentPeriod: event.period, activeBudget: null));
       await _loadDefaultBudgetForPeriod(event.period, emit);
     });
-    
+
     on<ChangeBudget>((event, emit) {
       emit(state.copyWith(activeBudget: event.budget));
     });
-    
+
     on<LoadAvailablePeriods>((event, emit) async {
       final periods = await getAvailablePeriodsUseCase();
       emit(state.copyWith(availablePeriods: periods));
@@ -36,9 +36,12 @@ class NavigationBloc extends HydratedBloc<NavigationEvent, NavigationState> {
     });
   }
 
-  Future<void> _loadDefaultBudgetForPeriod(BudgetPeriod period, Emitter<NavigationState> emit) async {
+  Future<void> _loadDefaultBudgetForPeriod(
+    BudgetPeriod period,
+    Emitter<NavigationState> emit,
+  ) async {
     var budgets = await budgetRepository.getBudgetsForPeriod(period);
-    
+
     if (budgets.isEmpty) {
       // Create a default budget for the new period
       final defaultBudget = Budget(
@@ -50,18 +53,20 @@ class NavigationBloc extends HydratedBloc<NavigationEvent, NavigationState> {
       );
       await budgetRepository.addBudget(defaultBudget);
       budgets = [defaultBudget];
-      
+
       // Refresh available periods since we just added one for a potentially new period
       final periods = await getAvailablePeriodsUseCase();
       emit(state.copyWith(availablePeriods: periods));
     }
 
     // Try to find the active one, or just take the first
-    final active = budgets.firstWhere((b) => b.isActive, orElse: () => budgets.first);
-    emit(state.copyWith(
-      activeBudget: active,
-      availableBudgetsForPeriod: budgets,
-    ));
+    final active = budgets.firstWhere(
+      (b) => b.isActive,
+      orElse: () => budgets.first,
+    );
+    emit(
+      state.copyWith(activeBudget: active, availableBudgetsForPeriod: budgets),
+    );
   }
 
   @override

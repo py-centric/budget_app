@@ -164,9 +164,9 @@ class BudgetComparisonLegend extends StatelessWidget {
           label: 'Planned',
         ),
         const SizedBox(width: 24),
-        _LegendItem(color: Colors.green, label: 'Under Budget'),
+        const _LegendItem(color: Colors.green, label: 'Under Budget'),
         const SizedBox(width: 24),
-        _LegendItem(color: Colors.red, label: 'Over Budget'),
+        const _LegendItem(color: Colors.red, label: 'Over Budget'),
       ],
     );
   }

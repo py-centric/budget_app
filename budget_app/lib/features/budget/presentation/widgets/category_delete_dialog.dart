@@ -45,14 +45,21 @@ class _CategoryDeleteDialogState extends State<CategoryDeleteDialog> {
               items: widget.availableCategories.map((c) {
                 return DropdownMenuItem(value: c.id, child: Text(c.name));
               }).toList(),
-              onChanged: (value) => setState(() => _selectedReassignedId = value),
+              onChanged: (value) =>
+                  setState(() => _selectedReassignedId = value),
             )
           else
-            const Text('No other categories available. Transactions will be deleted or orphaned.', style: TextStyle(color: Colors.red)),
+            const Text(
+              'No other categories available. Transactions will be deleted or orphaned.',
+              style: TextStyle(color: Colors.red),
+            ),
         ],
       ),
       actions: [
-        TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text('Cancel'),
+        ),
         TextButton(
           onPressed: () {
             widget.onConfirm(_selectedReassignedId);

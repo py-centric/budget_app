@@ -72,19 +72,17 @@ class _TransactionFormState extends State<TransactionForm> {
 
   String get _title => widget.isIncome ? 'Add Income' : 'Add Expense';
 
-  String get _potentialLabel =>
-      widget.isIncome
-          ? 'Potential Income (Not Guaranteed)'
-          : 'Potential Expense (Not Guaranteed)';
+  String get _potentialLabel => widget.isIncome
+      ? 'Potential Income (Not Guaranteed)'
+      : 'Potential Expense (Not Guaranteed)';
 
   IconData get _submitIcon => widget.isIncome ? Icons.add : Icons.remove;
 
   String get _submitLabel => widget.isIncome ? 'Add Income' : 'Add Expense';
 
-  String get _successMessage =>
-      widget.isIncome
-          ? 'Income added successfully!'
-          : 'Expense added successfully!';
+  String get _successMessage => widget.isIncome
+      ? 'Income added successfully!'
+      : 'Expense added successfully!';
 
   CategoryType get _categoryType =>
       widget.isIncome ? CategoryType.income : CategoryType.expense;
@@ -142,9 +140,9 @@ class _TransactionFormState extends State<TransactionForm> {
           _isSplit = false;
           _splits = null;
         });
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(_successMessage)),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(_successMessage)));
       }
     }
   }
@@ -209,10 +207,7 @@ class _TransactionFormState extends State<TransactionForm> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Text(
-                  _title,
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
+                Text(_title, style: Theme.of(context).textTheme.titleLarge),
                 const SizedBox(height: 16),
                 BlocBuilder<SettingsBloc, SettingsState>(
                   builder: (context, settingsState) {
@@ -260,7 +255,7 @@ class _TransactionFormState extends State<TransactionForm> {
                 const SizedBox(height: 8),
                 if (!_isSplit)
                   OutlinedButton.icon(
-                    onPressed: () => _showSplitDialog(),
+                    onPressed: _showSplitDialog,
                     icon: const Icon(Icons.call_split, size: 18),
                     label: const Text('Split Transaction'),
                   )
@@ -276,11 +271,7 @@ class _TransactionFormState extends State<TransactionForm> {
                     ),
                     child: Row(
                       children: [
-                        Icon(
-                          Icons.check_circle,
-                          color: splitColor,
-                          size: 20,
-                        ),
+                        Icon(Icons.check_circle, color: splitColor, size: 20),
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text(

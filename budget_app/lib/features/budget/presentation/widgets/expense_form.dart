@@ -214,7 +214,7 @@ class _ExpenseFormState extends State<ExpenseForm> {
                 const SizedBox(height: 8),
                 if (!_isSplit)
                   OutlinedButton.icon(
-                    onPressed: () => _showSplitDialog(),
+                    onPressed: _showSplitDialog,
                     icon: const Icon(Icons.call_split, size: 18),
                     label: const Text('Split Transaction'),
                   )

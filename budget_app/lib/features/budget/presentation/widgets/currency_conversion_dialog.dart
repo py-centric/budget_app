@@ -3,8 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:budget_app/features/settings/presentation/bloc/settings_bloc.dart';
 import '../../domain/entities/budget.dart';
-import '../budget_bloc.dart';
-import '../budget_event.dart';
+import '../bloc/budget_bloc.dart';
+import '../bloc/budget_event.dart';
 
 class CurrencyConversionDialog extends StatefulWidget {
   final Budget budget;

@@ -17,8 +17,13 @@ class ListHeaderTotal extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final currencyCode = context.watch<SettingsBloc>().state.settings.currencyCode;
-    final showPotential = potentialTotal != null && (potentialTotal! - actualTotal).abs() > 0.01;
+    final currencyCode = context
+        .watch<SettingsBloc>()
+        .state
+        .settings
+        .currencyCode;
+    final showPotential =
+        potentialTotal != null && (potentialTotal! - actualTotal).abs() > 0.01;
 
     return Row(
       children: [

@@ -27,17 +27,17 @@ class BudgetSelector extends StatelessWidget {
           return Center(
             child: Text(
               budget.name,
-              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
               overflow: TextOverflow.ellipsis,
             ),
           );
         }).toList();
       },
       items: budgets.map((budget) {
-        return DropdownMenuItem(
-          value: budget,
-          child: Text(budget.name),
-        );
+        return DropdownMenuItem(value: budget, child: Text(budget.name));
       }).toList(),
       onChanged: (budget) {
         if (budget != null && budget != activeBudget) {

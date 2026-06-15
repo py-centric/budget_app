@@ -57,7 +57,7 @@ bool _matchesWithSpecialCharacters(String text, String query) {
 
 String _escapeRegexCharacters(String input) {
   const specialChars = r'[\^$.|?*+(){}';
-  StringBuffer result = StringBuffer();
+  final StringBuffer result = StringBuffer();
 
   for (int i = 0; i < input.length; i++) {
     final char = input[i];

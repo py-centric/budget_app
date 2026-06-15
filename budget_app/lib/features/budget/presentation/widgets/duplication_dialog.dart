@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../domain/entities/budget_period.dart';
 import '../../domain/entities/budget.dart';
-import '../budget_bloc.dart';
-import '../budget_event.dart';
+import '../bloc/budget_bloc.dart';
+import '../bloc/budget_event.dart';
 
 class DuplicationDialog extends StatefulWidget {
   final Budget sourceBudget;

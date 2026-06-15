@@ -41,7 +41,9 @@ class _HomeProjectionOverviewState extends State<HomeProjectionOverview> {
 
         if (state is ProjectionLoaded) {
           // Find index of current horizon
-          int currentPage = _horizons.indexOf(state.settings.defaultProjectionHorizon);
+          int currentPage = _horizons.indexOf(
+            state.settings.defaultProjectionHorizon,
+          );
           if (currentPage == -1) currentPage = 0;
 
           return GestureDetector(
@@ -64,9 +66,8 @@ class _HomeProjectionOverviewState extends State<HomeProjectionOverview> {
                       children: [
                         Text(
                           'Projection Overview',
-                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
+                          style: Theme.of(context).textTheme.titleMedium
+                              ?.copyWith(fontWeight: FontWeight.bold),
                         ),
                         const Icon(Icons.chevron_right),
                       ],
@@ -77,9 +78,9 @@ class _HomeProjectionOverviewState extends State<HomeProjectionOverview> {
                       child: PageView.builder(
                         controller: PageController(initialPage: currentPage),
                         onPageChanged: (index) {
-                          context
-                              .read<ProjectionBloc>()
-                              .add(ChangeProjectionHorizon(_horizons[index]));
+                          context.read<ProjectionBloc>().add(
+                            ChangeProjectionHorizon(_horizons[index]),
+                          );
                         },
                         itemCount: _horizons.length,
                         itemBuilder: (context, index) {
@@ -90,9 +91,7 @@ class _HomeProjectionOverviewState extends State<HomeProjectionOverview> {
                                 style: Theme.of(context).textTheme.bodySmall,
                               ),
                               const SizedBox(height: 8),
-                              Expanded(
-                                child: _buildMiniChart(context, state),
-                              ),
+                              Expanded(child: _buildMiniChart(context, state)),
                             ],
                           );
                         },
@@ -150,8 +149,12 @@ class _HomeProjectionOverviewState extends State<HomeProjectionOverview> {
       return FlSpot(e.key.toDouble(), e.value.balance);
     }).toList();
 
-    double minBalance = state.points.map((p) => p.balance).reduce((a, b) => a < b ? a : b);
-    double maxBalance = state.points.map((p) => p.balance).reduce((a, b) => a > b ? a : b);
+    double minBalance = state.points
+        .map((p) => p.balance)
+        .reduce((a, b) => a < b ? a : b);
+    double maxBalance = state.points
+        .map((p) => p.balance)
+        .reduce((a, b) => a > b ? a : b);
 
     // Add padding
     double padding = (maxBalance - minBalance) * 0.1;

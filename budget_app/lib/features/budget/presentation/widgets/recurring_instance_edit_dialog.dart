@@ -17,10 +17,12 @@ class RecurringInstanceEditDialog extends StatefulWidget {
   });
 
   @override
-  State<RecurringInstanceEditDialog> createState() => _RecurringInstanceEditDialogState();
+  State<RecurringInstanceEditDialog> createState() =>
+      _RecurringInstanceEditDialogState();
 }
 
-class _RecurringInstanceEditDialogState extends State<RecurringInstanceEditDialog> {
+class _RecurringInstanceEditDialogState
+    extends State<RecurringInstanceEditDialog> {
   late TextEditingController _amountController;
   late DateTime _newDate;
   bool _isDeleted = false;
@@ -28,7 +30,9 @@ class _RecurringInstanceEditDialogState extends State<RecurringInstanceEditDialo
   @override
   void initState() {
     super.initState();
-    _amountController = TextEditingController(text: widget.instance.amount.toStringAsFixed(2));
+    _amountController = TextEditingController(
+      text: widget.instance.amount.toStringAsFixed(2),
+    );
     _newDate = widget.instance.date;
   }
 
@@ -55,13 +59,17 @@ class _RecurringInstanceEditDialogState extends State<RecurringInstanceEditDialo
               TextFormField(
                 controller: _amountController,
                 decoration: const InputDecoration(labelText: 'Amount'),
-                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                keyboardType: const TextInputType.numberWithOptions(
+                  decimal: true,
+                ),
                 inputFormatters: [
                   FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
                 ],
               ),
               ListTile(
-                title: Text('Date: ${_newDate.toLocal().toString().split(' ')[0]}'),
+                title: Text(
+                  'Date: ${_newDate.toLocal().toString().split(' ')[0]}',
+                ),
                 leading: const Icon(Icons.calendar_today),
                 onTap: () async {
                   final picked = await showDatePicker(
@@ -90,7 +98,9 @@ class _RecurringInstanceEditDialogState extends State<RecurringInstanceEditDialo
               id: const Uuid().v4(),
               recurringTransactionId: widget.instance.templateId,
               targetDate: widget.originalDate,
-              newAmount: _isDeleted ? null : double.tryParse(_amountController.text),
+              newAmount: _isDeleted
+                  ? null
+                  : double.tryParse(_amountController.text),
               newDate: _isDeleted ? null : _newDate,
               isDeleted: _isDeleted,
             );
