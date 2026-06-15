@@ -9,7 +9,9 @@ class ConfirmPotentialTransaction {
 
   Future<void> call({String? incomeId, String? expenseId}) async {
     if (incomeId != null) {
-      final income = (await repository.getAllIncome()).firstWhere((i) => i.id == incomeId);
+      final income = (await repository.getAllIncome()).firstWhere(
+        (i) => i.id == incomeId,
+      );
       final confirmed = IncomeEntry(
         id: income.id,
         budgetId: income.budgetId,
@@ -25,7 +27,9 @@ class ConfirmPotentialTransaction {
       );
       await repository.updateIncome(confirmed);
     } else if (expenseId != null) {
-      final expense = (await repository.getAllExpenses()).firstWhere((e) => e.id == expenseId);
+      final expense = (await repository.getAllExpenses()).firstWhere(
+        (e) => e.id == expenseId,
+      );
       final confirmed = ExpenseEntry(
         id: expense.id,
         budgetId: expense.budgetId,

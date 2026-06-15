@@ -23,10 +23,14 @@ class RecurringTransactionModel extends RecurringTransaction {
       categoryId: map['category_id'] as String,
       description: map['description'] as String,
       startDate: DateTime.parse(map['start_date'] as String),
-      endDate: map['end_date'] != null ? DateTime.parse(map['end_date'] as String) : null,
+      endDate: map['end_date'] != null
+          ? DateTime.parse(map['end_date'] as String)
+          : null,
       interval: map['recurrence_interval'] as int,
       unit: RecurrenceUnit.values.firstWhere(
-        (e) => e.toString().split('.').last.toUpperCase() == (map['recurrence_unit'] as String).toUpperCase(),
+        (e) =>
+            e.toString().split('.').last.toUpperCase() ==
+            (map['recurrence_unit'] as String).toUpperCase(),
         orElse: () => RecurrenceUnit.months,
       ),
     );

@@ -19,11 +19,11 @@ class RecurringOverride extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        recurringTransactionId,
-        targetDate,
-        newAmount,
-        newDate,
-        isDeleted,
-      ];
+    id,
+    recurringTransactionId,
+    targetDate,
+    newAmount,
+    newDate,
+    isDeleted,
+  ];
 }

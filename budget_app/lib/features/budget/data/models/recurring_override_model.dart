@@ -15,8 +15,12 @@ class RecurringOverrideModel extends RecurringOverride {
       id: map['id'] as String,
       recurringTransactionId: map['recurring_transaction_id'] as String,
       targetDate: DateTime.parse(map['target_date'] as String),
-      newAmount: map['new_amount'] != null ? (map['new_amount'] as num).toDouble() : null,
-      newDate: map['new_date'] != null ? DateTime.parse(map['new_date'] as String) : null,
+      newAmount: map['new_amount'] != null
+          ? (map['new_amount'] as num).toDouble()
+          : null,
+      newDate: map['new_date'] != null
+          ? DateTime.parse(map['new_date'] as String)
+          : null,
       isDeleted: (map['is_deleted'] as int) == 1,
     );
   }

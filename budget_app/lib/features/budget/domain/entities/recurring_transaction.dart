@@ -29,15 +29,15 @@ class RecurringTransaction extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        budgetId,
-        type,
-        amount,
-        categoryId,
-        description,
-        startDate,
-        endDate,
-        interval,
-        unit,
-      ];
+    id,
+    budgetId,
+    type,
+    amount,
+    categoryId,
+    description,
+    startDate,
+    endDate,
+    interval,
+    unit,
+  ];
 }

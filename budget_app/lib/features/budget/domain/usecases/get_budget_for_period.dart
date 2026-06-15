@@ -10,7 +10,8 @@ class GetBudgetForPeriodResult {
   GetBudgetForPeriodResult({required this.incomes, required this.expenses});
 
   double get totalIncome => incomes.fold(0, (sum, item) => sum + item.amount);
-  double get totalExpenses => expenses.fold(0, (sum, item) => sum + item.amount);
+  double get totalExpenses =>
+      expenses.fold(0, (sum, item) => sum + item.amount);
   double get balance => totalIncome - totalExpenses;
 }
 
@@ -23,9 +24,6 @@ class GetBudgetForPeriod {
     final incomes = await _repository.getIncomeForPeriod(period);
     final expenses = await _repository.getExpensesForPeriod(period);
 
-    return GetBudgetForPeriodResult(
-      incomes: incomes,
-      expenses: expenses,
-    );
+    return GetBudgetForPeriodResult(incomes: incomes, expenses: expenses);
   }
 }

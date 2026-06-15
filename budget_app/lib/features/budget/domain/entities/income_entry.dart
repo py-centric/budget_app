@@ -61,16 +61,16 @@ class IncomeEntry extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        budgetId,
-        amount,
-        description,
-        date,
-        periodMonth,
-        periodYear,
-        categoryId,
-        categoryName,
-        categoryIcon,
-        isPotential,
-      ];
+    id,
+    budgetId,
+    amount,
+    description,
+    date,
+    periodMonth,
+    periodYear,
+    categoryId,
+    categoryName,
+    categoryIcon,
+    isPotential,
+  ];
 }

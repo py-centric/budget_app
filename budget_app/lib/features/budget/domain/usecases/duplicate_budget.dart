@@ -29,19 +29,24 @@ class DuplicateBudget {
 
     await _repository.addBudget(newBudget);
 
-    // Duplicate Categories and Goals (Structure)
-    // Currently, Categories are global in this data model, so we only need to copy BudgetGoals
-    // However, our data-model says BudgetGoal has a budget_id now.
-    
-    // Note: To fully implement this, we'd need getBudgetGoalsForBudget in the repository.
-    // For now, we'll lay the groundwork.
+    // Note: Budget goals are tied to budget_id, but the repository does not yet expose
+    // getBudgetGoalsForBudget. Categories are global, so they are not duplicated.
+    // Future enhancement: add BudgetGoal duplication when the repository supports it.
 
     if (includeTransactions) {
-      final sourceIncome = await _repository.getIncomeForBudget(sourceBudget.id);
-      final sourceExpenses = await _repository.getExpensesForBudget(sourceBudget.id);
+      final sourceIncome = await _repository.getIncomeForBudget(
+        sourceBudget.id,
+      );
+      final sourceExpenses = await _repository.getExpensesForBudget(
+        sourceBudget.id,
+      );
 
       for (var income in sourceIncome) {
-        final shiftedDate = DateUtilsHelper.shiftDateToPeriod(income.date, targetPeriod.year, targetPeriod.month);
+        final shiftedDate = DateUtilsHelper.shiftDateToPeriod(
+          income.date,
+          targetPeriod.year,
+          targetPeriod.month,
+        );
         final newIncome = IncomeEntry(
           id: _uuid.v4(),
           budgetId: newBudget.id,
@@ -54,7 +59,11 @@ class DuplicateBudget {
       }
 
       for (var expense in sourceExpenses) {
-        final shiftedDate = DateUtilsHelper.shiftDateToPeriod(expense.date, targetPeriod.year, targetPeriod.month);
+        final shiftedDate = DateUtilsHelper.shiftDateToPeriod(
+          expense.date,
+          targetPeriod.year,
+          targetPeriod.month,
+        );
         final newExpense = ExpenseEntry(
           id: _uuid.v4(),
           budgetId: newBudget.id,
