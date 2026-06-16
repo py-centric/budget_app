@@ -6,6 +6,7 @@ import '../bloc/savings_state.dart';
 import '../widgets/savings_goal_card.dart';
 import '../widgets/savings_goal_dialog.dart';
 import '../widgets/add_contribution_dialog.dart';
+import '../widgets/savings_calculator_dialog.dart';
 
 class SavingsGoalsPage extends StatelessWidget {
   const SavingsGoalsPage({super.key});
@@ -13,7 +14,17 @@ class SavingsGoalsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Savings Goals'), centerTitle: true),
+      appBar: AppBar(
+        title: const Text('Savings Goals'),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.calculate),
+            tooltip: 'Savings Calculator',
+            onPressed: () => _showCalculatorDialog(context),
+          ),
+        ],
+      ),
       body: BlocBuilder<SavingsBloc, SavingsState>(
         builder: (context, state) {
           if (state is SavingsLoading) {
@@ -221,6 +232,13 @@ class SavingsGoalsPage extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  void _showCalculatorDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (_) => const SavingsCalculatorDialog(),
     );
   }
 
