@@ -6,6 +6,7 @@ import '../../domain/entities/expense_entry.dart';
 import '../../domain/entities/category.dart';
 import '../bloc/budget_bloc.dart';
 import '../bloc/budget_event.dart';
+import 'category_dropdown.dart';
 import 'delete_confirmation_dialog.dart';
 
 class TransactionEditDialog extends StatefulWidget {
@@ -82,12 +83,6 @@ class _TransactionEditDialogState extends State<TransactionEditDialog> {
   @override
   Widget build(BuildContext context) {
     final isIncome = widget.income != null;
-    final relevantCategories = widget.categories
-        .where(
-          (c) =>
-              c.type == (isIncome ? CategoryType.income : CategoryType.expense),
-        )
-        .toList();
 
     return AlertDialog(
       title: Text(isIncome ? 'Edit Income' : 'Edit Expense'),
@@ -111,21 +106,15 @@ class _TransactionEditDialogState extends State<TransactionEditDialog> {
                   return null;
                 },
               ),
-              DropdownButtonFormField<String>(
+              CategoryDropdown(
+                categories: widget.categories,
+                filterType: isIncome ? CategoryType.income : CategoryType.expense,
                 initialValue: _selectedCategoryId,
-                decoration: const InputDecoration(labelText: 'Category'),
-                items: relevantCategories.map((category) {
-                  return DropdownMenuItem(
-                    value: category.id,
-                    child: Text(category.name),
-                  );
-                }).toList(),
+                labelText: 'Category',
                 onChanged: (value) {
-                  if (value != null) {
-                    setState(() {
-                      _selectedCategoryId = value;
-                    });
-                  }
+                  setState(() {
+                    _selectedCategoryId = value;
+                  });
                 },
               ),
               TextFormField(
