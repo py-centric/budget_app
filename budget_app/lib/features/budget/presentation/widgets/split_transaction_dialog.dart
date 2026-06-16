@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../domain/entities/category.dart';
+import 'category_dropdown.dart';
 
 class SplitItem {
   final String categoryId;
@@ -260,19 +261,13 @@ class _SplitTransactionDialogState extends State<SplitTransactionDialog> {
             Row(
               children: [
                 Expanded(
-                  child: DropdownButtonFormField<String>(
+                  child: CategoryDropdown(
+                    categories: widget.categories,
+                    filterType: widget.isExpense
+                        ? CategoryType.expense
+                        : CategoryType.income,
                     initialValue: _splits[index].categoryId,
-                    decoration: const InputDecoration(
-                      labelText: 'Category',
-                      border: OutlineInputBorder(),
-                      isDense: true,
-                    ),
-                    items: widget.categories.map((category) {
-                      return DropdownMenuItem(
-                        value: category.id,
-                        child: Text(category.name),
-                      );
-                    }).toList(),
+                    labelText: 'Category',
                     onChanged: (value) {
                       if (value != null) {
                         _updateSplitCategory(index, value);

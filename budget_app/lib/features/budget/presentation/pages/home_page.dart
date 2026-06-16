@@ -510,6 +510,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _showTransactionDialog(BuildContext context, String budgetId) {
+    final navState = context.read<NavigationBloc>().state;
+    final period = navState.currentPeriod;
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -529,6 +532,8 @@ class _HomePageState extends State<HomePage> {
                               : CategoryType.expense),
                     )
                     .toList(),
+                periodYear: period.year,
+                periodMonth: period.month,
                 onSubmit:
                     (
                       id,
@@ -542,13 +547,16 @@ class _HomePageState extends State<HomePage> {
                       DateTime? endDate,
                       bool isPotential = false,
                       List<SplitItem>? splits,
+                      String? targetBudgetId,
                     }) {
+                      final effectiveBudgetId = targetBudgetId ?? budgetId;
+
                       if (isRecurring && interval != null && unit != null) {
                         context.read<BudgetBloc>().add(
                           SaveRecurringTransactionEvent(
                             RecurringTransaction(
                               id: _uuid.v4(),
-                              budgetId: budgetId,
+                              budgetId: effectiveBudgetId,
                               type: _showIncomeForm ? 'INCOME' : 'EXPENSE',
                               amount: amount,
                               categoryId: categoryId,
@@ -568,7 +576,7 @@ class _HomePageState extends State<HomePage> {
                         context.read<BudgetBloc>().add(
                           AddIncomeEvent(
                             id: id,
-                            budgetId: budgetId,
+                            budgetId: effectiveBudgetId,
                             amount: amount,
                             categoryId: categoryId,
                             description: description,
@@ -580,7 +588,7 @@ class _HomePageState extends State<HomePage> {
                         context.read<BudgetBloc>().add(
                           AddExpenseEvent(
                             id: id,
-                            budgetId: budgetId,
+                            budgetId: effectiveBudgetId,
                             amount: amount,
                             category: categoryId,
                             description: description,

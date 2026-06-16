@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import '../../../../core/utils/currency_formatter.dart';
 import '../../../../core/utils/math_expression_parser.dart';
 import '../../../../features/settings/presentation/bloc/settings_bloc.dart';
+import '../../domain/entities/budget.dart';
+import '../../domain/entities/budget_period.dart';
 import '../../domain/entities/category.dart';
 import '../../domain/entities/recurring_transaction.dart';
+import '../bloc/navigation_bloc.dart';
+import 'category_dropdown.dart';
 import 'split_transaction_dialog.dart';
 
 class TransactionForm extends StatefulWidget {
@@ -23,9 +28,12 @@ class TransactionForm extends StatefulWidget {
     DateTime? endDate,
     bool isPotential,
     List<SplitItem>? splits,
+    String? targetBudgetId,
   })
   onSubmit;
-  final dynamic existingEntry; // for future editing support
+  final dynamic existingEntry;
+  final int periodYear;
+  final int periodMonth;
 
   const TransactionForm({
     super.key,
@@ -33,6 +41,8 @@ class TransactionForm extends StatefulWidget {
     required this.categories,
     required this.onSubmit,
     this.existingEntry,
+    required this.periodYear,
+    required this.periodMonth,
   });
 
   @override
@@ -56,10 +66,7 @@ class _TransactionFormState extends State<TransactionForm> {
   @override
   void initState() {
     super.initState();
-    // Default: 1st of month for income, today for expense
-    _selectedDate = widget.isIncome
-        ? DateTime(DateTime.now().year, DateTime.now().month, 1)
-        : DateTime.now();
+    _selectedDate = DateTime(widget.periodYear, widget.periodMonth, 1);
   }
 
   @override
@@ -87,10 +94,41 @@ class _TransactionFormState extends State<TransactionForm> {
   CategoryType get _categoryType =>
       widget.isIncome ? CategoryType.income : CategoryType.expense;
 
-  void _submit() {
+  Future<void> _submit() async {
     if (_formKey.currentState!.validate()) {
       final amount = MathExpressionParser.evaluate(_amountController.text);
       if (amount != null && amount > 0) {
+        String? targetBudgetId;
+
+        if (_selectedDate.year != widget.periodYear ||
+            _selectedDate.month != widget.periodMonth) {
+          final choice = await _showDateOutsidePeriodDialog();
+          if (choice == _DateChoice.cancel) return;
+          if (choice == _DateChoice.move && mounted) {
+            final newPeriod = BudgetPeriod.fromDate(_selectedDate);
+            final newBudgetId =
+                'default_${newPeriod.year}_${newPeriod.month}';
+            targetBudgetId = newBudgetId;
+            final navBloc = context.read<NavigationBloc>();
+            final budgets =
+                await navBloc.budgetRepository.getBudgetsForPeriod(
+                  newPeriod,
+                );
+            if (budgets.isEmpty) {
+              await navBloc.budgetRepository.addBudget(
+                Budget(
+                  id: newBudgetId,
+                  name: 'Main Budget',
+                  periodMonth: newPeriod.month,
+                  periodYear: newPeriod.year,
+                  isActive: true,
+                ),
+              );
+            }
+            navBloc.add(ChangePeriod(newPeriod));
+          }
+        }
+
         if (_isSplit && _splits != null && _splits!.isNotEmpty) {
           widget.onSubmit(
             '',
@@ -108,6 +146,7 @@ class _TransactionFormState extends State<TransactionForm> {
             endDate: _isRecurring ? _endDate : null,
             isPotential: _isPotential,
             splits: _splits,
+            targetBudgetId: targetBudgetId,
           );
         } else if (_selectedCategoryId != null) {
           widget.onSubmit(
@@ -125,14 +164,14 @@ class _TransactionFormState extends State<TransactionForm> {
             unit: _isRecurring ? _selectedUnit : null,
             endDate: _isRecurring ? _endDate : null,
             isPotential: _isPotential,
+            targetBudgetId: targetBudgetId,
           );
         }
+        if (!mounted) return;
         _amountController.clear();
         _descriptionController.clear();
         setState(() {
-          _selectedDate = widget.isIncome
-              ? DateTime(DateTime.now().year, DateTime.now().month, 1)
-              : DateTime.now();
+          _selectedDate = DateTime(widget.periodYear, widget.periodMonth, 1);
           _isRecurring = false;
           _isPotential = false;
           _endDate = null;
@@ -145,6 +184,41 @@ class _TransactionFormState extends State<TransactionForm> {
         ).showSnackBar(SnackBar(content: Text(_successMessage)));
       }
     }
+  }
+
+  Future<_DateChoice> _showDateOutsidePeriodDialog() async {
+    final currentMonthName = DateFormat('MMMM').format(
+      DateTime(widget.periodYear, widget.periodMonth, 1),
+    );
+    final entryMonthName = DateFormat('MMMM').format(_selectedDate);
+    final formattedDate = DateFormat('EEEE, MMMM d, yyyy').format(
+      _selectedDate,
+    );
+    return await showDialog<_DateChoice>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Date Outside Budget Period'),
+        content: Text(
+          'This entry is dated $formattedDate. It falls outside the current $currentMonthName ${widget.periodYear} budget. Would you like to move it to the $entryMonthName ${_selectedDate.year} budget instead?',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () =>
+                Navigator.pop(context, _DateChoice.keep),
+            child: Text(
+              'Keep in $currentMonthName ${widget.periodYear}',
+            ),
+          ),
+          TextButton(
+            onPressed: () =>
+                Navigator.pop(context, _DateChoice.move),
+            child: Text(
+              'Move to $entryMonthName ${_selectedDate.year}',
+            ),
+          ),
+        ],
+      ),
+    ).then((v) => v ?? _DateChoice.cancel);
   }
 
   void _showSplitDialog() {
@@ -231,15 +305,11 @@ class _TransactionFormState extends State<TransactionForm> {
                   },
                 ),
                 const SizedBox(height: 12),
-                DropdownButtonFormField<String>(
+                CategoryDropdown(
+                  categories: widget.categories,
+                  filterType: _categoryType,
                   initialValue: _selectedCategoryId,
-                  decoration: const InputDecoration(labelText: 'Category'),
-                  items: widget.categories.map((category) {
-                    return DropdownMenuItem(
-                      value: category.id,
-                      child: Text(category.name),
-                    );
-                  }).toList(),
+                  labelText: 'Category',
                   onChanged: (value) {
                     setState(() {
                       _selectedCategoryId = value;
@@ -434,3 +504,5 @@ class _TransactionFormState extends State<TransactionForm> {
     );
   }
 }
+
+enum _DateChoice { keep, move, cancel }
