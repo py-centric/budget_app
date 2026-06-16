@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../domain/entities/savings_goal.dart';
+import '../../domain/usecases/calculate_required_contribution.dart';
 
 class SavingsGoalDialog extends StatefulWidget {
   final SavingsGoal? existingGoal;
@@ -22,9 +23,15 @@ class SavingsGoalDialog extends StatefulWidget {
 class _SavingsGoalDialogState extends State<SavingsGoalDialog> {
   late TextEditingController _nameController;
   late TextEditingController _targetAmountController;
+  late TextEditingController _rateController;
+  late TextEditingController _yearsController;
   DateTime? _deadline;
   String _selectedIcon = 'savings';
   String _selectedColor = 'blue';
+
+  final _calculator = CalculateRequiredContribution();
+
+  double? _calculatedMonthly;
 
   static const List<String> _availableIcons = [
     'savings',
@@ -55,16 +62,46 @@ class _SavingsGoalDialogState extends State<SavingsGoalDialog> {
     _targetAmountController = TextEditingController(
       text: widget.existingGoal?.targetAmount.toStringAsFixed(2) ?? '',
     );
+    _rateController = TextEditingController();
+    _yearsController = TextEditingController();
     _deadline = widget.existingGoal?.deadline;
     _selectedIcon = widget.existingGoal?.icon ?? 'savings';
     _selectedColor = widget.existingGoal?.color ?? 'blue';
+
+    _targetAmountController.addListener(_updateCalculation);
+    _rateController.addListener(_updateCalculation);
+    _yearsController.addListener(_updateCalculation);
   }
 
   @override
   void dispose() {
     _nameController.dispose();
     _targetAmountController.dispose();
+    _rateController.dispose();
+    _yearsController.dispose();
     super.dispose();
+  }
+
+  void _updateCalculation() {
+    final target = double.tryParse(_targetAmountController.text);
+    final rate = double.tryParse(_rateController.text);
+    final years = int.tryParse(_yearsController.text);
+
+    if (target != null && target > 0 && rate != null && years != null && years > 0) {
+      final result = _calculator(
+        targetAmount: target,
+        currentAmount: widget.existingGoal?.currentAmount ?? 0,
+        annualRate: rate,
+        years: years,
+      );
+      setState(() {
+        _calculatedMonthly = result;
+      });
+    } else {
+      setState(() {
+        _calculatedMonthly = null;
+      });
+    }
   }
 
   @override
@@ -121,6 +158,100 @@ class _SavingsGoalDialogState extends State<SavingsGoalDialog> {
               ),
             ),
             const SizedBox(height: 16),
+            const Divider(),
+            Text(
+              'Savings Calculator (Optional)',
+              style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              'Set a return rate and duration to see your required monthly contribution.',
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: Colors.grey[600],
+              ),
+            ),
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _rateController,
+                    decoration: const InputDecoration(
+                      labelText: 'Annual Return (%)',
+                      border: OutlineInputBorder(),
+                      suffixText: '%',
+                    ),
+                    keyboardType: TextInputType.number,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: TextField(
+                    controller: _yearsController,
+                    decoration: const InputDecoration(
+                      labelText: 'Duration (Years)',
+                      border: OutlineInputBorder(),
+                      suffixText: 'yr',
+                    ),
+                    keyboardType: TextInputType.number,
+                  ),
+                ),
+              ],
+            ),
+            if (_calculatedMonthly != null) ...[
+              const SizedBox(height: 12),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.green.withValues(alpha: 0.08),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: Colors.green.withValues(alpha: 0.3),
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.calculate,
+                          size: 16,
+                          color: Colors.green[700],
+                        ),
+                        const SizedBox(width: 6),
+                        Text(
+                          'Required Monthly Contribution',
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: Colors.green[700],
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      '\$${_calculatedMonthly!.toStringAsFixed(2)}',
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.green[800],
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      _buildSummaryText(),
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+            const SizedBox(height: 16),
+            const Divider(),
             Text('Icon', style: Theme.of(context).textTheme.bodyMedium),
             const SizedBox(height: 8),
             Wrap(
@@ -207,6 +338,13 @@ class _SavingsGoalDialogState extends State<SavingsGoalDialog> {
         ),
       ],
     );
+  }
+
+  String _buildSummaryText() {
+    final target = double.tryParse(_targetAmountController.text) ?? 0;
+    final rate = double.tryParse(_rateController.text) ?? 0;
+    final years = int.tryParse(_yearsController.text) ?? 0;
+    return 'To reach \$${target.toStringAsFixed(0)} in $years years at ${rate.toStringAsFixed(1)}% APY';
   }
 
   bool get _isValid {
