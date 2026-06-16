@@ -53,6 +53,8 @@ import '../../features/emergency_fund/presentation/bloc/emergency_fund_event.dar
 // Business Tools
 import '../../features/business_tools/domain/repositories/business_repository.dart';
 import '../../features/business_tools/data/repositories/business_repository_impl.dart';
+import '../../features/business_tools/presentation/bloc/business_bloc.dart';
+import '../../features/business_tools/presentation/bloc/business_event.dart';
 
 // Accounts
 import '../../features/accounts/domain/repositories/account_repository.dart';
@@ -272,6 +274,10 @@ class AppModule {
     BlocProvider<CalendarBloc>(
       create: (context) =>
           CalendarBloc(getCalendarData: GetCalendarData(budgetRepository)),
+    ),
+    BlocProvider<BusinessBloc>(
+      create: (_) =>
+          BusinessBloc(businessRepository)..add(LoadBusinessData()),
     ),
   ];
 }
