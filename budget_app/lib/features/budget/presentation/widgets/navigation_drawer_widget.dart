@@ -6,6 +6,7 @@ import 'year_group_header.dart';
 import '../pages/category_settings_page.dart';
 import '../pages/projection_page.dart';
 import '../pages/manage_recurring_page.dart';
+import '../pages/category_breakdown_page.dart';
 import 'package:budget_app/features/settings/presentation/pages/settings_page.dart';
 import 'package:budget_app/features/financial_tools/presentation/pages/tools_hub_page.dart';
 
@@ -54,6 +55,19 @@ class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
                     ),
                   ),
                 ),
+              ),
+              ListTile(
+                leading: const Icon(Icons.pie_chart),
+                title: const Text('Category Breakdown'),
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const CategoryBreakdownPage(),
+                    ),
+                  );
+                },
               ),
               ListTile(
                 leading: const Icon(Icons.settings),
