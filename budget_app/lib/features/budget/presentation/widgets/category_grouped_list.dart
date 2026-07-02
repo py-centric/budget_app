@@ -255,6 +255,7 @@ class _CategoryGroupedListState extends State<CategoryGroupedList> {
   Widget _buildExpenseItem(ExpenseEntry entry, ThemeData theme) {
     return SlidableTransactionItem(
       key: ValueKey(entry.id),
+      isIncome: false,
       onTap: () => widget.onEdit(entry),
       onEdit: () => widget.onEdit(entry),
       onDelete: () => widget.onDelete(entry),
