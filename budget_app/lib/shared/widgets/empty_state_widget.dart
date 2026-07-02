@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:budget_app/core/theme/app_spacing.dart';
 
 class EmptyStateWidget extends StatelessWidget {
   final String message;
@@ -18,12 +19,12 @@ class EmptyStateWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(24.0),
+        padding: const EdgeInsets.all(AppSpacing.lg),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(icon, size: 64, color: Theme.of(context).colorScheme.outline),
-            const SizedBox(height: 16),
+            SizedBox(height: AppSpacing.md),
             Text(
               message,
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
@@ -32,7 +33,7 @@ class EmptyStateWidget extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             if (onAction != null && actionLabel != null) ...[
-              const SizedBox(height: 16),
+              SizedBox(height: AppSpacing.md),
               ElevatedButton(onPressed: onAction, child: Text(actionLabel!)),
             ],
           ],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:budget_app/core/theme/app_spacing.dart';
 import 'package:budget_app/features/budget/domain/usecases/calculate_summary.dart';
 import 'package:budget_app/core/utils/currency_formatter.dart';
 import 'package:budget_app/features/settings/presentation/bloc/settings_bloc.dart';
@@ -17,28 +18,30 @@ class SummaryCard extends StatelessWidget {
         .settings
         .currencyCode;
 
+    final theme = Theme.of(context);
+
     return Column(
       children: [
         if (summary.missedPotentialCount > 0)
           Padding(
-            padding: const EdgeInsets.only(bottom: 16.0),
+            padding: const EdgeInsets.only(bottom: AppSpacing.md),
             child: Material(
-              color: Colors.orange.shade50,
-              borderRadius: BorderRadius.circular(12),
+              color: theme.colorScheme.tertiaryContainer,
+              borderRadius: BorderRadius.circular(AppRadius.md),
               child: ListTile(
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  side: BorderSide(color: Colors.orange.shade200),
+                  borderRadius: BorderRadius.circular(AppRadius.md),
+                  side: BorderSide(color: theme.colorScheme.tertiary.withValues(alpha: 0.3)),
                 ),
-                leading: const Icon(
+                leading: Icon(
                   Icons.warning_amber_rounded,
-                  color: Colors.orange,
+                  color: theme.colorScheme.tertiary,
                 ),
                 title: Text(
                   '${summary.missedPotentialCount} past-due potential transactions',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    color: Colors.orange,
+                    color: theme.colorScheme.tertiary,
                   ),
                 ),
                 subtitle: const Text(
@@ -49,14 +52,14 @@ class SummaryCard extends StatelessWidget {
           ),
         Card(
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(AppSpacing.md),
             child: Column(
               children: [
                 Text(
                   'Budget Summary',
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: AppSpacing.md),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
@@ -64,7 +67,7 @@ class SummaryCard extends StatelessWidget {
                       label: 'Income',
                       actualAmount: summary.totalIncome,
                       projectedAmount: summary.totalPotentialIncome,
-                      color: Colors.green,
+                      color: Theme.of(context).colorScheme.primary,
                       icon: Icons.arrow_downward,
                       currencyCode: currencyCode,
                     ),
@@ -72,7 +75,7 @@ class SummaryCard extends StatelessWidget {
                       label: 'Expenses',
                       actualAmount: summary.totalExpenses,
                       projectedAmount: summary.totalPotentialExpenses,
-                      color: Colors.red,
+                      color: Theme.of(context).colorScheme.error,
                       icon: Icons.arrow_upward,
                       currencyCode: currencyCode,
                     ),
@@ -108,6 +111,7 @@ class _BalanceDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final isPositive = actualBalance >= 0;
     final projectedIsPositive = projectedBalance >= 0;
     final hasProjection = (projectedBalance - actualBalance).abs() > 0.01;
@@ -122,27 +126,27 @@ class _BalanceDisplay extends StatelessWidget {
               isPositive
                   ? Icons.sentiment_satisfied
                   : Icons.sentiment_dissatisfied,
-              color: isPositive ? Colors.green : Colors.red,
+              color: isPositive ? theme.colorScheme.primary : theme.colorScheme.error,
               size: 32,
             ),
-            const SizedBox(height: 8),
-            Text('Balance', style: Theme.of(context).textTheme.titleMedium),
+            const SizedBox(height: AppSpacing.sm),
+            Text('Balance', style: theme.textTheme.titleMedium),
             Text(
               CurrencyFormatter.format(
                 actualBalance,
                 currencyCode: currencyCode,
               ),
-              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                color: isPositive ? Colors.green : Colors.red,
+              style: theme.textTheme.headlineMedium?.copyWith(
+                color: isPositive ? theme.colorScheme.primary : theme.colorScheme.error,
                 fontWeight: FontWeight.bold,
               ),
             ),
             if (hasProjection) ...[
-              const SizedBox(height: 8),
+              const SizedBox(height: AppSpacing.sm),
               Text(
                 'Projected: ${projectedIsPositive ? '+' : ''}${CurrencyFormatter.format(projectedBalance, currencyCode: currencyCode)}',
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: projectedIsPositive ? Colors.green : Colors.red,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: projectedIsPositive ? theme.colorScheme.primary : theme.colorScheme.error,
                 ),
               ),
             ],

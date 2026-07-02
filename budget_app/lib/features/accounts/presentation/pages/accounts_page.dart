@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
+import 'package:budget_app/core/theme/app_spacing.dart';
+import 'package:budget_app/core/utils/currency_formatter.dart';
+import 'package:budget_app/features/settings/presentation/bloc/settings_bloc.dart';
+import 'package:budget_app/shared/widgets/confirm_action_dialog.dart';
 import 'package:budget_app/features/accounts/domain/entities/account.dart';
 import 'package:budget_app/features/accounts/presentation/bloc/account_bloc.dart';
 import 'package:budget_app/features/accounts/presentation/bloc/account_event.dart';
@@ -73,12 +76,16 @@ class AccountsPage extends StatelessWidget {
   }
 
   Widget _buildTotalBalanceCard(BuildContext context, double totalBalance) {
-    final currencyFormat = NumberFormat.currency(symbol: '\$');
+    final currencyCode = context
+        .read<SettingsBloc>()
+        .state
+        .settings
+        .currencyCode;
 
     return Card(
-      margin: const EdgeInsets.all(16),
+      margin: const EdgeInsets.all(AppSpacing.md),
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(AppSpacing.md),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -86,9 +93,9 @@ class AccountsPage extends StatelessWidget {
               'Total Balance',
               style: Theme.of(context).textTheme.titleMedium,
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: AppSpacing.sm),
             Text(
-              currencyFormat.format(totalBalance),
+              CurrencyFormatter.format(totalBalance, currencyCode: currencyCode),
               style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                 color: Theme.of(context).colorScheme.primary,
                 fontWeight: FontWeight.bold,
@@ -110,12 +117,12 @@ class AccountsPage extends StatelessWidget {
             size: 64,
             color: Theme.of(context).colorScheme.outline,
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: AppSpacing.md),
           Text(
             'No accounts yet',
             style: Theme.of(context).textTheme.titleLarge,
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: AppSpacing.sm),
           Text(
             'Tap + to add your first account',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -138,7 +145,11 @@ class AccountsPage extends StatelessWidget {
   }
 
   Widget _buildAccountTile(BuildContext context, Account account) {
-    final currencyFormat = NumberFormat.currency(symbol: '\$');
+    final currencyCode = context
+        .read<SettingsBloc>()
+        .state
+        .settings
+        .currencyCode;
 
     IconData accountIcon;
     switch (account.type) {
@@ -156,14 +167,16 @@ class AccountsPage extends StatelessWidget {
         break;
     }
 
+    final theme = Theme.of(context);
+
     return Dismissible(
       key: Key(account.id),
       direction: DismissDirection.endToStart,
       background: Container(
-        color: Colors.red,
+        color: theme.colorScheme.error,
         alignment: Alignment.centerRight,
-        padding: const EdgeInsets.only(right: 16),
-        child: const Icon(Icons.delete, color: Colors.white),
+        padding: const EdgeInsets.only(right: AppSpacing.md),
+        child: Icon(Icons.delete, color: theme.colorScheme.onError),
       ),
       confirmDismiss: (direction) => _confirmDelete(context, account),
       onDismissed: (direction) {
@@ -180,7 +193,7 @@ class AccountsPage extends StatelessWidget {
           ),
         ),
         trailing: Text(
-          currencyFormat.format(account.balance),
+          CurrencyFormatter.format(account.balance, currencyCode: currencyCode),
           style: Theme.of(
             context,
           ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
@@ -193,22 +206,12 @@ class AccountsPage extends StatelessWidget {
   Future<bool?> _confirmDelete(BuildContext context, Account account) {
     return showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Delete Account'),
-        content: Text(
-          'Are you sure you want to delete "${account.name}"? This will also delete all transfers associated with this account.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            style: TextButton.styleFrom(foregroundColor: Colors.red),
-            child: const Text('Delete'),
-          ),
-        ],
+      builder: (ctx) => ConfirmActionDialog(
+        title: 'Delete Account',
+        message: 'Are you sure you want to delete "${account.name}"? This will also delete all transfers associated with this account.',
+        confirmLabel: 'Delete',
+        isDestructive: true,
+        onConfirm: () => Navigator.pop(ctx, true),
       ),
     );
   }

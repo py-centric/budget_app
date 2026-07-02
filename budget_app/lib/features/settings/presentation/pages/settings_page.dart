@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:budget_app/core/theme/app_spacing.dart';
+import 'package:budget_app/shared/widgets/confirm_action_dialog.dart';
 import '../../../app_lock/domain/entities/app_lock_settings.dart';
 import '../../../app_lock/presentation/bloc/app_lock_bloc.dart';
 import '../../../app_lock/presentation/bloc/app_lock_event.dart';
@@ -24,11 +26,11 @@ class SettingsPage extends StatelessWidget {
       body: BlocBuilder<SettingsBloc, SettingsState>(
         builder: (context, state) {
           return ListView(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(AppSpacing.md),
             children: [
               Card(
                 child: Padding(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.all(AppSpacing.md),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -36,10 +38,10 @@ class SettingsPage extends StatelessWidget {
                         'Currency',
                         style: Theme.of(context).textTheme.titleLarge,
                       ),
-                      const SizedBox(height: 8),
-                      const Text(
+                      SizedBox(height: AppSpacing.sm),
+                      Text(
                         'Select your preferred currency for formatting values.',
-                        style: TextStyle(color: Colors.grey),
+                        style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
                       ),
                       const SizedBox(height: 16),
                       DropdownButtonFormField<String>(
@@ -126,10 +128,10 @@ class SettingsPage extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: AppSpacing.md),
               Card(
                 child: Padding(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.all(AppSpacing.md),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -137,10 +139,10 @@ class SettingsPage extends StatelessWidget {
                         'Appearance',
                         style: Theme.of(context).textTheme.titleLarge,
                       ),
-                      const SizedBox(height: 8),
-                      const Text(
+                      SizedBox(height: AppSpacing.sm),
+                      Text(
                         'Choose between Light, Dark, or System Default themes.',
-                        style: TextStyle(color: Colors.grey),
+                        style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
                       ),
                       const SizedBox(height: 16),
                       DropdownButtonFormField<String>(
@@ -172,18 +174,18 @@ class SettingsPage extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: AppSpacing.md),
               BlocProvider.value(
                 value: context.read<AppLockBloc>(),
                 child: const _AppLockSection(),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: AppSpacing.md),
               BlocProvider(
                 create: (context) =>
                     BackupBloc(backupService: BackupServiceImpl()),
                 child: const _BackupSection(),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: AppSpacing.md),
               BlocProvider.value(
                 value: context.read<BudgetBloc>(),
                 child: const _FactoryResetSection(),
@@ -205,7 +207,7 @@ class _AppLockSection extends StatelessWidget {
       builder: (context, state) {
         return Card(
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(AppSpacing.md),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -228,15 +230,15 @@ class _AppLockSection extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: AppSpacing.sm),
                 Text(
                   state.settings.isEnabled
                       ? 'App is locked with ${state.settings.authMethod == AuthMethod.biometrics ? "biometrics" : "PIN"}'
                       : 'Require authentication to open the app',
-                  style: const TextStyle(color: Colors.grey),
+                  style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
                 ),
                 if (state.settings.isEnabled) ...[
-                  const SizedBox(height: 8),
+                  SizedBox(height: AppSpacing.sm),
                   InkWell(
                     onTap: () => _showChangeMethodDialog(context, state),
                     child: Text(
@@ -342,7 +344,7 @@ class _BackupSection extends StatelessWidget {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(state.successMessage!),
-              backgroundColor: Colors.green,
+              backgroundColor: Theme.of(context).colorScheme.primary,
             ),
           );
         }
@@ -350,7 +352,7 @@ class _BackupSection extends StatelessWidget {
       builder: (context, state) {
         return Card(
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(AppSpacing.md),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -358,12 +360,12 @@ class _BackupSection extends StatelessWidget {
                   'Database Backup',
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
-                const SizedBox(height: 8),
-                const Text(
+                SizedBox(height: AppSpacing.sm),
+                Text(
                   'Create a backup of your database or restore from a backup file.',
-                  style: TextStyle(color: Colors.grey),
+                  style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: AppSpacing.md),
                 Row(
                   children: [
                     Expanded(
@@ -385,7 +387,7 @@ class _BackupSection extends StatelessWidget {
                         label: const Text('Backup'),
                       ),
                     ),
-                    const SizedBox(width: 8),
+                    SizedBox(width: AppSpacing.sm),
                     Expanded(
                       child: OutlinedButton.icon(
                         onPressed: state.isLoading
@@ -398,7 +400,7 @@ class _BackupSection extends StatelessWidget {
                   ],
                 ),
                 if (state.filePath != null && state.isSuccess) ...[
-                  const SizedBox(height: 8),
+                  SizedBox(height: AppSpacing.sm),
                   TextButton.icon(
                     onPressed: () {
                       context.read<BackupBloc>().add(
@@ -448,7 +450,7 @@ class _FactoryResetSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(AppSpacing.md),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -456,12 +458,12 @@ class _FactoryResetSection extends StatelessWidget {
               'Factory Reset',
               style: Theme.of(context).textTheme.titleLarge,
             ),
-            const SizedBox(height: 8),
-            const Text(
+            SizedBox(height: AppSpacing.sm),
+            Text(
               'Delete all budgets and reset the app to its initial state. This cannot be undone.',
-              style: TextStyle(color: Colors.grey),
+              style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: AppSpacing.md),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton.icon(
@@ -469,8 +471,8 @@ class _FactoryResetSection extends StatelessWidget {
                 icon: const Icon(Icons.delete_forever),
                 label: const Text('Factory Reset'),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red,
-                  foregroundColor: Colors.white,
+                  backgroundColor: Theme.of(context).colorScheme.error,
+                  foregroundColor: Theme.of(context).colorScheme.onError,
                 ),
               ),
             ),
@@ -483,31 +485,19 @@ class _FactoryResetSection extends StatelessWidget {
   void _showFactoryResetDialog(BuildContext context) {
     showDialog(
       context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: const Text('Factory Reset'),
-        content: const Text(
-          'Are you sure you want to delete all budgets and reset the app? This action cannot be undone.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(dialogContext).pop(),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.of(dialogContext).pop();
-              context.read<BudgetBloc>().add(const FactoryResetEvent());
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Factory reset complete'),
-                  backgroundColor: Colors.green,
-                ),
-              );
-            },
-            style: TextButton.styleFrom(foregroundColor: Colors.red),
-            child: const Text('Reset'),
-          ),
-        ],
+      builder: (dialogContext) => ConfirmActionDialog(
+        title: 'Factory Reset',
+        message: 'Are you sure you want to delete all budgets and reset the app? This action cannot be undone.',
+        confirmLabel: 'Reset',
+        isDestructive: true,
+        onConfirm: () {
+          context.read<BudgetBloc>().add(const FactoryResetEvent());
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Factory reset complete'),
+            ),
+          );
+        },
       ),
     );
   }
