@@ -78,29 +78,33 @@ class CategoryLimitBloc extends Bloc<CategoryLimitEvent, CategoryLimitState> {
     AddCategoryLimit event,
     Emitter<CategoryLimitState> emit,
   ) async {
-    final now = DateTime.now();
+    try {
+      final now = DateTime.now();
 
-    final limit = CategoryLimit(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
-      categoryId: event.categoryId,
-      amount: event.amount,
-      period: event.period,
-      createdAt: now,
-      updatedAt: now,
-    );
-
-    await _repository.saveLimit(limit, event.budgetId);
-
-    if (_currentBudgetId != null &&
-        _currentYear != null &&
-        _currentMonth != null) {
-      add(
-        LoadCategoryLimits(
-          budgetId: _currentBudgetId!,
-          year: _currentYear!,
-          month: _currentMonth!,
-        ),
+      final limit = CategoryLimit(
+        id: DateTime.now().millisecondsSinceEpoch.toString(),
+        categoryId: event.categoryId,
+        amount: event.amount,
+        period: event.period,
+        createdAt: now,
+        updatedAt: now,
       );
+
+      await _repository.saveLimit(limit, event.budgetId);
+
+      if (_currentBudgetId != null &&
+          _currentYear != null &&
+          _currentMonth != null) {
+        add(
+          LoadCategoryLimits(
+            budgetId: _currentBudgetId!,
+            year: _currentYear!,
+            month: _currentMonth!,
+          ),
+        );
+      }
+    } catch (e) {
+      emit(CategoryLimitError(e.toString()));
     }
   }
 
@@ -108,19 +112,23 @@ class CategoryLimitBloc extends Bloc<CategoryLimitEvent, CategoryLimitState> {
     UpdateCategoryLimit event,
     Emitter<CategoryLimitState> emit,
   ) async {
-    final updatedLimit = event.limit.copyWith(updatedAt: DateTime.now());
-    await _repository.saveLimit(updatedLimit, event.limit.categoryId);
+    try {
+      final updatedLimit = event.limit.copyWith(updatedAt: DateTime.now());
+      await _repository.saveLimit(updatedLimit, _currentBudgetId ?? '');
 
-    if (_currentBudgetId != null &&
-        _currentYear != null &&
-        _currentMonth != null) {
-      add(
-        LoadCategoryLimits(
-          budgetId: _currentBudgetId!,
-          year: _currentYear!,
-          month: _currentMonth!,
-        ),
-      );
+      if (_currentBudgetId != null &&
+          _currentYear != null &&
+          _currentMonth != null) {
+        add(
+          LoadCategoryLimits(
+            budgetId: _currentBudgetId!,
+            year: _currentYear!,
+            month: _currentMonth!,
+          ),
+        );
+      }
+    } catch (e) {
+      emit(CategoryLimitError(e.toString()));
     }
   }
 
@@ -128,18 +136,22 @@ class CategoryLimitBloc extends Bloc<CategoryLimitEvent, CategoryLimitState> {
     DeleteCategoryLimit event,
     Emitter<CategoryLimitState> emit,
   ) async {
-    await _repository.deleteLimit(event.limitId);
+    try {
+      await _repository.deleteLimit(event.limitId);
 
-    if (_currentBudgetId != null &&
-        _currentYear != null &&
-        _currentMonth != null) {
-      add(
-        LoadCategoryLimits(
-          budgetId: _currentBudgetId!,
-          year: _currentYear!,
-          month: _currentMonth!,
-        ),
-      );
+      if (_currentBudgetId != null &&
+          _currentYear != null &&
+          _currentMonth != null) {
+        add(
+          LoadCategoryLimits(
+            budgetId: _currentBudgetId!,
+            year: _currentYear!,
+            month: _currentMonth!,
+          ),
+        );
+      }
+    } catch (e) {
+      emit(CategoryLimitError(e.toString()));
     }
   }
 }
