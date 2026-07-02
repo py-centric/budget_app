@@ -7,6 +7,7 @@ class SlidableTransactionItem extends StatelessWidget {
   final VoidCallback onDelete;
   final VoidCallback? onConfirm;
   final VoidCallback? onTap;
+  final bool isIncome;
 
   const SlidableTransactionItem({
     super.key,
@@ -15,10 +16,12 @@ class SlidableTransactionItem extends StatelessWidget {
     required this.onDelete,
     this.onConfirm,
     this.onTap,
+    this.isIncome = true,
   });
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Slidable(
       key: key,
       startActionPane: onConfirm != null
@@ -27,10 +30,10 @@ class SlidableTransactionItem extends StatelessWidget {
               children: [
                 SlidableAction(
                   onPressed: (_) => onConfirm!(),
-                  backgroundColor: Colors.green,
-                  foregroundColor: Colors.white,
-                  icon: Icons.check_circle_outline,
-                  label: 'Confirm',
+                  backgroundColor: theme.colorScheme.primary,
+                  foregroundColor: theme.colorScheme.onPrimary,
+                  icon: isIncome ? Icons.check_circle : Icons.payments,
+                  label: isIncome ? 'Received' : 'Paid',
                 ),
               ],
             )
@@ -40,15 +43,15 @@ class SlidableTransactionItem extends StatelessWidget {
         children: [
           SlidableAction(
             onPressed: (_) => onEdit(),
-            backgroundColor: Colors.blue,
-            foregroundColor: Colors.white,
+            backgroundColor: theme.colorScheme.secondary,
+            foregroundColor: theme.colorScheme.onSecondary,
             icon: Icons.edit,
             label: 'Edit',
           ),
           SlidableAction(
             onPressed: (_) => onDelete(),
-            backgroundColor: Colors.red,
-            foregroundColor: Colors.white,
+            backgroundColor: theme.colorScheme.error,
+            foregroundColor: theme.colorScheme.onError,
             icon: Icons.delete,
             label: 'Delete',
           ),
