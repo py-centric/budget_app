@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:budget_app/core/theme/app_spacing.dart';
+import 'package:budget_app/core/utils/currency_formatter.dart';
+import 'package:budget_app/features/settings/presentation/bloc/settings_bloc.dart';
+import 'package:budget_app/shared/widgets/confirm_action_dialog.dart';
 import '../bloc/savings_bloc.dart';
 import '../bloc/savings_event.dart';
 import '../bloc/savings_state.dart';
@@ -36,7 +40,7 @@ class SavingsGoalsPage extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.error_outline, size: 64, color: Colors.grey[400]),
+                  Icon(Icons.error_outline, size: 64, color: Theme.of(context).colorScheme.outline),
                   const SizedBox(height: 16),
                   Text(
                     'Error loading savings goals',
@@ -82,26 +86,26 @@ class SavingsGoalsPage extends StatelessWidget {
   Widget _buildEmptyState(BuildContext context) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(32),
+        padding: const EdgeInsets.all(AppSpacing.xl),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.savings_outlined, size: 80, color: Colors.grey[400]),
-            const SizedBox(height: 24),
+            Icon(Icons.savings_outlined, size: 80, color: Theme.of(context).colorScheme.outline),
+            SizedBox(height: AppSpacing.lg),
             Text(
               'No Savings Goals Yet',
               style: Theme.of(context).textTheme.headlineSmall,
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: AppSpacing.sm + AppSpacing.xs),
             Text(
               'Start saving for your dreams! Create a goal to track your progress.',
               style: Theme.of(
                 context,
-              ).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
+              ).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 32),
+            SizedBox(height: AppSpacing.xl),
             FilledButton.icon(
               onPressed: () => _showAddGoalDialog(context),
               icon: const Icon(Icons.add),
@@ -121,7 +125,7 @@ class SavingsGoalsPage extends StatelessWidget {
           delegate: SliverChildBuilderDelegate((context, index) {
             final goalWithContributions = state.goals[index];
             return Padding(
-              padding: const EdgeInsets.only(bottom: 8),
+              padding: const EdgeInsets.only(bottom: AppSpacing.sm),
               child: SavingsGoalCard(
                 goalWithContributions: goalWithContributions,
                 onEdit: () =>
@@ -147,12 +151,19 @@ class SavingsGoalsPage extends StatelessWidget {
     final theme = Theme.of(context);
     final totalSaved = state.totalSaved;
     final totalTarget = state.totalTarget;
+    final currencyCode = context
+        .read<SettingsBloc>()
+        .state
+        .settings
+        .currencyCode;
     final overallProgress = totalTarget > 0
         ? (totalSaved / totalTarget * 100)
         : 0.0;
 
+    final onPrimary = theme.colorScheme.onPrimary;
+
     return Container(
-      margin: const EdgeInsets.all(16),
+      margin: const EdgeInsets.all(AppSpacing.md),
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -163,7 +174,7 @@ class SavingsGoalsPage extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppRadius.lg),
         boxShadow: [
           BoxShadow(
             color: theme.colorScheme.primary.withValues(alpha: 0.3),
@@ -181,52 +192,52 @@ class SavingsGoalsPage extends StatelessWidget {
               Text(
                 'Total Saved',
                 style: theme.textTheme.titleMedium?.copyWith(
-                  color: Colors.white.withValues(alpha: 0.9),
+                  color: onPrimary.withValues(alpha: 0.9),
                 ),
               ),
               Container(
                 padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 4,
+                  horizontal: AppSpacing.sm + AppSpacing.xs,
+                  vertical: AppSpacing.xs,
                 ),
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.2),
+                  color: onPrimary.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(
                   '${overallProgress.toStringAsFixed(0)}%',
                   style: theme.textTheme.bodyMedium?.copyWith(
-                    color: Colors.white,
+                    color: onPrimary,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: AppSpacing.sm),
           Text(
-            '\$${totalSaved.toStringAsFixed(2)}',
+            CurrencyFormatter.format(totalSaved, currencyCode: currencyCode),
             style: theme.textTheme.headlineLarge?.copyWith(
-              color: Colors.white,
+              color: onPrimary,
               fontWeight: FontWeight.bold,
             ),
           ),
-          const SizedBox(height: 4),
+          SizedBox(height: AppSpacing.xs),
           Text(
-            'of \$${totalTarget.toStringAsFixed(2)} total goal',
+            'of ${CurrencyFormatter.format(totalTarget, currencyCode: currencyCode)} total goal',
             style: theme.textTheme.bodyMedium?.copyWith(
-              color: Colors.white.withValues(alpha: 0.8),
+              color: onPrimary.withValues(alpha: 0.8),
             ),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: AppSpacing.md),
           ClipRRect(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(AppRadius.sm),
             child: LinearProgressIndicator(
               value: totalTarget > 0
                   ? (totalSaved / totalTarget).clamp(0, 1)
                   : 0,
-              backgroundColor: Colors.white.withValues(alpha: 0.2),
-              valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
+              backgroundColor: onPrimary.withValues(alpha: 0.2),
+              valueColor: AlwaysStoppedAnimation<Color>(onPrimary),
               minHeight: 8,
             ),
           ),
@@ -288,25 +299,14 @@ class SavingsGoalsPage extends StatelessWidget {
   void _showDeleteConfirmation(BuildContext context, goal) {
     showDialog(
       context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: const Text('Delete Goal?'),
-        content: Text(
-          'Are you sure you want to delete "${goal.name}"? This action cannot be undone.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(dialogContext).pop(),
-            child: const Text('Cancel'),
-          ),
-          FilledButton(
-            onPressed: () {
-              context.read<SavingsBloc>().add(DeleteSavingsGoal(goal.id));
-              Navigator.of(dialogContext).pop();
-            },
-            style: FilledButton.styleFrom(backgroundColor: Colors.red),
-            child: const Text('Delete'),
-          ),
-        ],
+      builder: (dialogContext) => ConfirmActionDialog(
+        title: 'Delete Goal?',
+        message: 'Are you sure you want to delete "${goal.name}"? This action cannot be undone.',
+        confirmLabel: 'Delete',
+        isDestructive: true,
+        onConfirm: () {
+          context.read<SavingsBloc>().add(DeleteSavingsGoal(goal.id));
+        },
       ),
     );
   }

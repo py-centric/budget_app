@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:budget_app/core/theme/app_spacing.dart';
+import 'package:budget_app/core/utils/currency_formatter.dart';
+import 'package:budget_app/features/settings/presentation/bloc/settings_bloc.dart';
 import '../bloc/calendar_bloc.dart';
 import '../bloc/calendar_event.dart';
 import '../bloc/calendar_state.dart';
@@ -44,7 +47,7 @@ class _CalendarViewPageState extends State<CalendarViewPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.error_outline, size: 64, color: Colors.grey[400]),
+                  Icon(Icons.error_outline, size: 64, color: Theme.of(context).colorScheme.outline),
                   const SizedBox(height: 16),
                   Text(
                     'Error loading calendar',
@@ -112,19 +115,24 @@ class _CalendarViewPageState extends State<CalendarViewPage> {
   Widget _buildMonthSummary(BuildContext context, CalendarLoaded state) {
     final theme = Theme.of(context);
     final isPositive = state.monthEndBalance >= state.monthStartBalance;
+    final currencyCode = context
+        .read<SettingsBloc>()
+        .state
+        .settings
+        .currencyCode;
 
     return Container(
-      margin: const EdgeInsets.all(16),
-      padding: const EdgeInsets.all(16),
+      margin: const EdgeInsets.all(AppSpacing.md),
+      padding: const EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: isPositive
-              ? [Colors.green, Colors.green.shade700]
-              : [Colors.red, Colors.red.shade700],
+              ? [theme.colorScheme.primary, theme.colorScheme.primary.withValues(alpha: 0.7)]
+              : [theme.colorScheme.error, theme.colorScheme.error.withValues(alpha: 0.7)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppRadius.md),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -138,7 +146,7 @@ class _CalendarViewPageState extends State<CalendarViewPage> {
                 ),
               ),
               Text(
-                '\$${state.monthStartBalance.toStringAsFixed(2)}',
+                CurrencyFormatter.format(state.monthStartBalance, currencyCode: currencyCode),
                 style: theme.textTheme.titleMedium?.copyWith(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -156,7 +164,7 @@ class _CalendarViewPageState extends State<CalendarViewPage> {
                 ),
               ),
               Text(
-                '\$${state.monthEndBalance.toStringAsFixed(2)}',
+                CurrencyFormatter.format(state.monthEndBalance, currencyCode: currencyCode),
                 style: theme.textTheme.titleMedium?.copyWith(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -174,7 +182,7 @@ class _CalendarViewPageState extends State<CalendarViewPage> {
                 ),
               ),
               Text(
-                '${isPositive ? '+' : ''}\$${(state.monthEndBalance - state.monthStartBalance).toStringAsFixed(2)}',
+                '${isPositive ? '+' : ''}${CurrencyFormatter.format(state.monthEndBalance - state.monthStartBalance, currencyCode: currencyCode)}',
                 style: theme.textTheme.titleMedium?.copyWith(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -234,12 +242,13 @@ class _CalendarViewPageState extends State<CalendarViewPage> {
         titleCentered: true,
         formatButtonDecoration: BoxDecoration(
           border: Border.all(color: Theme.of(context).colorScheme.primary),
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(AppRadius.sm),
         ),
       ),
       calendarBuilders: CalendarBuilders(
         markerBuilder: (context, day, events) {
           if (events.isEmpty) return null;
+          final markerTheme = Theme.of(context);
 
           final normalizedDay = DateTime(day.year, day.month, day.day);
           final runningBalance = state.runningBalances[normalizedDay];
@@ -254,7 +263,7 @@ class _CalendarViewPageState extends State<CalendarViewPage> {
                     width: 6,
                     height: 6,
                     decoration: BoxDecoration(
-                      color: runningBalance >= 0 ? Colors.green : Colors.red,
+                      color: runningBalance >= 0 ? markerTheme.colorScheme.primary : markerTheme.colorScheme.error,
                       shape: BoxShape.circle,
                     ),
                   ),
@@ -282,6 +291,11 @@ class _CalendarViewPageState extends State<CalendarViewPage> {
 
   Widget _buildDayDetail(BuildContext context, CalendarLoaded state) {
     final theme = Theme.of(context);
+    final currencyCode = context
+        .read<SettingsBloc>()
+        .state
+        .settings
+        .currencyCode;
     final normalizedSelectedDay = DateTime(
       _selectedDay!.year,
       _selectedDay!.month,
@@ -299,7 +313,7 @@ class _CalendarViewPageState extends State<CalendarViewPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(AppSpacing.md),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -309,18 +323,18 @@ class _CalendarViewPageState extends State<CalendarViewPage> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: AppSpacing.sm),
                 if (runningBalance != null)
                   Row(
                     children: [
-                      const Icon(
+                      Icon(
                         Icons.play_arrow,
                         size: 16,
-                        color: Colors.grey,
+                        color: theme.colorScheme.onSurfaceVariant,
                       ),
-                      const SizedBox(width: 4),
+                      SizedBox(width: AppSpacing.xs),
                       Text(
-                        'Running: \$${runningBalance.toStringAsFixed(2)}',
+                        'Running: ${CurrencyFormatter.format(runningBalance, currencyCode: currencyCode)}',
                         style: theme.textTheme.bodyMedium,
                       ),
                     ],
@@ -333,13 +347,13 @@ class _CalendarViewPageState extends State<CalendarViewPage> {
                             ? Icons.arrow_upward
                             : Icons.arrow_downward,
                         size: 16,
-                        color: endBalance >= 0 ? Colors.green : Colors.red,
+                        color: endBalance >= 0 ? theme.colorScheme.primary : theme.colorScheme.error,
                       ),
-                      const SizedBox(width: 4),
+                      SizedBox(width: AppSpacing.xs),
                       Text(
-                        'End: \$${endBalance.toStringAsFixed(2)}',
+                        'End: ${CurrencyFormatter.format(endBalance, currencyCode: currencyCode)}',
                         style: theme.textTheme.bodyMedium?.copyWith(
-                          color: endBalance >= 0 ? Colors.green : Colors.red,
+                          color: endBalance >= 0 ? theme.colorScheme.primary : theme.colorScheme.error,
                         ),
                       ),
                     ],
@@ -357,13 +371,13 @@ class _CalendarViewPageState extends State<CalendarViewPage> {
                         Icon(
                           Icons.event_available,
                           size: 48,
-                          color: Colors.grey[400],
+                          color: theme.colorScheme.outline,
                         ),
-                        const SizedBox(height: 8),
+                        SizedBox(height: AppSpacing.sm),
                         Text(
                           'No transactions',
                           style: theme.textTheme.bodyMedium?.copyWith(
-                            color: Colors.grey[600],
+                            color: theme.colorScheme.onSurfaceVariant,
                           ),
                         ),
                       ],
@@ -379,19 +393,19 @@ class _CalendarViewPageState extends State<CalendarViewPage> {
                               ? Icons.arrow_downward
                               : Icons.arrow_upward,
                           color: transaction.isExpense
-                              ? Colors.red
-                              : Colors.green,
+                              ? theme.colorScheme.error
+                              : theme.colorScheme.primary,
                         ),
                         title: Text(transaction.description),
                         subtitle: Text(
                           transaction.categoryName ?? 'Uncategorized',
                         ),
                         trailing: Text(
-                          '${transaction.isExpense ? '-' : '+'}\$${transaction.amount.toStringAsFixed(2)}',
+                          '${transaction.isExpense ? '-' : '+'}${CurrencyFormatter.format(transaction.amount, currencyCode: currencyCode)}',
                           style: TextStyle(
                             color: transaction.isExpense
-                                ? Colors.red
-                                : Colors.green,
+                                ? theme.colorScheme.error
+                                : theme.colorScheme.primary,
                             fontWeight: FontWeight.bold,
                           ),
                         ),

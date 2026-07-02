@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:budget_app/core/theme/app_spacing.dart';
+import 'package:budget_app/core/utils/currency_formatter.dart';
 import '../../domain/usecases/calculate_required_contribution.dart';
 
 class SavingsCalculatorDialog extends StatefulWidget {
@@ -70,22 +72,22 @@ class _SavingsCalculatorDialogState extends State<SavingsCalculatorDialog> {
             Text(
               'Calculate how much you need to save each month to reach your goal.',
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Colors.grey[600],
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: AppSpacing.md),
             TextField(
               controller: _targetController,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 labelText: 'Target Amount',
-                prefixText: '\$ ',
-                border: OutlineInputBorder(),
+                prefixText: '${CurrencyFormatter.getSymbol(currencyCode: 'USD')} ',
+                border: const OutlineInputBorder(),
               ),
               keyboardType: const TextInputType.numberWithOptions(
                 decimal: true,
               ),
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: AppSpacing.sm + AppSpacing.xs),
             TextField(
               controller: _rateController,
               decoration: const InputDecoration(
@@ -95,7 +97,7 @@ class _SavingsCalculatorDialogState extends State<SavingsCalculatorDialog> {
               ),
               keyboardType: TextInputType.number,
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: AppSpacing.sm + AppSpacing.xs),
             TextField(
               controller: _yearsController,
               decoration: const InputDecoration(
@@ -106,14 +108,14 @@ class _SavingsCalculatorDialogState extends State<SavingsCalculatorDialog> {
               keyboardType: TextInputType.number,
             ),
             if (_calculatedMonthly != null) ...[
-              const SizedBox(height: 16),
+              SizedBox(height: AppSpacing.md),
               Container(
-                padding: const EdgeInsets.all(12),
+                padding: const EdgeInsets.all(AppSpacing.sm + AppSpacing.xs),
                 decoration: BoxDecoration(
-                  color: Colors.green.withValues(alpha: 0.08),
-                  borderRadius: BorderRadius.circular(8),
+                  color: Theme.of(context).colorScheme.tertiaryContainer,
+                  borderRadius: BorderRadius.circular(AppSpacing.sm),
                   border: Border.all(
-                    color: Colors.green.withValues(alpha: 0.3),
+                    color: Theme.of(context).colorScheme.tertiary.withValues(alpha: 0.3),
                   ),
                 ),
                 child: Column(
@@ -124,31 +126,31 @@ class _SavingsCalculatorDialogState extends State<SavingsCalculatorDialog> {
                         Icon(
                           Icons.calculate,
                           size: 16,
-                          color: Colors.green[700],
+                          color: Theme.of(context).colorScheme.tertiary,
                         ),
-                        const SizedBox(width: 6),
+                        SizedBox(width: AppSpacing.sm - 2),
                         Text(
                           'Required Monthly Contribution',
                           style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Colors.green[700],
+                            color: Theme.of(context).colorScheme.tertiary,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 4),
+                    SizedBox(height: AppSpacing.xs),
                     Text(
-                      '\$${_calculatedMonthly!.toStringAsFixed(2)}',
+                      CurrencyFormatter.format(_calculatedMonthly!, currencyCode: 'USD'),
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.bold,
-                        color: Colors.green[800],
+                        color: Theme.of(context).colorScheme.tertiary,
                       ),
                     ),
-                    const SizedBox(height: 2),
+                    SizedBox(height: 2),
                     Text(
                       _buildSummaryText(),
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Colors.grey[600],
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
                       ),
                     ),
                   ],
@@ -171,6 +173,6 @@ class _SavingsCalculatorDialogState extends State<SavingsCalculatorDialog> {
     final target = double.tryParse(_targetController.text) ?? 0;
     final rate = double.tryParse(_rateController.text) ?? 0;
     final years = int.tryParse(_yearsController.text) ?? 0;
-    return 'To reach \$${target.toStringAsFixed(0)} in $years years at ${rate.toStringAsFixed(1)}% APY, you need to contribute \$${_calculatedMonthly?.toStringAsFixed(2) ?? '0.00'}/month';
+    return 'To reach ${CurrencyFormatter.format(target, currencyCode: 'USD')} in $years years at ${rate.toStringAsFixed(1)}% APY, you need to contribute ${CurrencyFormatter.format(_calculatedMonthly ?? 0, currencyCode: 'USD')}/month';
   }
 }

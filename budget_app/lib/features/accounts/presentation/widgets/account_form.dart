@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uuid/uuid.dart';
+import 'package:budget_app/core/utils/currency_formatter.dart';
 import 'package:budget_app/features/accounts/domain/entities/account.dart';
 import 'package:budget_app/features/accounts/presentation/bloc/account_bloc.dart';
 import 'package:budget_app/features/accounts/presentation/bloc/account_event.dart';
@@ -102,10 +103,10 @@ class _AccountFormState extends State<AccountForm> {
             const SizedBox(height: 16),
             TextFormField(
               controller: _balanceController,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 labelText: 'Initial Balance',
-                border: OutlineInputBorder(),
-                prefixText: '\$ ',
+                border: const OutlineInputBorder(),
+                prefixText: '${CurrencyFormatter.getSymbol(currencyCode: _currency)} ',
               ),
               keyboardType: const TextInputType.numberWithOptions(
                 decimal: true,
