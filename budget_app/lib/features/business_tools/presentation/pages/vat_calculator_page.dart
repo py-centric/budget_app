@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:budget_app/core/theme/app_spacing.dart';
+import 'package:budget_app/core/utils/currency_formatter.dart';
+import 'package:budget_app/features/settings/presentation/bloc/settings_bloc.dart';
 import '../../domain/usecases/calculate_vat.dart';
 
 class VatCalculatorPage extends StatefulWidget {
@@ -52,12 +55,16 @@ class _VatCalculatorPageState extends State<VatCalculatorPage> {
 
   @override
   Widget build(BuildContext context) {
-    final currencyFormat = NumberFormat.currency(symbol: '\$');
+    final currencyCode = context
+        .read<SettingsBloc>()
+        .state
+        .settings
+        .currencyCode;
 
     return Scaffold(
       appBar: AppBar(title: const Text('VAT Calculator')),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(AppSpacing.md),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -82,19 +89,19 @@ class _VatCalculatorPageState extends State<VatCalculatorPage> {
                 });
               },
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: AppSpacing.lg),
             TextField(
               controller: _amountController,
               decoration: InputDecoration(
                 labelText: _isNetToGross ? 'Net Amount' : 'Gross Amount',
-                prefixText: '\$ ',
+                prefixText: '${CurrencyFormatter.getSymbol(currencyCode: currencyCode)} ',
                 border: const OutlineInputBorder(),
               ),
               keyboardType: const TextInputType.numberWithOptions(
                 decimal: true,
               ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: AppSpacing.md),
             TextField(
               controller: _rateController,
               decoration: const InputDecoration(
@@ -106,24 +113,24 @@ class _VatCalculatorPageState extends State<VatCalculatorPage> {
                 decimal: true,
               ),
             ),
-            const SizedBox(height: 32),
+            SizedBox(height: AppSpacing.xl),
             if (_result != null) ...[
               _ResultCard(
                 title: 'Net Amount',
-                value: currencyFormat.format(_result!.netAmount),
-                color: Colors.blue,
+                value: CurrencyFormatter.format(_result!.netAmount, currencyCode: currencyCode),
+                color: Theme.of(context).colorScheme.secondary,
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: AppSpacing.sm + AppSpacing.xs),
               _ResultCard(
                 title: 'VAT Amount (${_result!.vatRate}%)',
-                value: currencyFormat.format(_result!.vatAmount),
-                color: Colors.orange,
+                value: CurrencyFormatter.format(_result!.vatAmount, currencyCode: currencyCode),
+                color: Theme.of(context).colorScheme.tertiary,
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: AppSpacing.sm + AppSpacing.xs),
               _ResultCard(
                 title: 'Gross Amount',
-                value: currencyFormat.format(_result!.grossAmount),
-                color: Colors.green,
+                value: CurrencyFormatter.format(_result!.grossAmount, currencyCode: currencyCode),
+                color: Theme.of(context).colorScheme.primary,
                 isTotal: true,
               ),
             ],
@@ -153,7 +160,7 @@ class _ResultCard extends StatelessWidget {
       elevation: isTotal ? 4 : 1,
       color: isTotal ? color.withValues(alpha: 0.1) : null,
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(AppSpacing.md),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [

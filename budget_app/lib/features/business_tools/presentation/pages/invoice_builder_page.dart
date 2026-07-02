@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uuid/uuid.dart';
 import 'package:intl/intl.dart';
+import 'package:budget_app/core/utils/currency_formatter.dart';
+import 'package:budget_app/features/settings/presentation/bloc/settings_bloc.dart';
 import '../../domain/entities/invoice.dart';
 import '../../domain/entities/invoice_item.dart';
 import '../../domain/entities/company_profile.dart';
@@ -282,12 +284,12 @@ class _InvoiceBuilderPageState extends State<InvoiceBuilderPage> {
             return ListTile(
               title: Text(item.description),
               subtitle: Text(
-                '${item.quantity} x \$${item.rate.toStringAsFixed(2)} (${item.taxRate}% VAT)',
+                '${item.quantity} x ${CurrencyFormatter.format(item.rate)} (${item.taxRate}% VAT)',
               ),
               trailing: IconButton(
-                icon: const Icon(
+                icon: Icon(
                   Icons.remove_circle_outline,
-                  color: Colors.red,
+                  color: Theme.of(context).colorScheme.error,
                 ),
                 onPressed: () => setState(() => _items.removeAt(index)),
               ),
@@ -299,15 +301,15 @@ class _InvoiceBuilderPageState extends State<InvoiceBuilderPage> {
   }
 
   Widget _buildSummary() {
-    final currencyFormat = NumberFormat.currency(symbol: '\$');
+    final currencyCode = context.read<SettingsBloc>().state.settings.currencyCode;
     return Column(
       children: [
-        _summaryRow('Sub-total', currencyFormat.format(_subTotal)),
-        _summaryRow('Tax Total', currencyFormat.format(_taxTotal)),
+        _summaryRow('Sub-total', CurrencyFormatter.format(_subTotal, currencyCode: currencyCode)),
+        _summaryRow('Tax Total', CurrencyFormatter.format(_taxTotal, currencyCode: currencyCode)),
         const Divider(),
         _summaryRow(
           'Grand Total',
-          currencyFormat.format(_grandTotal),
+          CurrencyFormatter.format(_grandTotal, currencyCode: currencyCode),
           isBold: true,
         ),
       ],

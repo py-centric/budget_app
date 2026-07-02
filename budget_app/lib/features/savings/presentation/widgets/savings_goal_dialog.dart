@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:budget_app/core/theme/app_spacing.dart';
+import 'package:budget_app/core/utils/currency_formatter.dart';
+import 'package:budget_app/features/settings/presentation/bloc/settings_bloc.dart';
 import '../../domain/entities/savings_goal.dart';
 import '../../domain/usecases/calculate_required_contribution.dart';
 
@@ -106,6 +110,12 @@ class _SavingsGoalDialogState extends State<SavingsGoalDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final currencyCode = context
+        .read<SettingsBloc>()
+        .state
+        .settings
+        .currencyCode;
+    final calcTheme = Theme.of(context);
     return AlertDialog(
       title: Text(
         widget.existingGoal != null
@@ -126,19 +136,19 @@ class _SavingsGoalDialogState extends State<SavingsGoalDialog> {
               ),
               textCapitalization: TextCapitalization.words,
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: AppSpacing.md),
             TextField(
               controller: _targetAmountController,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 labelText: 'Target Amount',
-                prefixText: '\$ ',
-                border: OutlineInputBorder(),
+                prefixText: '${CurrencyFormatter.getSymbol(currencyCode: currencyCode)} ',
+                border: const OutlineInputBorder(),
               ),
               keyboardType: const TextInputType.numberWithOptions(
                 decimal: true,
               ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: AppSpacing.md),
             InkWell(
               onTap: _selectDeadline,
               child: InputDecorator(
@@ -152,12 +162,12 @@ class _SavingsGoalDialogState extends State<SavingsGoalDialog> {
                       ? '${_deadline!.month}/${_deadline!.day}/${_deadline!.year}'
                       : 'No deadline',
                   style: TextStyle(
-                    color: _deadline != null ? null : Colors.grey,
+                    color: _deadline != null ? null : Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
                 ),
               ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: AppSpacing.md),
             const Divider(),
             Text(
               'Savings Calculator (Optional)',
@@ -165,14 +175,14 @@ class _SavingsGoalDialogState extends State<SavingsGoalDialog> {
                 fontWeight: FontWeight.w600,
               ),
             ),
-            const SizedBox(height: 4),
+            SizedBox(height: AppSpacing.xs),
             Text(
               'Set a return rate and duration to see your required monthly contribution.',
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Colors.grey[600],
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: AppSpacing.sm + AppSpacing.xs),
             Row(
               children: [
                 Expanded(
@@ -186,7 +196,7 @@ class _SavingsGoalDialogState extends State<SavingsGoalDialog> {
                     keyboardType: TextInputType.number,
                   ),
                 ),
-                const SizedBox(width: 12),
+                SizedBox(width: AppSpacing.sm + AppSpacing.xs),
                 Expanded(
                   child: TextField(
                     controller: _yearsController,
@@ -201,14 +211,14 @@ class _SavingsGoalDialogState extends State<SavingsGoalDialog> {
               ],
             ),
             if (_calculatedMonthly != null) ...[
-              const SizedBox(height: 12),
+              SizedBox(height: AppSpacing.sm + AppSpacing.xs),
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: Colors.green.withValues(alpha: 0.08),
+                  color: calcTheme.colorScheme.tertiaryContainer,
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
-                    color: Colors.green.withValues(alpha: 0.3),
+                    color: calcTheme.colorScheme.tertiary.withValues(alpha: 0.3),
                   ),
                 ),
                 child: Column(
@@ -219,41 +229,41 @@ class _SavingsGoalDialogState extends State<SavingsGoalDialog> {
                         Icon(
                           Icons.calculate,
                           size: 16,
-                          color: Colors.green[700],
+                          color: calcTheme.colorScheme.tertiary,
                         ),
-                        const SizedBox(width: 6),
+                        SizedBox(width: AppSpacing.sm - 2),
                         Text(
                           'Required Monthly Contribution',
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Colors.green[700],
+                          style: calcTheme.textTheme.bodySmall?.copyWith(
+                            color: calcTheme.colorScheme.tertiary,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 4),
+                    SizedBox(height: AppSpacing.xs),
                     Text(
-                      '\$${_calculatedMonthly!.toStringAsFixed(2)}',
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      CurrencyFormatter.format(_calculatedMonthly!, currencyCode: currencyCode),
+                      style: calcTheme.textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.bold,
-                        color: Colors.green[800],
+                        color: calcTheme.colorScheme.tertiary,
                       ),
                     ),
-                    const SizedBox(height: 2),
+                    SizedBox(height: 2),
                     Text(
                       _buildSummaryText(),
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Colors.grey[600],
+                      style: calcTheme.textTheme.bodySmall?.copyWith(
+                        color: calcTheme.colorScheme.onSurfaceVariant,
                       ),
                     ),
                   ],
                 ),
               ),
             ],
-            const SizedBox(height: 16),
+            SizedBox(height: AppSpacing.md),
             const Divider(),
             Text('Icon', style: Theme.of(context).textTheme.bodyMedium),
-            const SizedBox(height: 8),
+            SizedBox(height: AppSpacing.sm),
             Wrap(
               spacing: 8,
               children: _availableIcons.map((iconName) {
@@ -267,7 +277,7 @@ class _SavingsGoalDialogState extends State<SavingsGoalDialog> {
                     decoration: BoxDecoration(
                       color: isSelected
                           ? _getColor(_selectedColor).withValues(alpha: 0.2)
-                          : Colors.grey[200],
+                          : Theme.of(context).colorScheme.surfaceContainerHighest,
                       borderRadius: BorderRadius.circular(8),
                       border: isSelected
                           ? Border.all(
@@ -280,15 +290,15 @@ class _SavingsGoalDialogState extends State<SavingsGoalDialog> {
                       _getIcon(iconName),
                       color: isSelected
                           ? _getColor(_selectedColor)
-                          : Colors.grey[600],
+                          : Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
                   ),
                 );
               }).toList(),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: AppSpacing.md),
             Text('Color', style: Theme.of(context).textTheme.bodyMedium),
-            const SizedBox(height: 8),
+            SizedBox(height: AppSpacing.sm),
             Wrap(
               spacing: 8,
               children: _availableColors.map((colorName) {
@@ -303,7 +313,7 @@ class _SavingsGoalDialogState extends State<SavingsGoalDialog> {
                       color: _getColor(colorName),
                       shape: BoxShape.circle,
                       border: isSelected
-                          ? Border.all(color: Colors.white, width: 3)
+                          ? Border.all(color: Theme.of(context).colorScheme.surface, width: 3)
                           : null,
                       boxShadow: isSelected
                           ? [
@@ -344,7 +354,8 @@ class _SavingsGoalDialogState extends State<SavingsGoalDialog> {
     final target = double.tryParse(_targetAmountController.text) ?? 0;
     final rate = double.tryParse(_rateController.text) ?? 0;
     final years = int.tryParse(_yearsController.text) ?? 0;
-    return 'To reach \$${target.toStringAsFixed(0)} in $years years at ${rate.toStringAsFixed(1)}% APY';
+    final currencyCode = context.read<SettingsBloc>().state.settings.currencyCode;
+    return 'To reach ${CurrencyFormatter.format(target, currencyCode: currencyCode)} in $years years at ${rate.toStringAsFixed(1)}% APY';
   }
 
   bool get _isValid {

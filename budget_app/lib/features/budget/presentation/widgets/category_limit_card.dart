@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:budget_app/core/theme/app_spacing.dart';
+import 'package:budget_app/core/utils/currency_formatter.dart';
+import 'package:budget_app/features/settings/presentation/bloc/settings_bloc.dart';
 import '../../domain/entities/category_limit.dart';
 import '../bloc/category_limit_state.dart';
 import 'category_limit_progress_bar.dart';
@@ -22,14 +26,19 @@ class CategoryLimitCard extends StatelessWidget {
     final percentUsed = limitWithSpending.progressPercentage;
     final remaining = limitWithSpending.remainingAmount;
     final isOverBudget = limitWithSpending.isOverBudget;
+    final currencyCode = context
+        .watch<SettingsBloc>()
+        .state
+        .settings
+        .currencyCode;
 
     return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      margin: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.xs),
       child: InkWell(
         onTap: onEdit,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppRadius.md),
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(AppSpacing.md),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -40,7 +49,7 @@ class CategoryLimitCard extends StatelessWidget {
                     size: 24,
                     color: theme.colorScheme.primary,
                   ),
-                  const SizedBox(width: 12),
+                  SizedBox(width: AppSpacing.sm + AppSpacing.xs),
                   Expanded(
                     child: Text(
                       limitWithSpending.categoryName,
@@ -57,53 +66,53 @@ class CategoryLimitCard extends StatelessWidget {
                     ),
                 ],
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: AppSpacing.sm + AppSpacing.xs),
               CategoryLimitProgressBar(
                 spentAmount: limitWithSpending.spentAmount,
                 limitAmount: limit.amount,
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: AppSpacing.sm),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    '\$${limitWithSpending.spentAmount.toStringAsFixed(2)} / \$${limit.amount.toStringAsFixed(2)}',
+                    '${CurrencyFormatter.format(limitWithSpending.spentAmount, currencyCode: currencyCode)} / ${CurrencyFormatter.format(limit.amount, currencyCode: currencyCode)}',
                     style: theme.textTheme.bodyMedium,
                   ),
                   Container(
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
+                      horizontal: AppSpacing.sm,
                       vertical: 2,
                     ),
                     decoration: BoxDecoration(
                       color: isOverBudget
-                          ? Colors.red.withValues(alpha: 0.1)
+                          ? theme.colorScheme.error.withValues(alpha: 0.1)
                           : percentUsed > 80
-                          ? Colors.orange.withValues(alpha: 0.1)
-                          : Colors.green.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(12),
+                          ? theme.colorScheme.tertiary.withValues(alpha: 0.1)
+                          : theme.colorScheme.primary.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(AppRadius.md),
                     ),
                     child: Text(
                       isOverBudget
-                          ? 'Over by \$${(limitWithSpending.spentAmount - limit.amount).toStringAsFixed(2)}'
-                          : '\$${remaining.toStringAsFixed(2)} left',
+                          ? 'Over by ${CurrencyFormatter.format(limitWithSpending.spentAmount - limit.amount, currencyCode: currencyCode)}'
+                          : '${CurrencyFormatter.format(remaining, currencyCode: currencyCode)} left',
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: isOverBudget
-                            ? Colors.red
+                            ? theme.colorScheme.error
                             : percentUsed > 80
-                            ? Colors.orange
-                            : Colors.green,
+                            ? theme.colorScheme.tertiary
+                            : theme.colorScheme.primary,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 4),
+              SizedBox(height: AppSpacing.xs),
               Text(
                 limit.period == LimitPeriod.monthly ? 'Monthly' : 'Weekly',
                 style: theme.textTheme.bodySmall?.copyWith(
-                  color: Colors.grey[600],
+                  color: theme.colorScheme.onSurfaceVariant,
                 ),
               ),
             ],

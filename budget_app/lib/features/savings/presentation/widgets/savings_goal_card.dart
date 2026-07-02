@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:budget_app/core/theme/app_spacing.dart';
+import 'package:budget_app/core/utils/currency_formatter.dart';
+import 'package:budget_app/features/settings/presentation/bloc/settings_bloc.dart';
 import '../bloc/savings_state.dart';
 import 'savings_goal_progress_bar.dart';
 
@@ -24,14 +28,19 @@ class SavingsGoalCard extends StatelessWidget {
     final remaining = goal.remainingAmount;
     final isOverdue = goal.isOverdue;
     final isCompleted = goal.isCompleted;
+    final currencyCode = context
+        .watch<SettingsBloc>()
+        .state
+        .settings
+        .currencyCode;
 
     return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      margin: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.xs),
       child: InkWell(
         onTap: onAddContribution,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppRadius.md),
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(AppSpacing.md),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -42,7 +51,7 @@ class SavingsGoalCard extends StatelessWidget {
                     height: 40,
                     decoration: BoxDecoration(
                       color: _getColor(goal.color).withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(AppRadius.sm + 2),
                     ),
                     child: Icon(
                       _getIcon(goal.icon),
@@ -65,7 +74,7 @@ class SavingsGoalCard extends StatelessWidget {
                           Text(
                             _formatDeadline(goal.deadline!),
                             style: theme.textTheme.bodySmall?.copyWith(
-                              color: isOverdue ? Colors.red : Colors.grey[600],
+                              color: isOverdue ? theme.colorScheme.error : theme.colorScheme.onSurfaceVariant,
                             ),
                           ),
                       ],
@@ -107,18 +116,18 @@ class SavingsGoalCard extends StatelessWidget {
                     ),
                 ],
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: AppSpacing.md),
               SavingsGoalProgressBar(
                 currentAmount: goal.currentAmount,
                 targetAmount: goal.targetAmount,
                 progressColor: _getColor(goal.color),
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: AppSpacing.sm),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    '\$${goal.currentAmount.toStringAsFixed(2)} / \$${goal.targetAmount.toStringAsFixed(2)}',
+                    '${CurrencyFormatter.format(goal.currentAmount, currencyCode: currencyCode)} / ${CurrencyFormatter.format(goal.targetAmount, currencyCode: currencyCode)}',
                     style: theme.textTheme.bodyMedium,
                   ),
                   Container(
@@ -128,28 +137,28 @@ class SavingsGoalCard extends StatelessWidget {
                     ),
                     decoration: BoxDecoration(
                       color: isCompleted
-                          ? Colors.green.withValues(alpha: 0.1)
+                          ? theme.colorScheme.primary.withValues(alpha: 0.1)
                           : isOverdue
-                          ? Colors.red.withValues(alpha: 0.1)
+                          ? theme.colorScheme.error.withValues(alpha: 0.1)
                           : progressPercentage > 80
-                          ? Colors.orange.withValues(alpha: 0.1)
-                          : Colors.blue.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(12),
+                          ? theme.colorScheme.tertiary.withValues(alpha: 0.1)
+                          : theme.colorScheme.secondary.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(AppRadius.md),
                     ),
                     child: Text(
                       isCompleted
                           ? 'Completed!'
                           : isOverdue
                           ? 'Overdue'
-                          : '${progressPercentage.toStringAsFixed(0)}% - \$${remaining.toStringAsFixed(2)} left',
+                          : '${progressPercentage.toStringAsFixed(0)}% - ${CurrencyFormatter.format(remaining, currencyCode: currencyCode)} left',
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: isCompleted
-                            ? Colors.green
+                            ? theme.colorScheme.primary
                             : isOverdue
-                            ? Colors.red
+                            ? theme.colorScheme.error
                             : progressPercentage > 80
-                            ? Colors.orange
-                            : Colors.blue,
+                            ? theme.colorScheme.tertiary
+                            : theme.colorScheme.secondary,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -157,15 +166,15 @@ class SavingsGoalCard extends StatelessWidget {
                 ],
               ),
               if (goal.linkedCategoryId != null) ...[
-                const SizedBox(height: 8),
+                SizedBox(height: AppSpacing.sm),
                 Row(
                   children: [
-                    Icon(Icons.link, size: 14, color: Colors.grey[600]),
-                    const SizedBox(width: 4),
+                    Icon(Icons.link, size: 14, color: theme.colorScheme.onSurfaceVariant),
+                    SizedBox(width: AppSpacing.xs),
                     Text(
                       'Linked to category',
                       style: theme.textTheme.bodySmall?.copyWith(
-                        color: Colors.grey[600],
+                        color: theme.colorScheme.onSurfaceVariant,
                       ),
                     ),
                   ],
