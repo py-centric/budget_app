@@ -1,3 +1,33 @@
+import 'package:flutter/material.dart';
+
+enum EntryStatus {
+  all,
+  outstanding,
+  paid;
+
+  String get label {
+    switch (this) {
+      case EntryStatus.all:
+        return 'All';
+      case EntryStatus.outstanding:
+        return 'Outstanding';
+      case EntryStatus.paid:
+        return 'Paid';
+    }
+  }
+
+  IconData get icon {
+    switch (this) {
+      case EntryStatus.all:
+        return Icons.list;
+      case EntryStatus.outstanding:
+        return Icons.pending_actions;
+      case EntryStatus.paid:
+        return Icons.check_circle_outline;
+    }
+  }
+}
+
 enum AmountOperator {
   lessThan,
   greaterThan,
@@ -76,22 +106,28 @@ class FilterState {
   final String? searchQuery;
   final AmountFilter? amountFilter;
   final FilterScope scope;
+  final EntryStatus entryStatus;
 
   const FilterState({
     this.searchQuery,
     this.amountFilter,
     this.scope = FilterScope.both,
+    this.entryStatus = EntryStatus.all,
   });
 
   bool get hasActiveFilters =>
-      (searchQuery != null && searchQuery!.isNotEmpty) || amountFilter != null;
+      (searchQuery != null && searchQuery!.isNotEmpty) ||
+      amountFilter != null ||
+      entryStatus != EntryStatus.all;
 
   FilterState copyWith({
     String? searchQuery,
     AmountFilter? amountFilter,
     FilterScope? scope,
+    EntryStatus? entryStatus,
     bool clearSearchQuery = false,
     bool clearAmountFilter = false,
+    bool clearEntryStatus = false,
   }) {
     return FilterState(
       searchQuery: clearSearchQuery ? null : (searchQuery ?? this.searchQuery),
@@ -99,6 +135,9 @@ class FilterState {
           ? null
           : (amountFilter ?? this.amountFilter),
       scope: scope ?? this.scope,
+      entryStatus: clearEntryStatus
+          ? EntryStatus.all
+          : (entryStatus ?? this.entryStatus),
     );
   }
 
@@ -112,10 +151,14 @@ class FilterState {
     return other is FilterState &&
         other.searchQuery == searchQuery &&
         other.amountFilter == amountFilter &&
-        other.scope == scope;
+        other.scope == scope &&
+        other.entryStatus == entryStatus;
   }
 
   @override
   int get hashCode =>
-      searchQuery.hashCode ^ amountFilter.hashCode ^ scope.hashCode;
+      searchQuery.hashCode ^
+      amountFilter.hashCode ^
+      scope.hashCode ^
+      entryStatus.hashCode;
 }
