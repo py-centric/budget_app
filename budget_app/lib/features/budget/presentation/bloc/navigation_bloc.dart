@@ -1,4 +1,5 @@
 import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:uuid/uuid.dart';
 import '../../domain/entities/budget_period.dart';
 import '../../domain/entities/budget.dart';
 import '../../domain/usecases/get_available_periods.dart';
@@ -32,6 +33,57 @@ class NavigationBloc extends HydratedBloc<NavigationEvent, NavigationState> {
       emit(state.copyWith(availablePeriods: periods));
       if (state.activeBudget == null) {
         await _loadDefaultBudgetForPeriod(state.currentPeriod, emit);
+      }
+    });
+
+    on<CreateBudget>((event, emit) async {
+      try {
+        if (event.months.length > 1) {
+          for (final m in event.months) {
+            final budget = Budget(
+              id: const Uuid().v4(),
+              name: event.name,
+              periodMonth: m,
+              periodYear: event.year,
+              isActive: m == event.months.first,
+            );
+            await budgetRepository.addBudget(budget);
+          }
+          final firstPeriod = BudgetPeriod(
+            year: event.year,
+            month: event.months.first,
+          );
+          final periods = await getAvailablePeriodsUseCase();
+          emit(state.copyWith(
+            currentPeriod: firstPeriod,
+            availablePeriods: periods,
+            activeBudget: null,
+          ));
+          await _loadDefaultBudgetForPeriod(firstPeriod, emit);
+        } else {
+          final targetMonth = event.months.length == 1
+              ? event.months.first
+              : (event.month > 0 ? event.month : DateTime.now().month);
+          final budget = Budget(
+            id: const Uuid().v4(),
+            name: event.name,
+            periodMonth: targetMonth,
+            periodYear: event.year,
+            isActive: true,
+          );
+          await budgetRepository.addBudget(budget);
+          final period = BudgetPeriod(year: event.year, month: targetMonth);
+          final periods = await getAvailablePeriodsUseCase();
+          emit(state.copyWith(
+            currentPeriod: period,
+            availablePeriods: periods,
+            activeBudget: null,
+          ));
+          await _loadDefaultBudgetForPeriod(period, emit);
+        }
+      } catch (e) {
+        print('CreateBudget failed: $e');
+        emit(state);
       }
     });
   }

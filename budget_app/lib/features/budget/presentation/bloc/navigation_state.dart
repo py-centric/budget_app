@@ -30,6 +30,15 @@ class NavigationState extends Equatable {
     );
   }
 
+  String? budgetIdForPeriod(BudgetPeriod period) {
+    for (final b in availableBudgetsForPeriod) {
+      if (b.periodMonth == period.month && b.periodYear == period.year) {
+        return b.id;
+      }
+    }
+    return null;
+  }
+
   @override
   List<Object?> get props => [
     currentPeriod,

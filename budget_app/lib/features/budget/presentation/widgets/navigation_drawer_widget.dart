@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:budget_app/shared/widgets/confirm_action_dialog.dart';
 import '../bloc/navigation_bloc.dart';
 import 'year_group_header.dart';
 import '../pages/category_settings_page.dart';
@@ -19,7 +20,12 @@ import 'package:budget_app/features/reminders/presentation/pages/reminders_page.
 import 'package:budget_app/features/reminders/presentation/bloc/reminder_bloc.dart';
 import 'package:budget_app/features/reminders/presentation/bloc/reminder_state.dart';
 import 'package:budget_app/features/budget/presentation/pages/budget_comparison_page.dart';
+import 'package:budget_app/features/budget/domain/entities/budget.dart';
+import 'package:budget_app/features/budget/domain/entities/budget_period.dart';
 import 'package:budget_app/features/calendar/presentation/pages/calendar_view_page.dart';
+import '../bloc/budget_bloc.dart';
+import '../bloc/budget_event.dart';
+import 'create_budget_dialog.dart';
 
 class NavigationDrawerWidget extends StatefulWidget {
   const NavigationDrawerWidget({super.key});
@@ -162,8 +168,8 @@ class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
                             top: 0,
                             child: Container(
                               padding: const EdgeInsets.all(2),
-                              decoration: const BoxDecoration(
-                                color: Colors.red,
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).colorScheme.error,
                                 shape: BoxShape.circle,
                               ),
                               constraints: const BoxConstraints(
@@ -172,8 +178,8 @@ class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
                               ),
                               child: Text(
                                 unreadCount > 9 ? '9+' : '$unreadCount',
-                                style: const TextStyle(
-                                  color: Colors.white,
+                                style: TextStyle(
+                                  color: Theme.of(context).colorScheme.onError,
                                   fontSize: 10,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -281,6 +287,19 @@ class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
                 },
               ),
               const Divider(),
+              ListTile(
+                leading: Icon(Icons.add_box_outlined, color: Theme.of(context).colorScheme.primary),
+                title: Text('Create Budget', style: TextStyle(color: Theme.of(context).colorScheme.primary)),
+                onTap: () {
+                  Navigator.pop(context);
+                  showDialog(
+                    context: context,
+                    builder: (_) => const CreateBudgetDialog(),
+                  );
+                },
+              ),
+
+              const Divider(),
               ...List.generate(sortedYears.length, (index) {
                 final year = sortedYears[index];
                 final monthsInYear =
@@ -302,20 +321,79 @@ class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
                     ),
                     if (isExpanded)
                       ...monthsInYear.map(
-                        (period) => ListTile(
-                          title: Text(
-                            DateFormat(
-                              'MMMM',
-                            ).format(DateTime(year, period.month)),
-                          ),
-                          selected: state.currentPeriod == period,
-                          onTap: () {
-                            context.read<NavigationBloc>().add(
-                              ChangePeriod(period),
-                            );
-                            Navigator.pop(context);
-                          },
-                        ),
+                        (period) {
+                          Budget? sourceBudget;
+                          for (final b in state.availableBudgetsForPeriod) {
+                            if (b.periodMonth == period.month &&
+                                b.periodYear == period.year) {
+                              sourceBudget = b;
+                              break;
+                            }
+                          }
+
+                          return Dismissible(
+                            key: ValueKey('period_${period.year}_${period.month}'),
+                            direction: DismissDirection.horizontal,
+                            background: Container(
+                              color: Theme.of(context).colorScheme.primary,
+                              alignment: Alignment.centerLeft,
+                              padding: const EdgeInsets.only(left: 20),
+                              child: Icon(Icons.copy, color: Theme.of(context).colorScheme.onPrimary),
+                            ),
+                            secondaryBackground: Container(
+                              color: Theme.of(context).colorScheme.error,
+                              alignment: Alignment.centerRight,
+                              padding: const EdgeInsets.only(right: 20),
+                              child: Icon(Icons.delete, color: Theme.of(context).colorScheme.onError),
+                            ),
+                            confirmDismiss: (direction) async {
+                              if (sourceBudget == null) return false;
+
+                              if (direction == DismissDirection.startToEnd) {
+                                return _showCloneDialog(
+                                  context: context,
+                                  sourceBudget: sourceBudget,
+                                );
+                              }
+
+                              if (direction == DismissDirection.endToStart) {
+                                final budgetName = sourceBudget.name;
+                                final budgetId = sourceBudget.id;
+                                final confirmed = await showDialog<bool>(
+                                  context: context,
+                                  builder: (ctx) => ConfirmActionDialog(
+                                    title: 'Delete Budget',
+                                    message: 'Are you sure you want to delete "$budgetName"? All income and expense entries for this budget will also be deleted. This action cannot be undone.',
+                                    confirmLabel: 'Delete',
+                                    isDestructive: true,
+                                    onConfirm: () => Navigator.pop(ctx, true),
+                                  ),
+                                );
+
+                                if (confirmed == true && context.mounted) {
+                                  context.read<BudgetBloc>().add(
+                                    DeleteBudgetEvent(budgetId),
+                                  );
+                                }
+                                return confirmed == true;
+                              }
+
+                              return false;
+                            },
+                            child: ListTile(
+                              title: Text(
+                                DateFormat('MMMM').format(DateTime(year, period.month)),
+                              ),
+                              selected: state.currentPeriod == period,
+                              onTap: () {
+                                context.read<NavigationBloc>().add(
+                                  ChangePeriod(period),
+                                );
+                                Navigator.pop(context);
+                              },
+                            ),
+                          );
+                        },
                       ),
                   ],
                 );
@@ -325,5 +403,144 @@ class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
         );
       },
     );
+  }
+
+  Future<bool> _showCloneDialog({
+    required BuildContext context,
+    required Budget sourceBudget,
+  }) async {
+    final next = BudgetPeriod.fromDate(DateTime(sourceBudget.periodYear, sourceBudget.periodMonth))
+        .next;
+    final formKey = GlobalKey<FormState>();
+    final nameController = TextEditingController(text: '${sourceBudget.name} (Copy)');
+    var targetYear = next.year;
+    var targetMonth = next.month;
+    var includeTransactions = false;
+
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) {
+        return StatefulBuilder(
+          builder: (ctx, setLocalState) {
+            final targetLabel = DateFormat('MMMM yyyy').format(
+              DateTime(targetYear, targetMonth),
+            );
+            final sourceLabel = DateFormat('MMMM yyyy').format(
+              DateTime(sourceBudget.periodYear, sourceBudget.periodMonth),
+            );
+
+            Future<void> pickDate() async {
+              final picked = await showDatePicker(
+                context: ctx,
+                initialDate: DateTime(targetYear, targetMonth),
+                firstDate: DateTime(2000),
+                lastDate: DateTime(2100),
+                initialDatePickerMode: DatePickerMode.year,
+                helpText: 'Select target month',
+              );
+              if (picked != null) {
+                setLocalState(() {
+                  targetYear = picked.year;
+                  targetMonth = picked.month;
+                });
+              }
+            }
+
+            return AlertDialog(
+              title: const Text('Clone Budget'),
+              content: SingleChildScrollView(
+                child: Form(
+                  key: formKey,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'From: ${sourceBudget.name} ($sourceLabel)',
+                        style: Theme.of(ctx).textTheme.bodySmall?.copyWith(
+                          color: Theme.of(ctx).colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        leading: const Icon(Icons.event),
+                        title: const Text('To'),
+                        subtitle: Text(targetLabel),
+                        trailing: const Icon(Icons.edit_calendar),
+                        onTap: pickDate,
+                      ),
+                      TextFormField(
+                        controller: nameController,
+                        decoration: const InputDecoration(
+                          labelText: 'Name',
+                          border: OutlineInputBorder(),
+                        ),
+                        textInputAction: TextInputAction.done,
+                        validator: (value) {
+                          if (value == null || value.trim().isEmpty) {
+                            return 'Name is required';
+                          }
+                          return null;
+                        },
+                      ),
+                      SwitchListTile(
+                        contentPadding: EdgeInsets.zero,
+                        title: const Text('Include transactions'),
+                        value: includeTransactions,
+                        onChanged: (v) {
+                          setLocalState(() {
+                            includeTransactions = v;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(dialogContext, false),
+                  child: const Text('Cancel'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    if (!(formKey.currentState?.validate() ?? false)) {
+                      return;
+                    }
+                    Navigator.pop(dialogContext, true);
+                  },
+                  child: Text('Clone', style: TextStyle(color: Theme.of(context).colorScheme.primary)),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+
+    if (result != true) {
+      nameController.dispose();
+      return false;
+    }
+
+    if (!context.mounted) {
+      nameController.dispose();
+      return false;
+    }
+
+    final targetPeriod = BudgetPeriod(year: targetYear, month: targetMonth);
+    final trimmedName = nameController.text.trim();
+    context.read<BudgetBloc>().add(
+      DuplicateBudgetEvent(
+        sourceBudget: sourceBudget,
+        targetPeriod: targetPeriod,
+        newName: trimmedName,
+        includeTransactions: includeTransactions,
+      ),
+    );
+    context.read<NavigationBloc>().add(ChangePeriod(targetPeriod));
+    nameController.dispose();
+    return true;
   }
 }

@@ -30,3 +30,20 @@ class ChangeBudget extends NavigationEvent {
 class LoadAvailablePeriods extends NavigationEvent {
   const LoadAvailablePeriods();
 }
+
+class CreateBudget extends NavigationEvent {
+  final String name;
+  final int year;
+  final int month;
+  final List<int> months;
+
+  const CreateBudget({
+    required this.name,
+    required this.year,
+    this.month = 0,
+    this.months = const [],
+  });
+
+  @override
+  List<Object> get props => [name, year, month, months];
+}
