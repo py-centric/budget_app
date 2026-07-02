@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uuid/uuid.dart';
+import 'package:budget_app/core/theme/app_spacing.dart';
+import 'package:budget_app/shared/widgets/confirm_action_dialog.dart';
 
 import '../bloc/budget_bloc.dart';
 import '../bloc/budget_event.dart';
@@ -11,6 +13,7 @@ import '../widgets/transaction_form.dart';
 import '../widgets/income_list.dart';
 import '../widgets/expense_list.dart';
 import '../widgets/summary_card.dart';
+import '../widgets/outstanding_balances_card.dart';
 import '../widgets/navigation_drawer_widget.dart';
 import '../widgets/transaction_edit_dialog.dart';
 import '../widgets/delete_confirmation_dialog.dart';
@@ -54,7 +57,7 @@ class _HomePageState extends State<HomePage> {
       context.read<BudgetBloc>().add(
         LoadSummaryEvent(
           period: navState.currentPeriod,
-          budgetId: navState.activeBudget?.id,
+          budgetId: navState.budgetIdForPeriod(navState.currentPeriod),
         ),
       );
     });
@@ -63,11 +66,13 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return BlocListener<NavigationBloc, NavigationState>(
+      listenWhen: (previous, current) =>
+          previous.currentPeriod != current.currentPeriod,
       listener: (context, navState) {
         context.read<BudgetBloc>().add(
           LoadSummaryEvent(
             period: navState.currentPeriod,
-            budgetId: navState.activeBudget?.id,
+            budgetId: navState.budgetIdForPeriod(navState.currentPeriod),
           ),
         );
       },
@@ -148,33 +153,20 @@ class _HomePageState extends State<HomePage> {
                   icon: Icon(
                     Icons.delete,
                     color: state.activeBudget != null
-                        ? Colors.red
-                        : Colors.grey,
+                        ? Theme.of(context).colorScheme.error
+                        : Theme.of(context).colorScheme.outline,
                   ),
                   tooltip: 'Delete Budget',
                   onPressed: state.activeBudget != null
                       ? () async {
                           final confirmed = await showDialog<bool>(
                             context: context,
-                            builder: (context) => AlertDialog(
-                              title: const Text('Delete Budget'),
-                              content: Text(
-                                'Are you sure you want to delete "${state.activeBudget!.name}"? This action cannot be undone.',
-                              ),
-                              actions: [
-                                TextButton(
-                                  onPressed: () =>
-                                      Navigator.pop(context, false),
-                                  child: const Text('Cancel'),
-                                ),
-                                TextButton(
-                                  onPressed: () => Navigator.pop(context, true),
-                                  child: const Text(
-                                    'Delete',
-                                    style: TextStyle(color: Colors.red),
-                                  ),
-                                ),
-                              ],
+                            builder: (ctx) => ConfirmActionDialog(
+                              title: 'Delete Budget',
+                              message: 'Are you sure you want to delete "${state.activeBudget!.name}"? This action cannot be undone.',
+                              confirmLabel: 'Delete',
+                              isDestructive: true,
+                              onConfirm: () => Navigator.pop(ctx, true),
                             ),
                           );
                           if (confirmed == true && context.mounted) {
@@ -207,13 +199,14 @@ class _HomePageState extends State<HomePage> {
               context.read<BudgetBloc>().add(
                 LoadSummaryEvent(
                   period: navState.currentPeriod,
-                  budgetId: navState.activeBudget?.id,
+                  budgetId: navState.budgetIdForPeriod(navState.currentPeriod),
                 ),
               );
               context.read<ProjectionBloc>().add(const LoadProjection());
 
+              final snackText = state.message ?? 'Operation completed';
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Operation completed')),
+                SnackBar(content: Text(snackText)),
               );
             }
           },
@@ -235,7 +228,7 @@ class _HomePageState extends State<HomePage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       CircularProgressIndicator(),
-                      SizedBox(height: 16),
+                      SizedBox(height: AppSpacing.md),
                       Text('Loading...'),
                     ],
                   ),
@@ -247,22 +240,24 @@ class _HomePageState extends State<HomePage> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(
+                      Icon(
                         Icons.error_outline,
                         size: 64,
-                        color: Colors.red,
+                        color: Theme.of(context).colorScheme.error,
                       ),
-                      const SizedBox(height: 16),
+                      SizedBox(height: AppSpacing.md),
                       Text('Error: ${state.message}'),
-                      const SizedBox(height: 16),
+                      SizedBox(height: AppSpacing.md),
                       ElevatedButton(
                         onPressed: () {
-                          final currentPeriod = context
+                          final navState = context
                               .read<NavigationBloc>()
-                              .state
-                              .currentPeriod;
+                              .state;
                           context.read<BudgetBloc>().add(
-                            LoadSummaryEvent(period: currentPeriod),
+                            LoadSummaryEvent(
+                              period: navState.currentPeriod,
+                              budgetId: navState.budgetIdForPeriod(navState.currentPeriod),
+                            ),
                           );
                           context.read<BudgetBloc>().add(
                             const LoadCategoriesEvent(),
@@ -281,7 +276,7 @@ class _HomePageState extends State<HomePage> {
                   const HomeProjectionOverview(),
                   Expanded(
                     child: SingleChildScrollView(
-                      padding: const EdgeInsets.all(16.0),
+                      padding: const EdgeInsets.all(AppSpacing.md),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
@@ -297,13 +292,15 @@ class _HomePageState extends State<HomePage> {
                               return Column(
                                 children: [
                                   SummaryCard(summary: s),
-                                  const SizedBox(height: 24),
+                                  const SizedBox(height: AppSpacing.md),
+                                  OutstandingBalancesCard(summary: s),
+                                  const SizedBox(height: AppSpacing.lg),
                                   _buildCategoryLimitsSection(context, s),
-                                  const SizedBox(height: 24),
+                                  SizedBox(height: AppSpacing.lg),
                                   Row(
                                     children: [
                                       Expanded(
-                                        child: ElevatedButton.icon(
+                                        child: FilledButton.icon(
                                           onPressed: () {
                                             final budgetId = context
                                                 .read<NavigationBloc>()
@@ -330,11 +327,10 @@ class _HomePageState extends State<HomePage> {
                                               budgetId,
                                             );
                                           },
-                                          style: ElevatedButton.styleFrom(
-                                            backgroundColor: Colors.green,
-                                            foregroundColor: Colors.white,
+                                          style: FilledButton.styleFrom(
+                                            backgroundColor: Theme.of(context).colorScheme.primary,
                                             padding: const EdgeInsets.symmetric(
-                                              vertical: 16,
+                                              vertical: AppSpacing.md,
                                             ),
                                             textStyle: const TextStyle(
                                               fontSize: 16,
@@ -345,9 +341,9 @@ class _HomePageState extends State<HomePage> {
                                           label: const Text('Add Income'),
                                         ),
                                       ),
-                                      const SizedBox(width: 16),
+                                      const SizedBox(width: AppSpacing.md),
                                       Expanded(
-                                        child: ElevatedButton.icon(
+                                        child: FilledButton.icon(
                                           onPressed: () {
                                             final budgetId = context
                                                 .read<NavigationBloc>()
@@ -374,11 +370,10 @@ class _HomePageState extends State<HomePage> {
                                               budgetId,
                                             );
                                           },
-                                          style: ElevatedButton.styleFrom(
-                                            backgroundColor: Colors.red,
-                                            foregroundColor: Colors.white,
+                                          style: FilledButton.styleFrom(
+                                            backgroundColor: Theme.of(context).colorScheme.error,
                                             padding: const EdgeInsets.symmetric(
-                                              vertical: 16,
+                                              vertical: AppSpacing.md,
                                             ),
                                             textStyle: const TextStyle(
                                               fontSize: 16,
@@ -391,7 +386,7 @@ class _HomePageState extends State<HomePage> {
                                       ),
                                     ],
                                   ),
-                                  const SizedBox(height: 24),
+                                  SizedBox(height: AppSpacing.lg),
                                 ],
                               );
                             },
@@ -643,7 +638,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ],
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: AppSpacing.sm),
         BlocBuilder<CategoryLimitBloc, CategoryLimitState>(
           builder: (context, state) {
             if (state is CategoryLimitLoading) {
@@ -654,13 +649,13 @@ class _HomePageState extends State<HomePage> {
               if (state.limits.isEmpty) {
                 return Card(
                   child: Padding(
-                    padding: const EdgeInsets.all(24),
+                    padding: const EdgeInsets.all(AppSpacing.lg),
                     child: Center(
-                      child: Text(
-                        'No category limits set. Tap "Add Limit" to get started.',
-                        style: TextStyle(color: Colors.grey[600]),
-                        textAlign: TextAlign.center,
-                      ),
+                        child: Text(
+                          'No category limits set. Tap "Add Limit" to get started.',
+                          style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
+                          textAlign: TextAlign.center,
+                        ),
                     ),
                   ),
                 );
@@ -748,26 +743,16 @@ class _HomePageState extends State<HomePage> {
   void _deleteLimit(BuildContext context, String limitId) {
     showDialog(
       context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: const Text('Delete Limit'),
-        content: const Text(
-          'Are you sure you want to delete this category limit?',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext),
-            child: const Text('Cancel'),
-          ),
-          FilledButton(
-            onPressed: () {
-              context.read<CategoryLimitBloc>().add(
-                DeleteCategoryLimit(limitId),
-              );
-              Navigator.pop(dialogContext);
-            },
-            child: const Text('Delete'),
-          ),
-        ],
+      builder: (dialogContext) => ConfirmActionDialog(
+        title: 'Delete Limit',
+        message: 'Are you sure you want to delete this category limit?',
+        confirmLabel: 'Delete',
+        isDestructive: true,
+        onConfirm: () {
+          context.read<CategoryLimitBloc>().add(
+            DeleteCategoryLimit(limitId),
+          );
+        },
       ),
     );
   }
