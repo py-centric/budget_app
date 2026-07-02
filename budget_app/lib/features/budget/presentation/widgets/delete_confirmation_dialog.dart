@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:budget_app/shared/widgets/confirm_action_dialog.dart';
 
 class DeleteConfirmationDialog extends StatelessWidget {
   final String title;
@@ -14,23 +15,12 @@ class DeleteConfirmationDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      title: Text(title),
-      content: Text(content),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: const Text('Cancel'),
-        ),
-        TextButton(
-          onPressed: () {
-            onConfirm();
-            Navigator.pop(context);
-          },
-          style: TextButton.styleFrom(foregroundColor: Colors.red),
-          child: const Text('Delete'),
-        ),
-      ],
+    return ConfirmActionDialog(
+      title: title,
+      message: content,
+      confirmLabel: 'Delete',
+      isDestructive: true,
+      onConfirm: onConfirm,
     );
   }
 }
