@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:budget_app/core/theme/app_spacing.dart';
 import '../../domain/entities/budget_comparison.dart';
 import '../bloc/budget_comparison_bloc.dart';
 import '../bloc/budget_comparison_event.dart';
@@ -8,8 +9,30 @@ import '../bloc/navigation_bloc.dart';
 import '../widgets/budget_comparison_chart.dart';
 import '../widgets/budget_comparison_table.dart';
 
-class BudgetComparisonPage extends StatelessWidget {
+class BudgetComparisonPage extends StatefulWidget {
   const BudgetComparisonPage({super.key});
+
+  @override
+  State<BudgetComparisonPage> createState() => _BudgetComparisonPageState();
+}
+
+class _BudgetComparisonPageState extends State<BudgetComparisonPage> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final navState = context.read<NavigationBloc>().state;
+      if (navState.activeBudget != null) {
+        context.read<BudgetComparisonBloc>().add(
+          LoadBudgetComparison(
+            budgetId: navState.activeBudget!.id,
+            year: navState.currentPeriod.year,
+            month: navState.currentPeriod.month,
+          ),
+        );
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,9 +58,9 @@ class BudgetComparisonPage extends StatelessWidget {
                       Icon(
                         Icons.error_outline,
                         size: 64,
-                        color: Colors.grey[400],
+                        color: Theme.of(context).colorScheme.outline,
                       ),
-                      const SizedBox(height: 16),
+                      SizedBox(height: AppSpacing.md),
                       Text(
                         'Error loading budget comparison',
                         style: Theme.of(context).textTheme.titleMedium,
@@ -85,19 +108,19 @@ class BudgetComparisonPage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.compare_arrows, size: 80, color: Colors.grey[400]),
-            const SizedBox(height: 24),
+            Icon(Icons.compare_arrows, size: 80, color: Theme.of(context).colorScheme.outline),
+            SizedBox(height: AppSpacing.lg),
             Text(
               'No Budget Comparisons',
               style: Theme.of(context).textTheme.headlineSmall,
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: AppSpacing.sm + AppSpacing.xs),
             Text(
               'Set up category spending limits to see budget vs actual comparisons.',
               style: Theme.of(
                 context,
-              ).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
+              ).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 24),
@@ -142,7 +165,7 @@ class BudgetComparisonPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(AppSpacing.md),
               child: Row(
                 children: [
                   Container(
@@ -152,7 +175,7 @@ class BudgetComparisonPage extends StatelessWidget {
                     ),
                     decoration: BoxDecoration(
                       color: theme.colorScheme.primaryContainer,
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(AppRadius.xl - 4),
                     ),
                     child: Text(
                       '${_getMonthName(state.month)} ${state.year}',
@@ -167,7 +190,7 @@ class BudgetComparisonPage extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -177,16 +200,16 @@ class BudgetComparisonPage extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(height: AppSpacing.md),
                   BudgetComparisonChart(comparisons: state.comparisons),
-                  const SizedBox(height: 8),
+                  SizedBox(height: AppSpacing.sm),
                   const BudgetComparisonLegend(),
                 ],
               ),
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: AppSpacing.lg),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
               child: Text(
                 'Category Breakdown',
                 style: theme.textTheme.titleMedium?.copyWith(
@@ -194,7 +217,7 @@ class BudgetComparisonPage extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: AppSpacing.sm),
             SizedBox(
               height: MediaQuery.of(context).size.height * 0.4,
               child: BudgetComparisonTable(
@@ -202,7 +225,7 @@ class BudgetComparisonPage extends StatelessWidget {
                 summary: state.summary,
               ),
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: AppSpacing.lg),
           ],
         ),
       ),
@@ -218,15 +241,15 @@ class BudgetComparisonPage extends StatelessWidget {
     IconData icon;
 
     if (summary.totalActual > summary.totalPlanned) {
-      color = Colors.red;
+      color = Theme.of(context).colorScheme.error;
       text = 'Over Budget';
       icon = Icons.warning;
     } else if (summary.totalActual < summary.totalPlanned * 0.8) {
-      color = Colors.green;
+      color = Theme.of(context).colorScheme.primary;
       text = 'Under Budget';
       icon = Icons.check_circle;
     } else {
-      color = Colors.orange;
+      color = Theme.of(context).colorScheme.tertiary;
       text = 'On Track';
       icon = Icons.trending_flat;
     }
