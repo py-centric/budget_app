@@ -21,7 +21,8 @@ class BudgetLoading extends BudgetState {
 /// Consolidated one-shot success state replacing IncomeAdded, ExpenseAdded,
 /// EntryDeleted, EntryUpdated, BudgetDeleted, BudgetsCleared, and FactoryResetComplete.
 class OperationSuccess extends BudgetState {
-  const OperationSuccess();
+  final String? message;
+  const OperationSuccess({this.message});
 }
 
 class SummaryLoaded extends BudgetState {
