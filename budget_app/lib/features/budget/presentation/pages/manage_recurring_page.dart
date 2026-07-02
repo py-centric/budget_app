@@ -67,7 +67,9 @@ class _ManageRecurringPageState extends State<ManageRecurringPage> {
                   item.type == 'INCOME'
                       ? Icons.arrow_downward
                       : Icons.arrow_upward,
-                  color: item.type == 'INCOME' ? Colors.green : Colors.red,
+                  color: item.type == 'INCOME'
+                      ? Theme.of(context).colorScheme.primary
+                      : Theme.of(context).colorScheme.error,
                 ),
                 title: Text(item.description),
                 subtitle: Text(
@@ -78,7 +80,8 @@ class _ManageRecurringPageState extends State<ManageRecurringPage> {
                   children: [
                     Text(CurrencyFormatter.format(item.amount)),
                     IconButton(
-                      icon: const Icon(Icons.delete, color: Colors.red),
+                      icon: Icon(Icons.delete,
+                          color: Theme.of(context).colorScheme.error),
                       onPressed: () => _confirmDelete(context, item),
                     ),
                   ],
@@ -106,7 +109,8 @@ class _ManageRecurringPageState extends State<ManageRecurringPage> {
             child: const Text('Cancel'),
           ),
           ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            style: ElevatedButton.styleFrom(
+                backgroundColor: Theme.of(context).colorScheme.error),
             onPressed: () async {
               final navigator = Navigator.of(context);
               final budgetBloc = context.read<BudgetBloc>();

@@ -23,12 +23,12 @@ class SavingsGoalProgressBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = progressColor ?? Colors.blue;
+    final color = progressColor ?? Theme.of(context).colorScheme.primary;
 
     return Container(
       height: height,
       decoration: BoxDecoration(
-        color: backgroundColor ?? Colors.grey[200],
+        color: backgroundColor ?? Theme.of(context).colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(height / 2),
       ),
       child: Stack(

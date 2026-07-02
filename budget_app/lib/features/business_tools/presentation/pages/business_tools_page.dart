@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:budget_app/core/theme/app_spacing.dart';
 import 'vat_calculator_page.dart';
 import 'invoice_builder_page.dart';
 import 'invoices_page.dart';
@@ -12,7 +13,7 @@ class BusinessToolsPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('Business Tools')),
       body: GridView.count(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(AppSpacing.md),
         crossAxisCount: 2,
         mainAxisSpacing: 16,
         crossAxisSpacing: 16,
@@ -20,7 +21,7 @@ class BusinessToolsPage extends StatelessWidget {
           _BusinessToolCard(
             title: 'VAT Calculator',
             icon: Icons.calculate,
-            color: Colors.blue,
+            color: Theme.of(context).colorScheme.secondary,
             onTap: () => Navigator.push(
               context,
               MaterialPageRoute(
@@ -31,7 +32,7 @@ class BusinessToolsPage extends StatelessWidget {
           _BusinessToolCard(
             title: 'New Invoice',
             icon: Icons.add_chart,
-            color: Colors.green,
+            color: Theme.of(context).colorScheme.primary,
             onTap: () => Navigator.push(
               context,
               MaterialPageRoute(
@@ -42,7 +43,7 @@ class BusinessToolsPage extends StatelessWidget {
           _BusinessToolCard(
             title: 'Invoices',
             icon: Icons.history,
-            color: Colors.orange,
+            color: Theme.of(context).colorScheme.tertiary,
             onTap: () => Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => const InvoicesPage()),
@@ -51,7 +52,7 @@ class BusinessToolsPage extends StatelessWidget {
           _BusinessToolCard(
             title: 'Business Profiles',
             icon: Icons.business,
-            color: Colors.purple,
+            color: Theme.of(context).colorScheme.secondary,
             onTap: () => Navigator.push(
               context,
               MaterialPageRoute(
@@ -84,12 +85,12 @@ class _BusinessToolCard extends StatelessWidget {
       elevation: 2,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppRadius.md),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(icon, size: 48, color: color),
-            const SizedBox(height: 12),
+            SizedBox(height: AppSpacing.sm + AppSpacing.xs),
             Text(
               title,
               style: Theme.of(context).textTheme.titleMedium,

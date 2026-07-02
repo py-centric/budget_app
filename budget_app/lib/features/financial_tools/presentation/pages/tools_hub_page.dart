@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:budget_app/core/theme/app_spacing.dart';
 import 'net_worth_calculator_page.dart';
 import 'loan_calculator_page.dart';
 import 'savings_calculator_page.dart';
@@ -14,7 +15,7 @@ class ToolsHubPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('Financial Tools')),
       body: GridView.count(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(AppSpacing.md),
         crossAxisCount: 2,
         mainAxisSpacing: 16,
         crossAxisSpacing: 16,
@@ -22,7 +23,7 @@ class ToolsHubPage extends StatelessWidget {
           _ToolCard(
             title: 'Net Worth Calculator',
             icon: Icons.account_balance,
-            color: Colors.blue,
+            color: Theme.of(context).colorScheme.secondary,
             onTap: () => Navigator.push(
               context,
               MaterialPageRoute(builder: (_) => const NetWorthCalculatorPage()),
@@ -31,7 +32,7 @@ class ToolsHubPage extends StatelessWidget {
           _ToolCard(
             title: 'Loan Amortization',
             icon: Icons.real_estate_agent,
-            color: Colors.orange,
+            color: Theme.of(context).colorScheme.tertiary,
             onTap: () => Navigator.push(
               context,
               MaterialPageRoute(builder: (_) => const LoanCalculatorPage()),
@@ -40,7 +41,7 @@ class ToolsHubPage extends StatelessWidget {
           _ToolCard(
             title: 'Savings Goals',
             icon: Icons.savings,
-            color: Colors.green,
+            color: Theme.of(context).colorScheme.primary,
             onTap: () => Navigator.push(
               context,
               MaterialPageRoute(builder: (_) => const SavingsCalculatorPage()),
@@ -49,7 +50,7 @@ class ToolsHubPage extends StatelessWidget {
           _ToolCard(
             title: 'Rate Converter',
             icon: Icons.percent,
-            color: Colors.purple,
+            color: Theme.of(context).colorScheme.secondary,
             onTap: () => Navigator.push(
               context,
               MaterialPageRoute(builder: (_) => const RateConverterPage()),
@@ -58,7 +59,7 @@ class ToolsHubPage extends StatelessWidget {
           _ToolCard(
             title: 'Emergency Fund',
             icon: Icons.health_and_safety,
-            color: Colors.red,
+            color: Theme.of(context).colorScheme.error,
             onTap: () => Navigator.push(
               context,
               MaterialPageRoute(
@@ -69,7 +70,7 @@ class ToolsHubPage extends StatelessWidget {
           _ToolCard(
             title: 'Saved Calculations',
             icon: Icons.bookmark,
-            color: Colors.teal,
+            color: Theme.of(context).colorScheme.tertiary,
             onTap: () => Navigator.push(
               context,
               MaterialPageRoute(builder: (_) => const SavedCalculationsPage()),
@@ -100,12 +101,12 @@ class _ToolCard extends StatelessWidget {
       elevation: 2,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppRadius.md),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(icon, size: 48, color: color),
-            const SizedBox(height: 12),
+            SizedBox(height: AppSpacing.sm + AppSpacing.xs),
             Text(title, style: Theme.of(context).textTheme.titleMedium),
           ],
         ),

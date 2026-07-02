@@ -28,12 +28,12 @@ class CategorySettingsPage extends StatelessWidget {
               length: 2,
               child: Column(
                 children: [
-                  const TabBar(
-                    tabs: [
+                  TabBar(
+                    tabs: const [
                       Tab(text: 'Income'),
                       Tab(text: 'Expense'),
                     ],
-                    labelColor: Colors.black,
+                    labelColor: Theme.of(context).colorScheme.onSurface,
                   ),
                   Expanded(
                     child: TabBarView(
@@ -77,7 +77,7 @@ class CategorySettingsPage extends StatelessWidget {
         return ListTile(
           title: Text(category.name),
           trailing: IconButton(
-            icon: const Icon(Icons.delete, color: Colors.red),
+            icon: Icon(Icons.delete, color: Theme.of(context).colorScheme.error),
             onPressed: () {
               showDialog(
                 context: context,
