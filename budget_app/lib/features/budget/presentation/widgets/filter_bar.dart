@@ -94,6 +94,14 @@ class _FilterBarState extends State<FilterBar> {
     }
   }
 
+  void _updateEntryStatus(EntryStatus? status) {
+    if (status != null) {
+      setState(() {
+        _filterState = _filterState.copyWith(entryStatus: status);
+      });
+    }
+  }
+
   void _clearAll() {
     setState(() {
       _filterState = _filterState.clearAll();
@@ -247,6 +255,20 @@ class _FilterBarState extends State<FilterBar> {
                   selected: {_filterState.scope},
                   onSelectionChanged: (selection) {
                     _updateScope(selection.first);
+                  },
+                ),
+                const SizedBox(height: 8),
+                SegmentedButton<EntryStatus>(
+                  segments: EntryStatus.values.map((status) {
+                    return ButtonSegment(
+                      value: status,
+                      label: Text(status.label),
+                      icon: Icon(status.icon, size: 18),
+                    );
+                  }).toList(),
+                  selected: {_filterState.entryStatus},
+                  onSelectionChanged: (selection) {
+                    _updateEntryStatus(selection.first);
                   },
                 ),
               ],

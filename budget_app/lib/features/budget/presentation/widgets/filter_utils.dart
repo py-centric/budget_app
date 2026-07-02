@@ -23,8 +23,9 @@ List<ExpenseEntry> filterExpenseEntries(
 bool _matchesFilter(dynamic entry, FilterState filterState) {
   final matchesSearch = _matchesSearch(entry, filterState.searchQuery);
   final matchesAmount = _matchesAmount(entry, filterState.amountFilter);
+  final matchesStatus = _matchesStatus(entry, filterState.entryStatus);
 
-  return matchesSearch && matchesAmount;
+  return matchesSearch && matchesAmount && matchesStatus;
 }
 
 bool _matchesSearch(dynamic entry, String? searchQuery) {
@@ -95,4 +96,19 @@ double _getAmount(dynamic entry) {
     return entry.amount;
   }
   return 0.0;
+}
+
+bool _matchesStatus(dynamic entry, EntryStatus status) {
+  if (status == EntryStatus.all) return true;
+
+  final isPotential = entry.isPotential;
+
+  switch (status) {
+    case EntryStatus.outstanding:
+      return isPotential == true;
+    case EntryStatus.paid:
+      return isPotential != true;
+    case EntryStatus.all:
+      return true;
+  }
 }
