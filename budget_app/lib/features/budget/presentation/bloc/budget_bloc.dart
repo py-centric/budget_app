@@ -68,7 +68,7 @@ class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
         incomeId: event.incomeId,
         expenseId: event.expenseId,
       );
-      emit(const OperationSuccess()); // Or a new state if preferred
+      emit(const OperationSuccess(message: 'Transaction confirmed'));
       // Refresh summary
     } catch (e) {
       emit(BudgetError(e.toString()));
@@ -128,7 +128,7 @@ class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
         isPotential: event.isPotential,
       );
       await addIncomeUseCase(income);
-      emit(const OperationSuccess());
+      emit(const OperationSuccess(message: 'Income added'));
       add(
         LoadSummaryEvent(
           period: BudgetPeriod.fromDate(event.date),
@@ -155,7 +155,7 @@ class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
         isPotential: event.isPotential,
       );
       await addExpenseUseCase(expense);
-      emit(const OperationSuccess());
+      emit(const OperationSuccess(message: 'Expense added'));
       add(
         LoadSummaryEvent(
           period: BudgetPeriod.fromDate(event.date),
@@ -206,7 +206,7 @@ class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
             ? usecase.EntryType.income
             : usecase.EntryType.expense,
       );
-      emit(const OperationSuccess()); // Trigger reload in UI
+      emit(const OperationSuccess(message: 'Entry deleted'));
     } catch (e) {
       emit(BudgetError(e.toString()));
     }
@@ -218,7 +218,7 @@ class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
   ) async {
     try {
       await updateEntryUseCase(income: event.income);
-      emit(const OperationSuccess());
+      emit(const OperationSuccess(message: 'Income updated'));
       add(
         LoadSummaryEvent(
           period: BudgetPeriod.fromDate(event.income.date),
@@ -236,7 +236,7 @@ class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
   ) async {
     try {
       await updateEntryUseCase(expense: event.expense);
-      emit(const OperationSuccess());
+      emit(const OperationSuccess(message: 'Expense updated'));
       add(
         LoadSummaryEvent(
           period: BudgetPeriod.fromDate(event.expense.date),
@@ -254,7 +254,7 @@ class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
   ) async {
     try {
       await repository.deleteBudget(event.budgetId);
-      emit(const OperationSuccess());
+      emit(const OperationSuccess(message: 'Budget deleted'));
     } catch (e) {
       emit(BudgetError(e.toString()));
     }
@@ -266,7 +266,7 @@ class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
   ) async {
     try {
       await repository.clearAllBudgets();
-      emit(const OperationSuccess());
+      emit(const OperationSuccess(message: 'All budgets cleared'));
     } catch (e) {
       emit(BudgetError(e.toString()));
     }
@@ -278,7 +278,7 @@ class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
   ) async {
     try {
       await repository.factoryReset();
-      emit(const OperationSuccess());
+      emit(const OperationSuccess(message: 'Factory reset complete'));
     } catch (e) {
       emit(BudgetError(e.toString()));
     }
