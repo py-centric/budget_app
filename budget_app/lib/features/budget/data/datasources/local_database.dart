@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:path/path.dart' as p;
 import 'package:budget_app/core/constants/app_constants.dart';
@@ -8,10 +9,28 @@ class LocalDatabase {
   static Database? _database;
   static final LocalDatabase instance = LocalDatabase._internal();
   static bool _initialized = false;
-  static final Completer<Database> _databaseCompleter = Completer<Database>();
+  static Completer<Database> _databaseCompleter = Completer<Database>();
   static bool _databaseCompleterUsed = false;
 
   LocalDatabase._internal();
+
+  @visibleForTesting
+  static void setTestDatabase(Database db) {
+    _database = db;
+    _initialized = true;
+    if (!_databaseCompleterUsed) {
+      _databaseCompleterUsed = true;
+      _databaseCompleter.complete(db);
+    }
+  }
+
+  @visibleForTesting
+  static void resetForTesting() {
+    _database = null;
+    _initialized = false;
+    _databaseCompleterUsed = false;
+    _databaseCompleter = Completer<Database>();
+  }
 
   static Future<void> initialize() async {
     if (_initialized) return;
