@@ -43,7 +43,8 @@ budget_app/
 ## Commands
 
 # Version bump (run from budget_app/ directory)
-dart run scripts/version_bump.dart <patch|minor|major>
+# Auto-detects from git log: major for breaking, minor for feat, patch for fixes/other
+dart run scripts/version_bump.dart [patch|minor|major] [--dry-run]
 
 ## Code Style
 
