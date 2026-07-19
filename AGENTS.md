@@ -42,7 +42,8 @@ budget_app/
 
 ## Commands
 
-# Add commands for Dart 3.x (Flutter 3.x)
+# Version bump (run from budget_app/ directory)
+dart run scripts/version_bump.dart <patch|minor|major>
 
 ## Code Style
 
