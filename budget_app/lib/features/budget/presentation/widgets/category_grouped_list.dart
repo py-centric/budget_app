@@ -17,6 +17,7 @@ class CategoryGroupedList extends StatefulWidget {
   final SortField sortField;
   final SortOrder sortOrder;
   final GroupMode groupMode;
+  final Set<String>? disposableBudgetIds;
 
   const CategoryGroupedList({
     super.key,
@@ -29,6 +30,7 @@ class CategoryGroupedList extends StatefulWidget {
     this.sortField = SortField.date,
     this.sortOrder = SortOrder.descending,
     this.groupMode = GroupMode.category,
+    this.disposableBudgetIds,
   });
 
   @override
@@ -444,6 +446,7 @@ class _CategoryGroupedListState extends State<CategoryGroupedList> {
   }
 
   Widget _buildExpenseItem(ExpenseEntry entry, ThemeData theme) {
+    final isDisposable = widget.disposableBudgetIds?.contains(entry.budgetId) ?? false;
     return SlidableTransactionItem(
       key: ValueKey(entry.id),
       isIncome: false,
@@ -493,6 +496,15 @@ class _CategoryGroupedListState extends State<CategoryGroupedList> {
                       ),
                     ),
                   ),
+                if (isDisposable)
+                  Padding(
+                    padding: const EdgeInsets.only(left: 6),
+                    child: Icon(
+                      Icons.all_inbox,
+                      size: 14,
+                      color: theme.colorScheme.secondary,
+                    ),
+                  ),
               ],
             ),
             subtitle: Column(
@@ -517,6 +529,7 @@ class _CategoryGroupedListState extends State<CategoryGroupedList> {
   }
 
   Widget _buildIncomeItem(IncomeEntry entry, ThemeData theme) {
+    final isDisposable = widget.disposableBudgetIds?.contains(entry.budgetId) ?? false;
     return SlidableTransactionItem(
       key: ValueKey(entry.id),
       onTap: () => widget.onEdit(entry),
@@ -563,6 +576,15 @@ class _CategoryGroupedListState extends State<CategoryGroupedList> {
                         color: theme.colorScheme.onSurfaceVariant,
                         fontStyle: FontStyle.italic,
                       ),
+                    ),
+                  ),
+                if (isDisposable)
+                  Padding(
+                    padding: const EdgeInsets.only(left: 6),
+                    child: Icon(
+                      Icons.all_inbox,
+                      size: 14,
+                      color: theme.colorScheme.secondary,
                     ),
                   ),
               ],

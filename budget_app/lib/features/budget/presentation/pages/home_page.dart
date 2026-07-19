@@ -31,6 +31,7 @@ import '../bloc/category_limit_event.dart';
 import '../bloc/category_limit_state.dart';
 import '../bloc/projection_event.dart';
 import 'package:budget_app/shared/widgets/branding_footer.dart';
+import '../../domain/entities/budget.dart';
 import '../../domain/entities/category.dart';
 import '../../domain/entities/recurring_transaction.dart';
 
@@ -473,6 +474,10 @@ class _HomePageState extends State<HomePage> {
                                 },
                                 incomeListBuilder:
                                     (entries, onEdit, onDelete, onConfirm, sortField, sortOrder, groupMode) {
+                                      final blocState = context.read<BudgetBloc>().state;
+                                      final disposableIds = blocState is DisposableBudgetsLoaded
+                                          ? blocState.active.map((b) => b.id).toSet()
+                                          : <String>{};
                                       return IncomeList(
                                         entries: entries,
                                         onEdit: onEdit,
@@ -481,10 +486,15 @@ class _HomePageState extends State<HomePage> {
                                         sortField: sortField,
                                         sortOrder: sortOrder,
                                         groupMode: groupMode,
+                                        disposableBudgetIds: disposableIds,
                                       );
                                     },
                                 expenseListBuilder:
                                     (entries, onEdit, onDelete, onConfirm, sortField, sortOrder, groupMode) {
+                                      final blocState = context.read<BudgetBloc>().state;
+                                      final disposableIds = blocState is DisposableBudgetsLoaded
+                                          ? blocState.active.map((b) => b.id).toSet()
+                                          : <String>{};
                                       return ExpenseList(
                                         entries: entries,
                                         onEdit: onEdit,
@@ -493,6 +503,7 @@ class _HomePageState extends State<HomePage> {
                                         sortField: sortField,
                                         sortOrder: sortOrder,
                                         groupMode: groupMode,
+                                        disposableBudgetIds: disposableIds,
                                       );
                                     },
                               );
@@ -512,107 +523,161 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void _showTransactionDialog(BuildContext context, String budgetId) {
-    final navState = context.read<NavigationBloc>().state;
+  void _showTransactionDialog(BuildContext outerContext, String budgetId) {
+    final navState = outerContext.read<NavigationBloc>().state;
+    final budgetBlocState = outerContext.read<BudgetBloc>().state;
     final period = navState.currentPeriod;
 
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(_showIncomeForm ? 'Add Income' : 'Add Expense'),
-        content: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TransactionForm(
-                isIncome: _showIncomeForm,
-                categories: _categories
-                    .where(
-                      (c) =>
-                          c.type ==
-                          (_showIncomeForm
-                              ? CategoryType.income
-                              : CategoryType.expense),
-                    )
-                    .toList(),
-                periodYear: period.year,
-                periodMonth: period.month,
-                onSubmit:
-                    (
-                      id,
-                      amount,
-                      categoryId,
-                      description,
-                      date, {
-                      bool isRecurring = false,
-                      int? interval,
-                      RecurrenceUnit? unit,
-                      DateTime? endDate,
-                      bool isPotential = false,
-                      List<SplitItem>? splits,
-                      String? targetBudgetId,
-                    }) {
-                      final effectiveBudgetId = targetBudgetId ?? budgetId;
+    final allBudgets = <Budget>[];
+    if (navState.activeBudget != null) {
+      allBudgets.add(navState.activeBudget!);
+    }
+    if (budgetBlocState is DisposableBudgetsLoaded) {
+      allBudgets.addAll(budgetBlocState.active);
+    }
 
-                      if (isRecurring && interval != null && unit != null) {
-                        context.read<BudgetBloc>().add(
-                          SaveRecurringTransactionEvent(
-                            RecurringTransaction(
-                              id: _uuid.v4(),
-                              budgetId: effectiveBudgetId,
-                              type: _showIncomeForm ? 'INCOME' : 'EXPENSE',
-                              amount: amount,
-                              categoryId: categoryId,
-                              description:
-                                  description ??
-                                  (_showIncomeForm
-                                      ? 'Recurring Income'
-                                      : 'Recurring Expense'),
-                              startDate: date,
-                              endDate: endDate,
-                              interval: interval,
-                              unit: unit,
+    showDialog(
+      context: outerContext,
+      builder: (dialogContext) {
+        var selectedBudget = allBudgets.isNotEmpty ? allBudgets.first : null;
+
+        return StatefulBuilder(
+          builder: (ctx, setDialogState) => AlertDialog(
+            title: Text(_showIncomeForm ? 'Add Income' : 'Add Expense'),
+            content: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (allBudgets.length > 1)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 16),
+                      child: DropdownButtonFormField<Budget>(
+                        initialValue: selectedBudget,
+                        decoration: InputDecoration(
+                          labelText: 'Target Budget',
+                          prefixIcon: Icon(
+                            Icons.account_balance_wallet,
+                            color: Theme.of(dialogContext).colorScheme.secondary,
+                          ),
+                        ),
+                        items: allBudgets.map((b) {
+                          return DropdownMenuItem(
+                            value: b,
+                            child: Row(
+                              children: [
+                                if (b.type == BudgetType.disposable)
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 6),
+                                    child: Icon(
+                                      Icons.all_inbox,
+                                      size: 16,
+                                      color: Theme.of(dialogContext).colorScheme.secondary,
+                                    ),
+                                  ),
+                                Text(b.name),
+                              ],
                             ),
-                          ),
-                        );
-                      } else if (_showIncomeForm) {
-                        context.read<BudgetBloc>().add(
-                          AddIncomeEvent(
-                            id: id,
-                            budgetId: effectiveBudgetId,
-                            amount: amount,
-                            categoryId: categoryId,
-                            description: description,
-                            date: date,
-                            isPotential: isPotential,
-                          ),
-                        );
-                      } else {
-                        context.read<BudgetBloc>().add(
-                          AddExpenseEvent(
-                            id: id,
-                            budgetId: effectiveBudgetId,
-                            amount: amount,
-                            category: categoryId,
-                            description: description,
-                            date: date,
-                            isPotential: isPotential,
-                          ),
-                        );
-                      }
-                      Navigator.pop(context);
-                    },
+                          );
+                        }).toList(),
+                        onChanged: (b) {
+                          if (b != null) {
+                            setDialogState(() => selectedBudget = b);
+                          }
+                        },
+                      ),
+                    ),
+                  TransactionForm(
+                    isIncome: _showIncomeForm,
+                    categories: _categories
+                        .where(
+                          (c) =>
+                              c.type ==
+                              (_showIncomeForm
+                                  ? CategoryType.income
+                                  : CategoryType.expense),
+                        )
+                        .toList(),
+                    periodYear: period.year,
+                    periodMonth: period.month,
+                    onSubmit:
+                        (
+                          id,
+                          amount,
+                          categoryId,
+                          description,
+                          date, {
+                          bool isRecurring = false,
+                          int? interval,
+                          RecurrenceUnit? unit,
+                          DateTime? endDate,
+                          bool isPotential = false,
+                          List<SplitItem>? splits,
+                          String? targetBudgetId,
+                        }) {
+                          final effectiveBudgetId =
+                              targetBudgetId ?? selectedBudget?.id ?? budgetId;
+
+                          if (isRecurring && interval != null && unit != null) {
+                            dialogContext.read<BudgetBloc>().add(
+                              SaveRecurringTransactionEvent(
+                                RecurringTransaction(
+                                  id: _uuid.v4(),
+                                  budgetId: effectiveBudgetId,
+                                  type: _showIncomeForm ? 'INCOME' : 'EXPENSE',
+                                  amount: amount,
+                                  categoryId: categoryId,
+                                  description:
+                                      description ??
+                                      (_showIncomeForm
+                                          ? 'Recurring Income'
+                                          : 'Recurring Expense'),
+                                  startDate: date,
+                                  endDate: endDate,
+                                  interval: interval,
+                                  unit: unit,
+                                ),
+                              ),
+                            );
+                          } else if (_showIncomeForm) {
+                            dialogContext.read<BudgetBloc>().add(
+                              AddIncomeEvent(
+                                id: id,
+                                budgetId: effectiveBudgetId,
+                                amount: amount,
+                                categoryId: categoryId,
+                                description: description,
+                                date: date,
+                                isPotential: isPotential,
+                              ),
+                            );
+                          } else {
+                            dialogContext.read<BudgetBloc>().add(
+                              AddExpenseEvent(
+                                id: id,
+                                budgetId: effectiveBudgetId,
+                                amount: amount,
+                                category: categoryId,
+                                description: description,
+                                date: date,
+                                isPotential: isPotential,
+                              ),
+                            );
+                          }
+                          Navigator.pop(dialogContext);
+                        },
+                  ),
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(dialogContext),
+                child: const Text('Cancel'),
               ),
             ],
           ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 
