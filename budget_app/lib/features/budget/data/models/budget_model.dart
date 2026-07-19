@@ -11,9 +11,14 @@ class BudgetModel extends Budget {
     super.targetCurrencyCode,
     super.exchangeRate,
     super.convertedAmount,
+    super.type = BudgetType.regular,
+    super.targetIncome,
+    super.sourceDescription,
+    super.linkedIncomeId,
   });
 
   factory BudgetModel.fromMap(Map<String, dynamic> map) {
+    final typeStr = map['type'] as String? ?? 'regular';
     return BudgetModel(
       id: map['id'] as String,
       name: map['name'] as String,
@@ -24,6 +29,13 @@ class BudgetModel extends Budget {
       targetCurrencyCode: map['target_currency_code'] as String?,
       exchangeRate: map['exchange_rate'] as double?,
       convertedAmount: map['converted_amount'] as double?,
+      type: BudgetType.values.firstWhere(
+        (e) => e.name == typeStr,
+        orElse: () => BudgetType.regular,
+      ),
+      targetIncome: map['target_income'] as double?,
+      sourceDescription: map['source_description'] as String?,
+      linkedIncomeId: map['linked_income_id'] as String?,
     );
   }
 
@@ -38,6 +50,10 @@ class BudgetModel extends Budget {
       'target_currency_code': targetCurrencyCode,
       'exchange_rate': exchangeRate,
       'converted_amount': convertedAmount,
+      'type': type.name,
+      'target_income': targetIncome,
+      'source_description': sourceDescription,
+      'linked_income_id': linkedIncomeId,
     };
   }
 
@@ -52,6 +68,10 @@ class BudgetModel extends Budget {
       targetCurrencyCode: entity.targetCurrencyCode,
       exchangeRate: entity.exchangeRate,
       convertedAmount: entity.convertedAmount,
+      type: entity.type,
+      targetIncome: entity.targetIncome,
+      sourceDescription: entity.sourceDescription,
+      linkedIncomeId: entity.linkedIncomeId,
     );
   }
 }

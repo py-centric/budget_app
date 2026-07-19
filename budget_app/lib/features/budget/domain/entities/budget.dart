@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 
+enum BudgetType { regular, disposable, disposed, persisted }
+
 class Budget extends Equatable {
   final String id;
   final String name;
@@ -10,6 +12,10 @@ class Budget extends Equatable {
   final String? targetCurrencyCode;
   final double? exchangeRate;
   final double? convertedAmount;
+  final BudgetType type;
+  final double? targetIncome;
+  final String? sourceDescription;
+  final String? linkedIncomeId;
 
   const Budget({
     required this.id,
@@ -21,6 +27,10 @@ class Budget extends Equatable {
     this.targetCurrencyCode,
     this.exchangeRate,
     this.convertedAmount,
+    this.type = BudgetType.regular,
+    this.targetIncome,
+    this.sourceDescription,
+    this.linkedIncomeId,
   });
 
   Budget copyWith({
@@ -33,6 +43,10 @@ class Budget extends Equatable {
     String? targetCurrencyCode,
     double? exchangeRate,
     double? convertedAmount,
+    BudgetType? type,
+    double? targetIncome,
+    String? sourceDescription,
+    String? linkedIncomeId,
   }) {
     return Budget(
       id: id ?? this.id,
@@ -44,6 +58,10 @@ class Budget extends Equatable {
       targetCurrencyCode: targetCurrencyCode ?? this.targetCurrencyCode,
       exchangeRate: exchangeRate ?? this.exchangeRate,
       convertedAmount: convertedAmount ?? this.convertedAmount,
+      type: type ?? this.type,
+      targetIncome: targetIncome ?? this.targetIncome,
+      sourceDescription: sourceDescription ?? this.sourceDescription,
+      linkedIncomeId: linkedIncomeId ?? this.linkedIncomeId,
     );
   }
 
@@ -58,5 +76,9 @@ class Budget extends Equatable {
     targetCurrencyCode,
     exchangeRate,
     convertedAmount,
+    type,
+    targetIncome,
+    sourceDescription,
+    linkedIncomeId,
   ];
 }
