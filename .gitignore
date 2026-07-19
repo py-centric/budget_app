@@ -21,6 +21,9 @@
 .pub/
 build/
 
+# SonarQube scanner
+.scannerwork/
+
 # Specify/OpenCode/Gemini (not part of the app)
 specs/
 .specify/
