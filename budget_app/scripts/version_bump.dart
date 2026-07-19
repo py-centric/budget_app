@@ -1,5 +1,7 @@
 import 'dart:io';
 
+// ignore_for_file: avoid_print
+
 void main(List<String> args) async {
   final dryRun = args.contains('--dry-run');
 
@@ -26,7 +28,7 @@ void main(List<String> args) async {
   }
 
   var content = pubspecFile.readAsStringSync();
-  final versionRegex = RegExp(r"^version:\s*(\d+)\.(\d+)\.(\d+)\+(\d+)$", multiLine: true);
+  final versionRegex = RegExp(r'^version:\s*(\d+)\.(\d+)\.(\d+)\+(\d+)$', multiLine: true);
   final match = versionRegex.firstMatch(content);
 
   if (match == null) {
@@ -62,7 +64,7 @@ void main(List<String> args) async {
   }
 
   content = content.replaceFirst(
-    RegExp(r"^version:\s*.*$", multiLine: true),
+    RegExp(r'^version:\s*.*$', multiLine: true),
     'version: $newVersion',
   );
 
