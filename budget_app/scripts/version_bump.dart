@@ -1,18 +1,21 @@
 import 'dart:io';
 
 void main(List<String> args) async {
-  if (args.isEmpty) {
-    print('Usage: dart run scripts/version_bump.dart <patch|minor|major>');
-    print('  patch  — increment patch version (1.0.0 → 1.0.1)');
-    print('  minor  — increment minor version (1.0.0 → 1.1.0)');
-    print('  major  — increment major version (1.0.0 → 2.0.0)');
-    exit(1);
-  }
+  final dryRun = args.contains('--dry-run');
 
-  final bumpType = args[0].toLowerCase();
-  if (!['patch', 'minor', 'major'].contains(bumpType)) {
-    print('Invalid bump type. Use: patch, minor, or major.');
-    exit(1);
+  final bumpArg = args.where((a) => !a.startsWith('--')).firstOrNull;
+  String bumpType;
+
+  if (bumpArg != null && ['patch', 'minor', 'major'].contains(bumpArg.toLowerCase())) {
+    bumpType = bumpArg.toLowerCase();
+  } else {
+    bumpType = _detectBumpType();
+    if (bumpArg == null) {
+      print('Auto-detected bump: $bumpType');
+    } else {
+      print('Invalid bump type "$bumpArg". Use: patch, minor, or major.');
+      exit(1);
+    }
   }
 
   final pubspecFile = File('pubspec.yaml');
@@ -52,6 +55,12 @@ void main(List<String> args) async {
 
   final oldVersion = '${match.group(1)}.${match.group(2)}.${match.group(3)}+${match.group(4)}';
   final newVersion = '$major.$minor.$patch+$build';
+
+  if (dryRun) {
+    print('[dry-run] $oldVersion → $newVersion (bump: $bumpType)');
+    exit(0);
+  }
+
   content = content.replaceFirst(
     RegExp(r"^version:\s*.*$", multiLine: true),
     'version: $newVersion',
@@ -59,4 +68,42 @@ void main(List<String> args) async {
 
   pubspecFile.writeAsStringSync(content);
   print('$oldVersion → $newVersion');
+}
+
+String _detectBumpType() {
+  final result = Process.runSync(
+    'git',
+    ['log', '--format=%s', '--no-merges'],
+    runInShell: true,
+  );
+
+  if (result.exitCode != 0) {
+    print('Warning: git log failed. Defaulting to patch bump.');
+    return 'patch';
+  }
+
+  final commits = (result.stdout as String).split('\n').where((l) => l.trim().isNotEmpty);
+
+  var hasBreaking = false;
+  var hasFeat = false;
+  var hasFix = false;
+
+  for (final commit in commits) {
+    final trimmed = commit.trim();
+
+    if (trimmed.contains(RegExp(r'!\s*:')) ||
+        trimmed.contains(RegExp(r'BREAKING\s+CHANGE', caseSensitive: false))) {
+      hasBreaking = true;
+    }
+
+    if (trimmed.startsWith(RegExp(r'\w+\(?.+\)?!?\s*:'))) {
+      final type = trimmed.split(RegExp(r'[(!]')).first.toLowerCase();
+      if (type == 'feat') hasFeat = true;
+      if (type == 'fix') hasFix = true;
+    }
+  }
+
+  if (hasBreaking) return 'major';
+  if (hasFeat) return 'minor';
+  return 'patch';
 }
