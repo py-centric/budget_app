@@ -37,7 +37,23 @@ class BudgetSelector extends StatelessWidget {
         }).toList();
       },
       items: budgets.map((budget) {
-        return DropdownMenuItem(value: budget, child: Text(budget.name));
+        return DropdownMenuItem(
+          value: budget,
+          child: Row(
+            children: [
+              if (budget.type == BudgetType.disposable)
+                Padding(
+                  padding: const EdgeInsets.only(right: 6),
+                  child: Icon(
+                    Icons.all_inbox,
+                    size: 16,
+                    color: Theme.of(context).colorScheme.secondary,
+                  ),
+                ),
+              Text(budget.name),
+            ],
+          ),
+        );
       }).toList(),
       onChanged: (budget) {
         if (budget != null && budget != activeBudget) {

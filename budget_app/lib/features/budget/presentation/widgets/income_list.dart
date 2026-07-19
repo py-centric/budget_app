@@ -15,6 +15,7 @@ class IncomeList extends StatelessWidget {
   final SortField sortField;
   final SortOrder sortOrder;
   final GroupMode groupMode;
+  final Set<String>? disposableBudgetIds;
 
   const IncomeList({
     super.key,
@@ -25,6 +26,7 @@ class IncomeList extends StatelessWidget {
     this.sortField = SortField.date,
     this.sortOrder = SortOrder.descending,
     this.groupMode = GroupMode.category,
+    this.disposableBudgetIds,
   });
 
   @override
@@ -54,6 +56,7 @@ class IncomeList extends StatelessWidget {
       sortField: sortField,
       sortOrder: sortOrder,
       groupMode: groupMode,
+      disposableBudgetIds: disposableBudgetIds,
     );
   }
 }
