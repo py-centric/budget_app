@@ -4,6 +4,7 @@ import 'package:uuid/uuid.dart';
 import '../../domain/entities/income_entry.dart';
 import '../../domain/entities/expense_entry.dart';
 import '../../domain/entities/budget_period.dart';
+import '../../domain/entities/budget.dart';
 import '../../domain/repositories/budget_repository.dart';
 import '../../domain/usecases/add_income.dart';
 import '../../domain/usecases/add_expense.dart';
@@ -57,6 +58,14 @@ class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
     on<FactoryResetEvent>(_onFactoryReset);
     on<ConvertBudgetEvent>(_onConvertBudget);
     on<UpdateExchangeRateEvent>(_onUpdateExchangeRate);
+    on<CreateDisposableBudgetEvent>(_onCreateDisposableBudget);
+    on<UpdateDisposableBudgetEvent>(_onUpdateDisposableBudget);
+    on<DisposeBudgetEvent>(_onDisposeBudget);
+    on<PersistBudgetEvent>(_onPersistBudget);
+    on<LoadDisposableHistoryEvent>(_onLoadDisposableHistory);
+    on<LinkIncomeToBudgetEvent>(_onLinkIncomeToBudget);
+    on<UnlinkIncomeFromBudgetEvent>(_onUnlinkIncomeFromBudget);
+    on<LoadIncomeListEvent>(_onLoadIncomeList);
   }
 
   Future<void> _onConfirmPotentialTransaction(
@@ -357,6 +366,199 @@ class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
           convertedAmount: convertedAmount ?? 0,
         ),
       );
+    } catch (e) {
+      emit(BudgetError(e.toString()));
+    }
+  }
+
+  Future<void> _onCreateDisposableBudget(
+    CreateDisposableBudgetEvent event,
+    Emitter<BudgetState> emit,
+  ) async {
+    try {
+      if (event.targetIncome <= 0) {
+        emit(const BudgetError('Target income must be positive'));
+        return;
+      }
+      if (event.sourceDescription.length > 200) {
+        emit(const BudgetError('Source description too long'));
+        return;
+      }
+
+      final budget = Budget(
+        id: _uuid.v4(),
+        name: event.name,
+        periodMonth: event.periodMonth,
+        periodYear: event.periodYear,
+        isActive: true,
+        type: BudgetType.disposable,
+        targetIncome: event.targetIncome,
+        sourceDescription: event.sourceDescription,
+        linkedIncomeId: event.linkedIncomeId,
+      );
+
+      await repository.addBudget(budget);
+      emit(DisposableBudgetCreated(budget));
+    } catch (e) {
+      emit(BudgetError(e.toString()));
+    }
+  }
+
+  Future<void> _onUpdateDisposableBudget(
+    UpdateDisposableBudgetEvent event,
+    Emitter<BudgetState> emit,
+  ) async {
+    try {
+      final budget = await repository.getBudget(event.budgetId);
+      if (budget == null) {
+        emit(const BudgetError('Budget not found'));
+        return;
+      }
+      if (budget.type != BudgetType.disposable) {
+        emit(const BudgetError('Invalid budget type'));
+        return;
+      }
+
+      final updated = budget.copyWith(
+        targetIncome: event.targetIncome ?? budget.targetIncome,
+        sourceDescription: event.sourceDescription ?? budget.sourceDescription,
+      );
+
+      await repository.updateBudget(updated);
+      emit(const OperationSuccess(message: 'Disposable budget updated'));
+    } catch (e) {
+      emit(BudgetError(e.toString()));
+    }
+  }
+
+  Future<void> _onDisposeBudget(
+    DisposeBudgetEvent event,
+    Emitter<BudgetState> emit,
+  ) async {
+    try {
+      final budget = await repository.getBudget(event.budgetId);
+      if (budget == null) {
+        emit(const BudgetError('Budget not found'));
+        return;
+      }
+      if (budget.type != BudgetType.disposable) {
+        emit(const BudgetError('Invalid budget type'));
+        return;
+      }
+
+      final updated = budget.copyWith(type: BudgetType.disposed);
+      await repository.updateBudget(updated);
+      emit(BudgetDisposed(event.budgetId));
+    } catch (e) {
+      emit(BudgetError(e.toString()));
+    }
+  }
+
+  Future<void> _onPersistBudget(
+    PersistBudgetEvent event,
+    Emitter<BudgetState> emit,
+  ) async {
+    try {
+      final budget = await repository.getBudget(event.budgetId);
+      if (budget == null) {
+        emit(const BudgetError('Budget not found'));
+        return;
+      }
+      if (budget.type != BudgetType.disposable) {
+        emit(const BudgetError('Invalid budget type'));
+        return;
+      }
+
+      final updated = budget.copyWith(type: BudgetType.regular);
+      await repository.updateBudget(updated);
+      emit(BudgetPersisted(event.budgetId));
+    } catch (e) {
+      emit(BudgetError(e.toString()));
+    }
+  }
+
+  Future<void> _onLoadDisposableHistory(
+    LoadDisposableHistoryEvent event,
+    Emitter<BudgetState> emit,
+  ) async {
+    try {
+      final active = await repository.getActiveDisposableBudgets();
+      final history = await repository.getDisposableHistory();
+
+      final expenseTotals = <String, double>{};
+      final now = DateTime.now();
+      final endedIds = <String>{};
+
+      for (final budget in active) {
+        final expenses = await repository.getExpensesForBudget(budget.id);
+        expenseTotals[budget.id] =
+            expenses.fold<double>(0, (sum, e) => sum + e.amount);
+
+        if (budget.periodYear < now.year ||
+            (budget.periodYear == now.year && budget.periodMonth < now.month)) {
+          endedIds.add(budget.id);
+        }
+      }
+
+      emit(DisposableBudgetsLoaded(
+        active: active,
+        history: history,
+        budgetExpenseTotals: expenseTotals,
+        endedBudgetIds: endedIds,
+      ));
+    } catch (e) {
+      emit(BudgetError(e.toString()));
+    }
+  }
+
+  Future<void> _onLinkIncomeToBudget(
+    LinkIncomeToBudgetEvent event,
+    Emitter<BudgetState> emit,
+  ) async {
+    try {
+      final budget = await repository.getBudget(event.budgetId);
+      if (budget == null) {
+        emit(const BudgetError('Budget not found'));
+        return;
+      }
+      final updated = budget.copyWith(
+        linkedIncomeId: event.incomeTransactionId,
+      );
+      await repository.updateBudget(updated);
+      emit(IncomeLinked(
+        budgetId: event.budgetId,
+        transactionId: event.incomeTransactionId,
+      ));
+    } catch (e) {
+      emit(BudgetError(e.toString()));
+    }
+  }
+
+  Future<void> _onUnlinkIncomeFromBudget(
+    UnlinkIncomeFromBudgetEvent event,
+    Emitter<BudgetState> emit,
+  ) async {
+    try {
+      final budget = await repository.getBudget(event.budgetId);
+      if (budget == null) {
+        emit(const BudgetError('Budget not found'));
+        return;
+      }
+      final updated = budget.copyWith(linkedIncomeId: null);
+      await repository.updateBudget(updated);
+      emit(IncomeUnlinked(event.budgetId));
+    } catch (e) {
+      emit(BudgetError(e.toString()));
+    }
+  }
+
+  Future<void> _onLoadIncomeList(
+    LoadIncomeListEvent event,
+    Emitter<BudgetState> emit,
+  ) async {
+    try {
+      final incomes = await repository.getAllIncome();
+      emit(IncomeListLoaded(incomes));
     } catch (e) {
       emit(BudgetError(e.toString()));
     }
