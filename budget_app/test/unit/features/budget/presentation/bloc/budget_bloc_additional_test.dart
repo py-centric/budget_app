@@ -50,7 +50,6 @@ void main() {
   late MockDuplicateBudget mockDuplicateBudget;
   late MockConfirmPotentialTransaction mockConfirmPotentialTransaction;
 
-  const testPeriod = BudgetPeriod(year: 2024, month: 1);
   const testBudget = Budget(
     id: 'budget-1',
     name: 'Test Budget',

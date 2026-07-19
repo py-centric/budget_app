@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mocktail/mocktail.dart';
 import 'package:budget_app/features/budget/domain/entities/expense_entry.dart';
 import 'package:budget_app/features/budget/domain/entities/income_entry.dart';
 import 'package:budget_app/features/budget/presentation/widgets/category_grouped_list.dart';
