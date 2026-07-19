@@ -101,7 +101,7 @@ class _CreateReminderDialogState extends State<CreateReminderDialog> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         DropdownButtonFormField<RecurringTransaction>(
-                          value: _selectedTransaction,
+                          initialValue: _selectedTransaction,
                           decoration: const InputDecoration(
                             labelText: 'Recurring Transaction',
                             hintText: 'Select a transaction',

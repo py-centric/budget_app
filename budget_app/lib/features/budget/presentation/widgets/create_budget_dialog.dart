@@ -142,7 +142,7 @@ class _CreateBudgetDialogState extends State<CreateBudgetDialog> {
               const SizedBox(height: 16),
               if (!_isMultiMonth)
                 DropdownButtonFormField<int>(
-                  value: _selectedMonth,
+                  initialValue: _selectedMonth,
                   decoration: const InputDecoration(labelText: 'Month'),
                   items: List.generate(12, (i) {
                     return DropdownMenuItem<int>(
@@ -159,7 +159,7 @@ class _CreateBudgetDialogState extends State<CreateBudgetDialog> {
                   children: <Widget>[
                     Expanded(
                       child: DropdownButtonFormField<int>(
-                        value: _startMonth,
+                        initialValue: _startMonth,
                         decoration: const InputDecoration(
                           labelText: 'Start Month',
                         ),
@@ -183,7 +183,7 @@ class _CreateBudgetDialogState extends State<CreateBudgetDialog> {
                     const SizedBox(width: 12),
                     Expanded(
                       child: DropdownButtonFormField<int>(
-                        value: _endMonth,
+                        initialValue: _endMonth,
                         decoration: const InputDecoration(
                           labelText: 'End Month',
                         ),
