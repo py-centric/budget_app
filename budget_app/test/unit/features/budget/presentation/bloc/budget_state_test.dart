@@ -44,7 +44,7 @@ void main() {
 
     group('SummaryLoaded', () {
       test('props contain summary', () {
-        final summary = BudgetSummary(
+        const summary = BudgetSummary(
           totalIncome: 5000,
           totalExpenses: 1000,
           balance: 4000,
@@ -53,7 +53,7 @@ void main() {
           incomeEntries: [],
           expenseEntries: [],
         );
-        final state = SummaryLoaded(summary);
+        const state = SummaryLoaded(summary);
         expect(state.props, [summary]);
       });
     });

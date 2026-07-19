@@ -99,8 +99,8 @@ void main() {
     );
 
     when(() => mockNavigationBloc.state).thenReturn(
-      NavigationState(
-        currentPeriod: const BudgetPeriod(year: 2026, month: 1),
+      const NavigationState(
+        currentPeriod: BudgetPeriod(year: 2026, month: 1),
       ),
     );
 

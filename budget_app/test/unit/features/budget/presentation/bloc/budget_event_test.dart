@@ -50,7 +50,7 @@ void main() {
 
     group('DuplicateBudgetEvent', () {
       test('props contain all fields', () {
-        final event = DuplicateBudgetEvent(
+        const event = DuplicateBudgetEvent(
           sourceBudget: testBudget,
           targetPeriod: testPeriod,
           newName: 'Copy',
@@ -60,12 +60,12 @@ void main() {
       });
 
       test('equal events have same props', () {
-        final a = DuplicateBudgetEvent(
+        const a = DuplicateBudgetEvent(
           sourceBudget: testBudget,
           targetPeriod: testPeriod,
           newName: 'Copy',
         );
-        final b = DuplicateBudgetEvent(
+        const b = DuplicateBudgetEvent(
           sourceBudget: testBudget,
           targetPeriod: testPeriod,
           newName: 'Copy',
@@ -74,12 +74,12 @@ void main() {
       });
 
       test('different events are not equal', () {
-        final a = DuplicateBudgetEvent(
+        const a = DuplicateBudgetEvent(
           sourceBudget: testBudget,
           targetPeriod: testPeriod,
           newName: 'Copy A',
         );
-        final b = DuplicateBudgetEvent(
+        const b = DuplicateBudgetEvent(
           sourceBudget: testBudget,
           targetPeriod: testPeriod,
           newName: 'Copy B',

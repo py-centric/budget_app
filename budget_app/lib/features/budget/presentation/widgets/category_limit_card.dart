@@ -49,7 +49,7 @@ class CategoryLimitCard extends StatelessWidget {
                     size: 24,
                     color: theme.colorScheme.primary,
                   ),
-                  SizedBox(width: AppSpacing.sm + AppSpacing.xs),
+                  const SizedBox(width: AppSpacing.sm + AppSpacing.xs),
                   Expanded(
                     child: Text(
                       limitWithSpending.categoryName,
@@ -66,12 +66,12 @@ class CategoryLimitCard extends StatelessWidget {
                     ),
                 ],
               ),
-              SizedBox(height: AppSpacing.sm + AppSpacing.xs),
+              const SizedBox(height: AppSpacing.sm + AppSpacing.xs),
               CategoryLimitProgressBar(
                 spentAmount: limitWithSpending.spentAmount,
                 limitAmount: limit.amount,
               ),
-              SizedBox(height: AppSpacing.sm),
+              const SizedBox(height: AppSpacing.sm),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -108,7 +108,7 @@ class CategoryLimitCard extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: AppSpacing.xs),
+              const SizedBox(height: AppSpacing.xs),
               Text(
                 limit.period == LimitPeriod.monthly ? 'Monthly' : 'Weekly',
                 style: theme.textTheme.bodySmall?.copyWith(

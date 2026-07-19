@@ -139,7 +139,7 @@ void main() {
     });
 
     testWidgets('shows active disposable budgets with remaining balance', (tester) async {
-      stubBudgetBloc(DisposableBudgetsLoaded(
+      stubBudgetBloc(const DisposableBudgetsLoaded(
         active: [disposableBudget],
         history: [],
         budgetExpenseTotals: {'disp-1': 1200.0},
@@ -168,7 +168,7 @@ void main() {
         targetIncome: 1000.0,
       );
 
-      stubBudgetBloc(DisposableBudgetsLoaded(
+      stubBudgetBloc(const DisposableBudgetsLoaded(
         active: [endedBudget],
         history: [],
         endedBudgetIds: {'ended-1'},
@@ -187,7 +187,7 @@ void main() {
     });
 
     testWidgets('shows View History link even with active budgets', (tester) async {
-      stubBudgetBloc(DisposableBudgetsLoaded(
+      stubBudgetBloc(const DisposableBudgetsLoaded(
         active: [disposableBudget],
         history: [],
         budgetExpenseTotals: {'disp-1': 0.0},
@@ -205,7 +205,7 @@ void main() {
     });
 
     testWidgets('shows popup menu with Dispose and Persist options', (tester) async {
-      stubBudgetBloc(DisposableBudgetsLoaded(
+      stubBudgetBloc(const DisposableBudgetsLoaded(
         active: [disposableBudget],
         history: [],
         budgetExpenseTotals: {'disp-1': 0.0},

@@ -114,7 +114,7 @@ class _ToolCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(icon, size: 48, color: color),
-            SizedBox(height: AppSpacing.sm + AppSpacing.xs),
+            const SizedBox(height: AppSpacing.sm + AppSpacing.xs),
             Text(title, style: Theme.of(context).textTheme.titleMedium),
           ],
         ),

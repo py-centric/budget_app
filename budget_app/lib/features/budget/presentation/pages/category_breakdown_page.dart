@@ -336,9 +336,9 @@ class _CategoryBreakdownPageState extends State<CategoryBreakdownPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(Icons.error_outline, size: 64, color: Theme.of(context).colorScheme.error),
-                      SizedBox(height: AppSpacing.md),
+                      const SizedBox(height: AppSpacing.md),
                       Text('Error: ${state.message}'),
-                      SizedBox(height: AppSpacing.md),
+                      const SizedBox(height: AppSpacing.md),
                       ElevatedButton(
                         onPressed: _loadData,
                         child: const Text('Retry'),
@@ -394,21 +394,21 @@ class _CategoryBreakdownPageState extends State<CategoryBreakdownPage> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           _buildDurationChipBar(context),
-          SizedBox(height: AppSpacing.sm),
+          const SizedBox(height: AppSpacing.sm),
           if (_getAvailableBudgetIds().length > 1) ...[
             _buildBudgetChips(context),
-            SizedBox(height: AppSpacing.sm),
+            const SizedBox(height: AppSpacing.sm),
           ],
           if (_isLoadingRange) ...[
             const LinearProgressIndicator(),
-            SizedBox(height: AppSpacing.sm),
+            const SizedBox(height: AppSpacing.sm),
           ],
-          SizedBox(height: AppSpacing.md),
+          const SizedBox(height: AppSpacing.md),
           if (showComparison)
             _buildComparisonCard(context, currencyCode)
           else
             _buildNetSummaryCard(context, net, totalIncome, totalExpenses, currencyCode),
-          SizedBox(height: AppSpacing.lg),
+          const SizedBox(height: AppSpacing.lg),
           if (incomeByCategory.isNotEmpty) ...[
             Text(
               'INCOME BY CATEGORY',
@@ -417,7 +417,7 @@ class _CategoryBreakdownPageState extends State<CategoryBreakdownPage> {
                 color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),
             ),
-            SizedBox(height: AppSpacing.sm),
+            const SizedBox(height: AppSpacing.sm),
             ...incomeByCategory.entries.map((entry) {
               return _buildCategoryGroup(
                 context: context,
@@ -434,7 +434,7 @@ class _CategoryBreakdownPageState extends State<CategoryBreakdownPage> {
             }),
             _buildTotalRow(context, 'Total Income', totalIncome, currencyCode,
                 Theme.of(context).colorScheme.primary),
-            SizedBox(height: AppSpacing.lg),
+            const SizedBox(height: AppSpacing.lg),
           ],
           if (expenseByCategory.isNotEmpty) ...[
             Text(
@@ -444,7 +444,7 @@ class _CategoryBreakdownPageState extends State<CategoryBreakdownPage> {
                 color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),
             ),
-            SizedBox(height: AppSpacing.sm),
+            const SizedBox(height: AppSpacing.sm),
             ...expenseByCategory.entries.map((entry) {
               return _buildCategoryGroup(
                 context: context,
@@ -621,7 +621,7 @@ class _CategoryBreakdownPageState extends State<CategoryBreakdownPage> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: AppSpacing.sm + AppSpacing.xs),
+            const SizedBox(height: AppSpacing.sm + AppSpacing.xs),
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: DataTable(
@@ -675,7 +675,7 @@ class _CategoryBreakdownPageState extends State<CategoryBreakdownPage> {
                 ],
               ),
             ),
-            SizedBox(height: AppSpacing.sm),
+            const SizedBox(height: AppSpacing.sm),
             Text(
               'Categories below show combined totals across all selected budgets.',
               style: theme.textTheme.bodySmall?.copyWith(
@@ -711,7 +711,7 @@ class _CategoryBreakdownPageState extends State<CategoryBreakdownPage> {
                 color: netColor,
               ),
             ),
-            SizedBox(height: AppSpacing.sm),
+            const SizedBox(height: AppSpacing.sm),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -815,7 +815,7 @@ class _CategoryBreakdownPageState extends State<CategoryBreakdownPage> {
                       color: groupColor,
                     ),
                   ),
-                  SizedBox(width: AppSpacing.sm + AppSpacing.xs),
+                  const SizedBox(width: AppSpacing.sm + AppSpacing.xs),
                   Expanded(
                     child: Text(
                       categoryName,
@@ -832,7 +832,7 @@ class _CategoryBreakdownPageState extends State<CategoryBreakdownPage> {
                       color: groupColor,
                     ),
                   ),
-                  SizedBox(width: AppSpacing.xs),
+                  const SizedBox(width: AppSpacing.xs),
                   AnimatedRotation(
                     turns: isCollapsed ? 0.5 : 0.0,
                     duration: const Duration(milliseconds: 200),

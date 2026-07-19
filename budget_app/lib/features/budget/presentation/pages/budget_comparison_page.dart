@@ -61,7 +61,7 @@ class _BudgetComparisonPageState extends State<BudgetComparisonPage> {
                         size: 64,
                         color: Theme.of(context).colorScheme.outline,
                       ),
-                      SizedBox(height: AppSpacing.md),
+                      const SizedBox(height: AppSpacing.md),
                       Text(
                         'Error loading budget comparison',
                         style: Theme.of(context).textTheme.titleMedium,
@@ -110,13 +110,13 @@ class _BudgetComparisonPageState extends State<BudgetComparisonPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(Icons.compare_arrows, size: 80, color: Theme.of(context).colorScheme.outline),
-            SizedBox(height: AppSpacing.lg),
+            const SizedBox(height: AppSpacing.lg),
             Text(
               'No Budget Comparisons',
               style: Theme.of(context).textTheme.headlineSmall,
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: AppSpacing.sm + AppSpacing.xs),
+            const SizedBox(height: AppSpacing.sm + AppSpacing.xs),
             Text(
               'Set up category spending limits to see budget vs actual comparisons.',
               style: Theme.of(
@@ -201,14 +201,14 @@ class _BudgetComparisonPageState extends State<BudgetComparisonPage> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: AppSpacing.md),
+                  const SizedBox(height: AppSpacing.md),
                   BudgetComparisonChart(comparisons: state.comparisons),
-                  SizedBox(height: AppSpacing.sm),
+                  const SizedBox(height: AppSpacing.sm),
                   const BudgetComparisonLegend(),
                 ],
               ),
             ),
-            SizedBox(height: AppSpacing.lg),
+            const SizedBox(height: AppSpacing.lg),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
               child: Text(
@@ -218,7 +218,7 @@ class _BudgetComparisonPageState extends State<BudgetComparisonPage> {
                 ),
               ),
             ),
-            SizedBox(height: AppSpacing.sm),
+            const SizedBox(height: AppSpacing.sm),
             SizedBox(
               height: MediaQuery.of(context).size.height * 0.4,
               child: BudgetComparisonTable(
@@ -226,7 +226,7 @@ class _BudgetComparisonPageState extends State<BudgetComparisonPage> {
                 summary: state.summary,
               ),
             ),
-            SizedBox(height: AppSpacing.lg),
+            const SizedBox(height: AppSpacing.lg),
             const BrandingFooter(),
           ],
         ),

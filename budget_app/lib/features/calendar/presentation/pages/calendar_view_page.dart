@@ -325,7 +325,7 @@ class _CalendarViewPageState extends State<CalendarViewPage> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: AppSpacing.sm),
+                const SizedBox(height: AppSpacing.sm),
                 if (runningBalance != null)
                   Row(
                     children: [
@@ -334,7 +334,7 @@ class _CalendarViewPageState extends State<CalendarViewPage> {
                         size: 16,
                         color: theme.colorScheme.onSurfaceVariant,
                       ),
-                      SizedBox(width: AppSpacing.xs),
+                      const SizedBox(width: AppSpacing.xs),
                       Text(
                         'Running: ${CurrencyFormatter.format(runningBalance, currencyCode: currencyCode)}',
                         style: theme.textTheme.bodyMedium,
@@ -351,7 +351,7 @@ class _CalendarViewPageState extends State<CalendarViewPage> {
                         size: 16,
                         color: endBalance >= 0 ? theme.colorScheme.primary : theme.colorScheme.error,
                       ),
-                      SizedBox(width: AppSpacing.xs),
+                      const SizedBox(width: AppSpacing.xs),
                       Text(
                         'End: ${CurrencyFormatter.format(endBalance, currencyCode: currencyCode)}',
                         style: theme.textTheme.bodyMedium?.copyWith(
@@ -375,7 +375,7 @@ class _CalendarViewPageState extends State<CalendarViewPage> {
                           size: 48,
                           color: theme.colorScheme.outline,
                         ),
-                        SizedBox(height: AppSpacing.sm),
+                        const SizedBox(height: AppSpacing.sm),
                         Text(
                           'No transactions',
                           style: theme.textTheme.bodyMedium?.copyWith(
