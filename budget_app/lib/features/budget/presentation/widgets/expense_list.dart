@@ -5,12 +5,16 @@ import 'package:budget_app/shared/widgets/empty_state_widget.dart';
 import 'package:budget_app/features/settings/presentation/bloc/settings_bloc.dart';
 
 import 'category_grouped_list.dart';
+import 'filter_models.dart';
 
 class ExpenseList extends StatelessWidget {
   final List<ExpenseEntry> entries;
   final Function(ExpenseEntry) onEdit;
   final Function(ExpenseEntry) onDelete;
   final Function(ExpenseEntry)? onConfirm;
+  final SortField sortField;
+  final SortOrder sortOrder;
+  final GroupMode groupMode;
 
   const ExpenseList({
     super.key,
@@ -18,6 +22,9 @@ class ExpenseList extends StatelessWidget {
     required this.onEdit,
     required this.onDelete,
     this.onConfirm,
+    this.sortField = SortField.date,
+    this.sortOrder = SortOrder.descending,
+    this.groupMode = GroupMode.category,
   });
 
   @override
@@ -44,6 +51,9 @@ class ExpenseList extends StatelessWidget {
       onConfirm: onConfirm != null
           ? (entry) => onConfirm!(entry as ExpenseEntry)
           : null,
+      sortField: sortField,
+      sortOrder: sortOrder,
+      groupMode: groupMode,
     );
   }
 }

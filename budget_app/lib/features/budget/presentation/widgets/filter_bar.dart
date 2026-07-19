@@ -22,6 +22,9 @@ class FilterBar extends StatefulWidget {
     Function(IncomeEntry),
     Function(IncomeEntry),
     Function(IncomeEntry)?,
+    SortField,
+    SortOrder,
+    GroupMode,
   )
   incomeListBuilder;
   final Widget Function(
@@ -29,6 +32,9 @@ class FilterBar extends StatefulWidget {
     Function(ExpenseEntry),
     Function(ExpenseEntry),
     Function(ExpenseEntry)?,
+    SortField,
+    SortOrder,
+    GroupMode,
   )
   expenseListBuilder;
 
@@ -196,6 +202,27 @@ class _FilterBarState extends State<FilterBar> {
     );
   }
 
+  void _showSortGroupSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) => _SortGroupSheet(
+        initialSortField: _filterState.sortField,
+        initialSortOrder: _filterState.sortOrder,
+        initialGroupMode: _filterState.groupMode,
+        onChanged: (sortField, sortOrder, groupMode) {
+          setState(() {
+            _filterState = _filterState.copyWith(
+              sortField: sortField,
+              sortOrder: sortOrder,
+              groupMode: groupMode,
+            );
+          });
+        },
+      ),
+    );
+  }
+
   @override
   @override
   Widget build(BuildContext context) {
@@ -228,12 +255,19 @@ class _FilterBarState extends State<FilterBar> {
                     ),
                     const SizedBox(width: 8),
                     _FilterButton(
+                      icon: Icons.sort,
+                      label: 'Sort',
+                      isActive: _filterState.hasActiveSortGroup,
+                      onPressed: () => _showSortGroupSheet(context),
+                    ),
+                    const SizedBox(width: 8),
+                    _FilterButton(
                       icon: Icons.filter_list,
                       label: 'Filter',
                       isActive: _filterState.amountFilter != null,
                       onPressed: () => _showFilterSheet(context),
                     ),
-                    if (_filterState.hasActiveFilters) ...[
+                    if (_filterState.hasActiveFilters || _filterState.hasActiveDisplayOptions) ...[
                       const SizedBox(width: 8),
                       TextButton.icon(
                         onPressed: _clearAll,
@@ -324,6 +358,9 @@ class _FilterBarState extends State<FilterBar> {
             widget.onEditIncome,
             widget.onDeleteIncome,
             widget.onConfirmIncome,
+            _filterState.sortField,
+            _filterState.sortOrder,
+            _filterState.groupMode,
           ),
       ],
     );
@@ -354,6 +391,9 @@ class _FilterBarState extends State<FilterBar> {
             widget.onEditExpense,
             widget.onDeleteExpense,
             widget.onConfirmExpense,
+            _filterState.sortField,
+            _filterState.sortOrder,
+            _filterState.groupMode,
           ),
       ],
     );
@@ -545,6 +585,142 @@ class _AmountFilterSheetState extends State<_AmountFilterSheet> {
               FilledButton(
                 onPressed: () => Navigator.pop(context),
                 child: const Text('Done'),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+        ],
+      ),
+    );
+  }
+}
+
+class _SortGroupSheet extends StatefulWidget {
+  final SortField initialSortField;
+  final SortOrder initialSortOrder;
+  final GroupMode initialGroupMode;
+  final void Function(SortField, SortOrder, GroupMode) onChanged;
+
+  const _SortGroupSheet({
+    required this.initialSortField,
+    required this.initialSortOrder,
+    required this.initialGroupMode,
+    required this.onChanged,
+  });
+
+  @override
+  State<_SortGroupSheet> createState() => _SortGroupSheetState();
+}
+
+class _SortGroupSheetState extends State<_SortGroupSheet> {
+  late SortField _sortField;
+  late SortOrder _sortOrder;
+  late GroupMode _groupMode;
+
+  @override
+  void initState() {
+    super.initState();
+    _sortField = widget.initialSortField;
+    _sortOrder = widget.initialSortOrder;
+    _groupMode = widget.initialGroupMode;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Padding(
+      padding: EdgeInsets.only(
+        bottom: MediaQuery.of(context).viewInsets.bottom,
+        left: 16,
+        right: 16,
+        top: 16,
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            children: [
+              Text('Sort & Group', style: theme.textTheme.titleLarge),
+              const Spacer(),
+              IconButton(
+                icon: const Icon(Icons.close),
+                onPressed: () => Navigator.pop(context),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Text(
+            'Sort by',
+            style: theme.textTheme.titleSmall?.copyWith(
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 8),
+          SegmentedButton<SortField>(
+            segments: SortField.values.map((f) {
+              return ButtonSegment(
+                value: f,
+                label: Text(f.label),
+                icon: Icon(f.icon, size: 18),
+              );
+            }).toList(),
+            selected: {_sortField},
+            onSelectionChanged: (s) => setState(() => _sortField = s.first),
+          ),
+          const SizedBox(height: 8),
+          SegmentedButton<SortOrder>(
+            segments: SortOrder.values.map((o) {
+              return ButtonSegment(
+                value: o,
+                label: Text(o.label),
+                icon: Icon(o.icon, size: 18),
+              );
+            }).toList(),
+            selected: {_sortOrder},
+            onSelectionChanged: (s) => setState(() => _sortOrder = s.first),
+          ),
+          const SizedBox(height: 20),
+          Text(
+            'Group by',
+            style: theme.textTheme.titleSmall?.copyWith(
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 8),
+          SegmentedButton<GroupMode>(
+            segments: GroupMode.values.map((g) {
+              return ButtonSegment(
+                value: g,
+                label: Text(g.label),
+                icon: Icon(g.icon, size: 18),
+              );
+            }).toList(),
+            selected: {_groupMode},
+            onSelectionChanged: (s) => setState(() => _groupMode = s.first),
+          ),
+          const SizedBox(height: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              TextButton(
+                onPressed: () {
+                  widget.onChanged(
+                    SortField.date,
+                    SortOrder.descending,
+                    GroupMode.category,
+                  );
+                  Navigator.pop(context);
+                },
+                child: const Text('Reset'),
+              ),
+              const SizedBox(width: 8),
+              FilledButton(
+                onPressed: () {
+                  widget.onChanged(_sortField, _sortOrder, _groupMode);
+                  Navigator.pop(context);
+                },
+                child: const Text('Apply'),
               ),
             ],
           ),

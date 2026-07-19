@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:budget_app/core/utils/currency_formatter.dart';
 import 'package:budget_app/features/budget/domain/entities/expense_entry.dart';
 import 'package:budget_app/features/budget/domain/entities/income_entry.dart';
 import 'package:budget_app/shared/widgets/empty_state_widget.dart';
+import 'filter_models.dart';
 import 'slidable_transaction_item.dart';
 
 class CategoryGroupedList extends StatefulWidget {
@@ -12,6 +14,9 @@ class CategoryGroupedList extends StatefulWidget {
   final Function(dynamic) onEdit;
   final Function(dynamic) onDelete;
   final Function(dynamic)? onConfirm;
+  final SortField sortField;
+  final SortOrder sortOrder;
+  final GroupMode groupMode;
 
   const CategoryGroupedList({
     super.key,
@@ -21,6 +26,9 @@ class CategoryGroupedList extends StatefulWidget {
     required this.onEdit,
     required this.onDelete,
     this.onConfirm,
+    this.sortField = SortField.date,
+    this.sortOrder = SortOrder.descending,
+    this.groupMode = GroupMode.category,
   });
 
   @override
@@ -28,7 +36,7 @@ class CategoryGroupedList extends StatefulWidget {
 }
 
 class _CategoryGroupedListState extends State<CategoryGroupedList> {
-  final Set<String> _collapsedCategories = {};
+  final Set<String> _collapsedGroups = {};
 
   String? _getCategoryId(dynamic entry) {
     if (entry is ExpenseEntry) return entry.categoryId;
@@ -52,6 +60,12 @@ class _CategoryGroupedListState extends State<CategoryGroupedList> {
     if (entry is ExpenseEntry) return entry.amount;
     if (entry is IncomeEntry) return entry.amount;
     return 0;
+  }
+
+  DateTime _getDate(dynamic entry) {
+    if (entry is ExpenseEntry) return entry.date;
+    if (entry is IncomeEntry) return entry.date;
+    return DateTime(0);
   }
 
   IconData _categoryIcon(String? iconName) {
@@ -85,6 +99,46 @@ class _CategoryGroupedListState extends State<CategoryGroupedList> {
         (widget.isExpense ? Icons.money_off : Icons.attach_money);
   }
 
+  static List<dynamic> sortEntries(
+    List<dynamic> entries,
+    SortField field,
+    SortOrder order,
+  ) {
+    final sorted = List<dynamic>.from(entries);
+    sorted.sort((a, b) {
+      int result;
+      switch (field) {
+        case SortField.amount:
+          result = _amountOf(a).compareTo(_amountOf(b));
+        case SortField.date:
+          result = _dateOf(a).compareTo(_dateOf(b));
+        case SortField.name:
+          final aDesc = _descriptionOf(a) ?? '';
+          final bDesc = _descriptionOf(b) ?? '';
+          if (aDesc.isEmpty && bDesc.isEmpty) {
+            result = 0;
+          } else if (aDesc.isEmpty) {
+            result = 1;
+          } else if (bDesc.isEmpty) {
+            result = -1;
+          } else {
+            result = aDesc.toLowerCase().compareTo(bDesc.toLowerCase());
+          }
+      }
+      return order == SortOrder.ascending ? result : -result;
+    });
+    return sorted;
+  }
+
+  static double _amountOf(dynamic e) =>
+      (e is ExpenseEntry) ? e.amount : (e is IncomeEntry) ? e.amount : 0;
+
+  static DateTime _dateOf(dynamic e) =>
+      (e is ExpenseEntry) ? e.date : (e is IncomeEntry) ? e.date : DateTime(0);
+
+  static String? _descriptionOf(dynamic e) =>
+      (e is ExpenseEntry) ? e.description : (e is IncomeEntry) ? e.description : null;
+
   @override
   Widget build(BuildContext context) {
     if (widget.entries.isEmpty) {
@@ -96,13 +150,68 @@ class _CategoryGroupedListState extends State<CategoryGroupedList> {
       );
     }
 
+    final sorted = sortEntries(widget.entries, widget.sortField, widget.sortOrder);
+
+    switch (widget.groupMode) {
+      case GroupMode.category:
+        return _buildCategoryGrouped(sorted);
+      case GroupMode.none:
+        return _buildFlatList(sorted);
+      case GroupMode.dateWeek:
+        return _buildDateGrouped(sorted, _groupByWeek);
+      case GroupMode.dateMonth:
+        return _buildDateGrouped(sorted, _groupByMonth);
+    }
+  }
+
+  String _groupByWeek(DateTime d) {
+    final startOfWeek = d.subtract(Duration(days: d.weekday - 1));
+    final endOfWeek = startOfWeek.add(const Duration(days: 6));
+    return '${DateFormat('MMM d').format(startOfWeek)} – ${DateFormat('MMM d, yyyy').format(endOfWeek)}';
+  }
+
+  String _groupByMonth(DateTime d) => DateFormat('MMMM yyyy').format(d);
+
+  Widget _buildTotalRow(double totalAll, ThemeData theme) {
+    final groupColor = widget.isExpense
+        ? theme.colorScheme.error
+        : theme.colorScheme.primary;
+    return Column(
+      children: [
+        const Divider(height: 24),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Total',
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                CurrencyFormatter.format(totalAll, currencyCode: widget.currencyCode),
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: groupColor,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildCategoryGrouped(List<dynamic> sorted) {
     final theme = Theme.of(context);
     final groupColor = widget.isExpense
         ? theme.colorScheme.error
         : theme.colorScheme.primary;
 
     final Map<String, List<dynamic>> groups = {};
-    for (final entry in widget.entries) {
+    for (final entry in sorted) {
       final catId = _getCategoryId(entry) ?? '__uncategorized__';
       groups.putIfAbsent(catId, () => []);
       groups[catId]!.add(entry);
@@ -114,10 +223,7 @@ class _CategoryGroupedListState extends State<CategoryGroupedList> {
       return bTotal.compareTo(aTotal);
     });
 
-    final totalAll = widget.entries.fold<double>(
-      0,
-      (sum, e) => sum + _getAmount(e),
-    );
+    final totalAll = sorted.fold<double>(0, (sum, e) => sum + _getAmount(e));
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -131,7 +237,7 @@ class _CategoryGroupedListState extends State<CategoryGroupedList> {
             0,
             (sum, e) => sum + _getAmount(e),
           );
-          final isCollapsed = _collapsedCategories.contains(catId);
+          final isCollapsed = _collapsedGroups.contains(catId);
 
           return Column(
             children: [
@@ -139,17 +245,14 @@ class _CategoryGroupedListState extends State<CategoryGroupedList> {
                 onTap: () {
                   setState(() {
                     if (isCollapsed) {
-                      _collapsedCategories.remove(catId);
+                      _collapsedGroups.remove(catId);
                     } else {
-                      _collapsedCategories.add(catId);
+                      _collapsedGroups.add(catId);
                     }
                   });
                 },
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 4,
-                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   child: Row(
                     children: [
                       Container(
@@ -175,10 +278,7 @@ class _CategoryGroupedListState extends State<CategoryGroupedList> {
                         ),
                       ),
                       Text(
-                        CurrencyFormatter.format(
-                          groupTotal,
-                          currencyCode: widget.currencyCode,
-                        ),
+                        CurrencyFormatter.format(groupTotal, currencyCode: widget.currencyCode),
                         style: theme.textTheme.titleSmall?.copyWith(
                           fontWeight: FontWeight.bold,
                           color: groupColor,
@@ -213,31 +313,122 @@ class _CategoryGroupedListState extends State<CategoryGroupedList> {
             ],
           );
         }),
-        const Divider(height: 24),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        _buildTotalRow(totalAll, theme),
+      ],
+    );
+  }
+
+  Widget _buildFlatList(List<dynamic> sorted) {
+    final theme = Theme.of(context);
+    final totalAll = sorted.fold<double>(0, (sum, e) => sum + _getAmount(e));
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        ...sorted.map((entry) => _buildEntryItem(entry, theme)),
+        _buildTotalRow(totalAll, theme),
+      ],
+    );
+  }
+
+  Widget _buildDateGrouped(List<dynamic> sorted, String Function(DateTime) keyFn) {
+    final theme = Theme.of(context);
+    final groupColor = widget.isExpense
+        ? theme.colorScheme.error
+        : theme.colorScheme.primary;
+
+    final Map<String, List<dynamic>> groups = {};
+    for (final entry in sorted) {
+      final key = keyFn(_getDate(entry));
+      groups.putIfAbsent(key, () => []);
+      groups[key]!.add(entry);
+    }
+
+    final groupKeys = groups.keys.toList();
+    final totalAll = sorted.fold<double>(0, (sum, e) => sum + _getAmount(e));
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        ...groupKeys.map((key) {
+          final groupEntries = groups[key]!;
+          final groupTotal = groupEntries.fold<double>(0, (sum, e) => sum + _getAmount(e));
+          final isCollapsed = _collapsedGroups.contains(key);
+          final iconData = widget.groupMode == GroupMode.dateWeek
+              ? Icons.view_week
+              : Icons.calendar_month;
+
+          return Column(
             children: [
-              Text(
-                'Total',
-                style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
+              InkWell(
+                onTap: () {
+                  setState(() {
+                    if (isCollapsed) {
+                      _collapsedGroups.remove(key);
+                    } else {
+                      _collapsedGroups.add(key);
+                    }
+                  });
+                },
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: groupColor.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Icon(iconData, size: 18, color: groupColor),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          key,
+                          style: theme.textTheme.titleSmall?.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      Text(
+                        CurrencyFormatter.format(groupTotal, currencyCode: widget.currencyCode),
+                        style: theme.textTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: groupColor,
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      AnimatedRotation(
+                        turns: isCollapsed ? 0.5 : 0.0,
+                        duration: const Duration(milliseconds: 200),
+                        child: Icon(
+                          Icons.expand_more,
+                          size: 20,
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-              Text(
-                CurrencyFormatter.format(
-                  totalAll,
-                  currencyCode: widget.currencyCode,
+              AnimatedCrossFade(
+                duration: const Duration(milliseconds: 200),
+                crossFadeState: isCollapsed
+                    ? CrossFadeState.showSecond
+                    : CrossFadeState.showFirst,
+                firstChild: Column(
+                  children: groupEntries.map((entry) {
+                    return _buildEntryItem(entry, theme);
+                  }).toList(),
                 ),
-                style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: groupColor,
-                ),
+                secondChild: const SizedBox.shrink(),
               ),
             ],
-          ),
-        ),
+          );
+        }),
+        _buildTotalRow(totalAll, theme),
       ],
     );
   }
@@ -288,10 +479,7 @@ class _CategoryGroupedListState extends State<CategoryGroupedList> {
             title: Row(
               children: [
                 Text(
-                  CurrencyFormatter.format(
-                    entry.amount,
-                    currencyCode: widget.currencyCode,
-                  ),
+                  CurrencyFormatter.format(entry.amount, currencyCode: widget.currencyCode),
                 ),
                 if (entry.isPotential)
                   Padding(
@@ -354,9 +542,7 @@ class _CategoryGroupedListState extends State<CategoryGroupedList> {
                   ? theme.colorScheme.surfaceContainerHighest
                   : theme.colorScheme.primaryContainer,
               child: Icon(
-                entry.isPotential
-                    ? Icons.help_outline
-                    : Icons.arrow_downward,
+                entry.isPotential ? Icons.help_outline : Icons.arrow_downward,
                 color: entry.isPotential
                     ? theme.colorScheme.outline
                     : theme.colorScheme.onPrimaryContainer,
@@ -365,10 +551,7 @@ class _CategoryGroupedListState extends State<CategoryGroupedList> {
             title: Row(
               children: [
                 Text(
-                  CurrencyFormatter.format(
-                    entry.amount,
-                    currencyCode: widget.currencyCode,
-                  ),
+                  CurrencyFormatter.format(entry.amount, currencyCode: widget.currencyCode),
                 ),
                 if (entry.isPotential)
                   Padding(
