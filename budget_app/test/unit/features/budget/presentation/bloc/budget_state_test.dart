@@ -2,7 +2,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:budget_app/features/budget/domain/entities/budget.dart';
 import 'package:budget_app/features/budget/domain/entities/category.dart';
 import 'package:budget_app/features/budget/domain/entities/income_entry.dart';
-import 'package:budget_app/features/budget/domain/entities/expense_entry.dart';
 import 'package:budget_app/features/budget/domain/usecases/calculate_summary.dart';
 import 'package:budget_app/features/budget/presentation/bloc/budget_state.dart';
 

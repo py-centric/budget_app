@@ -86,7 +86,6 @@ String _detectBumpType() {
 
   var hasBreaking = false;
   var hasFeat = false;
-  var hasFix = false;
 
   for (final commit in commits) {
     final trimmed = commit.trim();
@@ -99,7 +98,6 @@ String _detectBumpType() {
     if (trimmed.startsWith(RegExp(r'\w+\(?.+\)?!?\s*:'))) {
       final type = trimmed.split(RegExp(r'[(!]')).first.toLowerCase();
       if (type == 'feat') hasFeat = true;
-      if (type == 'fix') hasFix = true;
     }
   }
 
