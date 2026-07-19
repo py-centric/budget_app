@@ -82,7 +82,6 @@ class NavigationBloc extends HydratedBloc<NavigationEvent, NavigationState> {
           await _loadDefaultBudgetForPeriod(period, emit);
         }
       } catch (e) {
-        print('CreateBudget failed: $e');
         emit(state);
       }
     });
