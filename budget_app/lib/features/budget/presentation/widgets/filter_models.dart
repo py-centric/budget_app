@@ -1,5 +1,77 @@
 import 'package:flutter/material.dart';
 
+enum SortField {
+  date,
+  amount,
+  name;
+
+  String get label {
+    switch (this) {
+      case SortField.date:
+        return 'Date';
+      case SortField.amount:
+        return 'Amount';
+      case SortField.name:
+        return 'Name';
+    }
+  }
+
+  IconData get icon {
+    switch (this) {
+      case SortField.date:
+        return Icons.calendar_today;
+      case SortField.amount:
+        return Icons.attach_money;
+      case SortField.name:
+        return Icons.sort_by_alpha;
+    }
+  }
+}
+
+enum SortOrder {
+  ascending,
+  descending;
+
+  String get label =>
+      this == SortOrder.ascending ? 'Ascending' : 'Descending';
+
+  IconData get icon =>
+      this == SortOrder.ascending ? Icons.arrow_upward : Icons.arrow_downward;
+}
+
+enum GroupMode {
+  category,
+  none,
+  dateWeek,
+  dateMonth;
+
+  String get label {
+    switch (this) {
+      case GroupMode.category:
+        return 'Category';
+      case GroupMode.none:
+        return 'None';
+      case GroupMode.dateWeek:
+        return 'Week';
+      case GroupMode.dateMonth:
+        return 'Month';
+    }
+  }
+
+  IconData get icon {
+    switch (this) {
+      case GroupMode.category:
+        return Icons.category;
+      case GroupMode.none:
+        return Icons.view_list;
+      case GroupMode.dateWeek:
+        return Icons.view_week;
+      case GroupMode.dateMonth:
+        return Icons.calendar_month;
+    }
+  }
+}
+
 enum EntryStatus {
   all,
   outstanding,
@@ -107,12 +179,18 @@ class FilterState {
   final AmountFilter? amountFilter;
   final FilterScope scope;
   final EntryStatus entryStatus;
+  final SortField sortField;
+  final SortOrder sortOrder;
+  final GroupMode groupMode;
 
   const FilterState({
     this.searchQuery,
     this.amountFilter,
     this.scope = FilterScope.both,
     this.entryStatus = EntryStatus.all,
+    this.sortField = SortField.date,
+    this.sortOrder = SortOrder.descending,
+    this.groupMode = GroupMode.category,
   });
 
   bool get hasActiveFilters =>
@@ -120,11 +198,21 @@ class FilterState {
       amountFilter != null ||
       entryStatus != EntryStatus.all;
 
+  bool get hasActiveSortGroup =>
+      sortField != SortField.date ||
+      sortOrder != SortOrder.descending ||
+      groupMode != GroupMode.category;
+
+  bool get hasActiveDisplayOptions => hasActiveSortGroup;
+
   FilterState copyWith({
     String? searchQuery,
     AmountFilter? amountFilter,
     FilterScope? scope,
     EntryStatus? entryStatus,
+    SortField? sortField,
+    SortOrder? sortOrder,
+    GroupMode? groupMode,
     bool clearSearchQuery = false,
     bool clearAmountFilter = false,
     bool clearEntryStatus = false,
@@ -138,6 +226,9 @@ class FilterState {
       entryStatus: clearEntryStatus
           ? EntryStatus.all
           : (entryStatus ?? this.entryStatus),
+      sortField: sortField ?? this.sortField,
+      sortOrder: sortOrder ?? this.sortOrder,
+      groupMode: groupMode ?? this.groupMode,
     );
   }
 
@@ -152,7 +243,10 @@ class FilterState {
         other.searchQuery == searchQuery &&
         other.amountFilter == amountFilter &&
         other.scope == scope &&
-        other.entryStatus == entryStatus;
+        other.entryStatus == entryStatus &&
+        other.sortField == sortField &&
+        other.sortOrder == sortOrder &&
+        other.groupMode == groupMode;
   }
 
   @override
@@ -160,5 +254,8 @@ class FilterState {
       searchQuery.hashCode ^
       amountFilter.hashCode ^
       scope.hashCode ^
-      entryStatus.hashCode;
+      entryStatus.hashCode ^
+      sortField.hashCode ^
+      sortOrder.hashCode ^
+      groupMode.hashCode;
 }
