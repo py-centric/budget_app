@@ -136,7 +136,7 @@ class _SavingsGoalDialogState extends State<SavingsGoalDialog> {
               ),
               textCapitalization: TextCapitalization.words,
             ),
-            SizedBox(height: AppSpacing.md),
+            const SizedBox(height: AppSpacing.md),
             TextField(
               controller: _targetAmountController,
               decoration: InputDecoration(
@@ -148,7 +148,7 @@ class _SavingsGoalDialogState extends State<SavingsGoalDialog> {
                 decimal: true,
               ),
             ),
-            SizedBox(height: AppSpacing.md),
+            const SizedBox(height: AppSpacing.md),
             InkWell(
               onTap: _selectDeadline,
               child: InputDecorator(
@@ -167,7 +167,7 @@ class _SavingsGoalDialogState extends State<SavingsGoalDialog> {
                 ),
               ),
             ),
-            SizedBox(height: AppSpacing.md),
+            const SizedBox(height: AppSpacing.md),
             const Divider(),
             Text(
               'Savings Calculator (Optional)',
@@ -175,14 +175,14 @@ class _SavingsGoalDialogState extends State<SavingsGoalDialog> {
                 fontWeight: FontWeight.w600,
               ),
             ),
-            SizedBox(height: AppSpacing.xs),
+            const SizedBox(height: AppSpacing.xs),
             Text(
               'Set a return rate and duration to see your required monthly contribution.',
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),
             ),
-            SizedBox(height: AppSpacing.sm + AppSpacing.xs),
+            const SizedBox(height: AppSpacing.sm + AppSpacing.xs),
             Row(
               children: [
                 Expanded(
@@ -196,7 +196,7 @@ class _SavingsGoalDialogState extends State<SavingsGoalDialog> {
                     keyboardType: TextInputType.number,
                   ),
                 ),
-                SizedBox(width: AppSpacing.sm + AppSpacing.xs),
+                const SizedBox(width: AppSpacing.sm + AppSpacing.xs),
                 Expanded(
                   child: TextField(
                     controller: _yearsController,
@@ -211,7 +211,7 @@ class _SavingsGoalDialogState extends State<SavingsGoalDialog> {
               ],
             ),
             if (_calculatedMonthly != null) ...[
-              SizedBox(height: AppSpacing.sm + AppSpacing.xs),
+              const SizedBox(height: AppSpacing.sm + AppSpacing.xs),
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
@@ -231,7 +231,7 @@ class _SavingsGoalDialogState extends State<SavingsGoalDialog> {
                           size: 16,
                           color: calcTheme.colorScheme.tertiary,
                         ),
-                        SizedBox(width: AppSpacing.sm - 2),
+                        const SizedBox(width: AppSpacing.sm - 2),
                         Text(
                           'Required Monthly Contribution',
                           style: calcTheme.textTheme.bodySmall?.copyWith(
@@ -241,7 +241,7 @@ class _SavingsGoalDialogState extends State<SavingsGoalDialog> {
                         ),
                       ],
                     ),
-                    SizedBox(height: AppSpacing.xs),
+                    const SizedBox(height: AppSpacing.xs),
                     Text(
                       CurrencyFormatter.format(_calculatedMonthly!, currencyCode: currencyCode),
                       style: calcTheme.textTheme.titleLarge?.copyWith(
@@ -249,7 +249,7 @@ class _SavingsGoalDialogState extends State<SavingsGoalDialog> {
                         color: calcTheme.colorScheme.tertiary,
                       ),
                     ),
-                    SizedBox(height: 2),
+                    const SizedBox(height: 2),
                     Text(
                       _buildSummaryText(),
                       style: calcTheme.textTheme.bodySmall?.copyWith(
@@ -260,10 +260,10 @@ class _SavingsGoalDialogState extends State<SavingsGoalDialog> {
                 ),
               ),
             ],
-            SizedBox(height: AppSpacing.md),
+            const SizedBox(height: AppSpacing.md),
             const Divider(),
             Text('Icon', style: Theme.of(context).textTheme.bodyMedium),
-            SizedBox(height: AppSpacing.sm),
+            const SizedBox(height: AppSpacing.sm),
             Wrap(
               spacing: 8,
               children: _availableIcons.map((iconName) {
@@ -296,9 +296,9 @@ class _SavingsGoalDialogState extends State<SavingsGoalDialog> {
                 );
               }).toList(),
             ),
-            SizedBox(height: AppSpacing.md),
+            const SizedBox(height: AppSpacing.md),
             Text('Color', style: Theme.of(context).textTheme.bodyMedium),
-            SizedBox(height: AppSpacing.sm),
+            const SizedBox(height: AppSpacing.sm),
             Wrap(
               spacing: 8,
               children: _availableColors.map((colorName) {

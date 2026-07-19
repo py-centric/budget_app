@@ -92,13 +92,13 @@ class SavingsGoalsPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(Icons.savings_outlined, size: 80, color: Theme.of(context).colorScheme.outline),
-            SizedBox(height: AppSpacing.lg),
+            const SizedBox(height: AppSpacing.lg),
             Text(
               'No Savings Goals Yet',
               style: Theme.of(context).textTheme.headlineSmall,
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: AppSpacing.sm + AppSpacing.xs),
+            const SizedBox(height: AppSpacing.sm + AppSpacing.xs),
             Text(
               'Start saving for your dreams! Create a goal to track your progress.',
               style: Theme.of(
@@ -106,7 +106,7 @@ class SavingsGoalsPage extends StatelessWidget {
               ).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: AppSpacing.xl),
+            const SizedBox(height: AppSpacing.xl),
             FilledButton.icon(
               onPressed: () => _showAddGoalDialog(context),
               icon: const Icon(Icons.add),
@@ -216,7 +216,7 @@ class SavingsGoalsPage extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: AppSpacing.sm),
+          const SizedBox(height: AppSpacing.sm),
           Text(
             CurrencyFormatter.format(totalSaved, currencyCode: currencyCode),
             style: theme.textTheme.headlineLarge?.copyWith(
@@ -224,14 +224,14 @@ class SavingsGoalsPage extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
-          SizedBox(height: AppSpacing.xs),
+          const SizedBox(height: AppSpacing.xs),
           Text(
             'of ${CurrencyFormatter.format(totalTarget, currencyCode: currencyCode)} total goal',
             style: theme.textTheme.bodyMedium?.copyWith(
               color: onPrimary.withValues(alpha: 0.8),
             ),
           ),
-          SizedBox(height: AppSpacing.md),
+          const SizedBox(height: AppSpacing.md),
           ClipRRect(
             borderRadius: BorderRadius.circular(AppRadius.sm),
             child: LinearProgressIndicator(

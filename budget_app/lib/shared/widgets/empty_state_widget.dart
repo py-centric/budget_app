@@ -24,7 +24,7 @@ class EmptyStateWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(icon, size: 64, color: Theme.of(context).colorScheme.outline),
-            SizedBox(height: AppSpacing.md),
+            const SizedBox(height: AppSpacing.md),
             Text(
               message,
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
@@ -33,7 +33,7 @@ class EmptyStateWidget extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             if (onAction != null && actionLabel != null) ...[
-              SizedBox(height: AppSpacing.md),
+              const SizedBox(height: AppSpacing.md),
               ElevatedButton(onPressed: onAction, child: Text(actionLabel!)),
             ],
           ],

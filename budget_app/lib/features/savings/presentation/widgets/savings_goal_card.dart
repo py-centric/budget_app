@@ -116,13 +116,13 @@ class SavingsGoalCard extends StatelessWidget {
                     ),
                 ],
               ),
-              SizedBox(height: AppSpacing.md),
+              const SizedBox(height: AppSpacing.md),
               SavingsGoalProgressBar(
                 currentAmount: goal.currentAmount,
                 targetAmount: goal.targetAmount,
                 progressColor: _getColor(goal.color),
               ),
-              SizedBox(height: AppSpacing.sm),
+              const SizedBox(height: AppSpacing.sm),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -166,11 +166,11 @@ class SavingsGoalCard extends StatelessWidget {
                 ],
               ),
               if (goal.linkedCategoryId != null) ...[
-                SizedBox(height: AppSpacing.sm),
+                const SizedBox(height: AppSpacing.sm),
                 Row(
                   children: [
                     Icon(Icons.link, size: 14, color: theme.colorScheme.onSurfaceVariant),
-                    SizedBox(width: AppSpacing.xs),
+                    const SizedBox(width: AppSpacing.xs),
                     Text(
                       'Linked to category',
                       style: theme.textTheme.bodySmall?.copyWith(

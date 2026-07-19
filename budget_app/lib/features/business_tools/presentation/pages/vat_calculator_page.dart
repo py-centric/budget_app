@@ -90,7 +90,7 @@ class _VatCalculatorPageState extends State<VatCalculatorPage> {
                 });
               },
             ),
-            SizedBox(height: AppSpacing.lg),
+            const SizedBox(height: AppSpacing.lg),
             TextField(
               controller: _amountController,
               decoration: InputDecoration(
@@ -102,7 +102,7 @@ class _VatCalculatorPageState extends State<VatCalculatorPage> {
                 decimal: true,
               ),
             ),
-            SizedBox(height: AppSpacing.md),
+            const SizedBox(height: AppSpacing.md),
             TextField(
               controller: _rateController,
               decoration: const InputDecoration(
@@ -114,20 +114,20 @@ class _VatCalculatorPageState extends State<VatCalculatorPage> {
                 decimal: true,
               ),
             ),
-            SizedBox(height: AppSpacing.xl),
+            const SizedBox(height: AppSpacing.xl),
             if (_result != null) ...[
               _ResultCard(
                 title: 'Net Amount',
                 value: CurrencyFormatter.format(_result!.netAmount, currencyCode: currencyCode),
                 color: Theme.of(context).colorScheme.secondary,
               ),
-              SizedBox(height: AppSpacing.sm + AppSpacing.xs),
+              const SizedBox(height: AppSpacing.sm + AppSpacing.xs),
               _ResultCard(
                 title: 'VAT Amount (${_result!.vatRate}%)',
                 value: CurrencyFormatter.format(_result!.vatAmount, currencyCode: currencyCode),
                 color: Theme.of(context).colorScheme.tertiary,
               ),
-              SizedBox(height: AppSpacing.sm + AppSpacing.xs),
+              const SizedBox(height: AppSpacing.sm + AppSpacing.xs),
               _ResultCard(
                 title: 'Gross Amount',
                 value: CurrencyFormatter.format(_result!.grossAmount, currencyCode: currencyCode),

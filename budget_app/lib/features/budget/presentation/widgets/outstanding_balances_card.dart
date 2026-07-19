@@ -39,7 +39,7 @@ class OutstandingBalancesCard extends StatelessWidget {
                   color: theme.colorScheme.tertiary,
                   size: 20,
                 ),
-                SizedBox(width: AppSpacing.sm),
+                const SizedBox(width: AppSpacing.sm),
                 Text(
                   'Outstanding Balances',
                   style: theme.textTheme.titleMedium
@@ -47,7 +47,7 @@ class OutstandingBalancesCard extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: AppSpacing.md),
+            const SizedBox(height: AppSpacing.md),
             if (outstandingIncome > 0.01)
               _OutstandingRow(
                 label: 'Income to Receive',
@@ -57,7 +57,7 @@ class OutstandingBalancesCard extends StatelessWidget {
                 color: theme.colorScheme.primary,
               ),
             if (outstandingExpenses > 0.01) ...[
-              if (outstandingIncome > 0.01) SizedBox(height: AppSpacing.sm),
+              if (outstandingIncome > 0.01) const SizedBox(height: AppSpacing.sm),
               _OutstandingRow(
                 label: 'Expenses to Pay',
                 amount: outstandingExpenses,
@@ -67,7 +67,7 @@ class OutstandingBalancesCard extends StatelessWidget {
               ),
             ],
             if (outstandingIncome > 0.01 && outstandingExpenses > 0.01) ...[
-              Divider(height: AppSpacing.lg),
+              const Divider(height: AppSpacing.lg),
               _OutstandingRow(
                 label: 'Net Outstanding',
                 amount: netOutstanding,
@@ -110,7 +110,7 @@ class _OutstandingRow extends StatelessWidget {
     return Row(
       children: [
         Icon(icon, color: color, size: 18),
-        SizedBox(width: AppSpacing.sm),
+        const SizedBox(width: AppSpacing.sm),
         Expanded(
           child: Text(
             label,

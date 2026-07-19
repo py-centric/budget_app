@@ -247,9 +247,9 @@ class _HomePageState extends State<HomePage> {
                         size: 64,
                         color: Theme.of(context).colorScheme.error,
                       ),
-                      SizedBox(height: AppSpacing.md),
+                      const SizedBox(height: AppSpacing.md),
                       Text('Error: ${state.message}'),
-                      SizedBox(height: AppSpacing.md),
+                      const SizedBox(height: AppSpacing.md),
                       ElevatedButton(
                         onPressed: () {
                           final navState = context
@@ -298,7 +298,7 @@ class _HomePageState extends State<HomePage> {
                                   OutstandingBalancesCard(summary: s),
                                   const SizedBox(height: AppSpacing.lg),
                                   _buildCategoryLimitsSection(context, s),
-                                  SizedBox(height: AppSpacing.lg),
+                                  const SizedBox(height: AppSpacing.lg),
                                   Row(
                                     children: [
                                       Expanded(
@@ -388,7 +388,7 @@ class _HomePageState extends State<HomePage> {
                                       ),
                                     ],
                                   ),
-                                  SizedBox(height: AppSpacing.lg),
+                                  const SizedBox(height: AppSpacing.lg),
                                 ],
                               );
                             },
@@ -711,7 +711,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ],
         ),
-        SizedBox(height: AppSpacing.sm),
+        const SizedBox(height: AppSpacing.sm),
         BlocBuilder<CategoryLimitBloc, CategoryLimitState>(
           builder: (context, state) {
             if (state is CategoryLimitLoading) {

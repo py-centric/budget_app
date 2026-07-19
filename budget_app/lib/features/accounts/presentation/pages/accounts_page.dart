@@ -100,7 +100,7 @@ class AccountsPage extends StatelessWidget {
               'Total Balance',
               style: Theme.of(context).textTheme.titleMedium,
             ),
-            SizedBox(height: AppSpacing.sm),
+            const SizedBox(height: AppSpacing.sm),
             Text(
               CurrencyFormatter.format(totalBalance, currencyCode: currencyCode),
               style: Theme.of(context).textTheme.headlineMedium?.copyWith(
@@ -124,12 +124,12 @@ class AccountsPage extends StatelessWidget {
             size: 64,
             color: Theme.of(context).colorScheme.outline,
           ),
-          SizedBox(height: AppSpacing.md),
+          const SizedBox(height: AppSpacing.md),
           Text(
             'No accounts yet',
             style: Theme.of(context).textTheme.titleLarge,
           ),
-          SizedBox(height: AppSpacing.sm),
+          const SizedBox(height: AppSpacing.sm),
           Text(
             'Tap + to add your first account',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(

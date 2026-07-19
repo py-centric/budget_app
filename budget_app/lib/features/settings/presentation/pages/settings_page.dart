@@ -39,7 +39,7 @@ class SettingsPage extends StatelessWidget {
                         'Currency',
                         style: Theme.of(context).textTheme.titleLarge,
                       ),
-                      SizedBox(height: AppSpacing.sm),
+                      const SizedBox(height: AppSpacing.sm),
                       Text(
                         'Select your preferred currency for formatting values.',
                         style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
@@ -129,7 +129,7 @@ class SettingsPage extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: AppSpacing.md),
+              const SizedBox(height: AppSpacing.md),
               Card(
                 child: Padding(
                   padding: const EdgeInsets.all(AppSpacing.md),
@@ -140,7 +140,7 @@ class SettingsPage extends StatelessWidget {
                         'Appearance',
                         style: Theme.of(context).textTheme.titleLarge,
                       ),
-                      SizedBox(height: AppSpacing.sm),
+                      const SizedBox(height: AppSpacing.sm),
                       Text(
                         'Choose between Light, Dark, or System Default themes.',
                         style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
@@ -175,18 +175,18 @@ class SettingsPage extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: AppSpacing.md),
+              const SizedBox(height: AppSpacing.md),
               BlocProvider.value(
                 value: context.read<AppLockBloc>(),
                 child: const _AppLockSection(),
               ),
-              SizedBox(height: AppSpacing.md),
+              const SizedBox(height: AppSpacing.md),
               BlocProvider(
                 create: (context) =>
                     BackupBloc(backupService: BackupServiceImpl()),
                 child: const _BackupSection(),
               ),
-              SizedBox(height: AppSpacing.md),
+              const SizedBox(height: AppSpacing.md),
               BlocProvider.value(
                 value: context.read<BudgetBloc>(),
                 child: const _FactoryResetSection(),
@@ -232,7 +232,7 @@ class _AppLockSection extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(height: AppSpacing.sm),
+                const SizedBox(height: AppSpacing.sm),
                 Text(
                   state.settings.isEnabled
                       ? 'App is locked with ${state.settings.authMethod == AuthMethod.biometrics ? "biometrics" : "PIN"}'
@@ -240,7 +240,7 @@ class _AppLockSection extends StatelessWidget {
                   style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
                 ),
                 if (state.settings.isEnabled) ...[
-                  SizedBox(height: AppSpacing.sm),
+                  const SizedBox(height: AppSpacing.sm),
                   InkWell(
                     onTap: () => _showChangeMethodDialog(context, state),
                     child: Text(
@@ -362,12 +362,12 @@ class _BackupSection extends StatelessWidget {
                   'Database Backup',
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
-                SizedBox(height: AppSpacing.sm),
+                const SizedBox(height: AppSpacing.sm),
                 Text(
                   'Create a backup of your database or restore from a backup file.',
                   style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
                 ),
-                SizedBox(height: AppSpacing.md),
+                const SizedBox(height: AppSpacing.md),
                 Row(
                   children: [
                     Expanded(
@@ -389,7 +389,7 @@ class _BackupSection extends StatelessWidget {
                         label: const Text('Backup'),
                       ),
                     ),
-                    SizedBox(width: AppSpacing.sm),
+                    const SizedBox(width: AppSpacing.sm),
                     Expanded(
                       child: OutlinedButton.icon(
                         onPressed: state.isLoading
@@ -402,7 +402,7 @@ class _BackupSection extends StatelessWidget {
                   ],
                 ),
                 if (state.filePath != null && state.isSuccess) ...[
-                  SizedBox(height: AppSpacing.sm),
+                  const SizedBox(height: AppSpacing.sm),
                   TextButton.icon(
                     onPressed: () {
                       context.read<BackupBloc>().add(
@@ -460,12 +460,12 @@ class _FactoryResetSection extends StatelessWidget {
               'Factory Reset',
               style: Theme.of(context).textTheme.titleLarge,
             ),
-            SizedBox(height: AppSpacing.sm),
+            const SizedBox(height: AppSpacing.sm),
             Text(
               'Delete all budgets and reset the app to its initial state. This cannot be undone.',
               style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
             ),
-            SizedBox(height: AppSpacing.md),
+            const SizedBox(height: AppSpacing.md),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton.icon(

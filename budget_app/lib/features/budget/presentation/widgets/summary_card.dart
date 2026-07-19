@@ -59,7 +59,7 @@ class SummaryCard extends StatelessWidget {
                   'Budget Summary',
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
-                SizedBox(height: AppSpacing.md),
+                const SizedBox(height: AppSpacing.md),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [

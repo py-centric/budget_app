@@ -75,7 +75,7 @@ class _SavingsCalculatorDialogState extends State<SavingsCalculatorDialog> {
                 color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),
             ),
-            SizedBox(height: AppSpacing.md),
+            const SizedBox(height: AppSpacing.md),
             TextField(
               controller: _targetController,
               decoration: InputDecoration(
@@ -87,7 +87,7 @@ class _SavingsCalculatorDialogState extends State<SavingsCalculatorDialog> {
                 decimal: true,
               ),
             ),
-            SizedBox(height: AppSpacing.sm + AppSpacing.xs),
+            const SizedBox(height: AppSpacing.sm + AppSpacing.xs),
             TextField(
               controller: _rateController,
               decoration: const InputDecoration(
@@ -97,7 +97,7 @@ class _SavingsCalculatorDialogState extends State<SavingsCalculatorDialog> {
               ),
               keyboardType: TextInputType.number,
             ),
-            SizedBox(height: AppSpacing.sm + AppSpacing.xs),
+            const SizedBox(height: AppSpacing.sm + AppSpacing.xs),
             TextField(
               controller: _yearsController,
               decoration: const InputDecoration(
@@ -108,7 +108,7 @@ class _SavingsCalculatorDialogState extends State<SavingsCalculatorDialog> {
               keyboardType: TextInputType.number,
             ),
             if (_calculatedMonthly != null) ...[
-              SizedBox(height: AppSpacing.md),
+              const SizedBox(height: AppSpacing.md),
               Container(
                 padding: const EdgeInsets.all(AppSpacing.sm + AppSpacing.xs),
                 decoration: BoxDecoration(
@@ -128,7 +128,7 @@ class _SavingsCalculatorDialogState extends State<SavingsCalculatorDialog> {
                           size: 16,
                           color: Theme.of(context).colorScheme.tertiary,
                         ),
-                        SizedBox(width: AppSpacing.sm - 2),
+                        const SizedBox(width: AppSpacing.sm - 2),
                         Text(
                           'Required Monthly Contribution',
                           style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -138,7 +138,7 @@ class _SavingsCalculatorDialogState extends State<SavingsCalculatorDialog> {
                         ),
                       ],
                     ),
-                    SizedBox(height: AppSpacing.xs),
+                    const SizedBox(height: AppSpacing.xs),
                     Text(
                       CurrencyFormatter.format(_calculatedMonthly!, currencyCode: 'USD'),
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -146,7 +146,7 @@ class _SavingsCalculatorDialogState extends State<SavingsCalculatorDialog> {
                         color: Theme.of(context).colorScheme.tertiary,
                       ),
                     ),
-                    SizedBox(height: 2),
+                    const SizedBox(height: 2),
                     Text(
                       _buildSummaryText(),
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
