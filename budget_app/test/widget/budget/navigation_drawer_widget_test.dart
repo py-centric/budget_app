@@ -4,6 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:budget_app/features/budget/domain/entities/budget_period.dart';
 import 'package:budget_app/features/budget/presentation/bloc/navigation_bloc.dart';
+import 'package:budget_app/features/budget/presentation/bloc/budget_bloc.dart';
+import 'package:budget_app/features/budget/presentation/bloc/budget_state.dart';
 import 'package:budget_app/features/budget/presentation/widgets/navigation_drawer_widget.dart';
 import 'package:budget_app/features/reminders/presentation/bloc/reminder_bloc.dart';
 import 'package:budget_app/features/reminders/presentation/bloc/reminder_state.dart';
@@ -12,14 +14,18 @@ class MockNavigationBloc extends Mock implements NavigationBloc {}
 
 class MockReminderBloc extends Mock implements ReminderBloc {}
 
+class MockBudgetBloc extends Mock implements BudgetBloc {}
+
 void main() {
   late MockNavigationBloc mockNavigationBloc;
   late MockReminderBloc mockReminderBloc;
+  late MockBudgetBloc mockBudgetBloc;
   late BudgetPeriod currentPeriod;
 
   setUp(() {
     mockNavigationBloc = MockNavigationBloc();
     mockReminderBloc = MockReminderBloc();
+    mockBudgetBloc = MockBudgetBloc();
     currentPeriod = const BudgetPeriod(year: 2024, month: 1);
 
     when(() => mockNavigationBloc.state).thenReturn(
@@ -34,6 +40,9 @@ void main() {
     when(
       () => mockNavigationBloc.stream,
     ).thenAnswer((_) => const Stream.empty());
+
+    when(() => mockBudgetBloc.state).thenReturn(const BudgetInitial());
+    when(() => mockBudgetBloc.stream).thenAnswer((_) => const Stream.empty());
 
     when(
       () => mockReminderBloc.state,
@@ -51,6 +60,7 @@ void main() {
         home: MultiBlocProvider(
           providers: [
             BlocProvider<NavigationBloc>.value(value: mockNavigationBloc),
+            BlocProvider<BudgetBloc>.value(value: mockBudgetBloc),
             BlocProvider<ReminderBloc>.value(value: mockReminderBloc),
           ],
           child: Scaffold(

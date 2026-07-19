@@ -62,4 +62,5 @@ Dart 3.x (Flutter 3.x): Follow standard conventions
 <!-- SPECKIT START -->
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan
+at specs/034-disposable-budgets/plan.md
 <!-- SPECKIT END -->
