@@ -23,9 +23,13 @@ import 'package:budget_app/features/budget/presentation/pages/budget_comparison_
 import 'package:budget_app/features/budget/domain/entities/budget.dart';
 import 'package:budget_app/features/budget/domain/entities/budget_period.dart';
 import 'package:budget_app/features/calendar/presentation/pages/calendar_view_page.dart';
+import 'package:budget_app/features/budget/presentation/pages/disposable_history_page.dart';
 import '../bloc/budget_bloc.dart';
 import '../bloc/budget_event.dart';
+import '../bloc/budget_state.dart';
 import 'create_budget_dialog.dart';
+import 'create_disposable_dialog.dart';
+import 'dispose_persist_sheet.dart';
 
 class NavigationDrawerWidget extends StatefulWidget {
   const NavigationDrawerWidget({super.key});
@@ -36,6 +40,13 @@ class NavigationDrawerWidget extends StatefulWidget {
 
 class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
   final Map<int, bool> _expandedYears = {};
+  bool _promptedEnded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<BudgetBloc>().add(const LoadDisposableHistoryEvent());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -296,6 +307,177 @@ class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
                     context: context,
                     builder: (_) => const CreateBudgetDialog(),
                   );
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.add_circle_outline, color: Theme.of(context).colorScheme.secondary),
+                title: Text('Create Disposable Budget', style: TextStyle(color: Theme.of(context).colorScheme.secondary)),
+                onTap: () {
+                  Navigator.pop(context);
+                  showDialog(
+                    context: context,
+                    builder: (_) => const CreateDisposableDialog(),
+                  );
+                },
+              ),
+
+              const Divider(),
+              BlocBuilder<BudgetBloc, BudgetState>(
+                builder: (context, state) {
+                  if (state is DisposableBudgetsLoaded && state.endedBudgetIds.isNotEmpty && !_promptedEnded) {
+                    _promptedEnded = true;
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              '${state.endedBudgetIds.length} disposable budget(s) have ended. Tap to dispose or persist.',
+                            ),
+                            behavior: SnackBarBehavior.floating,
+                          ),
+                        );
+                      }
+                    });
+                  }
+                  if (state is DisposableBudgetsLoaded && state.active.isNotEmpty) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          child: Text(
+                            'Disposable Budgets',
+                            style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                              color: Theme.of(context).colorScheme.secondary,
+                            ),
+                          ),
+                        ),
+                        ...state.active.map((budget) {
+                          final expenses = state.budgetExpenseTotals[budget.id] ?? 0.0;
+                          final remaining = budget.targetIncome != null
+                              ? budget.targetIncome! - expenses
+                              : 0.0;
+                          final isEnded = state.endedBudgetIds.contains(budget.id);
+                          return ListTile(
+                            leading: Icon(
+                              isEnded ? Icons.warning_amber : Icons.all_inbox,
+                              color: isEnded
+                                  ? Colors.amber
+                                  : Theme.of(context).colorScheme.secondary,
+                              size: 20,
+                            ),
+                            title: Row(
+                              children: [
+                                Flexible(child: Text(budget.name, style: const TextStyle(fontSize: 14))),
+                                if (isEnded)
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 4),
+                                    child: Text(
+                                      '(ended)',
+                                      style: TextStyle(
+                                        fontSize: 10,
+                                        color: Colors.amber.shade700,
+                                      ),
+                                    ),
+                                  ),
+                              ],
+                            ),
+                            subtitle: Text(
+                              '\$${budget.targetIncome?.toStringAsFixed(2) ?? '0.00'} — \$${remaining.toStringAsFixed(2)} remaining',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: remaining > 0
+                                    ? Colors.green
+                                    : Theme.of(context).colorScheme.error,
+                              ),
+                            ),
+                            trailing: PopupMenuButton<String>(
+                              icon: Icon(
+                                Icons.more_vert,
+                                size: 18,
+                                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                              ),
+                              onSelected: (value) {
+                                if (value == 'dispose' || value == 'persist') {
+                                  Navigator.pop(context);
+                                  showModalBottomSheet(
+                                    context: context,
+                                    builder: (_) => DisposePersistSheet(
+                                      budget: budget,
+                                      totalExpenses: expenses,
+                                    ),
+                                  );
+                                }
+                              },
+                              itemBuilder: (_) => [
+                                const PopupMenuItem(
+                                  value: 'dispose',
+                                  child: ListTile(
+                                    leading: Icon(Icons.archive),
+                                    title: Text('Dispose'),
+                                    contentPadding: EdgeInsets.zero,
+                                  ),
+                                ),
+                                const PopupMenuItem(
+                                  value: 'persist',
+                                  child: ListTile(
+                                    leading: Icon(Icons.save),
+                                    title: Text('Persist'),
+                                    contentPadding: EdgeInsets.zero,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            dense: true,
+                            onTap: () {
+                              showModalBottomSheet(
+                                context: context,
+                                builder: (_) => DisposePersistSheet(
+                                  budget: budget,
+                                  totalExpenses: expenses,
+                                ),
+                              );
+                            },
+                          );
+                        }),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                          child: TextButton.icon(
+                            icon: const Icon(Icons.history, size: 18),
+                            label: const Text('View History'),
+                            onPressed: () {
+                              Navigator.pop(context);
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const DisposableHistoryPage(),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    );
+                  }
+                  if (state is DisposableBudgetsLoaded) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                      child: TextButton.icon(
+                        icon: const Icon(Icons.history, size: 18),
+                        label: const Text('View Disposable History'),
+                        onPressed: () {
+                          Navigator.pop(context);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const DisposableHistoryPage(),
+                            ),
+                          );
+                        },
+                      ),
+                    );
+                  }
+                  return const SizedBox.shrink();
                 },
               ),
 
