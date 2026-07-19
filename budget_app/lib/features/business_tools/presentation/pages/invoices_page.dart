@@ -8,6 +8,7 @@ import '../widgets/invoice_dashboard.dart';
 import '../bloc/business_bloc.dart';
 import '../bloc/business_event.dart';
 import '../bloc/business_state.dart';
+import 'package:budget_app/shared/widgets/branding_footer.dart';
 
 class InvoicesPage extends StatefulWidget {
   const InvoicesPage({super.key});
@@ -69,6 +70,7 @@ class _InvoicesPageState extends State<InvoicesPage>
                   ],
                 ),
               ),
+              const BrandingFooter(),
             ],
           );
         },

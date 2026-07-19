@@ -7,6 +7,7 @@ import 'package:budget_app/features/emergency_fund/presentation/widgets/expense_
 import 'package:budget_app/features/emergency_fund/presentation/widgets/living_expenses_calculator.dart';
 import 'package:budget_app/features/emergency_fund/presentation/widgets/insurance_section.dart';
 import 'package:intl/intl.dart';
+import 'package:budget_app/shared/widgets/branding_footer.dart';
 
 class EmergencyCalculatorScreen extends StatelessWidget {
   const EmergencyCalculatorScreen({super.key});
@@ -127,6 +128,7 @@ class EmergencyCalculatorScreen extends StatelessWidget {
                 ),
               ),
               const SliverToBoxAdapter(child: SizedBox(height: 32)),
+              const SliverToBoxAdapter(child: BrandingFooter()),
             ],
           );
         },

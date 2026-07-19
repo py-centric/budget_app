@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:budget_app/features/loans/domain/entities/loan.dart';
 import 'package:budget_app/features/loans/presentation/bloc/loan_bloc.dart';
 import 'package:budget_app/features/loans/presentation/bloc/loan_event.dart';
+import 'package:budget_app/shared/widgets/branding_footer.dart';
 
 class AddLoanPage extends StatefulWidget {
   final Loan? existingLoan;
@@ -167,6 +168,7 @@ class _AddLoanPageState extends State<AddLoanPage> {
                 child: Text(isEditing ? 'Update Loan' : 'Save Loan'),
               ),
             ),
+            const BrandingFooter(),
           ],
         ),
       ),

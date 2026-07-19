@@ -10,6 +10,7 @@ import 'package:budget_app/features/accounts/presentation/bloc/account_event.dar
 import 'package:budget_app/features/accounts/presentation/bloc/account_state.dart';
 import 'package:budget_app/features/accounts/presentation/widgets/account_form.dart';
 import 'package:budget_app/features/accounts/presentation/widgets/transfer_form.dart';
+import 'package:budget_app/shared/widgets/branding_footer.dart';
 
 class AccountsPage extends StatelessWidget {
   const AccountsPage({super.key});
@@ -57,13 +58,19 @@ class AccountsPage extends StatelessWidget {
           }
 
           if (accounts.isEmpty) {
-            return _buildEmptyState(context);
+            return Column(
+              children: [
+                Expanded(child: _buildEmptyState(context)),
+                const BrandingFooter(),
+              ],
+            );
           }
 
           return Column(
             children: [
               _buildTotalBalanceCard(context, totalBalance),
               Expanded(child: _buildAccountsList(context, accounts)),
+              const BrandingFooter(),
             ],
           );
         },

@@ -5,6 +5,7 @@ import '../bloc/financial_bloc.dart';
 import '../../../../core/utils/currency_formatter.dart';
 import '../../../settings/presentation/bloc/settings_bloc.dart';
 import '../../../../shared/widgets/empty_state_widget.dart';
+import 'package:budget_app/shared/widgets/branding_footer.dart';
 
 class SavedCalculationsPage extends StatefulWidget {
   const SavedCalculationsPage({super.key});
@@ -42,8 +43,11 @@ class _SavedCalculationsPageState extends State<SavedCalculationsPage> {
           }
 
           return ListView.builder(
-            itemCount: state.savedCalculations.length,
+            itemCount: state.savedCalculations.length + 1,
             itemBuilder: (context, index) {
+              if (index == state.savedCalculations.length) {
+                return const BrandingFooter();
+              }
               final item = state.savedCalculations[index];
               return Dismissible(
                 key: ValueKey(item.id),

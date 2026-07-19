@@ -5,6 +5,7 @@ import '../widgets/savings_chart.dart';
 import '../../../../core/utils/currency_formatter.dart';
 import '../../../settings/presentation/bloc/settings_bloc.dart';
 import '../../domain/usecases/calculate_amortization.dart';
+import 'package:budget_app/shared/widgets/branding_footer.dart';
 
 class SavingsCalculatorPage extends StatefulWidget {
   const SavingsCalculatorPage({super.key});
@@ -231,6 +232,7 @@ class _SavingsCalculatorPageState extends State<SavingsCalculatorPage> {
               ),
               const SizedBox(height: 24),
               SizedBox(height: 250, child: SavingsChart(schedule: schedule)),
+              const BrandingFooter(),
             ],
           );
         },

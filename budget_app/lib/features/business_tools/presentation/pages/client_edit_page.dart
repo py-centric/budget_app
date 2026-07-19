@@ -4,6 +4,7 @@ import 'package:uuid/uuid.dart';
 import '../../domain/entities/client.dart';
 import '../bloc/business_bloc.dart';
 import '../bloc/business_event.dart';
+import 'package:budget_app/shared/widgets/branding_footer.dart';
 
 class ClientEditPage extends StatefulWidget {
   final Client? client;
@@ -131,6 +132,7 @@ class _ClientEditPageState extends State<ClientEditPage> {
               decoration: const InputDecoration(labelText: 'Internal Notes'),
               maxLines: 3,
             ),
+            const BrandingFooter(),
           ],
         ),
       ),

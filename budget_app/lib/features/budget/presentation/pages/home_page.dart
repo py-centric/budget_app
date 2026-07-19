@@ -30,6 +30,7 @@ import '../bloc/category_limit_bloc.dart';
 import '../bloc/category_limit_event.dart';
 import '../bloc/category_limit_state.dart';
 import '../bloc/projection_event.dart';
+import 'package:budget_app/shared/widgets/branding_footer.dart';
 import '../../domain/entities/category.dart';
 import '../../domain/entities/recurring_transaction.dart';
 
@@ -471,26 +472,33 @@ class _HomePageState extends State<HomePage> {
                                   );
                                 },
                                 incomeListBuilder:
-                                    (entries, onEdit, onDelete, onConfirm) {
+                                    (entries, onEdit, onDelete, onConfirm, sortField, sortOrder, groupMode) {
                                       return IncomeList(
                                         entries: entries,
                                         onEdit: onEdit,
                                         onDelete: onDelete,
                                         onConfirm: onConfirm,
+                                        sortField: sortField,
+                                        sortOrder: sortOrder,
+                                        groupMode: groupMode,
                                       );
                                     },
                                 expenseListBuilder:
-                                    (entries, onEdit, onDelete, onConfirm) {
+                                    (entries, onEdit, onDelete, onConfirm, sortField, sortOrder, groupMode) {
                                       return ExpenseList(
                                         entries: entries,
                                         onEdit: onEdit,
                                         onDelete: onDelete,
                                         onConfirm: onConfirm,
+                                        sortField: sortField,
+                                        sortOrder: sortOrder,
+                                        groupMode: groupMode,
                                       );
                                     },
                               );
                             },
                           ),
+                          const BrandingFooter(),
                         ],
                       ),
                     ),

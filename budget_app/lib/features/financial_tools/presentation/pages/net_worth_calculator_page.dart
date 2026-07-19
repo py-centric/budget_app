@@ -6,6 +6,7 @@ import '../../domain/entities/financial_tool_entry.dart';
 import '../../../../core/utils/currency_formatter.dart';
 import '../../../settings/presentation/bloc/settings_bloc.dart';
 import '../widgets/net_worth_chart.dart';
+import 'package:budget_app/shared/widgets/branding_footer.dart';
 
 class NetWorthCalculatorPage extends StatefulWidget {
   const NetWorthCalculatorPage({super.key});
@@ -320,6 +321,7 @@ class _NetWorthCalculatorPageState extends State<NetWorthCalculatorPage> {
                   );
                 }),
               ],
+              const BrandingFooter(),
             ],
           );
         },

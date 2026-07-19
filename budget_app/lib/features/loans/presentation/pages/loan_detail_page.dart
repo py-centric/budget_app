@@ -9,6 +9,7 @@ import 'package:budget_app/features/loans/presentation/bloc/loan_event.dart';
 import 'package:budget_app/features/loans/presentation/bloc/loan_state.dart';
 import 'package:budget_app/features/loans/presentation/pages/add_loan_page.dart';
 import 'package:budget_app/features/loans/presentation/widgets/add_payment_dialog.dart';
+import 'package:budget_app/shared/widgets/branding_footer.dart';
 
 class LoanDetailPage extends StatefulWidget {
   final String loanId;
@@ -214,6 +215,7 @@ class _LoanDetailPageState extends State<LoanDetailPage> {
               ..._payments.map(
                 (payment) => _buildPaymentTile(context, payment),
               ),
+            const BrandingFooter(),
           ],
         ),
       ),

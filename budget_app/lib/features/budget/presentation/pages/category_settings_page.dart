@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/category_bloc.dart';
 import '../../domain/entities/category.dart';
 import '../widgets/category_delete_dialog.dart';
+import 'package:budget_app/shared/widgets/branding_footer.dart';
 
 class CategorySettingsPage extends StatelessWidget {
   const CategorySettingsPage({super.key});
@@ -71,8 +72,11 @@ class CategorySettingsPage extends StatelessWidget {
     CategoryType type,
   ) {
     return ListView.builder(
-      itemCount: categories.length,
+      itemCount: categories.length + 1,
       itemBuilder: (context, index) {
+        if (index == categories.length) {
+          return const BrandingFooter();
+        }
         final category = categories[index];
         return ListTile(
           title: Text(category.name),

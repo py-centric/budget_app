@@ -6,6 +6,7 @@ import '../../../../core/utils/currency_formatter.dart';
 import '../bloc/budget_bloc.dart';
 import '../bloc/budget_event.dart';
 import '../../../../shared/widgets/empty_state_widget.dart';
+import 'package:budget_app/shared/widgets/branding_footer.dart';
 
 class ManageRecurringPage extends StatefulWidget {
   const ManageRecurringPage({super.key});
@@ -59,8 +60,11 @@ class _ManageRecurringPageState extends State<ManageRecurringPage> {
           }
 
           return ListView.builder(
-            itemCount: filteredItems.length,
+            itemCount: filteredItems.length + 1,
             itemBuilder: (context, index) {
+              if (index == filteredItems.length) {
+                return const BrandingFooter();
+              }
               final item = filteredItems[index];
               return ListTile(
                 leading: Icon(

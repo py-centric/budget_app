@@ -4,6 +4,7 @@ import 'package:uuid/uuid.dart';
 import 'package:intl/intl.dart';
 import 'package:budget_app/core/utils/currency_formatter.dart';
 import 'package:budget_app/features/settings/presentation/bloc/settings_bloc.dart';
+import 'package:budget_app/shared/widgets/branding_footer.dart';
 import '../../domain/entities/invoice.dart';
 import '../../domain/entities/invoice_item.dart';
 import '../../domain/entities/company_profile.dart';
@@ -176,6 +177,7 @@ class _InvoiceBuilderPageState extends State<InvoiceBuilderPage> {
                     ),
                     maxLines: 3,
                   ),
+                  const BrandingFooter(),
                 ],
               ),
             );

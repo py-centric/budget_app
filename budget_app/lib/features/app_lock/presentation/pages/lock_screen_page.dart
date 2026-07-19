@@ -5,6 +5,7 @@ import '../bloc/app_lock_event.dart';
 import '../bloc/app_lock_state.dart';
 import '../widgets/pin_input_widget.dart';
 import '../widgets/biometric_button_widget.dart';
+import 'package:budget_app/shared/widgets/branding_footer.dart';
 
 class LockScreenPage extends StatefulWidget {
   final VoidCallback onUnlocked;
@@ -94,71 +95,76 @@ class _LockScreenPageState extends State<LockScreenPage>
         }
       },
       child: Scaffold(
-        body: SafeArea(
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: BlocBuilder<AppLockBloc, AppLockState>(
-                builder: (context, state) {
-                  if (state.status == AppLockStatus.lockedOut) {
-                    return _buildLockoutMessage(state);
-                  }
+      body: Column(
+        children: [
+          Expanded(
+            child: SafeArea(
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(24.0),
+                  child: BlocBuilder<AppLockBloc, AppLockState>(
+                    builder: (context, state) {
+                      if (state.status == AppLockStatus.lockedOut) {
+                        return _buildLockoutMessage(state);
+                      }
 
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.lock_outline,
-                        size: 64,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                      const SizedBox(height: 24),
-                      Text(
-                        'Budget App is Locked',
-                        style: Theme.of(context).textTheme.headlineSmall,
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        _showPinInput
-                            ? 'Enter your PIN to unlock'
-                            : 'Use biometrics or PIN to unlock',
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Theme.of(context).colorScheme.onSurfaceVariant,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(height: 32),
-                      // Show PIN input by default, or if biometrics failed
-                      if (_showPinInput || !state.isBiometricAvailable)
-                        _buildPinInput()
-                      else
-                        BiometricButtonWidget(
-                          onPressed: _tryBiometric,
-                          isAvailable: state.isBiometricAvailable,
-                        ),
-                      // Show toggle between PIN and biometrics if biometrics available
-                      if (state.isBiometricAvailable) ...[
-                        const SizedBox(height: 16),
-                        if (_showPinInput)
-                          TextButton.icon(
-                            onPressed: _switchToBiometrics,
-                            icon: const Icon(Icons.fingerprint),
-                            label: const Text('Use Biometrics'),
-                          )
-                        else
-                          TextButton.icon(
-                            onPressed: _switchToPin,
-                            icon: const Icon(Icons.pin),
-                            label: const Text('Use PIN instead'),
+                      return Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.lock_outline,
+                            size: 64,
+                            color: Theme.of(context).colorScheme.primary,
                           ),
-                      ],
-                    ],
-                  );
-                },
+                          const SizedBox(height: 24),
+                          Text(
+                            'Budget App is Locked',
+                            style: Theme.of(context).textTheme.headlineSmall,
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            _showPinInput
+                                ? 'Enter your PIN to unlock'
+                                : 'Use biometrics or PIN to unlock',
+                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              color: Theme.of(context).colorScheme.onSurfaceVariant,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 32),
+                          if (_showPinInput || !state.isBiometricAvailable)
+                            _buildPinInput()
+                          else
+                            BiometricButtonWidget(
+                              onPressed: _tryBiometric,
+                              isAvailable: state.isBiometricAvailable,
+                            ),
+                          if (state.isBiometricAvailable) ...[
+                            const SizedBox(height: 16),
+                            if (_showPinInput)
+                              TextButton.icon(
+                                onPressed: _switchToBiometrics,
+                                icon: const Icon(Icons.fingerprint),
+                                label: const Text('Use Biometrics'),
+                              )
+                            else
+                              TextButton.icon(
+                                onPressed: _switchToPin,
+                                icon: const Icon(Icons.pin),
+                                label: const Text('Use PIN instead'),
+                              ),
+                          ],
+                        ],
+                      );
+                    },
+                  ),
+                ),
               ),
             ),
           ),
-        ),
+          const BrandingFooter(),
+        ],
+      ),
       ),
     );
   }

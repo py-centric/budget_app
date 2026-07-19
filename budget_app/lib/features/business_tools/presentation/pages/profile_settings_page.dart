@@ -7,6 +7,7 @@ import '../bloc/business_bloc.dart';
 import '../bloc/business_event.dart';
 import '../bloc/business_state.dart';
 import '../utils/logo_picker.dart';
+import 'package:budget_app/shared/widgets/branding_footer.dart';
 
 class ProfileSettingsPage extends StatelessWidget {
   const ProfileSettingsPage({super.key});
@@ -23,8 +24,11 @@ class ProfileSettingsPage extends StatelessWidget {
 
           return ListView.builder(
             padding: const EdgeInsets.all(16),
-            itemCount: state.profiles.length,
+            itemCount: state.profiles.length + 1,
             itemBuilder: (context, index) {
+              if (index == state.profiles.length) {
+                return const BrandingFooter();
+              }
               final profile = state.profiles[index];
               return Card(
                 child: ListTile(

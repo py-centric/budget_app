@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:budget_app/core/theme/app_spacing.dart';
 import 'package:budget_app/core/utils/currency_formatter.dart';
 import 'package:budget_app/features/settings/presentation/bloc/settings_bloc.dart';
+import 'package:budget_app/shared/widgets/branding_footer.dart';
 import '../../domain/usecases/calculate_vat.dart';
 
 class VatCalculatorPage extends StatefulWidget {
@@ -134,6 +135,7 @@ class _VatCalculatorPageState extends State<VatCalculatorPage> {
                 isTotal: true,
               ),
             ],
+            const BrandingFooter(),
           ],
         ),
       ),
