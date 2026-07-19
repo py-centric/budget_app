@@ -614,6 +614,24 @@ class LocalDatabase {
         'CREATE INDEX IF NOT EXISTS idx_expense_category ON expense_entries (category_id)',
       );
     }
+
+    if (oldVersion < 22) {
+      await db.execute(
+        "ALTER TABLE budgets ADD COLUMN type TEXT NOT NULL DEFAULT 'regular'",
+      );
+      await db.execute(
+        'ALTER TABLE budgets ADD COLUMN target_income REAL',
+      );
+      await db.execute(
+        'ALTER TABLE budgets ADD COLUMN source_description TEXT',
+      );
+      await db.execute(
+        'ALTER TABLE budgets ADD COLUMN linked_income_id TEXT',
+      );
+      await db.execute(
+        'CREATE INDEX IF NOT EXISTS idx_budgets_type ON budgets(type)',
+      );
+    }
   }
 
   Future<void> _onCreate(Database db, int version) async {
@@ -627,7 +645,11 @@ class LocalDatabase {
         currency_code TEXT DEFAULT 'USD',
         target_currency_code TEXT,
         exchange_rate REAL,
-        converted_amount REAL
+        converted_amount REAL,
+        type TEXT NOT NULL DEFAULT 'regular',
+        target_income REAL,
+        source_description TEXT,
+        linked_income_id TEXT
       )
     ''');
 

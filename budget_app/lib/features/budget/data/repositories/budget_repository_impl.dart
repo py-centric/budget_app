@@ -204,6 +204,30 @@ class BudgetRepositoryImpl implements BudgetRepository {
   }
 
   @override
+  Future<List<Budget>> getDisposableHistory() async {
+    final db = await _localDatabase.database;
+    final maps = await db.query(
+      'budgets',
+      where: 'type IN (?, ?)',
+      whereArgs: ['disposed', 'persisted'],
+      orderBy: 'period_year DESC, period_month DESC',
+    );
+    return maps.map<Budget>(BudgetModel.fromMap).toList();
+  }
+
+  @override
+  Future<List<Budget>> getActiveDisposableBudgets() async {
+    final db = await _localDatabase.database;
+    final maps = await db.query(
+      'budgets',
+      where: 'type = ?',
+      whereArgs: ['disposable'],
+      orderBy: 'period_year DESC, period_month DESC',
+    );
+    return maps.map<Budget>(BudgetModel.fromMap).toList();
+  }
+
+  @override
   Future<void> clearAllBudgets() async {
     await _localDatabase.clearAllBudgets();
   }

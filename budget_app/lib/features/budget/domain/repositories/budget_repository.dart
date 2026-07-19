@@ -45,6 +45,8 @@ abstract class BudgetRepository {
   Future<void> reassignAndDeleteCategory(String oldId, String newId);
 
   Future<List<BudgetPeriod>> getAvailablePeriods();
+  Future<List<Budget>> getDisposableHistory();
+  Future<List<Budget>> getActiveDisposableBudgets();
 
   Future<void> clearAllBudgets();
   Future<void> factoryReset();
