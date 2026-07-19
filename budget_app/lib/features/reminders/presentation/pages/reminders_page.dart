@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/reminder_bloc.dart';
 import '../bloc/reminder_state.dart';
 import '../bloc/reminder_event.dart';
+import '../widgets/create_reminder_dialog.dart';
 import 'package:budget_app/shared/widgets/branding_footer.dart';
 
 class RemindersPage extends StatelessWidget {
@@ -12,6 +13,15 @@ class RemindersPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Bill Reminders'), centerTitle: true),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (_) => const CreateReminderDialog(),
+          );
+        },
+        child: const Icon(Icons.add),
+      ),
       body: BlocBuilder<ReminderBloc, ReminderState>(
         builder: (context, state) {
           if (state is ReminderLoading) {
