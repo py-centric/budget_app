@@ -124,7 +124,7 @@ class _CreateDisposableDialogState extends State<CreateDisposableDialog> {
                 children: [
                   Expanded(
                     child: DropdownButtonFormField<int>(
-                      value: _selectedMonth,
+                      initialValue: _selectedMonth,
                       decoration: const InputDecoration(labelText: 'Month'),
                       items: List.generate(12, (i) {
                         return DropdownMenuItem<int>(
@@ -180,7 +180,7 @@ class _CreateDisposableDialogState extends State<CreateDisposableDialog> {
                         );
                       }
                       return DropdownButtonFormField<String>(
-                        value: _selectedIncomeId,
+                        initialValue: _selectedIncomeId,
                         decoration: const InputDecoration(labelText: 'Select Income'),
                         items: state.incomes.map((income) {
                           return DropdownMenuItem<String>(
