@@ -204,3 +204,94 @@ class UpdateExchangeRateEvent extends BudgetEvent {
   @override
   List<Object?> get props => [budgetId, exchangeRate];
 }
+
+class CreateDisposableBudgetEvent extends BudgetEvent {
+  final String name;
+  final double targetIncome;
+  final String sourceDescription;
+  final int periodMonth;
+  final int periodYear;
+  final String? linkedIncomeId;
+
+  const CreateDisposableBudgetEvent({
+    required this.name,
+    required this.targetIncome,
+    required this.sourceDescription,
+    required this.periodMonth,
+    required this.periodYear,
+    this.linkedIncomeId,
+  });
+
+  @override
+  List<Object?> get props => [
+    name,
+    targetIncome,
+    sourceDescription,
+    periodMonth,
+    periodYear,
+    linkedIncomeId,
+  ];
+}
+
+class UpdateDisposableBudgetEvent extends BudgetEvent {
+  final String budgetId;
+  final double? targetIncome;
+  final String? sourceDescription;
+
+  const UpdateDisposableBudgetEvent({
+    required this.budgetId,
+    this.targetIncome,
+    this.sourceDescription,
+  });
+
+  @override
+  List<Object?> get props => [budgetId, targetIncome, sourceDescription];
+}
+
+class DisposeBudgetEvent extends BudgetEvent {
+  final String budgetId;
+
+  const DisposeBudgetEvent(this.budgetId);
+
+  @override
+  List<Object?> get props => [budgetId];
+}
+
+class PersistBudgetEvent extends BudgetEvent {
+  final String budgetId;
+
+  const PersistBudgetEvent(this.budgetId);
+
+  @override
+  List<Object?> get props => [budgetId];
+}
+
+class LoadDisposableHistoryEvent extends BudgetEvent {
+  const LoadDisposableHistoryEvent();
+}
+
+class LinkIncomeToBudgetEvent extends BudgetEvent {
+  final String budgetId;
+  final String incomeTransactionId;
+
+  const LinkIncomeToBudgetEvent({
+    required this.budgetId,
+    required this.incomeTransactionId,
+  });
+
+  @override
+  List<Object?> get props => [budgetId, incomeTransactionId];
+}
+
+class UnlinkIncomeFromBudgetEvent extends BudgetEvent {
+  final String budgetId;
+
+  const UnlinkIncomeFromBudgetEvent(this.budgetId);
+
+  @override
+  List<Object?> get props => [budgetId];
+}
+
+class LoadIncomeListEvent extends BudgetEvent {
+  const LoadIncomeListEvent();
+}
