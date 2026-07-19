@@ -6,12 +6,8 @@ import 'package:path_provider/path_provider.dart';
 
 import 'core/di/app_module.dart';
 import 'core/theme/app_theme.dart';
-import 'features/app_lock/presentation/bloc/app_lock_bloc.dart';
-import 'features/app_lock/presentation/bloc/app_lock_event.dart';
-import 'features/app_lock/presentation/bloc/app_lock_state.dart';
-import 'features/app_lock/presentation/pages/lock_screen_page.dart';
-import 'features/budget/presentation/pages/home_page.dart';
 import 'features/settings/presentation/bloc/settings_bloc.dart';
+import 'features/splash/presentation/pages/splash_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -56,45 +52,13 @@ class BudgetApp extends StatelessWidget {
               mode = ThemeMode.system;
           }
 
-          return BlocBuilder<AppLockBloc, AppLockState>(
-            builder: (context, appLockState) {
-              // Show lock screen ONLY if lock is actually enabled and user hasn't authenticated yet
-              // Don't show lock screen if:
-              // - Lock is not enabled
-              // - Status is loaded (initial load complete, lock not enabled)
-              // - Status is initial (still loading)
-              // - Status is authenticated
-              final shouldShowLock =
-                  appLockState.settings.isEnabled &&
-                  appLockState.status != AppLockStatus.authenticated &&
-                  appLockState.status != AppLockStatus.loaded &&
-                  appLockState.status != AppLockStatus.initial &&
-                  appLockState.status != AppLockStatus.loading;
-
-              if (shouldShowLock) {
-                return MaterialApp(
-                  title: 'Budget App',
-                  debugShowCheckedModeBanner: false,
-                  theme: AppTheme.lightTheme,
-                  darkTheme: AppTheme.darkTheme,
-                  themeMode: mode,
-                  home: LockScreenPage(
-                    onUnlocked: () {
-                      context.read<AppLockBloc>().add(AppLockLoadSettings());
-                    },
-                  ),
-                );
-              }
-
-              return MaterialApp(
-                title: 'Budget App',
-                debugShowCheckedModeBanner: false,
-                theme: AppTheme.lightTheme,
-                darkTheme: AppTheme.darkTheme,
-                themeMode: mode,
-                home: const HomePage(),
-              );
-            },
+          return MaterialApp(
+            title: 'Budget App',
+            debugShowCheckedModeBanner: false,
+            theme: AppTheme.lightTheme,
+            darkTheme: AppTheme.darkTheme,
+            themeMode: mode,
+            home: const SplashPage(),
           );
         },
       ),
