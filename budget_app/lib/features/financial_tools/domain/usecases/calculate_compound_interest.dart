@@ -101,8 +101,9 @@ class CalculateCompoundInterest {
     }
 
     final double monthlyRate = annualRate / 12 / 100;
-    if (monthlyRate == 0)
+    if (monthlyRate == 0) {
       return initialDeposit + (monthlyContribution * months);
+    }
 
     final double compoundFactor = pow(1 + monthlyRate, months).toDouble();
     final double futureValuePrincipal = initialDeposit * compoundFactor;

@@ -33,8 +33,9 @@ class _SavedCalculationsPageState extends State<SavedCalculationsPage> {
       appBar: AppBar(title: const Text('Saved Items')),
       body: BlocBuilder<FinancialBloc, FinancialState>(
         builder: (context, state) {
-          if (state.isLoading)
+          if (state.isLoading) {
             return const Center(child: CircularProgressIndicator());
+          }
           if (state.savedCalculations.isEmpty) {
             return const EmptyStateWidget(
               message: 'No saved items yet.',
@@ -94,21 +95,24 @@ class _SavedCalculationsPageState extends State<SavedCalculationsPage> {
   }
 
   String _getDisplayValue(dynamic item, String currencyCode) {
-    if (item.type == 'NET_WORTH')
+    if (item.type == 'NET_WORTH') {
       return CurrencyFormatter.format(
         item.data['total'] ?? 0,
         currencyCode: currencyCode,
       );
-    if (item.type == 'LOAN')
+    }
+    if (item.type == 'LOAN') {
       return CurrencyFormatter.format(
         item.data['monthlyPayment'] ?? 0,
         currencyCode: currencyCode,
       );
-    if (item.type == 'SAVINGS')
+    }
+    if (item.type == 'SAVINGS') {
       return CurrencyFormatter.format(
         item.data['futureValue'] ?? 0,
         currencyCode: currencyCode,
       );
+    }
     return '';
   }
 }
