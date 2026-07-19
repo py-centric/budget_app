@@ -12,6 +12,7 @@ import 'package:budget_app/features/budget/presentation/bloc/budget_bloc.dart';
 import 'package:budget_app/features/budget/presentation/bloc/budget_event.dart';
 import 'package:budget_app/features/budget/presentation/bloc/budget_state.dart';
 import 'package:budget_app/features/budget/domain/usecases/calculate_summary.dart';
+import 'package:budget_app/shared/widgets/branding_footer.dart';
 
 class CategoryBreakdownPage extends StatefulWidget {
   const CategoryBreakdownPage({super.key});
@@ -468,13 +469,14 @@ class _CategoryBreakdownPageState extends State<CategoryBreakdownPage> {
                 child: Text(
                   _selectedBudgetIds.length < _getAvailableBudgetIds().length
                       ? 'No entries match the selected budgets.'
-                      : 'No entries found for this period.',
+                      :               'No entries found for this period.',
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                     color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
                 ),
               ),
             ),
+          const BrandingFooter(),
         ],
       ),
     );

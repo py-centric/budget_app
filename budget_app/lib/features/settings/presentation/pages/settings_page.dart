@@ -15,6 +15,7 @@ import '../../../backup/presentation/bloc/backup_state.dart';
 import '../../../budget/presentation/bloc/budget_bloc.dart';
 import '../../../budget/presentation/bloc/budget_event.dart';
 import '../bloc/settings_bloc.dart';
+import 'package:budget_app/shared/widgets/branding_footer.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -190,6 +191,7 @@ class SettingsPage extends StatelessWidget {
                 value: context.read<BudgetBloc>(),
                 child: const _FactoryResetSection(),
               ),
+              const BrandingFooter(),
             ],
           );
         },

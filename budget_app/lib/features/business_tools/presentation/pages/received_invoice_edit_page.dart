@@ -5,6 +5,7 @@ import 'package:uuid/uuid.dart';
 import '../../domain/entities/received_invoice.dart';
 import '../bloc/business_bloc.dart';
 import '../bloc/business_event.dart';
+import 'package:budget_app/shared/widgets/branding_footer.dart';
 
 class ReceivedInvoiceEditPage extends StatefulWidget {
   final ReceivedInvoice? invoice;
@@ -155,6 +156,7 @@ class _ReceivedInvoiceEditPageState extends State<ReceivedInvoiceEditPage> {
               decoration: const InputDecoration(labelText: 'Notes'),
               maxLines: 3,
             ),
+            const BrandingFooter(),
           ],
         ),
       ),

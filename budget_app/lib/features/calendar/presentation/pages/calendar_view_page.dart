@@ -7,6 +7,7 @@ import 'package:budget_app/features/settings/presentation/bloc/settings_bloc.dar
 import '../bloc/calendar_bloc.dart';
 import '../bloc/calendar_event.dart';
 import '../bloc/calendar_state.dart';
+import 'package:budget_app/shared/widgets/branding_footer.dart';
 
 class CalendarViewPage extends StatefulWidget {
   const CalendarViewPage({super.key});
@@ -102,6 +103,7 @@ class _CalendarViewPageState extends State<CalendarViewPage> {
                     },
                   ),
                 ),
+                const BrandingFooter(),
               ],
             );
           }

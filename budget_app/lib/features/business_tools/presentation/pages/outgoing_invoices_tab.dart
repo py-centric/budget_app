@@ -9,6 +9,7 @@ import '../../domain/repositories/business_repository.dart';
 import 'pdf_preview_page.dart';
 import 'invoice_builder_page.dart';
 import '../../../../core/utils/currency_formatter.dart';
+import 'package:budget_app/shared/widgets/branding_footer.dart';
 
 class OutgoingInvoicesTab extends StatelessWidget {
   const OutgoingInvoicesTab({super.key});
@@ -29,8 +30,11 @@ class OutgoingInvoicesTab extends StatelessWidget {
 
         return ListView.builder(
           padding: const EdgeInsets.all(16),
-          itemCount: state.invoices.length,
+          itemCount: state.invoices.length + 1,
           itemBuilder: (context, index) {
+            if (index == state.invoices.length) {
+              return const BrandingFooter();
+            }
             final invoice = state.invoices[index];
             return Card(
               child: ListTile(

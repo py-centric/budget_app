@@ -6,6 +6,7 @@ import '../widgets/amortization_schedule_table.dart';
 import '../../../../core/utils/currency_formatter.dart';
 import '../../../settings/presentation/bloc/settings_bloc.dart';
 import '../../domain/usecases/calculate_amortization.dart';
+import 'package:budget_app/shared/widgets/branding_footer.dart';
 
 class LoanCalculatorPage extends StatefulWidget {
   const LoanCalculatorPage({super.key});
@@ -323,6 +324,7 @@ class _LoanCalculatorPageState extends State<LoanCalculatorPage> {
                     currencyCode: currencyCode,
                   ),
                 ),
+              const BrandingFooter(),
             ],
           );
         },

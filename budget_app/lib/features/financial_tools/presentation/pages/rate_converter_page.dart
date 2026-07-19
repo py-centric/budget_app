@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../domain/usecases/solve_interest_rate.dart';
 import '../../domain/usecases/convert_rate.dart';
 import '../../../settings/presentation/bloc/settings_bloc.dart';
+import 'package:budget_app/shared/widgets/branding_footer.dart';
 
 class RateConverterPage extends StatefulWidget {
   const RateConverterPage({super.key});
@@ -72,6 +73,7 @@ class _RateConverterPageState extends State<RateConverterPage> {
           _buildSolverCard(currencyCode),
           const SizedBox(height: 24),
           _buildConverterCard(),
+          const BrandingFooter(),
         ],
       ),
     );

@@ -7,6 +7,7 @@ import 'package:budget_app/features/loans/presentation/bloc/loan_bloc.dart';
 import 'package:budget_app/features/loans/presentation/bloc/loan_state.dart';
 import 'package:budget_app/features/loans/presentation/pages/loan_detail_page.dart';
 import 'package:budget_app/features/loans/presentation/pages/add_loan_page.dart';
+import 'package:budget_app/shared/widgets/branding_footer.dart';
 
 class LoansPage extends StatelessWidget {
   const LoansPage({super.key});
@@ -15,32 +16,39 @@ class LoansPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Loans')),
-      body: BlocBuilder<LoanBloc, LoanState>(
-        builder: (context, state) {
-          if (state is LoanLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
+      body: Column(
+        children: [
+          Expanded(
+            child: BlocBuilder<LoanBloc, LoanState>(
+              builder: (context, state) {
+                if (state is LoanLoading) {
+                  return const Center(child: CircularProgressIndicator());
+                }
 
-          if (state is LoanError) {
-            return Center(child: Text('Error: ${state.message}'));
-          }
+                if (state is LoanError) {
+                  return Center(child: Text('Error: ${state.message}'));
+                }
 
-          if (state is LoanLoaded) {
-            return Column(
-              children: [
-                if (state.summary != null)
-                  _buildSummaryCard(context, state.summary!),
-                Expanded(
-                  child: state.loans.isEmpty
-                      ? _buildEmptyState(context)
-                      : _buildLoansList(context, state.loans),
-                ),
-              ],
-            );
-          }
+                if (state is LoanLoaded) {
+                  return Column(
+                    children: [
+                      if (state.summary != null)
+                        _buildSummaryCard(context, state.summary!),
+                      Expanded(
+                        child: state.loans.isEmpty
+                            ? _buildEmptyState(context)
+                            : _buildLoansList(context, state.loans),
+                      ),
+                    ],
+                  );
+                }
 
-          return const Center(child: Text('No loans yet'));
-        },
+                return const Center(child: Text('No loans yet'));
+              },
+            ),
+          ),
+          const BrandingFooter(),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _addNewLoan(context),

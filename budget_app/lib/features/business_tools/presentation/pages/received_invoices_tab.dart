@@ -7,6 +7,7 @@ import '../bloc/business_state.dart';
 import 'received_invoice_edit_page.dart';
 import '../../../../core/utils/currency_formatter.dart';
 import '../../../../shared/widgets/empty_state_widget.dart';
+import 'package:budget_app/shared/widgets/branding_footer.dart';
 
 class ReceivedInvoicesTab extends StatelessWidget {
   const ReceivedInvoicesTab({super.key});
@@ -30,8 +31,11 @@ class ReceivedInvoicesTab extends StatelessWidget {
 
         return ListView.builder(
           padding: const EdgeInsets.all(16),
-          itemCount: state.receivedInvoices.length,
+          itemCount: state.receivedInvoices.length + 1,
           itemBuilder: (context, index) {
+            if (index == state.receivedInvoices.length) {
+              return const BrandingFooter();
+            }
             final invoice = state.receivedInvoices[index];
             return Card(
               child: ListTile(

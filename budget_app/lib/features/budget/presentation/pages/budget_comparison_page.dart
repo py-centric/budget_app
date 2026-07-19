@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:budget_app/core/theme/app_spacing.dart';
+import 'package:budget_app/shared/widgets/branding_footer.dart';
 import '../../domain/entities/budget_comparison.dart';
 import '../bloc/budget_comparison_bloc.dart';
 import '../bloc/budget_comparison_event.dart';
@@ -226,6 +227,7 @@ class _BudgetComparisonPageState extends State<BudgetComparisonPage> {
               ),
             ),
             SizedBox(height: AppSpacing.lg),
+            const BrandingFooter(),
           ],
         ),
       ),

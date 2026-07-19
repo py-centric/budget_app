@@ -11,6 +11,7 @@ import '../widgets/savings_goal_card.dart';
 import '../widgets/savings_goal_dialog.dart';
 import '../widgets/add_contribution_dialog.dart';
 import '../widgets/savings_calculator_dialog.dart';
+import 'package:budget_app/shared/widgets/branding_footer.dart';
 
 class SavingsGoalsPage extends StatelessWidget {
   const SavingsGoalsPage({super.key});
@@ -143,6 +144,7 @@ class SavingsGoalsPage extends StatelessWidget {
           }, childCount: state.goals.length),
         ),
         const SliverToBoxAdapter(child: SizedBox(height: 80)),
+        const SliverToBoxAdapter(child: BrandingFooter()),
       ],
     );
   }

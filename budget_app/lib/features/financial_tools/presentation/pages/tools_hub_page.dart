@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:budget_app/core/theme/app_spacing.dart';
+import 'package:budget_app/shared/widgets/branding_footer.dart';
 import 'net_worth_calculator_page.dart';
 import 'loan_calculator_page.dart';
 import 'savings_calculator_page.dart';
@@ -14,68 +15,75 @@ class ToolsHubPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Financial Tools')),
-      body: GridView.count(
-        padding: const EdgeInsets.all(AppSpacing.md),
-        crossAxisCount: 2,
-        mainAxisSpacing: 16,
-        crossAxisSpacing: 16,
+      body: Column(
         children: [
-          _ToolCard(
-            title: 'Net Worth Calculator',
-            icon: Icons.account_balance,
-            color: Theme.of(context).colorScheme.secondary,
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => const NetWorthCalculatorPage()),
+          Expanded(
+            child: GridView.count(
+              padding: const EdgeInsets.all(AppSpacing.md),
+              crossAxisCount: 2,
+              mainAxisSpacing: 16,
+              crossAxisSpacing: 16,
+              children: [
+                _ToolCard(
+                  title: 'Net Worth Calculator',
+                  icon: Icons.account_balance,
+                  color: Theme.of(context).colorScheme.secondary,
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const NetWorthCalculatorPage()),
+                  ),
+                ),
+                _ToolCard(
+                  title: 'Loan Amortization',
+                  icon: Icons.real_estate_agent,
+                  color: Theme.of(context).colorScheme.tertiary,
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const LoanCalculatorPage()),
+                  ),
+                ),
+                _ToolCard(
+                  title: 'Savings Goals',
+                  icon: Icons.savings,
+                  color: Theme.of(context).colorScheme.primary,
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const SavingsCalculatorPage()),
+                  ),
+                ),
+                _ToolCard(
+                  title: 'Rate Converter',
+                  icon: Icons.percent,
+                  color: Theme.of(context).colorScheme.secondary,
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const RateConverterPage()),
+                  ),
+                ),
+                _ToolCard(
+                  title: 'Emergency Fund',
+                  icon: Icons.health_and_safety,
+                  color: Theme.of(context).colorScheme.error,
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const EmergencyCalculatorScreen(),
+                    ),
+                  ),
+                ),
+                _ToolCard(
+                  title: 'Saved Calculations',
+                  icon: Icons.bookmark,
+                  color: Theme.of(context).colorScheme.tertiary,
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const SavedCalculationsPage()),
+                  ),
+                ),
+              ],
             ),
           ),
-          _ToolCard(
-            title: 'Loan Amortization',
-            icon: Icons.real_estate_agent,
-            color: Theme.of(context).colorScheme.tertiary,
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => const LoanCalculatorPage()),
-            ),
-          ),
-          _ToolCard(
-            title: 'Savings Goals',
-            icon: Icons.savings,
-            color: Theme.of(context).colorScheme.primary,
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => const SavingsCalculatorPage()),
-            ),
-          ),
-          _ToolCard(
-            title: 'Rate Converter',
-            icon: Icons.percent,
-            color: Theme.of(context).colorScheme.secondary,
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => const RateConverterPage()),
-            ),
-          ),
-          _ToolCard(
-            title: 'Emergency Fund',
-            icon: Icons.health_and_safety,
-            color: Theme.of(context).colorScheme.error,
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (_) => const EmergencyCalculatorScreen(),
-              ),
-            ),
-          ),
-          _ToolCard(
-            title: 'Saved Calculations',
-            icon: Icons.bookmark,
-            color: Theme.of(context).colorScheme.tertiary,
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => const SavedCalculationsPage()),
-            ),
-          ),
+          const BrandingFooter(),
         ],
       ),
     );

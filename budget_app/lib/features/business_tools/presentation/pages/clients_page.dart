@@ -4,6 +4,7 @@ import '../bloc/business_bloc.dart';
 import '../bloc/business_event.dart';
 import '../bloc/business_state.dart';
 import 'client_edit_page.dart';
+import 'package:budget_app/shared/widgets/branding_footer.dart';
 
 class ClientsPage extends StatelessWidget {
   const ClientsPage({super.key});
@@ -23,8 +24,11 @@ class ClientsPage extends StatelessWidget {
           }
 
           return ListView.builder(
-            itemCount: state.clients.length,
+            itemCount: state.clients.length + 1,
             itemBuilder: (context, index) {
+              if (index == state.clients.length) {
+                return const BrandingFooter();
+              }
               final client = state.clients[index];
               return ListTile(
                 leading: const Icon(Icons.person),

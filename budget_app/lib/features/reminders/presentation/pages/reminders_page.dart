@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/reminder_bloc.dart';
 import '../bloc/reminder_state.dart';
 import '../bloc/reminder_event.dart';
+import 'package:budget_app/shared/widgets/branding_footer.dart';
 
 class RemindersPage extends StatelessWidget {
   const RemindersPage({super.key});
@@ -110,6 +111,7 @@ class RemindersPage extends StatelessWidget {
           }, childCount: state.reminders.length),
         ),
         const SliverToBoxAdapter(child: SizedBox(height: 20)),
+        const SliverToBoxAdapter(child: BrandingFooter()),
       ],
     );
   }
