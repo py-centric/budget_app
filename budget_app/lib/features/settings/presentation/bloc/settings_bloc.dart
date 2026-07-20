@@ -32,6 +32,33 @@ class UpdateThemeEvent extends SettingsEvent {
   List<Object?> get props => [themeMode];
 }
 
+class UpdateSeedColorEvent extends SettingsEvent {
+  final int color;
+
+  const UpdateSeedColorEvent(this.color);
+
+  @override
+  List<Object?> get props => [color];
+}
+
+class UpdateIncomeColorEvent extends SettingsEvent {
+  final int color;
+
+  const UpdateIncomeColorEvent(this.color);
+
+  @override
+  List<Object?> get props => [color];
+}
+
+class UpdateExpenseColorEvent extends SettingsEvent {
+  final int color;
+
+  const UpdateExpenseColorEvent(this.color);
+
+  @override
+  List<Object?> get props => [color];
+}
+
 class InitializeSettingsEvent extends SettingsEvent {
   const InitializeSettingsEvent();
 }
@@ -79,6 +106,30 @@ class SettingsBloc extends HydratedBloc<SettingsEvent, SettingsState> {
       emit(
         state.copyWith(
           settings: state.settings.copyWith(themeMode: event.themeMode),
+        ),
+      );
+    });
+
+    on<UpdateSeedColorEvent>((event, emit) {
+      emit(
+        state.copyWith(
+          settings: state.settings.copyWith(seedColor: event.color),
+        ),
+      );
+    });
+
+    on<UpdateIncomeColorEvent>((event, emit) {
+      emit(
+        state.copyWith(
+          settings: state.settings.copyWith(incomeColor: event.color),
+        ),
+      );
+    });
+
+    on<UpdateExpenseColorEvent>((event, emit) {
+      emit(
+        state.copyWith(
+          settings: state.settings.copyWith(expenseColor: event.color),
         ),
       );
     });
