@@ -81,6 +81,33 @@ import '../notifications/notification_service.dart';
 import '../../features/budget/domain/usecases/get_calendar_data.dart';
 import '../../features/calendar/presentation/bloc/calendar_bloc.dart';
 
+// Tags
+import '../../features/tags/domain/repositories/tags_repository.dart';
+import '../../features/tags/data/repositories/tags_repository_impl.dart';
+import '../../features/tags/presentation/bloc/tags_bloc.dart';
+import '../../features/tags/presentation/bloc/tags_event.dart';
+
+// Attachments
+import '../../features/attachments/domain/repositories/attachments_repository.dart';
+import '../../features/attachments/data/repositories/attachments_repository_impl.dart';
+import '../../features/attachments/presentation/bloc/attachments_bloc.dart';
+
+// Budget Templates
+import '../../features/budget_templates/domain/repositories/budget_templates_repository.dart';
+import '../../features/budget_templates/data/repositories/budget_templates_repository_impl.dart';
+import '../../features/budget_templates/presentation/bloc/budget_templates_bloc.dart';
+import '../../features/budget_templates/presentation/bloc/budget_templates_event.dart';
+
+// Financial Health
+import '../../features/financial_health/domain/usecases/calculate_financial_health.dart';
+import '../../features/financial_health/presentation/bloc/financial_health_bloc.dart';
+
+// Net Worth
+import '../../features/net_worth/domain/repositories/net_worth_repository.dart';
+import '../../features/net_worth/data/repositories/net_worth_repository_impl.dart';
+import '../../features/net_worth/presentation/bloc/net_worth_bloc.dart';
+import '../../features/net_worth/presentation/bloc/net_worth_event.dart';
+
 /// Holds all lazily-created repository and use-case instances.
 class AppModule {
   // Repositories
@@ -93,6 +120,10 @@ class AppModule {
   late final CategoryLimitRepository categoryLimitRepository;
   late final SavingsRepository savingsRepository;
   late final ReminderRepository reminderRepository;
+  late final TagsRepository tagsRepository;
+  late final AttachmentsRepository attachmentsRepository;
+  late final BudgetTemplatesRepository budgetTemplatesRepository;
+  late final NetWorthRepository netWorthRepository;
 
   // Use cases
   late final AddIncome addIncomeUseCase;
@@ -112,6 +143,7 @@ class AppModule {
   late final CalculateNetWorth calculateNetWorthUseCase;
   late final CalculateAmortization calculateAmortizationUseCase;
   late final CalculateCompoundInterest calculateCompoundInterestUseCase;
+  late final CalculateFinancialHealth calculateFinancialHealthUseCase;
 
   // Services
   late final NotificationService notificationService;
@@ -131,6 +163,10 @@ class AppModule {
     categoryLimitRepository = CategoryLimitRepositoryImpl(localDatabase);
     savingsRepository = SavingsRepositoryImpl(localDatabase);
     reminderRepository = ReminderRepositoryImpl(localDatabase);
+    tagsRepository = TagsRepositoryImpl(localDatabase);
+    attachmentsRepository = AttachmentsRepositoryImpl(localDatabase);
+    budgetTemplatesRepository = BudgetTemplatesRepositoryImpl(localDatabase);
+    netWorthRepository = NetWorthRepositoryImpl(localDatabase);
 
     // Use cases
     addIncomeUseCase = AddIncome(budgetRepository);
@@ -162,6 +198,7 @@ class AppModule {
     calculateNetWorthUseCase = CalculateNetWorth();
     calculateAmortizationUseCase = CalculateAmortization();
     calculateCompoundInterestUseCase = CalculateCompoundInterest();
+    calculateFinancialHealthUseCase = CalculateFinancialHealth();
 
     // Services
     notificationService = NotificationService();
@@ -184,6 +221,10 @@ class AppModule {
     ),
     RepositoryProvider<SavingsRepository>(create: (_) => savingsRepository),
     RepositoryProvider<ReminderRepository>(create: (_) => reminderRepository),
+    RepositoryProvider<TagsRepository>(create: (_) => tagsRepository),
+    RepositoryProvider<AttachmentsRepository>(create: (_) => attachmentsRepository),
+    RepositoryProvider<BudgetTemplatesRepository>(create: (_) => budgetTemplatesRepository),
+    RepositoryProvider<NetWorthRepository>(create: (_) => netWorthRepository),
   ];
 
   /// Returns the list of [BlocProvider]s for the app.
@@ -278,6 +319,24 @@ class AppModule {
     BlocProvider<BusinessBloc>(
       create: (_) =>
           BusinessBloc(businessRepository)..add(LoadBusinessData()),
+    ),
+    BlocProvider<TagsBloc>(
+      create: (_) =>
+          TagsBloc(repository: tagsRepository)..add(const LoadAllTags()),
+    ),
+    BlocProvider<AttachmentsBloc>(
+      create: (_) => AttachmentsBloc(repository: attachmentsRepository),
+    ),
+    BlocProvider<BudgetTemplatesBloc>(
+      create: (_) => BudgetTemplatesBloc(repository: budgetTemplatesRepository)
+        ..add(const LoadAllTemplates()),
+    ),
+    BlocProvider<FinancialHealthBloc>(
+      create: (_) => FinancialHealthBloc(calculateHealth: calculateFinancialHealthUseCase),
+    ),
+    BlocProvider<NetWorthBloc>(
+      create: (_) => NetWorthBloc(repository: netWorthRepository)
+        ..add(const LoadNetWorthSnapshots()),
     ),
   ];
 }

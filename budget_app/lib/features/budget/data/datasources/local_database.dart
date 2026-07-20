@@ -647,8 +647,120 @@ class LocalDatabase {
       await db.execute(
         'ALTER TABLE budgets ADD COLUMN linked_income_id TEXT',
       );
+    }
+
+    if (oldVersion < 23) {
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS tags (
+          id TEXT PRIMARY KEY,
+          name TEXT NOT NULL,
+          color TEXT,
+          created_at TEXT NOT NULL
+        )
+      ''');
+
       await db.execute(
-        'CREATE INDEX IF NOT EXISTS idx_budgets_type ON budgets(type)',
+        'CREATE INDEX IF NOT EXISTS idx_tags_name ON tags(name)',
+      );
+
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS transaction_tags (
+          transaction_id TEXT NOT NULL,
+          transaction_type TEXT NOT NULL,
+          tag_id TEXT NOT NULL,
+          PRIMARY KEY (transaction_id, transaction_type, tag_id),
+          FOREIGN KEY (tag_id) REFERENCES tags(id) ON DELETE CASCADE
+        )
+      ''');
+
+      await db.execute(
+        'CREATE INDEX IF NOT EXISTS idx_transaction_tags_tag ON transaction_tags(tag_id)',
+      );
+      await db.execute(
+        'CREATE INDEX IF NOT EXISTS idx_transaction_tags_transaction ON transaction_tags(transaction_id, transaction_type)',
+      );
+    }
+
+    if (oldVersion < 24) {
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS attachments (
+          id TEXT PRIMARY KEY,
+          transaction_id TEXT NOT NULL,
+          transaction_type TEXT NOT NULL,
+          file_path TEXT NOT NULL,
+          file_name TEXT NOT NULL,
+          file_size INTEGER,
+          mime_type TEXT,
+          created_at TEXT NOT NULL
+        )
+      ''');
+
+      await db.execute(
+        'CREATE INDEX IF NOT EXISTS idx_attachments_transaction ON attachments(transaction_id, transaction_type)',
+      );
+    }
+
+    if (oldVersion < 25) {
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS budget_templates (
+          id TEXT PRIMARY KEY,
+          name TEXT NOT NULL,
+          description TEXT,
+          is_preset INTEGER NOT NULL DEFAULT 0,
+          created_at TEXT NOT NULL
+        )
+      ''');
+
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS budget_template_allocations (
+          template_id TEXT NOT NULL,
+          category_id TEXT NOT NULL,
+          percentage REAL NOT NULL,
+          PRIMARY KEY (template_id, category_id),
+          FOREIGN KEY (template_id) REFERENCES budget_templates(id) ON DELETE CASCADE
+        )
+      ''');
+
+      await db.execute(
+        'CREATE INDEX IF NOT EXISTS idx_template_allocations_template ON budget_template_allocations(template_id)',
+      );
+
+      // Insert preset templates
+      await db.insert('budget_templates', {
+        'id': 'preset_50_30_20',
+        'name': '50/30/20 Rule',
+        'description': '50% needs, 30% wants, 20% savings',
+        'is_preset': 1,
+        'created_at': DateTime(2024).toIso8601String(),
+      });
+      await db.insert('budget_templates', {
+        'id': 'preset_70_20_10',
+        'name': '70/20/10 Rule',
+        'description': '70% living expenses, 20% savings, 10% debt',
+        'is_preset': 1,
+        'created_at': DateTime(2024).toIso8601String(),
+      });
+      await db.insert('budget_templates', {
+        'id': 'preset_zero_based',
+        'name': 'Zero-Based',
+        'description': 'Every dollar is assigned a job',
+        'is_preset': 1,
+        'created_at': DateTime(2024).toIso8601String(),
+      });
+    }
+
+    if (oldVersion < 26) {
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS net_worth_snapshots (
+          id TEXT PRIMARY KEY,
+          date TEXT NOT NULL,
+          total_assets REAL NOT NULL,
+          total_liabilities REAL NOT NULL,
+          net_worth REAL NOT NULL
+        )
+      ''');
+      await db.execute(
+        'CREATE INDEX IF NOT EXISTS idx_net_worth_date ON net_worth_snapshots(date)',
       );
     }
   }
@@ -1056,6 +1168,86 @@ class LocalDatabase {
     );
     await db.execute(
       'CREATE INDEX IF NOT EXISTS idx_transaction_splits_category ON transaction_splits(category_id)',
+    );
+
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS tags (
+        id TEXT PRIMARY KEY,
+        name TEXT NOT NULL,
+        color TEXT,
+        created_at TEXT NOT NULL
+      )
+    ''');
+    await db.execute(
+      'CREATE INDEX IF NOT EXISTS idx_tags_name ON tags(name)',
+    );
+
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS transaction_tags (
+        transaction_id TEXT NOT NULL,
+        transaction_type TEXT NOT NULL,
+        tag_id TEXT NOT NULL,
+        PRIMARY KEY (transaction_id, transaction_type, tag_id),
+        FOREIGN KEY (tag_id) REFERENCES tags(id) ON DELETE CASCADE
+      )
+    ''');
+    await db.execute(
+      'CREATE INDEX IF NOT EXISTS idx_transaction_tags_tag ON transaction_tags(tag_id)',
+    );
+    await db.execute(
+      'CREATE INDEX IF NOT EXISTS idx_transaction_tags_transaction ON transaction_tags(transaction_id, transaction_type)',
+    );
+
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS attachments (
+        id TEXT PRIMARY KEY,
+        transaction_id TEXT NOT NULL,
+        transaction_type TEXT NOT NULL,
+        file_path TEXT NOT NULL,
+        file_name TEXT NOT NULL,
+        file_size INTEGER,
+        mime_type TEXT,
+        created_at TEXT NOT NULL
+      )
+    ''');
+    await db.execute(
+      'CREATE INDEX IF NOT EXISTS idx_attachments_transaction ON attachments(transaction_id, transaction_type)',
+    );
+
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS budget_templates (
+        id TEXT PRIMARY KEY,
+        name TEXT NOT NULL,
+        description TEXT,
+        is_preset INTEGER NOT NULL DEFAULT 0,
+        created_at TEXT NOT NULL
+      )
+    ''');
+
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS budget_template_allocations (
+        template_id TEXT NOT NULL,
+        category_id TEXT NOT NULL,
+        percentage REAL NOT NULL,
+        PRIMARY KEY (template_id, category_id),
+        FOREIGN KEY (template_id) REFERENCES budget_templates(id) ON DELETE CASCADE
+      )
+    ''');
+    await db.execute(
+      'CREATE INDEX IF NOT EXISTS idx_template_allocations_template ON budget_template_allocations(template_id)',
+    );
+
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS net_worth_snapshots (
+        id TEXT PRIMARY KEY,
+        date TEXT NOT NULL,
+        total_assets REAL NOT NULL,
+        total_liabilities REAL NOT NULL,
+        net_worth REAL NOT NULL
+      )
+    ''');
+    await db.execute(
+      'CREATE INDEX IF NOT EXISTS idx_net_worth_date ON net_worth_snapshots(date)',
     );
   }
 
