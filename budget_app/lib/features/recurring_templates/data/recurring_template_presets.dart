@@ -1,0 +1,88 @@
+import '../domain/entities/recurring_template.dart';
+
+class RecurringTemplatePresets {
+  static final List<RecurringTemplate> presets = [
+    RecurringTemplate(
+      id: 'netflix',
+      name: 'Netflix',
+      description: 'Streaming subscription',
+      type: 'expense',
+      defaultAmount: 15.49,
+      defaultCategoryId: 'entertainment',
+    ),
+    RecurringTemplate(
+      id: 'spotify',
+      name: 'Spotify',
+      description: 'Music streaming',
+      type: 'expense',
+      defaultAmount: 10.99,
+      defaultCategoryId: 'entertainment',
+    ),
+    RecurringTemplate(
+      id: 'rent',
+      name: 'Rent / Mortgage',
+      description: 'Monthly housing payment',
+      type: 'expense',
+      defaultAmount: 1500.00,
+      defaultCategoryId: 'other',
+      defaultUnit: 'months',
+    ),
+    RecurringTemplate(
+      id: 'car_insurance',
+      name: 'Car Insurance',
+      description: 'Auto insurance premium',
+      type: 'expense',
+      defaultAmount: 150.00,
+      defaultCategoryId: 'other',
+      defaultUnit: 'months',
+    ),
+    RecurringTemplate(
+      id: 'gym',
+      name: 'Gym Membership',
+      description: 'Fitness club membership',
+      type: 'expense',
+      defaultAmount: 40.00,
+      defaultCategoryId: 'health',
+    ),
+    RecurringTemplate(
+      id: 'internet',
+      name: 'Internet Bill',
+      description: 'Home internet service',
+      type: 'expense',
+      defaultAmount: 60.00,
+      defaultCategoryId: 'utilities',
+    ),
+    RecurringTemplate(
+      id: 'phone',
+      name: 'Phone Bill',
+      description: 'Mobile phone plan',
+      type: 'expense',
+      defaultAmount: 50.00,
+      defaultCategoryId: 'utilities',
+    ),
+    RecurringTemplate(
+      id: 'electricity',
+      name: 'Electricity',
+      description: 'Monthly electric bill',
+      type: 'expense',
+      defaultAmount: 100.00,
+      defaultCategoryId: 'utilities',
+    ),
+    RecurringTemplate(
+      id: 'salary',
+      name: 'Salary',
+      description: 'Monthly salary deposit',
+      type: 'income',
+      defaultAmount: 3000.00,
+      defaultCategoryId: 'income_salary',
+    ),
+    RecurringTemplate(
+      id: 'streaming_bundle',
+      name: 'Streaming Bundle',
+      description: 'Multiple streaming services',
+      type: 'expense',
+      defaultAmount: 30.00,
+      defaultCategoryId: 'entertainment',
+    ),
+  ];
+}
