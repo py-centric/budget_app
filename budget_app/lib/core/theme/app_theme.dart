@@ -1,35 +1,38 @@
 import 'package:flutter/material.dart';
 import 'app_spacing.dart';
 import 'app_theme_extensions.dart';
+import 'domain_colors.dart';
 
 class AppTheme {
   AppTheme._();
 
-  static ThemeData get lightTheme {
+  static ThemeData lightTheme(Color seedColor, DomainColors domainColors) {
     return AppThemeExtensions.extend(
       _baseTheme(
         ColorScheme.fromSeed(
-          seedColor: Colors.green,
+          seedColor: seedColor,
           brightness: Brightness.light,
         ),
       ),
+      domainColors,
     );
   }
 
-  static ThemeData get darkTheme {
+  static ThemeData darkTheme(Color seedColor, DomainColors domainColors) {
     return AppThemeExtensions.extend(
       _baseTheme(
         ColorScheme.fromSeed(
-          seedColor: Colors.green,
+          seedColor: seedColor,
           brightness: Brightness.dark,
         ),
       ),
+      domainColors,
     );
   }
 
-  static ThemeData get oledDarkTheme {
+  static ThemeData oledDarkTheme(Color seedColor, DomainColors domainColors) {
     final colorScheme = ColorScheme.fromSeed(
-      seedColor: Colors.green,
+      seedColor: seedColor,
       brightness: Brightness.dark,
     ).copyWith(
       surface: const Color(0xFF000000),
@@ -104,6 +107,7 @@ class AppTheme {
           backgroundColor: Color(0xFF0A0A0A),
         ),
       ),
+      domainColors,
     );
   }
 
