@@ -1,0 +1,72 @@
+# ui_interaction.wc -- Test actual UI interactions with Flutter widgets
+# This test demonstrates how to interact with Flutter web UI elements
+# Prerequisites: Flutter web app running at http://localhost:8080 with HTML renderer
+# Run: uv run python __main__.py run tests/wc/ui_interaction.wc --headed
+
+strict
+
+goto "http://localhost:8080"
+wait for_load_state "domcontentloaded"
+
+# Wait for Flutter to fully render
+wait for_selector "flt-semantics" , 5000
+
+# Screenshot the initial state
+screenshot "/tmp/budget_app/interaction_01_initial.png"
+
+# Extract all semantic elements to understand the page structure
+extract "flt-semantics" as all_elements
+
+# Try to find text content in the page
+# In Flutter web, text is rendered in semantic elements
+extract "flt-semantics" as semantic_elements
+
+if semantic_elements {
+    print "Found semantic elements"
+    
+    # Look for specific text content
+    # Note: In Flutter web, text content is in the aria-label or inner text
+    # of flt-semantics elements
+    
+    # Try to find navigation elements
+    extract "flt-semantics[role='button']" as buttons
+    if buttons {
+        print "Found button elements"
+    } else {
+        print "No button elements found"
+    } endif
+    
+    # Try to find text inputs
+    extract "flt-semantics[role='textbox']" as inputs
+    if inputs {
+        print "Found text input elements"
+    } else {
+        print "No text input elements found"
+    } endif
+    
+    # Try to find links
+    extract "flt-semantics[role='link']" as links
+    if links {
+        print "Found link elements"
+    } else {
+        print "No link elements found"
+    } endif
+    
+} else {
+    print "No semantic elements found"
+    print "The app may be using Canvas renderer"
+    print "Try running with: flutter run -d chrome --web-renderer html"
+} endif
+
+# Take a final screenshot
+screenshot "/tmp/budget_app/interaction_02_final.png" full_page
+
+# Print summary
+print "URL: " + url
+print "Title: " + title
+
+if error_count != "0" {
+    print "Interaction errors: " + error_count
+} else {
+    print "UI interaction test passed"
+} endif

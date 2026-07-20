@@ -1,0 +1,53 @@
+# run_tests.wc -- Run all budget app UI tests
+# This script runs all the test files in sequence
+# Prerequisites: Flutter web app running at http://localhost:8080
+# Run: uv run python __main__.py run tests/wc/run_tests.wc --headed
+
+strict
+
+print "=== Budget App UI Test Suite ==="
+print ""
+
+# Test 1: Home Page
+print "Running home page tests..."
+import "tests/wc/home_page.wc"
+print "Home page tests complete"
+print ""
+
+# Test 2: Navigation
+print "Running navigation tests..."
+import "tests/wc/navigation.wc"
+print "Navigation tests complete"
+print ""
+
+# Test 3: Budget Flow
+print "Running budget flow tests..."
+import "tests/wc/budget_flow.wc"
+print "Budget flow tests complete"
+print ""
+
+# Test 4: Income/Expense
+print "Running income/expense tests..."
+import "tests/wc/income_expense.wc"
+print "Income/expense tests complete"
+print ""
+
+# Test 5: Category Management
+print "Running category management tests..."
+import "tests/wc/category_management.wc"
+print "Category management tests complete"
+print ""
+
+# Test 6: Settings
+print "Running settings tests..."
+import "tests/wc/settings.wc"
+print "Settings tests complete"
+print ""
+
+# Summary
+print "=== Test Suite Complete ==="
+if error_count != "0" {
+    print "ERRORS found: " + error_count
+} else {
+    print "All tests PASSED"
+} endif

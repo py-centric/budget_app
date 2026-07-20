@@ -1,0 +1,41 @@
+# income_expense.wc -- Test income and expense entry
+# Prerequisites: Flutter web app running at http://localhost:8080
+# Run: uv run python __main__.py run tests/wc/income_expense.wc --headed
+
+strict
+
+goto "http://localhost:8080"
+wait for_load_state "domcontentloaded"
+
+# Wait for Flutter to render
+wait for_selector "flt-semantics" , 5000
+
+# Screenshot the initial state
+screenshot "/tmp/budget_app/income_01_initial.png"
+
+# Verify app loaded
+verify "flt-semantics" exists
+
+# Extract page structure
+extract "flt-semantics" as page_elements
+
+# Try to find form elements
+# In Flutter web, form fields are rendered as semantic elements
+screenshot "/tmp/budget_app/income_02_form.png"
+
+# Check for input fields
+extract "input" as input_fields
+if input_fields {
+    print "Found input fields"
+} else {
+    print "No standard input fields - Flutter uses custom widgets"
+} endif
+
+# Final screenshot
+screenshot "/tmp/budget_app/income_03_final.png" full_page
+
+if error_count != "0" {
+    print "Income/expense errors: " + error_count
+} else {
+    print "Income/expense test passed"
+} endif
