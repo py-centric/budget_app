@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'domain_colors.dart';
 
 class AppThemeExtensions {
-  static ThemeData extend(ThemeData theme) {
+  static ThemeData extend(ThemeData theme, DomainColors domainColors) {
     return theme.copyWith(
+      extensions: [domainColors],
       snackBarTheme: const SnackBarThemeData(
         behavior: SnackBarBehavior.floating,
       ),
