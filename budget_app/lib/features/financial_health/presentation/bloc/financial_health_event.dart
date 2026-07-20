@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import '../../domain/entities/financial_health_score.dart';
 
 abstract class FinancialHealthEvent extends Equatable {
   const FinancialHealthEvent();

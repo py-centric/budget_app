@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import '../../domain/entities/net_worth_snapshot.dart';
 
 abstract class NetWorthEvent extends Equatable {
   const NetWorthEvent();
