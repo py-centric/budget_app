@@ -763,6 +763,35 @@ class LocalDatabase {
         'CREATE INDEX IF NOT EXISTS idx_net_worth_date ON net_worth_snapshots(date)',
       );
     }
+
+    if (oldVersion < 27) {
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS credit_cards (
+          id TEXT PRIMARY KEY,
+          name TEXT NOT NULL,
+          last_four TEXT,
+          credit_limit REAL NOT NULL,
+          current_balance REAL DEFAULT 0,
+          apr REAL DEFAULT 0,
+          billing_day INTEGER,
+          payment_due_day INTEGER,
+          minimum_payment_percent REAL DEFAULT 2.0,
+          last_updated TEXT
+        )
+      ''');
+
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS investments (
+          id TEXT PRIMARY KEY,
+          name TEXT NOT NULL,
+          ticker TEXT,
+          shares REAL NOT NULL DEFAULT 0,
+          avg_cost REAL NOT NULL DEFAULT 0,
+          current_price REAL NOT NULL DEFAULT 0,
+          created_at TEXT NOT NULL
+        )
+      ''');
+    }
   }
 
   Future<void> _onCreate(Database db, int version) async {
@@ -1249,6 +1278,33 @@ class LocalDatabase {
     await db.execute(
       'CREATE INDEX IF NOT EXISTS idx_net_worth_date ON net_worth_snapshots(date)',
     );
+
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS credit_cards (
+        id TEXT PRIMARY KEY,
+        name TEXT NOT NULL,
+        last_four TEXT,
+        credit_limit REAL NOT NULL,
+        current_balance REAL DEFAULT 0,
+        apr REAL DEFAULT 0,
+        billing_day INTEGER,
+        payment_due_day INTEGER,
+        minimum_payment_percent REAL DEFAULT 2.0,
+        last_updated TEXT
+      )
+    ''');
+
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS investments (
+        id TEXT PRIMARY KEY,
+        name TEXT NOT NULL,
+        ticker TEXT,
+        shares REAL NOT NULL DEFAULT 0,
+        avg_cost REAL NOT NULL DEFAULT 0,
+        current_price REAL NOT NULL DEFAULT 0,
+        created_at TEXT NOT NULL
+      )
+    ''');
   }
 
   String _getCategoryIcon(String category) {
