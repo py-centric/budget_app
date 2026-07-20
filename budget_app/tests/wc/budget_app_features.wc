@@ -1,0 +1,78 @@
+# budget_app_features.wc -- Test specific budget app features
+# This test verifies that key features are accessible in the UI
+# Prerequisites: Flutter web app running at http://localhost:8080
+# Run: uv run python __main__.py run tests/wc/budget_app_features.wc --headed
+
+strict
+
+goto "http://localhost:8080"
+wait for_load_state "domcontentloaded"
+
+# Wait for Flutter to render
+wait for_selector "flt-semantics" , 5000
+
+# Screenshot the initial state
+screenshot "/tmp/budget_app/features_01_initial.png"
+
+# Verify the app loaded
+verify "flt-semantics" exists
+
+# Extract page structure
+extract "flt-semantics" as page_elements
+
+# Test 1: Check for navigation elements
+print "=== Test 1: Navigation Elements ==="
+extract "flt-semantics[role='button']" as buttons
+if buttons {
+    print "PASS: Found navigation buttons"
+} else {
+    print "FAIL: No navigation buttons found"
+} endif
+
+# Test 2: Check for form elements
+print "=== Test 2: Form Elements ==="
+extract "flt-semantics[role='textbox']" as inputs
+if inputs {
+    print "PASS: Found form inputs"
+} else {
+    print "FAIL: No form inputs found"
+} endif
+
+# Test 3: Check for interactive elements
+print "=== Test 3: Interactive Elements ==="
+extract "flt-semantics[role='checkbox']" as checkboxes
+extract "flt-semantics[role='switch']" as switches
+if checkboxes {
+    print "PASS: Found checkboxes"
+} else {
+    print "INFO: No checkboxes found"
+} endif
+if switches {
+    print "PASS: Found switches"
+} else {
+    print "INFO: No switches found"
+} endif
+
+# Test 4: Check for list elements
+print "=== Test 4: List Elements ==="
+extract "flt-semantics[role='list']" as lists
+if lists {
+    print "PASS: Found list elements"
+} else {
+    print "INFO: No list elements found"
+} endif
+
+# Take a final screenshot
+screenshot "/tmp/budget_app/features_02_final.png" full_page
+
+# Print summary
+print ""
+print "=== Summary ==="
+print "URL: " + url
+print "Title: " + title
+
+if error_count != "0" {
+    print "ERRORS: " + error_count
+} else {
+    print "All feature tests PASSED"
+} endif

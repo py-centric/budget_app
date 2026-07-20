@@ -1,0 +1,123 @@
+# comprehensive.wc -- Comprehensive UI test for the budget app
+# Tests all major UI flows in a single script
+# Prerequisites: Flutter web app running at http://localhost:8080
+# Run: uv run python __main__.py run tests/wc/comprehensive.wc --headed
+
+strict
+
+# ============================================
+# Section 1: Initial Load
+# ============================================
+print "=== Section 1: Initial Load ==="
+
+goto "http://localhost:8080"
+wait for_load_state "domcontentloaded"
+
+# Wait for Flutter to render
+wait for_selector "flt-semantics" , 5000
+
+# Screenshot the initial state
+screenshot "/tmp/budget_app/comprehensive_01_initial.png"
+
+# Verify app loaded
+verify "flt-semantics" exists
+
+print "Initial load complete"
+
+# ============================================
+# Section 2: Page Structure
+# ============================================
+print "=== Section 2: Page Structure ==="
+
+# Extract all semantic elements
+extract "flt-semantics" as all_elements
+
+if all_elements {
+    print "Found semantic elements"
+} else {
+    print "No semantic elements found"
+} endif
+
+# Take a full page screenshot
+screenshot "/tmp/budget_app/comprehensive_02_structure.png" full_page
+
+# ============================================
+# Section 3: Navigation Elements
+# ============================================
+print "=== Section 3: Navigation Elements ==="
+
+# Look for button elements
+extract "flt-semantics[role='button']" as buttons
+if buttons {
+    print "Found buttons"
+} else {
+    print "No buttons found"
+} endif
+
+# Look for link elements
+extract "flt-semantics[role='link']" as links
+if links {
+    print "Found links"
+} else {
+    print "No links found"
+} endif
+
+# ============================================
+# Section 4: Form Elements
+# ============================================
+print "=== Section 4: Form Elements ==="
+
+# Look for text input elements
+extract "flt-semantics[role='textbox']" as text_inputs
+if text_inputs {
+    print "Found text inputs"
+} else {
+    print "No text inputs found"
+} endif
+
+# Look for dropdown elements
+extract "flt-semantics[role='listbox']" as dropdowns
+if dropdowns {
+    print "Found dropdowns"
+} else {
+    print "No dropdowns found"
+} endif
+
+# ============================================
+# Section 5: Interactive Elements
+# ============================================
+print "=== Section 5: Interactive Elements ==="
+
+# Look for checkbox elements
+extract "flt-semantics[role='checkbox']" as checkboxes
+if checkboxes {
+    print "Found checkboxes"
+} else {
+    print "No checkboxes found"
+} endif
+
+# Look for switch elements
+extract "flt-semantics[role='switch']" as switches
+if switches {
+    print "Found switches"
+} else {
+    print "No switches found"
+} endif
+
+# ============================================
+# Section 6: Final Verification
+# ============================================
+print "=== Section 6: Final Verification ==="
+
+# Final screenshot
+screenshot "/tmp/budget_app/comprehensive_03_final.png" full_page
+
+# Print summary
+print "URL: " + url
+print "Title: " + title
+
+if error_count != "0" {
+    print "ERRORS found: " + error_count
+} else {
+    print "Comprehensive test PASSED"
+} endif

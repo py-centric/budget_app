@@ -1,0 +1,48 @@
+# settings.wc -- Test settings page
+# Prerequisites: Flutter web app running at http://localhost:8080
+# Run: uv run python __main__.py run tests/wc/settings.wc --headed
+
+strict
+
+goto "http://localhost:8080"
+wait for_load_state "domcontentloaded"
+
+# Wait for Flutter to render
+wait for_selector "flt-semantics" , 5000
+
+# Screenshot the initial state
+screenshot "/tmp/budget_app/settings_01_initial.png"
+
+# Verify app loaded
+verify "flt-semantics" exists
+
+# Extract page structure
+extract "flt-semantics" as page_elements
+
+# Look for settings-related elements
+screenshot "/tmp/budget_app/settings_02_page.png"
+
+# Try to find dropdown elements
+extract "flt-semantics[role='listbox']" as dropdowns
+if dropdowns {
+    print "Found dropdown elements"
+} else {
+    print "No dropdown elements found"
+} endif
+
+# Try to find toggle/switch elements
+extract "flt-semantics[role='switch']" as switches
+if switches {
+    print "Found switch elements"
+} else {
+    print "No switch elements found"
+} endif
+
+# Final screenshot
+screenshot "/tmp/budget_app/settings_03_final.png" full_page
+
+if error_count != "0" {
+    print "Settings errors: " + error_count
+} else {
+    print "Settings test passed"
+} endif

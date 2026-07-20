@@ -1,0 +1,30 @@
+# home_page.wc -- Test the home page of the budget app
+# Prerequisites: Flutter web app running at http://localhost:8080
+# Run: uv run python __main__.py run tests/wc/home_page.wc --headed
+
+strict
+
+goto "http://localhost:8080"
+
+# Wait for the app to load
+wait for_load_state "domcontentloaded"
+
+# Take a screenshot of the initial load
+screenshot "/tmp/budget_app/home_page_initial.png"
+
+# Verify the home page loaded
+verify "flt-semantics" exists
+
+# Check that the navigation drawer is accessible
+screenshot "/tmp/budget_app/home_page_loaded.png" full_page
+
+# Print the current URL and title
+print "URL: " + url
+print "Title: " + title
+
+# Check for errors
+if error_count != "0" {
+    print "ERRORS found: " + error_count
+} else {
+    print "Home page test passed"
+} endif

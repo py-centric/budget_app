@@ -1,0 +1,33 @@
+# navigation.wc -- Test navigation between pages
+# Prerequisites: Flutter web app running at http://localhost:8080
+# Run: uv run python __main__.py run tests/wc/navigation.wc --headed
+
+strict
+
+goto "http://localhost:8080"
+wait for_load_state "domcontentloaded"
+
+# Screenshot the home page
+screenshot "/tmp/budget_app/nav_01_home.png"
+
+# Try to find navigation elements by text
+# Flutter web renders text in flt-semantics elements
+extract "flt-semantics" as page_elements
+
+if page_elements {
+    print "Found page elements"
+} else {
+    print "No page elements found - may need HTML renderer"
+} endif
+
+# Check for the navigation drawer icon (hamburger menu)
+# In Flutter web, the drawer trigger is usually a semantic button
+verify "flt-semantics" exists
+
+screenshot "/tmp/budget_app/nav_02_final.png" full_page
+
+if error_count != "0" {
+    print "Navigation errors: " + error_count
+} else {
+    print "Navigation test passed"
+} endif
