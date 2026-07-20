@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:budget_app/core/theme/app_spacing.dart';
+import 'package:budget_app/core/widgets/color_picker_field.dart';
 import 'package:budget_app/shared/widgets/confirm_action_dialog.dart';
 import '../../../app_lock/domain/entities/app_lock_settings.dart';
 import '../../../app_lock/presentation/bloc/app_lock_bloc.dart';
@@ -142,7 +143,7 @@ class SettingsPage extends StatelessWidget {
                       ),
                       const SizedBox(height: AppSpacing.sm),
                       Text(
-                        'Choose between Light, Dark, or System Default themes.',
+                        'Choose between Light, Dark, OLED, or System Default themes.',
                         style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
                       ),
                       const SizedBox(height: 16),
@@ -162,6 +163,7 @@ class SettingsPage extends StatelessWidget {
                             child: Text('Light'),
                           ),
                           DropdownMenuItem(value: 'dark', child: Text('Dark')),
+                          DropdownMenuItem(value: 'oled', child: Text('OLED (Pure Black)')),
                         ],
                         onChanged: (value) {
                           if (value != null) {
@@ -169,6 +171,36 @@ class SettingsPage extends StatelessWidget {
                               UpdateThemeEvent(value),
                             );
                           }
+                        },
+                      ),
+                      const SizedBox(height: AppSpacing.lg),
+                      ColorPickerField(
+                        label: 'Accent Color',
+                        selectedColor: Color(state.settings.seedColor),
+                        onColorSelected: (color) {
+                          context.read<SettingsBloc>().add(
+                            UpdateSeedColorEvent(color.value),
+                          );
+                        },
+                      ),
+                      const SizedBox(height: AppSpacing.lg),
+                      ColorPickerField(
+                        label: 'Income Color',
+                        selectedColor: Color(state.settings.incomeColor),
+                        onColorSelected: (color) {
+                          context.read<SettingsBloc>().add(
+                            UpdateIncomeColorEvent(color.value),
+                          );
+                        },
+                      ),
+                      const SizedBox(height: AppSpacing.lg),
+                      ColorPickerField(
+                        label: 'Expense Color',
+                        selectedColor: Color(state.settings.expenseColor),
+                        onColorSelected: (color) {
+                          context.read<SettingsBloc>().add(
+                            UpdateExpenseColorEvent(color.value),
+                          );
                         },
                       ),
                     ],
