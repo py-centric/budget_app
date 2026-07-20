@@ -1,0 +1,6 @@
+[submodule "submodules/bzt-rs"]
+	path = submodules/bzt-rs
+	url = https://github.com/py-centric/bzt-rs.git
+[submodule "submodules/WebCrawler"]
+	path = submodules/WebCrawler
+	url = https://github.com/py-centric/WebCrawler.git
