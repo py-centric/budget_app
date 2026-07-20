@@ -6,6 +6,7 @@ import 'package:path_provider/path_provider.dart';
 
 import 'core/di/app_module.dart';
 import 'core/theme/app_theme.dart';
+import 'core/theme/domain_colors.dart';
 import 'features/settings/presentation/bloc/settings_bloc.dart';
 import 'features/splash/presentation/pages/splash_page.dart';
 
@@ -40,6 +41,12 @@ class BudgetApp extends StatelessWidget {
       providers: appModule.blocProviders,
       child: BlocBuilder<SettingsBloc, SettingsState>(
         builder: (context, state) {
+          final seedColor = Color(state.settings.seedColor);
+          final domainColors = DomainColors(
+            incomeColor: Color(state.settings.incomeColor),
+            expenseColor: Color(state.settings.expenseColor),
+          );
+
           ThemeMode mode;
           ThemeData? darkTheme;
           switch (state.settings.themeMode) {
@@ -51,7 +58,7 @@ class BudgetApp extends StatelessWidget {
               break;
             case 'oled':
               mode = ThemeMode.dark;
-              darkTheme = AppTheme.oledDarkTheme;
+              darkTheme = AppTheme.oledDarkTheme(seedColor, domainColors);
               break;
             default:
               mode = ThemeMode.system;
@@ -60,8 +67,8 @@ class BudgetApp extends StatelessWidget {
           return MaterialApp(
             title: 'Budget App',
             debugShowCheckedModeBanner: false,
-            theme: AppTheme.lightTheme,
-            darkTheme: darkTheme ?? AppTheme.darkTheme,
+            theme: AppTheme.lightTheme(seedColor, domainColors),
+            darkTheme: darkTheme ?? AppTheme.darkTheme(seedColor, domainColors),
             themeMode: mode,
             home: const SplashPage(),
           );
