@@ -3,7 +3,7 @@ class AppConstants {
 
   static const String appName = 'Budget App';
   static const String databaseName = 'budget.db';
-  static const int databaseVersion = 26;
+  static const int databaseVersion = 27;
 
   static const List<String> defaultCategories = [
     'Food',
