@@ -41,12 +41,17 @@ class BudgetApp extends StatelessWidget {
       child: BlocBuilder<SettingsBloc, SettingsState>(
         builder: (context, state) {
           ThemeMode mode;
+          ThemeData? darkTheme;
           switch (state.settings.themeMode) {
             case 'light':
               mode = ThemeMode.light;
               break;
             case 'dark':
               mode = ThemeMode.dark;
+              break;
+            case 'oled':
+              mode = ThemeMode.dark;
+              darkTheme = AppTheme.oledDarkTheme;
               break;
             default:
               mode = ThemeMode.system;
@@ -56,7 +61,7 @@ class BudgetApp extends StatelessWidget {
             title: 'Budget App',
             debugShowCheckedModeBanner: false,
             theme: AppTheme.lightTheme,
-            darkTheme: AppTheme.darkTheme,
+            darkTheme: darkTheme ?? AppTheme.darkTheme,
             themeMode: mode,
             home: const SplashPage(),
           );
