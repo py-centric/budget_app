@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uuid/uuid.dart';
 import 'package:budget_app/core/theme/app_spacing.dart';
 import 'package:budget_app/shared/widgets/confirm_action_dialog.dart';
+import 'package:budget_app/features/settings/presentation/bloc/settings_bloc.dart';
 
 import '../bloc/budget_bloc.dart';
 import '../bloc/budget_event.dart';
@@ -146,6 +147,24 @@ class _HomePageState extends State<HomePage> {
                           );
                         }
                       : null,
+                );
+              },
+            ),
+            BlocBuilder<SettingsBloc, SettingsState>(
+              builder: (context, settingsState) {
+                final currentMode = settingsState.settings.themeMode;
+                return PopupMenuButton<String>(
+                  icon: Icon(_themeIcon(currentMode)),
+                  tooltip: 'Theme',
+                  onSelected: (value) {
+                    context.read<SettingsBloc>().add(UpdateThemeEvent(value));
+                  },
+                  itemBuilder: (context) => [
+                    _themeMenuItem('system', Icons.brightness_auto, 'System', currentMode),
+                    _themeMenuItem('light', Icons.light_mode, 'Light', currentMode),
+                    _themeMenuItem('dark', Icons.dark_mode, 'Dark', currentMode),
+                    _themeMenuItem('oled', Icons.contrast, 'OLED', currentMode),
+                  ],
                 );
               },
             ),
@@ -826,6 +845,45 @@ class _HomePageState extends State<HomePage> {
             DeleteCategoryLimit(limitId),
           );
         },
+      ),
+    );
+  }
+
+  IconData _themeIcon(String mode) {
+    switch (mode) {
+      case 'light':
+        return Icons.light_mode;
+      case 'dark':
+        return Icons.dark_mode;
+      case 'oled':
+        return Icons.contrast;
+      default:
+        return Icons.brightness_auto;
+    }
+  }
+
+  PopupMenuItem<String> _themeMenuItem(
+    String value,
+    IconData icon,
+    String label,
+    String currentMode,
+  ) {
+    return PopupMenuItem(
+      value: value,
+      child: Row(
+        children: [
+          Icon(icon, size: 20),
+          const SizedBox(width: 12),
+          Text(label),
+          if (value == currentMode) ...[
+            const Spacer(),
+            Icon(
+              Icons.check,
+              size: 18,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+          ],
+        ],
       ),
     );
   }
