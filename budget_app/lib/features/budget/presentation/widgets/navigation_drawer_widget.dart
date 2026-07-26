@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:budget_app/core/feature_flags/models/feature_flag.dart';
 import 'package:budget_app/core/feature_flags/presentation/widgets/feature_gate.dart';
 import 'package:budget_app/shared/widgets/confirm_action_dialog.dart';
+import 'package:budget_app/shared/widgets/pycentric_footer_widget.dart';
 import '../bloc/navigation_bloc.dart';
 import 'year_group_header.dart';
 import '../pages/category_settings_page.dart';
@@ -585,6 +586,8 @@ class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
                   ],
                 );
               }),
+              const Divider(),
+              const PyCentricFooterWidget(compact: true),
             ],
           ),
         );
