@@ -1,66 +1,56 @@
-# Welcome to Budget App Documentation
+Welcome to Budget App Documentation
+====================================
 
-```{toctree}
-:hidden:
-:maxdepth: 2
-:caption: Introduction
+.. toctree::
+   :maxdepth: 2
+   :caption: Introduction
 
-index
-getting_started
-architecture
-```
+   getting_started
+   architecture
+   feature_flags
 
-```{toctree}
-:hidden:
-:maxdepth: 2
-:caption: Core Features
+.. toctree::
+   :maxdepth: 2
+   :caption: Core Features
 
-budget_management
-transactions
-categories
-recurring_transactions
-projections
-```
+   budget_management
+   transactions
+   categories
+   recurring_transactions
+   projections
 
-```{toctree}
-:hidden:
-:maxdepth: 2
-:caption: Advanced Features
+.. toctree::
+   :maxdepth: 2
+   :caption: Advanced Features
 
-currency_conversion
-travel_budget_planner
-loans
-emergency_fund
-business_tools
-invoices
-```
+   currency_conversion
+   travel_budget_planner
+   loans
+   emergency_fund
+   business_tools
+   invoices
 
-```{toctree}
-:hidden:
-:maxdepth: 2
-:caption: Utilities
+.. toctree::
+   :maxdepth: 2
+   :caption: Utilities
 
-financial_tools
-export_backup
-app_settings
-```
+   financial_tools
+   export_backup
+   app_settings
 
-```{toctree}
-:hidden:
-:maxdepth: 1
-:caption: Development
+.. toctree::
+   :maxdepth: 1
+   :caption: Development
 
-contributing
-changelog
-```
+   contributing
+   changelog
 
-```{note}
-This documentation is automatically generated from the source code and feature specifications.
-```
+.. note::
+   This documentation is automatically generated from the source code and feature specifications.
 
 Indices and tables
 ==================
 
-* {ref}`genindex`
-* {ref}`modindex`
-* {ref}`search`
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
