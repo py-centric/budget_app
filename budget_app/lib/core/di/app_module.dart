@@ -98,6 +98,12 @@ import '../../features/budget_templates/data/repositories/budget_templates_repos
 import '../../features/budget_templates/presentation/bloc/budget_templates_bloc.dart';
 import '../../features/budget_templates/presentation/bloc/budget_templates_event.dart';
 
+// Feature Flags
+import '../feature_flags/presentation/bloc/feature_flags_bloc.dart';
+import '../feature_flags/services/feature_gate_service.dart';
+import '../feature_flags/services/feature_gate_service_impl.dart';
+
+
 // Financial Health
 import '../../features/financial_health/domain/usecases/calculate_financial_health.dart';
 import '../../features/financial_health/presentation/bloc/financial_health_bloc.dart';
@@ -147,11 +153,18 @@ class AppModule {
 
   // Services
   late final NotificationService notificationService;
+  late final FeatureFlagsBloc featureFlagsBloc;
+  late final FeatureGateService featureGateService;
 
   Future<void> init() async {
+    // Feature Flags BLoC & Service
+    featureFlagsBloc = FeatureFlagsBloc();
+    featureGateService = FeatureGateServiceImpl(featureFlagsBloc);
+
     // Initialize database
     await LocalDatabase.initialize();
     final localDatabase = LocalDatabase.instance;
+
 
     // Repositories
     budgetRepository = BudgetRepositoryImpl(localDatabase);
@@ -225,10 +238,15 @@ class AppModule {
     RepositoryProvider<AttachmentsRepository>(create: (_) => attachmentsRepository),
     RepositoryProvider<BudgetTemplatesRepository>(create: (_) => budgetTemplatesRepository),
     RepositoryProvider<NetWorthRepository>(create: (_) => netWorthRepository),
+    RepositoryProvider<FeatureGateService>(create: (_) => featureGateService),
   ];
 
   /// Returns the list of [BlocProvider]s for the app.
   List<BlocProvider> get blocProviders => [
+    BlocProvider<FeatureFlagsBloc>(
+      create: (_) => featureFlagsBloc,
+      lazy: false,
+    ),
     BlocProvider<SettingsBloc>(
       create: (_) => SettingsBloc()..add(const InitializeSettingsEvent()),
       lazy: false,
