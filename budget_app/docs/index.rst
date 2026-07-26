@@ -44,6 +44,7 @@ Welcome to Budget App Documentation
 
    contributing
    changelog
+   dependencies
 
 .. note::
    This documentation is automatically generated from the source code and feature specifications.
