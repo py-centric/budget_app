@@ -16,6 +16,7 @@ import '../../../backup/presentation/bloc/backup_state.dart';
 import '../../../budget/presentation/bloc/budget_bloc.dart';
 import '../../../budget/presentation/bloc/budget_event.dart';
 import '../bloc/settings_bloc.dart';
+import 'package:budget_app/core/feature_flags/presentation/widgets/edition_selector_tile.dart';
 import 'package:budget_app/shared/widgets/branding_footer.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -205,6 +206,13 @@ class SettingsPage extends StatelessWidget {
                       ),
                     ],
                   ),
+                ),
+              ),
+              const SizedBox(height: AppSpacing.md),
+              const Card(
+                child: Padding(
+                  padding: EdgeInsets.all(AppSpacing.md),
+                  child: EditionSelectorTile(),
                 ),
               ),
               const SizedBox(height: AppSpacing.md),

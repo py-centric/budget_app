@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:budget_app/core/feature_flags/models/feature_flag.dart';
+import 'package:budget_app/core/feature_flags/presentation/widgets/feature_gate.dart';
 import 'package:budget_app/shared/widgets/confirm_action_dialog.dart';
 import '../bloc/navigation_bloc.dart';
 import 'year_group_header.dart';
@@ -239,50 +241,53 @@ class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
                   );
                 },
               ),
-              ExpansionTile(
-                leading: const Icon(Icons.business_center),
-                title: const Text('Business Tools'),
-                children: [
-                  ListTile(
-                    leading: const Icon(Icons.receipt_long),
-                    title: const Text('Invoices'),
-                    onTap: () {
-                      Navigator.pop(context);
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const InvoicesPage(),
-                        ),
-                      );
-                    },
-                  ),
-                  ListTile(
-                    leading: const Icon(Icons.people),
-                    title: const Text('Clients'),
-                    onTap: () {
-                      Navigator.pop(context);
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const ClientsPage(),
-                        ), // To be created
-                      );
-                    },
-                  ),
-                  ListTile(
-                    leading: const Icon(Icons.store),
-                    title: const Text('Profiles'),
-                    onTap: () {
-                      Navigator.pop(context);
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const ProfileSettingsPage(),
-                        ),
-                      );
-                    },
-                  ),
-                ],
+              FeatureGate(
+                flag: FeatureFlag.invoicingPayables,
+                child: ExpansionTile(
+                  leading: const Icon(Icons.business_center),
+                  title: const Text('Business Tools'),
+                  children: [
+                    ListTile(
+                      leading: const Icon(Icons.receipt_long),
+                      title: const Text('Invoices'),
+                      onTap: () {
+                        Navigator.pop(context);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const InvoicesPage(),
+                          ),
+                        );
+                      },
+                    ),
+                    ListTile(
+                      leading: const Icon(Icons.people),
+                      title: const Text('Clients'),
+                      onTap: () {
+                        Navigator.pop(context);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const ClientsPage(),
+                          ),
+                        );
+                      },
+                    ),
+                    ListTile(
+                      leading: const Icon(Icons.person),
+                      title: const Text('Business Profile'),
+                      onTap: () {
+                        Navigator.pop(context);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const ProfileSettingsPage(),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
               ),
               ListTile(
                 leading: const Icon(Icons.settings_applications),

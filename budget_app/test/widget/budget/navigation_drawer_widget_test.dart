@@ -13,10 +13,15 @@ import 'package:budget_app/features/budget/presentation/widgets/navigation_drawe
 import 'package:budget_app/features/reminders/presentation/bloc/reminder_bloc.dart';
 import 'package:budget_app/features/reminders/presentation/bloc/reminder_state.dart';
 
+import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:budget_app/core/feature_flags/models/release_edition.dart';
+import 'package:budget_app/core/feature_flags/presentation/bloc/feature_flags_bloc.dart';
+
 class MockNavigationBloc extends Mock implements NavigationBloc {}
 class MockReminderBloc extends Mock implements ReminderBloc {}
 class MockBudgetBloc extends Mock implements BudgetBloc {}
 class FakeBudgetEvent extends Fake implements BudgetEvent {}
+class MockStorage extends Mock implements Storage {}
 
 void main() {
   late MockNavigationBloc mockNavigationBloc;
@@ -39,6 +44,10 @@ void main() {
   });
 
   setUp(() {
+    final storage = MockStorage();
+    when(() => storage.write(any(), any())).thenAnswer((_) async {});
+    HydratedBloc.storage = storage;
+
     mockNavigationBloc = MockNavigationBloc();
     mockReminderBloc = MockReminderBloc();
     mockBudgetBloc = MockBudgetBloc();
@@ -77,12 +86,14 @@ void main() {
 
   Widget buildApp({GlobalKey<ScaffoldState>? scaffoldKey}) {
     final key = scaffoldKey ?? GlobalKey<ScaffoldState>();
+    final featureFlagsBloc = FeatureFlagsBloc(initialDefaultEdition: ReleaseEdition.combined);
     return MaterialApp(
       home: MultiBlocProvider(
         providers: [
           BlocProvider<NavigationBloc>.value(value: mockNavigationBloc),
           BlocProvider<BudgetBloc>.value(value: mockBudgetBloc),
           BlocProvider<ReminderBloc>.value(value: mockReminderBloc),
+          BlocProvider<FeatureFlagsBloc>.value(value: featureFlagsBloc),
         ],
         child: Scaffold(
           key: key,
