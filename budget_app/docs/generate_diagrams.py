@@ -127,27 +127,81 @@ flowchart LR
 ```
 """
 
+MERMAID_BUDGET_USECASE_FLOW = """```mermaid
+flowchart TD
+    Start([User Action in Drawer]) --> Choice{Select Action}
+
+    Choice -->|Create Budget| Create[Enter Name, Month & Year]
+    Choice -->|Navigate Period| Nav[Select Target Month & Year]
+    Choice -->|Duplicate Budget| Copy[Select Source & Target Period]
+
+    Create --> SaveDB[Insert Budget into SQLite DB]
+    Nav --> FetchDB[Query Active Period in SQLite DB]
+    Copy --> CopyDB[Copy Categories & Limits to Target Period]
+
+    SaveDB --> Refresh[Refresh Home UI Dashboard & Navigation State]
+    FetchDB --> Refresh
+    CopyDB --> Refresh
+```
+"""
+
+MERMAID_TRANSACTION_USECASE_FLOW = """```mermaid
+flowchart TD
+    Start([Add Transaction Action]) --> Type{Select Entry Type}
+
+    Type -->|Income / Expense| Form[Input Amount, Category & Date]
+    Type -->|Potential Entry| Planned[Input Planned Amount & Date]
+
+    Form --> SaveActual[Save Actual Entry to SQLite DB]
+    Planned --> SavePotential[Save Potential Entry with isPotential=true]
+
+    SavePotential --> Confirm{User Confirms Actual Execution?}
+    Confirm -->|Yes| UpdatePotential[Set isPotential=false in SQLite DB]
+
+    SaveActual --> Recalc[Recalculate Period Income & Expense Totals]
+    UpdatePotential --> Recalc
+    Recalc --> UpdateUI[Update Balance Cards & Progress Bars]
+```
+"""
+
+MERMAID_INVOICE_USECASE_FLOW = """```mermaid
+flowchart TD
+    Start([Create Invoice]) --> AddDetails[Add Client, Line Items, Tax & Discount]
+    AddDetails --> Draft[Status: DRAFT]
+
+    Draft --> Choice{Next Action}
+    Choice -->|Export PDF| PDF[Generate Structured PDF Document]
+    Choice -->|Send to Client| Sent[Status: SENT / PENDING]
+
+    Sent --> CheckDue{Check Due Date}
+    CheckDue -->|Past Due Date| Overdue[Status: OVERDUE]
+    CheckDue -->|Payment Received| Paid[Status: PAID]
+
+    Overdue --> Remind[Trigger Payment Notification]
+    Paid --> RecordIncome[Automatically Record Income Transaction in DB]
+```
+"""
+
 def generate_diagram_files():
     """Create diagram directory and export Mermaid markdown assets."""
     os.makedirs(DIAGRAMS_DIR, exist_ok=True)
 
-    arch_file = DIAGRAMS_DIR / "architecture_system.md"
-    seq_file = DIAGRAMS_DIR / "feature_gating_sequence.md"
-    make_file = DIAGRAMS_DIR / "makefile_workflow.md"
+    diagram_mapping = {
+        "architecture_system.md": ("# System Architecture & Feature Gating Diagram\n\n", MERMAID_SYSTEM_ARCHITECTURE),
+        "feature_gating_sequence.md": ("# Feature Gate Execution Sequence Diagram\n\n", MERMAID_FEATURE_GATE_SEQUENCE),
+        "makefile_workflow.md": ("# Makefile Build & Execution Workflow Diagram\n\n", MERMAID_MAKEFILE_WORKFLOW),
+        "budget_usecase_flow.md": ("# Budget Management Use Case Flow Diagram\n\n", MERMAID_BUDGET_USECASE_FLOW),
+        "transaction_usecase_flow.md": ("# Transaction Lifecycle Use Case Flow Diagram\n\n", MERMAID_TRANSACTION_USECASE_FLOW),
+        "invoice_usecase_flow.md": ("# Invoice Management Use Case Flow Diagram\n\n", MERMAID_INVOICE_USECASE_FLOW),
+    }
 
-    with open(arch_file, "w", encoding="utf-8") as f:
-        f.write("# System Architecture & Feature Gating Diagram\n\n")
-        f.write(MERMAID_SYSTEM_ARCHITECTURE)
+    for filename, (header, content) in diagram_mapping.items():
+        filepath = DIAGRAMS_DIR / filename
+        with open(filepath, "w", encoding="utf-8") as f:
+            f.write(header)
+            f.write(content)
 
-    with open(seq_file, "w", encoding="utf-8") as f:
-        f.write("# Feature Gate Execution Sequence Diagram\n\n")
-        f.write(MERMAID_FEATURE_GATE_SEQUENCE)
-
-    with open(make_file, "w", encoding="utf-8") as f:
-        f.write("# Makefile Build & Execution Workflow Diagram\n\n")
-        f.write(MERMAID_MAKEFILE_WORKFLOW)
-
-    print(f"✅ Successfully generated diagrams in {DIAGRAMS_DIR}")
+    print(f"✅ Successfully generated {len(diagram_mapping)} diagram assets in {DIAGRAMS_DIR}")
 
 if __name__ == "__main__":
     generate_diagram_files()

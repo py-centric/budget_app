@@ -1,8 +1,49 @@
-# Invoices
+Invoices
+========
 
-## Overview
+Overview
+--------
 
 The invoicing system allows you to create, send, and track professional invoices for clients.
+
+Use Case Flow Diagram
+---------------------
+
+.. code-block:: text
+
+    +-----------------------------------------------------------------------+
+    |                        INVOICE MANAGEMENT LIFECYCLE                   |
+    +-----------------------------------------------------------------------+
+                                        |
+                                        v
+                          [ Create New Invoice Record ]
+                                        |
+                                        v
+                     Add Client, Line Items, Tax & Discount
+                                        |
+                                        v
+                            Status: [ DRAFT INVOICE ]
+                                        |
+           +----------------------------+----------------------------+
+           |                                                         |
+           v                                                         v
+    [ Generate PDF Document ]                             [ Mark as Sent ]
+           |                                                         |
+           v                                                         v
+    Preview / Share via Email                             Status: [ SENT / PENDING ]
+           |                                                         |
+           +----------------------------+----------------------------+
+                                        |
+                                        v
+                         { Check Due Date vs Today }
+                                        |
+           +----------------------------+----------------------------+
+           | (Past Due)                                              | (Payment Received)
+           v                                                         v
+    Status: [ OVERDUE ]                                   Status: [ PAID INVOICE ]
+           |                                                         |
+           v                                                         v
+    Trigger Payment Reminder                             Record Income Entry in DB
 
 ## Creating Invoices
 

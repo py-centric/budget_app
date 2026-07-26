@@ -1,8 +1,41 @@
-# Budget Management
+Budget Management
+=================
 
-## Overview
+Overview
+--------
 
 Budget management is the core feature of the app, allowing users to create, manage, and track multiple budgets across different time periods.
+
+Use Case Flow Diagram
+---------------------
+
+.. code-block:: text
+
+    +-----------------------------------------------------------------------+
+    |                         BUDGET MANAGEMENT USE CASE                    |
+    +-----------------------------------------------------------------------+
+                                        |
+                                        v
+                          [ Select Action in Drawer UI ]
+                                        |
+           +----------------------------+----------------------------+
+           |                            |                            |
+           v                            v                            v
+    [ Create Budget ]          [ Navigate Period ]           [ Duplicate Budget ]
+           |                            |                            |
+           v                            v                            v
+    Enter Name & Month         Select Month & Year          Choose Target Period
+           |                            |                            |
+           v                            v                            v
+    Set Base Currency          Fetch Active Budget           Copy Categories & Limits
+           |                            |                            |
+           +----------------------------+----------------------------+
+                                        |
+                                        v
+                          [ Update Local SQLite DB ]
+                                        |
+                                        v
+                          [ Refresh Home UI Dashboard ]
 
 ## Features
 

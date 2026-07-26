@@ -1,8 +1,41 @@
-# Export & Backup
+Export & Backup
+===============
 
-## Overview
+Overview
+--------
 
 Export and backup features ensure your financial data is portable and secure.
+
+Use Case Flow Diagram
+---------------------
+
+.. code-block:: text
+
+    +-----------------------------------------------------------------------+
+    |                    EXPORT & BACKUP DATA FLOW                          |
+    +-----------------------------------------------------------------------+
+                                        |
+                                        v
+                            [ Select Data Operation ]
+                                        |
+           +----------------------------+----------------------------+
+           | (Export Financial Data)                                 | (Database Backup / Restore)
+           v                                                         v
+    Choose Target Scope (Period/All)                         Select: [ Create Backup ] / [ Restore ]
+           |                                                         |
+    Select Format (CSV / PDF / Excel)                        [ Create ]: Export raw SQLite file
+           |                                                         |
+    Serialize Database Tables                                [ Restore ]: Select .db backup file
+           |                                                         |
+    Write to Local Temp Directory                            Verify SHA-256 Checksum Integrity
+           |                                                         |
+           +----------------------------+----------------------------+
+                                        |
+                                        v
+                          [ Trigger Native Share Sheet ]
+                                        |
+                                        v
+                          [ Save / Send File on Device ]
 
 ## Data Export
 
