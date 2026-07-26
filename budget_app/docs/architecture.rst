@@ -8,8 +8,9 @@ Budget App follows **Clean Architecture** principles with clear separation betwe
 
 ```
 lib/
-├── core/                  # Shared utilities and constants
+├── core/                  # Shared utilities, feature flags, constants
 │   ├── constants/        # App-wide constants
+│   ├── feature_flags/    # Release editions and feature gating
 │   ├── theme/           # Material Design 3 theming
 │   └── utils/           # Currency, date, and chart utilities
 │
@@ -74,6 +75,7 @@ The app uses **BLoC (Business Logic Component)** pattern via flutter_bloc:
 - **NavigationBloc**: Handles period/budget navigation
 - **CategoryBloc**: Manages categories
 - **ProjectionBloc**: Handles financial projections
+- **FeatureFlagsBloc**: Manages release edition targets and feature toggles
 - **SettingsBloc**: App configuration state
 
 ## Database Schema

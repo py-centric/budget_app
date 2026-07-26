@@ -41,6 +41,81 @@ A comprehensive personal finance management Flutter application with support for
 - Dart 3.x
 - Android SDK or Xcode (for mobile builds)
 
+## Architecture & Feature Flagging System
+
+The app utilizes a decoupled **Feature Flagging & Release Edition** engine allowing single-codebase targeting for Personal, Business, or Combined product editions.
+
+```mermaid
+graph TD
+    subgraph Build & Environment
+        A["Compile Flag<br/>(--dart-define=RELEASE_EDITION=...)"] --> B["DefaultFeatureMapping"]
+        C["Dev Settings Override"] --> D["HydratedStorage (Local Cache)"]
+    end
+
+    subgraph State Management Layer
+        B --> E["FeatureFlagsBloc"]
+        D --> E
+        E --> F["FeatureGateService"]
+    end
+
+    subgraph UI & Navigation Layer
+        F --> G["FeatureGate Widget"]
+        F --> H["FeatureRouteGuard"]
+        G --> I["Navigation Drawer"]
+        G --> J["Dashboard Widget Catalog"]
+        H --> K["Gated Feature Screens"]
+    end
+
+    subgraph Storage Layer (Offline-First)
+        L[("Local SQLite Database")]
+        M["Unified Table Schema (Preserved across editions)"]
+        L --- M
+    end
+
+    I -. Access Gated .-> L
+```
+
+### Running & Building by Release Edition
+
+The app supports three target release editions (`personal`, `business`, and `combined`).
+
+#### Using `make` (Recommended)
+
+```bash
+# Run local dev targets
+make run-personal     # Run Personal Edition
+make run-business     # Run Business Edition
+make run-combined     # Run Combined Edition
+
+# Build Linux executables
+make build-personal   # Build Personal release
+make build-business   # Build Business release
+make build-combined   # Build Combined release
+make build-all        # Build all 3 release editions
+
+# Build Android APKs
+make build-personal-apk
+make build-business-apk
+make build-combined-apk
+
+# Documentation & Testing
+make test             # Run test suite
+make docs             # Generate diagrams & Sphinx HTML docs
+```
+
+#### Direct `flutter` CLI Commands
+
+```bash
+# Personal Edition (Budgeting, savings, debt payoff)
+flutter run -d linux --dart-define=RELEASE_EDITION=personal
+
+# Business Edition (Invoicing, payables, reconciliation)
+flutter run -d linux --dart-define=RELEASE_EDITION=business
+
+# Combined Edition (Full suite - default)
+flutter run -d linux --dart-define=RELEASE_EDITION=combined
+```
+
 ### Installation
 
 ```bash

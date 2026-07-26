@@ -23,6 +23,8 @@ Auto-generated from all feature plans. Last updated: 2026-03-24
 - None (static currency list) (033-currency-search)
 - Dart 3.x + flutter_bloc, sqflite, flutter_local_notifications, table_calendar (035-budget-categories-savings)
 - SQLite via sqflite (offline-first per Constitution) (035-budget-categories-savings)
+- Dart 3.x + flutter_bloc, hydrated_bloc (036-feature-flagging-editions)
+- HydratedBloc key-value storage + SQLite unified schema (036-feature-flagging-editions)
 
 - Dart 3.x (Flutter 3.x) + flutter_bloc, sqflite, flutter_secure_storage, fl_chart (for pie charts) (023-invoice-dashboard-and-payables)
 
@@ -31,8 +33,8 @@ Auto-generated from all feature plans. Last updated: 2026-03-24
 ```text
 budget_app/
 ├── lib/
-│   ├── core/          # Shared utilities, constants, theming
-│   ├── features/      # 13 feature modules (Clean Architecture)
+│   ├── core/          # Shared utilities, feature_flags, theming
+│   ├── features/      # 29 feature modules (Clean Architecture)
 │   └── shared/        # Cross-feature widgets and models
 └── test/
     ├── unit/
@@ -51,6 +53,7 @@ dart run scripts/version_bump.dart [patch|minor|major] [--dry-run]
 Dart 3.x (Flutter 3.x): Follow standard conventions
 
 ## Recent Changes
+- 036-feature-flagging-editions: Added Dart 3.x + flutter_bloc, hydrated_bloc for Personal, Business, and Combined release targets
 - 035-budget-categories-savings: Added Dart 3.x + flutter_bloc, sqflite, flutter_local_notifications, table_calendar
 - 033-currency-search: Added Dart 3.x + Flutter (existing), Material Design 3
 - 032-multi-bank-accounts: Added Dart 3.x + flutter_bloc, sqflite, equatable, path_provider
