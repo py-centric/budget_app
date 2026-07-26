@@ -1,8 +1,47 @@
-# Transactions
+Transactions
+============
 
-## Overview
+Overview
+--------
 
 Transactions are the core data in Budget App - every income and expense entry. The app provides comprehensive transaction tracking with categories, dates, and descriptions.
+
+Use Case Flow Diagram
+---------------------
+
+.. code-block:: text
+
+    +-----------------------------------------------------------------------+
+    |                        TRANSACTION LIFECYCLE FLOW                     |
+    +-----------------------------------------------------------------------+
+                                        |
+                                        v
+                          [ User Action on Dashboard ]
+                                        |
+           +----------------------------+----------------------------+
+           |                                                         |
+           v                                                         v
+    [ Manual Entry Creation ]                              [ Potential Transaction ]
+           |                                                         |
+           v                                                         v
+    Select Type (Income / Expense)                         Set Planned Amount & Date
+           |                                                         |
+           v                                                         v
+    Choose Category & Amount                               Mark as Potential (What-if)
+           |                                                         |
+           v                                                         v
+    Assign Date & Description                              [ User Confirms Actual ]
+           |                                                         |
+           +----------------------------+----------------------------+
+                                        |
+                                        v
+                            [ Save to SQLite Database ]
+                                        |
+                                        v
+                          [ Recalculate Period Totals ]
+                                        |
+                                        v
+                          [ Re-render Financial Summary ]
 
 ## Transaction Types
 

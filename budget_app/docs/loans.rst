@@ -1,8 +1,43 @@
-# Loans Management
+Loans Management
+================
 
-## Overview
+Overview
+--------
 
 The loans feature helps you track money lent to others and money borrowed, with payment tracking and reminders.
+
+Use Case Flow Diagram
+---------------------
+
+.. code-block:: text
+
+    +-----------------------------------------------------------------------+
+    |                     LOAN & DEBT MANAGEMENT FLOW                       |
+    +-----------------------------------------------------------------------+
+                                        |
+                                        v
+                            [ Create Loan Account ]
+                                        |
+                 Select Type: (LENT to person / BORROWED from person)
+                                        |
+                 Set Principal, Interest Rate, Term & Due Date
+                                        |
+                                        v
+                    [ Calculate Amortization & Monthly Payment ]
+                                        |
+                                        v
+                    Status: [ ACTIVE LOAN (Remaining Balance) ]
+                                        |
+                                        v
+                           { Record Loan Payment Event }
+                                        |
+           +----------------------------+----------------------------+
+           | (Partial Payment)                                       | (Full Settlement)
+           v                                                         v
+    Deduct Amount from Balance                            Status: [ PAID OFF ]
+           |                                                         |
+           v                                                         v
+    Update Payment History Log                            Close Account & Record Completion
 
 ## Features
 
