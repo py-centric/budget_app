@@ -792,6 +792,59 @@ class LocalDatabase {
         )
       ''');
     }
+
+    if (oldVersion < 28) {
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS loan_accounts (
+          account_id TEXT PRIMARY KEY,
+          original_principal REAL NOT NULL,
+          current_principal REAL NOT NULL,
+          interest_rate_apr REAL NOT NULL,
+          minimum_monthly_payment REAL NOT NULL,
+          origination_date INTEGER NOT NULL,
+          is_paid_off INTEGER NOT NULL DEFAULT 0,
+          FOREIGN KEY (account_id) REFERENCES accounts(id) ON DELETE CASCADE
+        )
+      ''');
+
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS savings_accounts (
+          account_id TEXT PRIMARY KEY,
+          interest_rate_apy REAL NOT NULL,
+          compounding_frequency TEXT NOT NULL DEFAULT 'monthly',
+          target_goal_amount REAL,
+          total_contributions REAL NOT NULL DEFAULT 0.0,
+          FOREIGN KEY (account_id) REFERENCES accounts(id) ON DELETE CASCADE
+        )
+      ''');
+
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS investment_portfolios (
+          account_id TEXT PRIMARY KEY,
+          total_market_value REAL NOT NULL,
+          total_deposited REAL NOT NULL DEFAULT 0.0,
+          total_withdrawn REAL NOT NULL DEFAULT 0.0,
+          target_annual_return_rate REAL NOT NULL DEFAULT 7.0,
+          FOREIGN KEY (account_id) REFERENCES accounts(id) ON DELETE CASCADE
+        )
+      ''');
+
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS account_transactions (
+          id TEXT PRIMARY KEY,
+          account_id TEXT NOT NULL,
+          transaction_type TEXT NOT NULL,
+          amount REAL NOT NULL,
+          date INTEGER NOT NULL,
+          note TEXT,
+          FOREIGN KEY (account_id) REFERENCES accounts(id) ON DELETE CASCADE
+        )
+      ''');
+
+      await db.execute(
+        'CREATE INDEX IF NOT EXISTS idx_account_transactions_acc ON account_transactions(account_id)',
+      );
+    }
   }
 
   Future<void> _onCreate(Database db, int version) async {

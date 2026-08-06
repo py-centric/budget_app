@@ -5,11 +5,21 @@ import 'package:budget_app/core/utils/currency_formatter.dart';
 import 'package:budget_app/features/settings/presentation/bloc/settings_bloc.dart';
 import 'package:budget_app/shared/widgets/confirm_action_dialog.dart';
 import 'package:budget_app/features/accounts/domain/entities/account.dart';
+import 'package:budget_app/features/accounts/domain/entities/loan_account.dart';
+import 'package:budget_app/features/accounts/domain/entities/savings_account.dart';
+import 'package:budget_app/features/accounts/domain/entities/investment_portfolio.dart';
+import 'package:budget_app/features/accounts/domain/usecases/calculate_net_worth.dart';
 import 'package:budget_app/features/accounts/presentation/bloc/account_bloc.dart';
 import 'package:budget_app/features/accounts/presentation/bloc/account_event.dart';
 import 'package:budget_app/features/accounts/presentation/bloc/account_state.dart';
 import 'package:budget_app/features/accounts/presentation/widgets/account_form.dart';
 import 'package:budget_app/features/accounts/presentation/widgets/transfer_form.dart';
+import 'package:budget_app/features/accounts/presentation/widgets/net_worth_header.dart';
+import 'package:budget_app/features/accounts/presentation/widgets/loan_account_card.dart';
+import 'package:budget_app/features/accounts/presentation/widgets/savings_account_card.dart';
+import 'package:budget_app/features/accounts/presentation/widgets/investment_portfolio_card.dart';
+import 'package:budget_app/features/accounts/presentation/pages/loan_detail_page.dart';
+import 'package:budget_app/features/accounts/presentation/pages/savings_detail_page.dart';
 import 'package:budget_app/shared/widgets/branding_footer.dart';
 
 class AccountsPage extends StatelessWidget {
@@ -19,7 +29,7 @@ class AccountsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Accounts'),
+        title: const Text('Accounts & Portfolios'),
         actions: [
           IconButton(
             icon: const Icon(Icons.swap_horiz),
@@ -39,25 +49,26 @@ class AccountsPage extends StatelessWidget {
           }
 
           List<Account> accounts = [];
-          double totalBalance = 0;
+          List<LoanAccount> loanAccounts = [];
+          List<SavingsAccount> savingsAccounts = [];
+          List<InvestmentPortfolio> investmentPortfolios = [];
+          NetWorthSummary netWorthSummary = const NetWorthSummary(
+            totalAssets: 0.0,
+            totalLiabilities: 0.0,
+            netWorth: 0.0,
+          );
 
           if (state is AccountLoaded) {
             accounts = state.accounts;
-            totalBalance = state.totalBalance;
+            loanAccounts = state.loanAccounts;
+            savingsAccounts = state.savingsAccounts;
+            investmentPortfolios = state.investmentPortfolios;
+            netWorthSummary = state.netWorthSummary;
           } else if (state is TransferSuccess) {
             accounts = state.accounts;
-            totalBalance = state.totalBalance;
-          } else if (state is TransferError) {
-            accounts = state.accounts;
-            totalBalance = state.totalBalance;
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(SnackBar(content: Text(state.message)));
-            });
           }
 
-          if (accounts.isEmpty) {
+          if (accounts.isEmpty && loanAccounts.isEmpty && savingsAccounts.isEmpty && investmentPortfolios.isEmpty) {
             return Column(
               children: [
                 Expanded(child: _buildEmptyState(context)),
@@ -66,10 +77,56 @@ class AccountsPage extends StatelessWidget {
             );
           }
 
-          return Column(
+          return ListView(
             children: [
-              _buildTotalBalanceCard(context, totalBalance),
-              Expanded(child: _buildAccountsList(context, accounts)),
+              NetWorthHeader(summary: netWorthSummary),
+              if (loanAccounts.isNotEmpty) ...[
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  child: Text('Loan Accounts', style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
+                ),
+                ...loanAccounts.map((loan) => LoanAccountCard(
+                      loanAccount: loan,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => LoanDetailPage(loanAccount: loan)),
+                        );
+                      },
+                    )),
+              ],
+              if (savingsAccounts.isNotEmpty) ...[
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  child: Text('Savings Accounts', style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
+                ),
+                ...savingsAccounts.map((savings) => SavingsAccountCard(
+                      savingsAccount: savings,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => SavingsDetailPage(savingsAccount: savings)),
+                        );
+                      },
+                    )),
+              ],
+              if (investmentPortfolios.isNotEmpty) ...[
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  child: Text('Investment Portfolios', style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
+                ),
+                ...investmentPortfolios.map((portfolio) => InvestmentPortfolioCard(
+                      portfolio: portfolio,
+                      onTap: () {},
+                    )),
+              ],
+              if (accounts.isNotEmpty) ...[
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  child: Text('Bank & Operating Accounts', style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
+                ),
+                ...accounts.map((account) => _buildAccountTile(context, account)),
+              ],
               const BrandingFooter(),
             ],
           );
@@ -78,38 +135,6 @@ class AccountsPage extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showAddAccountDialog(context),
         child: const Icon(Icons.add),
-      ),
-    );
-  }
-
-  Widget _buildTotalBalanceCard(BuildContext context, double totalBalance) {
-    final currencyCode = context
-        .read<SettingsBloc>()
-        .state
-        .settings
-        .currencyCode;
-
-    return Card(
-      margin: const EdgeInsets.all(AppSpacing.md),
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.md),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Total Balance',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            const SizedBox(height: AppSpacing.sm),
-            Text(
-              CurrencyFormatter.format(totalBalance, currencyCode: currencyCode),
-              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                color: Theme.of(context).colorScheme.primary,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
@@ -141,16 +166,6 @@ class AccountsPage extends StatelessWidget {
     );
   }
 
-  Widget _buildAccountsList(BuildContext context, List<Account> accounts) {
-    return ListView.builder(
-      itemCount: accounts.length,
-      itemBuilder: (context, index) {
-        final account = accounts[index];
-        return _buildAccountTile(context, account);
-      },
-    );
-  }
-
   Widget _buildAccountTile(BuildContext context, Account account) {
     final currencyCode = context
         .read<SettingsBloc>()
@@ -168,6 +183,9 @@ class AccountsPage extends StatelessWidget {
         break;
       case AccountType.investment:
         accountIcon = Icons.trending_up;
+        break;
+      case AccountType.loan:
+        accountIcon = Icons.money_off;
         break;
       case AccountType.other:
         accountIcon = Icons.wallet;

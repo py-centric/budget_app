@@ -1,4 +1,8 @@
 import 'package:budget_app/features/accounts/domain/entities/account.dart';
+import 'package:budget_app/features/accounts/domain/entities/loan_account.dart';
+import 'package:budget_app/features/accounts/domain/entities/savings_account.dart';
+import 'package:budget_app/features/accounts/domain/entities/investment_portfolio.dart';
+import 'package:budget_app/features/accounts/domain/entities/account_transaction.dart';
 import 'package:budget_app/features/accounts/domain/entities/transfer.dart';
 
 abstract class AccountRepository {
@@ -14,4 +18,21 @@ abstract class AccountRepository {
     String fromAccountId,
     String toAccountId,
   );
+
+  // Specialized Accounts
+  Future<List<LoanAccount>> getLoanAccounts();
+  Future<void> saveLoanAccount(LoanAccount loanAccount);
+  Future<void> updateLoanAccount(LoanAccount loanAccount);
+
+  Future<List<SavingsAccount>> getSavingsAccounts();
+  Future<void> saveSavingsAccount(SavingsAccount savingsAccount);
+  Future<void> updateSavingsAccount(SavingsAccount savingsAccount);
+
+  Future<List<InvestmentPortfolio>> getInvestmentPortfolios();
+  Future<void> saveInvestmentPortfolio(InvestmentPortfolio portfolio);
+  Future<void> updateInvestmentPortfolio(InvestmentPortfolio portfolio);
+
+  // Transactions
+  Future<List<AccountTransaction>> getTransactionsForAccount(String accountId);
+  Future<void> addAccountTransaction(AccountTransaction transaction);
 }

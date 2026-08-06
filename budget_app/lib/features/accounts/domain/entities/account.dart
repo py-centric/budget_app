@@ -4,6 +4,7 @@ enum AccountType {
   checking,
   savings,
   investment,
+  loan,
   other;
 
   String get displayName {
@@ -14,6 +15,8 @@ enum AccountType {
         return 'Savings';
       case AccountType.investment:
         return 'Investment';
+      case AccountType.loan:
+        return 'Loan';
       case AccountType.other:
         return 'Other';
     }
