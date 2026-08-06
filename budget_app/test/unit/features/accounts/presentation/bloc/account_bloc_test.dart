@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:budget_app/features/accounts/domain/entities/account.dart';
 import 'package:budget_app/features/accounts/domain/entities/transfer.dart';
+import 'package:budget_app/features/accounts/domain/usecases/calculate_net_worth.dart';
 import 'package:budget_app/features/accounts/domain/repositories/account_repository.dart';
 import 'package:budget_app/features/accounts/presentation/bloc/account_bloc.dart';
 import 'package:budget_app/features/accounts/presentation/bloc/account_event.dart';
@@ -37,6 +38,9 @@ void main() {
 
   setUp(() {
     mockRepository = MockAccountRepository();
+    when(() => mockRepository.getLoanAccounts()).thenAnswer((_) async => []);
+    when(() => mockRepository.getSavingsAccounts()).thenAnswer((_) async => []);
+    when(() => mockRepository.getInvestmentPortfolios()).thenAnswer((_) async => []);
     accountBloc = AccountBloc(mockRepository);
   });
 
@@ -64,7 +68,15 @@ void main() {
         act: (bloc) => bloc.add(LoadAccounts()),
         expect: () => [
           AccountLoading(),
-          AccountLoaded(accounts: testAccounts, totalBalance: 1000.0),
+          AccountLoaded(
+            accounts: testAccounts,
+            netWorthSummary: const NetWorthSummary(
+              totalAssets: 1000.0,
+              totalLiabilities: 0.0,
+              netWorth: 1000.0,
+            ),
+            totalBalance: 1000.0,
+          ),
         ],
       );
 
@@ -98,7 +110,15 @@ void main() {
         },
         act: (bloc) => bloc.add(AddAccount(testAccount)),
         expect: () => [
-          AccountLoaded(accounts: testAccounts, totalBalance: 1000.0),
+          AccountLoaded(
+            accounts: testAccounts,
+            netWorthSummary: const NetWorthSummary(
+              totalAssets: 1000.0,
+              totalLiabilities: 0.0,
+              netWorth: 1000.0,
+            ),
+            totalBalance: 1000.0,
+          ),
         ],
       );
     });
