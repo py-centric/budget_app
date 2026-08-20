@@ -144,7 +144,7 @@ class SettingsPage extends StatelessWidget {
                       ),
                       const SizedBox(height: AppSpacing.sm),
                       Text(
-                        'Choose between Light, Dark, OLED, or System Default themes.',
+                        'Choose between Light, Dark, OLED, High Contrast, or System Default themes.',
                         style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
                       ),
                       const SizedBox(height: 16),
@@ -165,6 +165,10 @@ class SettingsPage extends StatelessWidget {
                           ),
                           DropdownMenuItem(value: 'dark', child: Text('Dark')),
                           DropdownMenuItem(value: 'oled', child: Text('OLED (Pure Black)')),
+                          DropdownMenuItem(
+                            value: 'high_contrast',
+                            child: Text('High Contrast (WCAG AA/AAA)'),
+                          ),
                         ],
                         onChanged: (value) {
                           if (value != null) {
@@ -180,7 +184,7 @@ class SettingsPage extends StatelessWidget {
                         selectedColor: Color(state.settings.seedColor),
                         onColorSelected: (color) {
                           context.read<SettingsBloc>().add(
-                            UpdateSeedColorEvent(color.value),
+                            UpdateSeedColorEvent(color.toARGB32()),
                           );
                         },
                       ),
@@ -190,7 +194,7 @@ class SettingsPage extends StatelessWidget {
                         selectedColor: Color(state.settings.incomeColor),
                         onColorSelected: (color) {
                           context.read<SettingsBloc>().add(
-                            UpdateIncomeColorEvent(color.value),
+                            UpdateIncomeColorEvent(color.toARGB32()),
                           );
                         },
                       ),
@@ -200,7 +204,7 @@ class SettingsPage extends StatelessWidget {
                         selectedColor: Color(state.settings.expenseColor),
                         onColorSelected: (color) {
                           context.read<SettingsBloc>().add(
-                            UpdateExpenseColorEvent(color.value),
+                            UpdateExpenseColorEvent(color.toARGB32()),
                           );
                         },
                       ),
@@ -281,13 +285,26 @@ class _AppLockSection extends StatelessWidget {
                 ),
                 if (state.settings.isEnabled) ...[
                   const SizedBox(height: AppSpacing.sm),
-                  InkWell(
-                    onTap: () => _showChangeMethodDialog(context, state),
-                    child: Text(
-                      'Tap to ${state.settings.authMethod == AuthMethod.biometrics ? "change to PIN" : "change to biometrics"}',
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.primary,
-                        fontSize: 12,
+                  Semantics(
+                    button: true,
+                    label: state.settings.authMethod == AuthMethod.biometrics
+                        ? 'Change authentication method to PIN'
+                        : 'Change authentication method to biometrics',
+                    child: InkWell(
+                      onTap: () => _showChangeMethodDialog(context, state),
+                      borderRadius: BorderRadius.circular(4),
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(minHeight: 48),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            'Tap to ${state.settings.authMethod == AuthMethod.biometrics ? "change to PIN" : "change to biometrics"}',
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.primary,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                   ),

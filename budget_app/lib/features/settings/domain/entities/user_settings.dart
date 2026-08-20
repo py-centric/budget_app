@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 /// Domain entity for application-wide user settings.
-/// Pure domain layer — no data-layer dependencies.
+/// Pure domain layer (no data-layer dependencies).
 class UserSettings extends Equatable {
   final int weekStartDay;
   final String defaultProjectionHorizon;
