@@ -31,3 +31,7 @@ specs/
 .gemini/
 
 .agents/
+
+# Business Strategy & Investor Materials
+business/
+investor/
