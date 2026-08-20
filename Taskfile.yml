@@ -67,6 +67,70 @@ tasks:
     cmds:
       - flutter run -d linux --dart-define=RELEASE_EDITION=combined
 
+  build:
+    desc: 'Build Linux release executable for Combined Edition (Default)'
+    dir: '{{.APP_DIR}}'
+    cmds:
+      - flutter build linux --release --dart-define=RELEASE_EDITION=combined
+
+  'build:personal':
+    desc: 'Build Linux release executable for Personal Edition'
+    dir: '{{.APP_DIR}}'
+    cmds:
+      - flutter build linux --release --dart-define=RELEASE_EDITION=personal
+
+  'build:business':
+    desc: 'Build Linux release executable for Business Edition'
+    dir: '{{.APP_DIR}}'
+    cmds:
+      - flutter build linux --release --dart-define=RELEASE_EDITION=business
+
+  'build:combined':
+    desc: 'Build Linux release executable for Combined Edition'
+    dir: '{{.APP_DIR}}'
+    cmds:
+      - flutter build linux --release --dart-define=RELEASE_EDITION=combined
+
+  'build:all':
+    desc: 'Build Linux release executables for all 3 editions (personal, business, combined)'
+    dir: '{{.APP_DIR}}'
+    cmds:
+      - task: 'build:personal'
+      - task: 'build:business'
+      - task: 'build:combined'
+
+  'build:apk':
+    desc: 'Build Android APK for Combined Edition (Default)'
+    dir: '{{.APP_DIR}}'
+    cmds:
+      - flutter build apk --release --dart-define=RELEASE_EDITION=combined
+
+  'build:apk:personal':
+    desc: 'Build Android APK for Personal Edition'
+    dir: '{{.APP_DIR}}'
+    cmds:
+      - flutter build apk --release --dart-define=RELEASE_EDITION=personal
+
+  'build:apk:business':
+    desc: 'Build Android APK for Business Edition'
+    dir: '{{.APP_DIR}}'
+    cmds:
+      - flutter build apk --release --dart-define=RELEASE_EDITION=business
+
+  'build:apk:combined':
+    desc: 'Build Android APK for Combined Edition'
+    dir: '{{.APP_DIR}}'
+    cmds:
+      - flutter build apk --release --dart-define=RELEASE_EDITION=combined
+
+  'build:apk:all':
+    desc: 'Build Android APKs for all 3 editions (personal, business, combined)'
+    dir: '{{.APP_DIR}}'
+    cmds:
+      - task: 'build:apk:personal'
+      - task: 'build:apk:business'
+      - task: 'build:apk:combined'
+
   docs:
     desc: 'Generate Mermaid architecture diagrams and build Sphinx HTML documentation'
     dir: '{{.APP_DIR}}'

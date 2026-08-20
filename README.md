@@ -137,11 +137,25 @@ task test
 task analyze
 task lint
 
+# Build release executables by edition (Linux Desktop)
+task build:personal     # Build Personal Edition
+task build:business     # Build Business Edition
+task build:combined     # Build Combined Edition (Default)
+task build:all          # Build all 3 release editions
+
+# Build release packages by edition (Android APK)
+task build:apk:personal
+task build:apk:business
+task build:apk:combined
+task build:apk:all
+
+# Run local development targets
+task dev:personal       # Run Personal Edition
+task dev:business       # Run Business Edition
+task dev:combined       # Run Combined Edition (Default)
+
 # Build Sphinx documentation portal with Mermaid diagrams
 task docs
-
-# Run local development target
-task dev
 ```
 
 ---
