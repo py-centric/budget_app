@@ -164,6 +164,7 @@ class _HomePageState extends State<HomePage> {
                     _themeMenuItem('light', Icons.light_mode, 'Light', currentMode),
                     _themeMenuItem('dark', Icons.dark_mode, 'Dark', currentMode),
                     _themeMenuItem('oled', Icons.contrast, 'OLED', currentMode),
+                    _themeMenuItem('high_contrast', Icons.tonality, 'High Contrast', currentMode),
                   ],
                 );
               },
@@ -203,6 +204,53 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
         drawer: const NavigationDrawerWidget(),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: Builder(
+          builder: (context) {
+            final screenWidth = MediaQuery.sizeOf(context).width;
+            return SizedBox(
+              width: screenWidth * 0.9,
+              height: 48,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: SizedBox(
+                      height: 48,
+                      child: FloatingActionButton.extended(
+                        heroTag: 'fab_add_income',
+                        onPressed: () => _openAddIncomeDialog(context),
+                        backgroundColor: Theme.of(context).colorScheme.primary,
+                        foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                        icon: const Icon(Icons.add),
+                        label: const Text(
+                          'Add Income',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: AppSpacing.md),
+                  Expanded(
+                    child: SizedBox(
+                      height: 48,
+                      child: FloatingActionButton.extended(
+                        heroTag: 'fab_add_expense',
+                        onPressed: () => _openAddExpenseDialog(context),
+                        backgroundColor: Theme.of(context).colorScheme.error,
+                        foregroundColor: Theme.of(context).colorScheme.onError,
+                        icon: const Icon(Icons.remove),
+                        label: const Text(
+                          'Add Expense',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
         body: BlocListener<BudgetBloc, BudgetState>(
           listener: (context, state) {
             if (state is CategoriesLoaded) {
@@ -297,7 +345,12 @@ class _HomePageState extends State<HomePage> {
                   const HomeProjectionOverview(),
                   Expanded(
                     child: SingleChildScrollView(
-                      padding: const EdgeInsets.all(AppSpacing.md),
+                      padding: const EdgeInsets.fromLTRB(
+                        AppSpacing.md,
+                        AppSpacing.md,
+                        AppSpacing.md,
+                        88,
+                      ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
@@ -317,96 +370,6 @@ class _HomePageState extends State<HomePage> {
                                   OutstandingBalancesCard(summary: s),
                                   const SizedBox(height: AppSpacing.lg),
                                   _buildCategoryLimitsSection(context, s),
-                                  const SizedBox(height: AppSpacing.lg),
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: FilledButton.icon(
-                                          onPressed: () {
-                                            final budgetId = context
-                                                .read<NavigationBloc>()
-                                                .state
-                                                .activeBudget
-                                                ?.id;
-                                            if (budgetId == null) {
-                                              ScaffoldMessenger.of(
-                                                context,
-                                              ).showSnackBar(
-                                                const SnackBar(
-                                                  content: Text(
-                                                    'No active budget',
-                                                  ),
-                                                ),
-                                              );
-                                              return;
-                                            }
-                                            setState(() {
-                                              _showIncomeForm = true;
-                                            });
-                                            _showTransactionDialog(
-                                              context,
-                                              budgetId,
-                                            );
-                                          },
-                                          style: FilledButton.styleFrom(
-                                            backgroundColor: Theme.of(context).colorScheme.primary,
-                                            padding: const EdgeInsets.symmetric(
-                                              vertical: AppSpacing.md,
-                                            ),
-                                            textStyle: const TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          icon: const Icon(Icons.add),
-                                          label: const Text('Add Income'),
-                                        ),
-                                      ),
-                                      const SizedBox(width: AppSpacing.md),
-                                      Expanded(
-                                        child: FilledButton.icon(
-                                          onPressed: () {
-                                            final budgetId = context
-                                                .read<NavigationBloc>()
-                                                .state
-                                                .activeBudget
-                                                ?.id;
-                                            if (budgetId == null) {
-                                              ScaffoldMessenger.of(
-                                                context,
-                                              ).showSnackBar(
-                                                const SnackBar(
-                                                  content: Text(
-                                                    'No active budget',
-                                                  ),
-                                                ),
-                                              );
-                                              return;
-                                            }
-                                            setState(() {
-                                              _showIncomeForm = false;
-                                            });
-                                            _showTransactionDialog(
-                                              context,
-                                              budgetId,
-                                            );
-                                          },
-                                          style: FilledButton.styleFrom(
-                                            backgroundColor: Theme.of(context).colorScheme.error,
-                                            padding: const EdgeInsets.symmetric(
-                                              vertical: AppSpacing.md,
-                                            ),
-                                            textStyle: const TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          icon: const Icon(Icons.remove),
-                                          label: const Text('Add Expense'),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
                                   const SizedBox(height: AppSpacing.lg),
                                 ],
                               );
@@ -542,6 +505,34 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  void _openAddIncomeDialog(BuildContext context) {
+    final budgetId = context.read<NavigationBloc>().state.activeBudget?.id;
+    if (budgetId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('No active budget')),
+      );
+      return;
+    }
+    setState(() {
+      _showIncomeForm = true;
+    });
+    _showTransactionDialog(context, budgetId);
+  }
+
+  void _openAddExpenseDialog(BuildContext context) {
+    final budgetId = context.read<NavigationBloc>().state.activeBudget?.id;
+    if (budgetId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('No active budget')),
+      );
+      return;
+    }
+    setState(() {
+      _showIncomeForm = false;
+    });
+    _showTransactionDialog(context, budgetId);
+  }
+
   void _showTransactionDialog(BuildContext outerContext, String budgetId) {
     final navState = outerContext.read<NavigationBloc>().state;
     final budgetBlocState = outerContext.read<BudgetBloc>().state;
@@ -632,6 +623,7 @@ class _HomePageState extends State<HomePage> {
                           bool isPotential = false,
                           List<SplitItem>? splits,
                           String? targetBudgetId,
+                          String? accountId,
                         }) {
                           final effectiveBudgetId =
                               targetBudgetId ?? selectedBudget?.id ?? budgetId;
@@ -666,6 +658,7 @@ class _HomePageState extends State<HomePage> {
                                 categoryId: categoryId,
                                 description: description,
                                 date: date,
+                                accountId: accountId,
                                 isPotential: isPotential,
                               ),
                             );
@@ -678,6 +671,7 @@ class _HomePageState extends State<HomePage> {
                                 category: categoryId,
                                 description: description,
                                 date: date,
+                                accountId: accountId,
                                 isPotential: isPotential,
                               ),
                             );
@@ -857,6 +851,8 @@ class _HomePageState extends State<HomePage> {
         return Icons.dark_mode;
       case 'oled':
         return Icons.contrast;
+      case 'high_contrast':
+        return Icons.tonality;
       default:
         return Icons.brightness_auto;
     }

@@ -4,6 +4,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../domain/entities/income_entry.dart';
 import '../../domain/entities/expense_entry.dart';
 import '../../../settings/presentation/bloc/settings_bloc.dart';
+import '../../../accounts/domain/entities/account.dart';
+import '../../../accounts/presentation/bloc/account_bloc.dart';
+import '../../../accounts/presentation/bloc/account_state.dart';
+import 'account_filter_sheet.dart';
 import 'filter_models.dart';
 import 'filter_utils.dart';
 import '../../../../core/utils/currency_formatter.dart';
@@ -202,6 +206,35 @@ class _FilterBarState extends State<FilterBar> {
     );
   }
 
+  void _updateAccountFilter(AccountFilter filter) {
+    setState(() {
+      _filterState = _filterState.copyWith(
+        accountFilter: filter,
+        clearAccountFilter: !filter.isActive,
+      );
+    });
+  }
+
+  void _showAccountFilterSheet(BuildContext context) {
+    List<Account> accounts = [];
+    try {
+      final accountState = context.read<AccountBloc>().state;
+      if (accountState is AccountLoaded) {
+        accounts = accountState.accounts;
+      }
+    } catch (_) {}
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) => AccountFilterSheet(
+        accounts: accounts,
+        initialFilter: _filterState.accountFilter,
+        onApply: _updateAccountFilter,
+      ),
+    );
+  }
+
   void _showSortGroupSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -224,7 +257,6 @@ class _FilterBarState extends State<FilterBar> {
   }
 
   @override
-  @override
   Widget build(BuildContext context) {
     final filteredIncome = filterIncomeEntries(
       widget.incomeEntries,
@@ -245,27 +277,42 @@ class _FilterBarState extends State<FilterBar> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    _FilterButton(
-                      icon: Icons.search,
-                      label: 'Search',
-                      isActive: _filterState.searchQuery?.isNotEmpty == true,
-                      onPressed: () => _showSearchSheet(context),
-                    ),
-                    const SizedBox(width: 8),
-                    _FilterButton(
-                      icon: Icons.sort,
-                      label: 'Sort',
-                      isActive: _filterState.hasActiveSortGroup,
-                      onPressed: () => _showSortGroupSheet(context),
-                    ),
-                    const SizedBox(width: 8),
-                    _FilterButton(
-                      icon: Icons.filter_list,
-                      label: 'Filter',
-                      isActive: _filterState.amountFilter != null,
-                      onPressed: () => _showFilterSheet(context),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: [
+                            _FilterButton(
+                              icon: Icons.search,
+                              label: 'Search',
+                              isActive: _filterState.searchQuery?.isNotEmpty == true,
+                              onPressed: () => _showSearchSheet(context),
+                            ),
+                            const SizedBox(width: 8),
+                            _FilterButton(
+                              icon: Icons.sort,
+                              label: 'Sort',
+                              isActive: _filterState.hasActiveSortGroup,
+                              onPressed: () => _showSortGroupSheet(context),
+                            ),
+                            const SizedBox(width: 8),
+                            _FilterButton(
+                              icon: Icons.filter_list,
+                              label: 'Filter',
+                              isActive: _filterState.amountFilter != null,
+                              onPressed: () => _showFilterSheet(context),
+                            ),
+                            const SizedBox(width: 8),
+                            _FilterButton(
+                              icon: Icons.account_balance,
+                              label: 'Account',
+                              isActive: _filterState.accountFilter.isActive,
+                              onPressed: () => _showAccountFilterSheet(context),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                     if (_filterState.hasActiveFilters || _filterState.hasActiveDisplayOptions) ...[
                       const SizedBox(width: 8),
