@@ -24,8 +24,20 @@ bool _matchesFilter(dynamic entry, FilterState filterState) {
   final matchesSearch = _matchesSearch(entry, filterState.searchQuery);
   final matchesAmount = _matchesAmount(entry, filterState.amountFilter);
   final matchesStatus = _matchesStatus(entry, filterState.entryStatus);
+  final matchesAccount = _matchesAccount(entry, filterState.accountFilter);
 
-  return matchesSearch && matchesAmount && matchesStatus;
+  return matchesSearch && matchesAmount && matchesStatus && matchesAccount;
+}
+
+bool _matchesAccount(dynamic entry, AccountFilter accountFilter) {
+  if (!accountFilter.isActive) return true;
+  String? accountId;
+  if (entry is IncomeEntry) {
+    accountId = entry.accountId;
+  } else if (entry is ExpenseEntry) {
+    accountId = entry.accountId;
+  }
+  return accountFilter.matches(accountId);
 }
 
 bool _matchesSearch(dynamic entry, String? searchQuery) {

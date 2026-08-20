@@ -13,6 +13,8 @@ class ExpenseEntry extends Equatable {
   final int? periodYear;
   final String? categoryName;
   final String? categoryIcon;
+  final String? accountId;
+  final String? accountName;
   final bool isPotential;
 
   const ExpenseEntry({
@@ -26,6 +28,8 @@ class ExpenseEntry extends Equatable {
     this.periodYear,
     this.categoryName,
     this.categoryIcon,
+    this.accountId,
+    this.accountName,
     this.isPotential = false,
   });
 
@@ -41,6 +45,8 @@ class ExpenseEntry extends Equatable {
       periodYear: map['period_year'] as int?,
       categoryName: map['category_name'] as String?,
       categoryIcon: map['category_icon'] as String?,
+      accountId: map['account_id'] as String?,
+      accountName: map['account_name'] as String?,
       isPotential: (map['is_potential'] as int? ?? 0) == 1,
     );
   }
@@ -55,8 +61,42 @@ class ExpenseEntry extends Equatable {
       'date': date.toIso8601String(),
       'period_month': periodMonth ?? date.month,
       'period_year': periodYear ?? date.year,
+      'account_id': accountId,
       'is_potential': isPotential ? 1 : 0,
     };
+  }
+
+  ExpenseEntry copyWith({
+    String? id,
+    String? budgetId,
+    double? amount,
+    String? categoryId,
+    String? description,
+    DateTime? date,
+    int? periodMonth,
+    int? periodYear,
+    String? categoryName,
+    String? categoryIcon,
+    String? accountId,
+    String? accountName,
+    bool? isPotential,
+    bool clearAccount = false,
+  }) {
+    return ExpenseEntry(
+      id: id ?? this.id,
+      budgetId: budgetId ?? this.budgetId,
+      amount: amount ?? this.amount,
+      categoryId: categoryId ?? this.categoryId,
+      description: description ?? this.description,
+      date: date ?? this.date,
+      periodMonth: periodMonth ?? this.periodMonth,
+      periodYear: periodYear ?? this.periodYear,
+      categoryName: categoryName ?? this.categoryName,
+      categoryIcon: categoryIcon ?? this.categoryIcon,
+      accountId: clearAccount ? null : (accountId ?? this.accountId),
+      accountName: clearAccount ? null : (accountName ?? this.accountName),
+      isPotential: isPotential ?? this.isPotential,
+    );
   }
 
   @override
@@ -71,6 +111,8 @@ class ExpenseEntry extends Equatable {
     periodYear,
     categoryName,
     categoryIcon,
+    accountId,
+    accountName,
     isPotential,
   ];
 }

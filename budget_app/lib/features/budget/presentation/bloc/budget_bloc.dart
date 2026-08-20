@@ -134,6 +134,7 @@ class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
         categoryId: event.categoryId,
         description: event.description,
         date: event.date,
+        accountId: event.accountId,
         isPotential: event.isPotential,
       );
       await addIncomeUseCase(income);
@@ -161,6 +162,7 @@ class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
         categoryId: event.category,
         description: event.description,
         date: event.date,
+        accountId: event.accountId,
         isPotential: event.isPotential,
       );
       await addExpenseUseCase(expense);

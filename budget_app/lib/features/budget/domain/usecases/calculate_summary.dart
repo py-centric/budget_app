@@ -3,6 +3,7 @@ import '../entities/expense_entry.dart';
 import '../entities/budget_period.dart';
 import '../repositories/budget_repository.dart';
 import '../repositories/recurring_repository.dart';
+import '../../presentation/widgets/filter_models.dart';
 import 'package:budget_app/core/utils/recurrence_calculator.dart';
 
 class BudgetSummary {
@@ -33,7 +34,11 @@ class CalculateSummary {
 
   CalculateSummary(this.repository, {this.recurringRepository});
 
-  Future<BudgetSummary> call({BudgetPeriod? period, String? budgetId}) async {
+  Future<BudgetSummary> call({
+    BudgetPeriod? period,
+    String? budgetId,
+    AccountFilter? accountFilter,
+  }) async {
     List<IncomeEntry> incomeEntries;
     List<ExpenseEntry> expenseEntries;
 
@@ -110,6 +115,15 @@ class CalculateSummary {
           }
         }
       }
+    }
+
+    if (accountFilter != null && accountFilter.isActive) {
+      incomeEntries = incomeEntries
+          .where((e) => accountFilter.matches(e.accountId))
+          .toList();
+      expenseEntries = expenseEntries
+          .where((e) => accountFilter.matches(e.accountId))
+          .toList();
     }
 
     final actualIncome = incomeEntries.where((e) => !e.isPotential).toList();

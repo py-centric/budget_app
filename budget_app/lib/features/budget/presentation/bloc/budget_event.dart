@@ -42,6 +42,7 @@ class AddIncomeEvent extends BudgetEvent {
   final String categoryId;
   final String? description;
   final DateTime date;
+  final String? accountId;
   final bool isPotential;
 
   const AddIncomeEvent({
@@ -51,6 +52,7 @@ class AddIncomeEvent extends BudgetEvent {
     required this.categoryId,
     this.description,
     required this.date,
+    this.accountId,
     this.isPotential = false,
   });
 
@@ -62,6 +64,7 @@ class AddIncomeEvent extends BudgetEvent {
     categoryId,
     description,
     date,
+    accountId,
     isPotential,
   ];
 }
@@ -73,6 +76,7 @@ class AddExpenseEvent extends BudgetEvent {
   final String category;
   final String? description;
   final DateTime date;
+  final String? accountId;
   final bool isPotential;
 
   const AddExpenseEvent({
@@ -82,6 +86,7 @@ class AddExpenseEvent extends BudgetEvent {
     required this.category,
     this.description,
     required this.date,
+    this.accountId,
     this.isPotential = false,
   });
 
@@ -93,6 +98,7 @@ class AddExpenseEvent extends BudgetEvent {
     category,
     description,
     date,
+    accountId,
     isPotential,
   ];
 }

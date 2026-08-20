@@ -18,7 +18,7 @@ class AccountLocalDataSource {
   Future<List<AccountModel>> getAccounts() async {
     final db = await _db;
     final maps = await db.query('accounts', orderBy: 'created_at DESC');
-    return maps.map((map) => AccountModel.fromMap(map)).toList();
+    return maps.map(AccountModel.fromMap).toList();
   }
 
   Future<void> insertAccount(AccountModel account) async {
@@ -168,7 +168,7 @@ class AccountLocalDataSource {
       whereArgs: [accountId],
       orderBy: 'date DESC',
     );
-    return maps.map((map) => AccountTransactionModel.fromMap(map)).toList();
+    return maps.map(AccountTransactionModel.fromMap).toList();
   }
 
   Future<void> insertTransaction(AccountTransactionModel tx) async {

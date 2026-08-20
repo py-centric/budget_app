@@ -55,6 +55,7 @@ void main() {
                       unit,
                       isPotential = false,
                       splits,
+                      accountId,
                     }) {},
               ),
             ),
@@ -91,6 +92,7 @@ void main() {
                       unit,
                       isPotential = false,
                       splits,
+                      accountId,
                     }) {},
               ),
             ),
@@ -98,7 +100,9 @@ void main() {
         ),
       );
 
-      await tester.tap(find.widgetWithText(ElevatedButton, 'Add Income'));
+      final button = find.widgetWithText(ElevatedButton, 'Add Income');
+      await tester.ensureVisible(button);
+      await tester.tap(button);
       await tester.pumpAndSettle();
 
       expect(find.text('Please enter an amount'), findsOneWidget);
@@ -127,6 +131,7 @@ void main() {
                       unit,
                       isPotential = false,
                       splits,
+                      accountId,
                     }) {},
               ),
             ),
@@ -135,13 +140,58 @@ void main() {
       );
 
       await tester.enterText(find.widgetWithText(TextFormField, 'Amount'), '0');
-      await tester.tap(find.widgetWithText(ElevatedButton, 'Add Income'));
+      final button = find.widgetWithText(ElevatedButton, 'Add Income');
+      await tester.ensureVisible(button);
+      await tester.tap(button);
       await tester.pumpAndSettle();
 
       expect(
         find.text('Please enter a valid positive amount or expression'),
         findsOneWidget,
       );
+    });
+
+    testWidgets('should show validation error for no category selected', (
+      WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: BlocProvider<SettingsBloc>.value(
+            value: mockSettingsBloc,
+            child: Scaffold(
+              body: IncomeForm(
+                categories: const [],
+                onSubmit:
+                    (
+                      id,
+                      amount,
+                      categoryId,
+                      description,
+                      date, {
+                      endDate,
+                      interval,
+                      isRecurring = false,
+                      unit,
+                      isPotential = false,
+                      splits,
+                      accountId,
+                    }) {},
+              ),
+            ),
+          ),
+        ),
+      );
+
+      await tester.enterText(
+        find.widgetWithText(TextFormField, 'Amount'),
+        '100',
+      );
+      final button = find.widgetWithText(ElevatedButton, 'Add Income');
+      await tester.ensureVisible(button);
+      await tester.tap(button);
+      await tester.pumpAndSettle();
+
+      expect(find.text('Please select a category'), findsOneWidget);
     });
   });
 }

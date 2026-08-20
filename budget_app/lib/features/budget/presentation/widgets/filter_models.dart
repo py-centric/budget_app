@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 enum SortField {
@@ -174,9 +175,70 @@ class AmountFilter {
   int get hashCode => operator.hashCode ^ value.hashCode;
 }
 
+class AccountFilter {
+  final Set<String> selectedAccountIds;
+  final bool includeUnassigned;
+
+  const AccountFilter({
+    this.selectedAccountIds = const {},
+    this.includeUnassigned = false,
+  });
+
+  bool get isActive => selectedAccountIds.isNotEmpty || includeUnassigned;
+
+  bool matches(String? accountId) {
+    if (!isActive) return true;
+    if (accountId == null) {
+      return includeUnassigned;
+    }
+    return selectedAccountIds.contains(accountId);
+  }
+
+  AccountFilter copyWith({
+    Set<String>? selectedAccountIds,
+    bool? includeUnassigned,
+  }) {
+    return AccountFilter(
+      selectedAccountIds: selectedAccountIds ?? this.selectedAccountIds,
+      includeUnassigned: includeUnassigned ?? this.includeUnassigned,
+    );
+  }
+
+  AccountFilter toggleAccount(String id) {
+    final newSet = Set<String>.from(selectedAccountIds);
+    if (newSet.contains(id)) {
+      newSet.remove(id);
+    } else {
+      newSet.add(id);
+    }
+    return copyWith(selectedAccountIds: newSet);
+  }
+
+  AccountFilter toggleUnassigned() {
+    return copyWith(includeUnassigned: !includeUnassigned);
+  }
+
+  AccountFilter clear() {
+    return const AccountFilter();
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is AccountFilter &&
+        setEquals(other.selectedAccountIds, selectedAccountIds) &&
+        other.includeUnassigned == includeUnassigned;
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(Object.hashAll(selectedAccountIds), includeUnassigned);
+}
+
 class FilterState {
   final String? searchQuery;
   final AmountFilter? amountFilter;
+  final AccountFilter accountFilter;
   final FilterScope scope;
   final EntryStatus entryStatus;
   final SortField sortField;
@@ -186,6 +248,7 @@ class FilterState {
   const FilterState({
     this.searchQuery,
     this.amountFilter,
+    this.accountFilter = const AccountFilter(),
     this.scope = FilterScope.both,
     this.entryStatus = EntryStatus.all,
     this.sortField = SortField.date,
@@ -196,7 +259,8 @@ class FilterState {
   bool get hasActiveFilters =>
       (searchQuery != null && searchQuery!.isNotEmpty) ||
       amountFilter != null ||
-      entryStatus != EntryStatus.all;
+      entryStatus != EntryStatus.all ||
+      accountFilter.isActive;
 
   bool get hasActiveSortGroup =>
       sortField != SortField.date ||
@@ -208,6 +272,7 @@ class FilterState {
   FilterState copyWith({
     String? searchQuery,
     AmountFilter? amountFilter,
+    AccountFilter? accountFilter,
     FilterScope? scope,
     EntryStatus? entryStatus,
     SortField? sortField,
@@ -215,6 +280,7 @@ class FilterState {
     GroupMode? groupMode,
     bool clearSearchQuery = false,
     bool clearAmountFilter = false,
+    bool clearAccountFilter = false,
     bool clearEntryStatus = false,
   }) {
     return FilterState(
@@ -222,6 +288,9 @@ class FilterState {
       amountFilter: clearAmountFilter
           ? null
           : (amountFilter ?? this.amountFilter),
+      accountFilter: clearAccountFilter
+          ? const AccountFilter()
+          : (accountFilter ?? this.accountFilter),
       scope: scope ?? this.scope,
       entryStatus: clearEntryStatus
           ? EntryStatus.all
@@ -242,6 +311,7 @@ class FilterState {
     return other is FilterState &&
         other.searchQuery == searchQuery &&
         other.amountFilter == amountFilter &&
+        other.accountFilter == accountFilter &&
         other.scope == scope &&
         other.entryStatus == entryStatus &&
         other.sortField == sortField &&
@@ -253,6 +323,7 @@ class FilterState {
   int get hashCode =>
       searchQuery.hashCode ^
       amountFilter.hashCode ^
+      accountFilter.hashCode ^
       scope.hashCode ^
       entryStatus.hashCode ^
       sortField.hashCode ^

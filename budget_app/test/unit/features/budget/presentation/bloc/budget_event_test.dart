@@ -106,6 +106,7 @@ void main() {
           'cat-1',
           'Salary',
           DateTime(2024, 1, 15),
+          null,
           true,
         ]);
       });
@@ -147,6 +148,7 @@ void main() {
           'cat-2',
           'Rent',
           DateTime(2024, 1, 1),
+          null,
           false,
         ]);
       });

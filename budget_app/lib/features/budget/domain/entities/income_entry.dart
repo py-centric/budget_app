@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 /// A single income transaction within a budget period.
-/// Records earned or potential money流入 tracked against a budget category.
+/// Records earned or potential money tracked against a budget category.
 class IncomeEntry extends Equatable {
   final String id;
   final String budgetId;
@@ -13,6 +13,8 @@ class IncomeEntry extends Equatable {
   final String? categoryId;
   final String? categoryName;
   final String? categoryIcon;
+  final String? accountId;
+  final String? accountName;
   final bool isPotential;
 
   const IncomeEntry({
@@ -26,6 +28,8 @@ class IncomeEntry extends Equatable {
     this.categoryId,
     this.categoryName,
     this.categoryIcon,
+    this.accountId,
+    this.accountName,
     this.isPotential = false,
   });
 
@@ -41,6 +45,8 @@ class IncomeEntry extends Equatable {
       categoryId: map['category_id'] as String?,
       categoryName: map['category_name'] as String?,
       categoryIcon: map['category_icon'] as String?,
+      accountId: map['account_id'] as String?,
+      accountName: map['account_name'] as String?,
       isPotential: (map['is_potential'] as int? ?? 0) == 1,
     );
   }
@@ -55,8 +61,42 @@ class IncomeEntry extends Equatable {
       'period_month': periodMonth ?? date.month,
       'period_year': periodYear ?? date.year,
       'category_id': categoryId,
+      'account_id': accountId,
       'is_potential': isPotential ? 1 : 0,
     };
+  }
+
+  IncomeEntry copyWith({
+    String? id,
+    String? budgetId,
+    double? amount,
+    String? description,
+    DateTime? date,
+    int? periodMonth,
+    int? periodYear,
+    String? categoryId,
+    String? categoryName,
+    String? categoryIcon,
+    String? accountId,
+    String? accountName,
+    bool? isPotential,
+    bool clearAccount = false,
+  }) {
+    return IncomeEntry(
+      id: id ?? this.id,
+      budgetId: budgetId ?? this.budgetId,
+      amount: amount ?? this.amount,
+      description: description ?? this.description,
+      date: date ?? this.date,
+      periodMonth: periodMonth ?? this.periodMonth,
+      periodYear: periodYear ?? this.periodYear,
+      categoryId: categoryId ?? this.categoryId,
+      categoryName: categoryName ?? this.categoryName,
+      categoryIcon: categoryIcon ?? this.categoryIcon,
+      accountId: clearAccount ? null : (accountId ?? this.accountId),
+      accountName: clearAccount ? null : (accountName ?? this.accountName),
+      isPotential: isPotential ?? this.isPotential,
+    );
   }
 
   @override
@@ -71,6 +111,8 @@ class IncomeEntry extends Equatable {
     categoryId,
     categoryName,
     categoryIcon,
+    accountId,
+    accountName,
     isPotential,
   ];
 }

@@ -21,9 +21,9 @@ void main() {
   final testCategories = [
     const Category(
       id: '1',
-      name: 'Food',
+      name: 'Groceries',
       type: CategoryType.expense,
-      icon: 'restaurant',
+      icon: 'shopping_cart',
     ),
     const Category(
       id: '2',
@@ -55,6 +55,7 @@ void main() {
                       unit,
                       isPotential = false,
                       splits,
+                      accountId,
                     }) {},
               ),
             ),
@@ -91,6 +92,7 @@ void main() {
                       unit,
                       isPotential = false,
                       splits,
+                      accountId,
                     }) {},
               ),
             ),
@@ -98,7 +100,9 @@ void main() {
         ),
       );
 
-      await tester.tap(find.widgetWithText(ElevatedButton, 'Add Expense'));
+      final button = find.widgetWithText(ElevatedButton, 'Add Expense');
+      await tester.ensureVisible(button);
+      await tester.tap(button);
       await tester.pumpAndSettle();
 
       expect(find.text('Please enter an amount'), findsOneWidget);
@@ -127,6 +131,7 @@ void main() {
                       unit,
                       isPotential = false,
                       splits,
+                      accountId,
                     }) {},
               ),
             ),
@@ -135,7 +140,9 @@ void main() {
       );
 
       await tester.enterText(find.widgetWithText(TextFormField, 'Amount'), '0');
-      await tester.tap(find.widgetWithText(ElevatedButton, 'Add Expense'));
+      final button = find.widgetWithText(ElevatedButton, 'Add Expense');
+      await tester.ensureVisible(button);
+      await tester.tap(button);
       await tester.pumpAndSettle();
 
       expect(
@@ -153,7 +160,7 @@ void main() {
             value: mockSettingsBloc,
             child: Scaffold(
               body: ExpenseForm(
-                categories: testCategories,
+                categories: const [],
                 onSubmit:
                     (
                       id,
@@ -167,6 +174,7 @@ void main() {
                       unit,
                       isPotential = false,
                       splits,
+                      accountId,
                     }) {},
               ),
             ),
@@ -178,7 +186,9 @@ void main() {
         find.widgetWithText(TextFormField, 'Amount'),
         '50',
       );
-      await tester.tap(find.widgetWithText(ElevatedButton, 'Add Expense'));
+      final button = find.widgetWithText(ElevatedButton, 'Add Expense');
+      await tester.ensureVisible(button);
+      await tester.tap(button);
       await tester.pumpAndSettle();
 
       expect(find.text('Please select a category'), findsOneWidget);
