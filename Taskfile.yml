@@ -1,0 +1,94 @@
+# https://taskfile.dev
+version: '3'
+
+vars:
+  APP_DIR: budget_app
+  DOCS_DIR: budget_app/docs
+  BUILD_DIR: budget_app/docs/_build/html
+
+tasks:
+  default:
+    desc: Display all available workflow tasks
+    cmds:
+      - task --list
+
+  lint:
+    desc: Verify code formatting and run static analysis
+    dir: '{{.APP_DIR}}'
+    cmds:
+      - dart format --output=none --set-exit-if-changed .
+      - flutter analyze
+
+  analyze:
+    desc: Run Flutter static analysis with zero tolerance for errors, warnings, or infos
+    dir: '{{.APP_DIR}}'
+    cmds:
+      - flutter analyze --fatal-infos
+
+  format:
+    desc: Automatically format all Dart code across lib/ and test/
+    dir: '{{.APP_DIR}}'
+    cmds:
+      - dart format .
+
+  test:
+    desc: Execute all unit, widget, and integration tests
+    dir: '{{.APP_DIR}}'
+    cmds:
+      - flutter test
+
+  test:coverage:
+    desc: Execute all tests and generate LCOV code coverage report
+    dir: '{{.APP_DIR}}'
+    cmds:
+      - flutter test --coverage
+
+  dev:
+    desc: Launch local development application (Combined Edition default)
+    dir: '{{.APP_DIR}}'
+    cmds:
+      - flutter run -d linux --dart-define=RELEASE_EDITION=combined
+
+  dev:personal:
+    desc: Launch local development application with Personal Edition feature set
+    dir: '{{.APP_DIR}}'
+    cmds:
+      - flutter run -d linux --dart-define=RELEASE_EDITION=personal
+
+  dev:business:
+    desc: Launch local development application with Business Edition feature set
+    dir: '{{.APP_DIR}}'
+    cmds:
+      - flutter run -d linux --dart-define=RELEASE_EDITION=business
+
+  dev:combined:
+    desc: Launch local development application with Combined Edition feature set
+    dir: '{{.APP_DIR}}'
+    cmds:
+      - flutter run -d linux --dart-define=RELEASE_EDITION=combined
+
+  docs:
+    desc: Generate Mermaid architecture diagrams and build Sphinx HTML documentation
+    dir: '{{.APP_DIR}}'
+    cmds:
+      - python3 docs/generate_diagrams.py
+      - sphinx-build -b html docs docs/_build/html
+
+  docs:serve:
+    desc: Serve built HTML documentation on local HTTP server (port 8000)
+    dir: '{{.APP_DIR}}'
+    cmds:
+      - python3 -m http.server 8000 -d docs/_build/html
+
+  clean:
+    desc: Clean Flutter build caches, test coverage, and Sphinx documentation output
+    dir: '{{.APP_DIR}}'
+    cmds:
+      - flutter clean
+      - rm -rf docs/_build coverage .dart_tool/coverage
+
+  version:bump:
+    desc: Bump project semantic version (Usage: task version:bump -- patch|minor|major [--dry-run])
+    dir: '{{.APP_DIR}}'
+    cmds:
+      - dart run scripts/version_bump.dart {{.CLI_ARGS}}
