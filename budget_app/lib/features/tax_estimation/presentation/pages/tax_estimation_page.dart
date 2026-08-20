@@ -87,14 +87,14 @@ class _TaxEstimationPageState extends State<TaxEstimationPage> {
                 ),
               ),
               const SizedBox(height: 16),
-              Card(
+              const Card(
                 child: Padding(
-                  padding: const EdgeInsets.all(16),
+                  padding: EdgeInsets.all(16),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('2024 Tax Brackets', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-                      const SizedBox(height: 8),
+                      Text('2024 Tax Brackets', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+                      SizedBox(height: 8),
                       _BracketRow(rate: '10%', range: 'Up to \$11,600'),
                       _BracketRow(rate: '12%', range: '\$11,601 - \$47,150'),
                       _BracketRow(rate: '22%', range: '\$47,151 - \$100,525'),

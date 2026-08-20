@@ -3,7 +3,7 @@ import 'package:budget_app/features/recurring_templates/domain/entities/recurrin
 
 void main() {
   group('RecurringTemplate', () {
-    final template = RecurringTemplate(
+    const template = RecurringTemplate(
       id: 'rt-1',
       name: 'Netflix Subscription',
       description: 'Monthly streaming service',
@@ -22,7 +22,7 @@ void main() {
     });
 
     test('equality works', () {
-      final template2 = RecurringTemplate(
+      const template2 = RecurringTemplate(
         id: 'rt-1', name: 'Netflix Subscription',
         description: 'Monthly streaming service',
         type: 'subscription', defaultAmount: 15.99,
@@ -32,7 +32,7 @@ void main() {
     });
 
     test('inequality with different id', () {
-      final template2 = RecurringTemplate(
+      const template2 = RecurringTemplate(
         id: 'rt-2', name: 'Netflix Subscription',
         description: 'Monthly streaming service',
         type: 'subscription', defaultAmount: 15.99,
@@ -42,7 +42,7 @@ void main() {
     });
 
     test('default values for optional fields', () {
-      final template = RecurringTemplate(
+      const template = RecurringTemplate(
         id: 'rt-1', name: 'Test', description: 'Test',
         type: 'bill', defaultAmount: 100, defaultCategoryId: 'bills',
       );

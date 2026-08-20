@@ -11,6 +11,11 @@ import 'package:budget_app/features/budget/presentation/bloc/navigation_bloc.dar
 import 'package:budget_app/features/budget/presentation/bloc/budget_bloc.dart';
 import 'package:budget_app/features/budget/presentation/bloc/budget_event.dart';
 import 'package:budget_app/features/budget/presentation/bloc/budget_state.dart';
+import 'package:budget_app/features/accounts/domain/entities/account.dart';
+import 'package:budget_app/features/accounts/presentation/bloc/account_bloc.dart';
+import 'package:budget_app/features/accounts/presentation/bloc/account_state.dart';
+import 'package:budget_app/features/budget/presentation/widgets/account_filter_sheet.dart';
+import 'package:budget_app/features/budget/presentation/widgets/filter_models.dart';
 import 'package:budget_app/features/budget/domain/usecases/calculate_summary.dart';
 import 'package:budget_app/shared/widgets/branding_footer.dart';
 
@@ -27,6 +32,7 @@ class _CategoryBreakdownPageState extends State<CategoryBreakdownPage> {
   int _selectedDuration = 1;
   BudgetPeriod _rangeEndPeriod = BudgetPeriod.current();
   Set<String> _selectedBudgetIds = {};
+  AccountFilter _accountFilter = const AccountFilter();
   int _loadIndex = 0;
   final List<_LoadItem> _loadQueue = [];
   final Map<String, BudgetSummary> _loadedSummaries = {};
@@ -201,16 +207,53 @@ class _CategoryBreakdownPageState extends State<CategoryBreakdownPage> {
     );
   }
 
+  void _showAccountFilterSheet() {
+    List<Account> accounts = [];
+    try {
+      final accountState = context.read<AccountBloc>().state;
+      if (accountState is AccountLoaded) {
+        accounts = accountState.accounts;
+      }
+    } catch (_) {}
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) => AccountFilterSheet(
+        accounts: accounts,
+        initialFilter: _accountFilter,
+        onApply: (filter) {
+          setState(() {
+            _accountFilter = filter;
+          });
+        },
+      ),
+    );
+  }
+
   BudgetSummary _getFilteredSummary() {
     final merged = _getMergedSummary();
-    if (_selectedBudgetIds.isEmpty) return merged;
 
-    final filteredIncome = merged.incomeEntries
-        .where((e) => _selectedBudgetIds.contains(e.budgetId))
-        .toList();
-    final filteredExpenses = merged.expenseEntries
-        .where((e) => _selectedBudgetIds.contains(e.budgetId))
-        .toList();
+    var filteredIncome = merged.incomeEntries;
+    var filteredExpenses = merged.expenseEntries;
+
+    if (_selectedBudgetIds.isNotEmpty) {
+      filteredIncome = filteredIncome
+          .where((e) => _selectedBudgetIds.contains(e.budgetId))
+          .toList();
+      filteredExpenses = filteredExpenses
+          .where((e) => _selectedBudgetIds.contains(e.budgetId))
+          .toList();
+    }
+
+    if (_accountFilter.isActive) {
+      filteredIncome = filteredIncome
+          .where((e) => _accountFilter.matches(e.accountId))
+          .toList();
+      filteredExpenses = filteredExpenses
+          .where((e) => _accountFilter.matches(e.accountId))
+          .toList();
+    }
 
     double calcTotalIncome = 0;
     double calcTotalExpenses = 0;
@@ -290,6 +333,18 @@ class _CategoryBreakdownPageState extends State<CategoryBreakdownPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Category Breakdown'),
+        actions: [
+          IconButton(
+            icon: Icon(
+              Icons.account_balance,
+              color: _accountFilter.isActive
+                  ? Theme.of(context).colorScheme.primary
+                  : null,
+            ),
+            tooltip: 'Filter by Account',
+            onPressed: _showAccountFilterSheet,
+          ),
+        ],
       ),
       body: BlocListener<NavigationBloc, NavigationState>(
         listenWhen: (previous, current) =>
@@ -606,7 +661,7 @@ class _CategoryBreakdownPageState extends State<CategoryBreakdownPage> {
     if (budgetIds.length < 2) return const SizedBox.shrink();
 
     final title = _selectedDuration == 1
-        ? 'Budget Comparison — ${_rangeLabel()}'
+        ? 'Budget Comparison: ${_rangeLabel()}'
         : 'Combined (${_rangeLabel()})';
 
     return Card(

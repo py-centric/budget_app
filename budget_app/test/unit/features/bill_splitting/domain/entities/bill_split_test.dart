@@ -62,10 +62,10 @@ void main() {
       transactionId: 'tx-1',
       description: 'Dinner',
       totalAmount: 120,
-      splits: [
-        const PersonSplit(name: 'Alice', amount: 40),
-        const PersonSplit(name: 'Bob', amount: 40),
-        const PersonSplit(name: 'Charlie', amount: 40),
+      splits: const [
+        PersonSplit(name: 'Alice', amount: 40),
+        PersonSplit(name: 'Bob', amount: 40),
+        PersonSplit(name: 'Charlie', amount: 40),
       ],
       createdAt: now,
     );

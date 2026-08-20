@@ -15,7 +15,7 @@ class FakeDuplicateBudgetEvent extends Fake implements DuplicateBudgetEvent {}
 void main() {
   late MockBudgetBloc mockBudgetBloc;
 
-  final sourceBudget = Budget(
+  const sourceBudget = Budget(
     id: 'b-1', name: 'June Budget', periodMonth: 6, periodYear: 2024,
     currencyCode: 'USD',
   );

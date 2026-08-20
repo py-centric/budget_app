@@ -22,22 +22,33 @@ class PyCentricFooterWidget extends StatelessWidget {
         vertical: compact ? AppSpacing.xs : AppSpacing.sm,
         horizontal: AppSpacing.sm,
       ),
-      child: InkWell(
-        onTap: onTap ?? () => PyCentricAboutDialog.show(context),
-        borderRadius: BorderRadius.circular(4),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            vertical: 4,
-            horizontal: 8,
-          ),
-          child: Text(
-            'Developed by PyCentric',
-            style: theme.textTheme.bodySmall?.copyWith(
-              fontSize: compact ? 10 : 11,
-              color: colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
-              fontWeight: FontWeight.w500,
+      child: Semantics(
+        button: true,
+        label: 'Developed by PyCentric. Tap to view about dialog.',
+        child: InkWell(
+          onTap: onTap ?? () => PyCentricAboutDialog.show(context),
+          borderRadius: BorderRadius.circular(4),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(
+              minWidth: 48,
+              minHeight: 48,
             ),
-            textAlign: TextAlign.center,
+            child: Container(
+              alignment: Alignment.center,
+              padding: const EdgeInsets.symmetric(
+                vertical: 4,
+                horizontal: 8,
+              ),
+              child: Text(
+                'Developed by PyCentric',
+                style: theme.textTheme.bodySmall?.copyWith(
+                  fontSize: compact ? 10 : 11,
+                  color: colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
+                  fontWeight: FontWeight.w500,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
           ),
         ),
       ),

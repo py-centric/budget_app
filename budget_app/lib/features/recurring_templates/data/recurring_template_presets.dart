@@ -1,7 +1,7 @@
 import '../domain/entities/recurring_template.dart';
 
 class RecurringTemplatePresets {
-  static final List<RecurringTemplate> presets = [
+  static const List<RecurringTemplate> presets = [
     RecurringTemplate(
       id: 'netflix',
       name: 'Netflix',

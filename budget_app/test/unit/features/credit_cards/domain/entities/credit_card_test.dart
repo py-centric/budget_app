@@ -92,7 +92,7 @@ void main() {
     });
 
     test('default values', () {
-      final minimal = CreditCard(id: 'cc-1', name: 'Test', creditLimit: 5000);
+      const minimal = CreditCard(id: 'cc-1', name: 'Test', creditLimit: 5000);
       expect(minimal.currentBalance, 0);
       expect(minimal.apr, 0);
       expect(minimal.minimumPaymentPercent, 2.0);

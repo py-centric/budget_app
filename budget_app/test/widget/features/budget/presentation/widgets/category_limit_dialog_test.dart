@@ -43,21 +43,21 @@ void main() {
 
   group('CategoryLimitDialog', () {
     testWidgets('shows title "Set Category Limit" for new limit', (tester) async {
-      await tester.pumpWidget(buildDialog(onSave: (_, __, ___) {}));
+      await tester.pumpWidget(buildDialog(onSave: (_, _, _) {}));
       await tester.tap(find.text('Open'));
       await tester.pumpAndSettle();
       expect(find.text('Set Category Limit'), findsOneWidget);
     });
 
     testWidgets('shows title "Edit Limit" for existing limit', (tester) async {
-      await tester.pumpWidget(buildDialog(existing: existingLimit, onSave: (_, __, ___) {}));
+      await tester.pumpWidget(buildDialog(existing: existingLimit, onSave: (_, _, _) {}));
       await tester.tap(find.text('Open'));
       await tester.pumpAndSettle();
       expect(find.text('Edit Limit'), findsOneWidget);
     });
 
     testWidgets('Save button is disabled when no category selected', (tester) async {
-      await tester.pumpWidget(buildDialog(onSave: (_, __, ___) {}));
+      await tester.pumpWidget(buildDialog(onSave: (_, _, _) {}));
       await tester.tap(find.text('Open'));
       await tester.pumpAndSettle();
       final saveButton = tester.widget<FilledButton>(
@@ -67,7 +67,7 @@ void main() {
     });
 
     testWidgets('Save button is enabled for existing limit with valid data', (tester) async {
-      await tester.pumpWidget(buildDialog(existing: existingLimit, onSave: (_, __, ___) {}));
+      await tester.pumpWidget(buildDialog(existing: existingLimit, onSave: (_, _, _) {}));
       await tester.tap(find.text('Open'));
       await tester.pumpAndSettle();
       final saveButton = tester.widget<FilledButton>(
@@ -78,7 +78,7 @@ void main() {
 
     testWidgets('Cancel closes dialog without saving', (tester) async {
       var saved = false;
-      await tester.pumpWidget(buildDialog(onSave: (_, __, ___) => saved = true));
+      await tester.pumpWidget(buildDialog(onSave: (_, _, _) => saved = true));
       await tester.tap(find.text('Open'));
       await tester.pumpAndSettle();
       await tester.tap(find.widgetWithText(TextButton, 'Cancel'));
@@ -88,7 +88,7 @@ void main() {
     });
 
     testWidgets('SegmentedButton shows Weekly and Monthly options', (tester) async {
-      await tester.pumpWidget(buildDialog(onSave: (_, __, ___) {}));
+      await tester.pumpWidget(buildDialog(onSave: (_, _, _) {}));
       await tester.tap(find.text('Open'));
       await tester.pumpAndSettle();
       expect(find.text('Monthly'), findsOneWidget);
@@ -96,7 +96,7 @@ void main() {
     });
 
     testWidgets('only expense categories shown in dropdown', (tester) async {
-      await tester.pumpWidget(buildDialog(onSave: (_, __, ___) {}));
+      await tester.pumpWidget(buildDialog(onSave: (_, _, _) {}));
       await tester.tap(find.text('Open'));
       await tester.pumpAndSettle();
       await tester.tap(find.byType(DropdownButtonFormField<String>));
@@ -106,7 +106,7 @@ void main() {
     });
 
     testWidgets('pre-fills amount when editing existing limit', (tester) async {
-      await tester.pumpWidget(buildDialog(existing: existingLimit, onSave: (_, __, ___) {}));
+      await tester.pumpWidget(buildDialog(existing: existingLimit, onSave: (_, _, _) {}));
       await tester.tap(find.text('Open'));
       await tester.pumpAndSettle();
       expect(find.text('500.00'), findsOneWidget);
@@ -140,7 +140,7 @@ void main() {
 
       await tester.pumpWidget(buildDialog(
         existing: existingLimit,
-        onSave: (_, amount, __) => savedAmount = amount,
+        onSave: (_, amount, _) => savedAmount = amount,
       ));
       await tester.tap(find.text('Open'));
       await tester.pumpAndSettle();
@@ -160,7 +160,7 @@ void main() {
 
       await tester.pumpWidget(buildDialog(
         existing: existingLimit,
-        onSave: (_, __, period) => savedPeriod = period,
+        onSave: (_, _, period) => savedPeriod = period,
       ));
       await tester.tap(find.text('Open'));
       await tester.pumpAndSettle();

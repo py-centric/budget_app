@@ -9,7 +9,7 @@ class DashboardSettingsPage extends StatefulWidget {
 }
 
 class _DashboardSettingsPageState extends State<DashboardSettingsPage> {
-  DashboardConfig _config = DashboardConfig.defaultConfig();
+  final DashboardConfig _config = DashboardConfig.defaultConfig();
 
   static const Map<String, String> _widgetLabels = {
     'net_worth': 'Net Worth',
@@ -29,9 +29,8 @@ class _DashboardSettingsPageState extends State<DashboardSettingsPage> {
       body: ReorderableListView.builder(
         padding: const EdgeInsets.all(8),
         itemCount: _config.widgetOrder.length,
-        onReorder: (oldIndex, newIndex) {
+        onReorderItem: (oldIndex, newIndex) {
           setState(() {
-            if (newIndex > oldIndex) newIndex--;
             final item = _config.widgetOrder.removeAt(oldIndex);
             _config.widgetOrder.insert(newIndex, item);
           });

@@ -36,7 +36,7 @@ void main() {
     test('props are correct', () {
       expect(entry.props, [
         'e-1', 'b1', 50, 'food', 'Lunch', date,
-        null, null, null, null, false,
+        null, null, null, null, null, null, false,
       ]);
     });
 
@@ -143,7 +143,7 @@ void main() {
     test('props are correct', () {
       expect(entry.props, [
         'i-1', 'b1', 3000, 'Salary', date,
-        null, null, null, null, null, false,
+        null, null, null, null, null, null, null, false,
       ]);
     });
 

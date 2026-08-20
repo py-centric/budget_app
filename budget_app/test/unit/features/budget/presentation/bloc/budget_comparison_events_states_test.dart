@@ -39,7 +39,7 @@ void main() {
         totalVariance: 50, overBudgetCount: 0,
         underBudgetCount: 0, onTrackCount: 1,
       );
-      final state = BudgetComparisonLoaded(
+      const state = BudgetComparisonLoaded(
         comparisons: [comparison], summary: summary,
         year: 2024, month: 6,
       );

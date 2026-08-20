@@ -71,7 +71,7 @@ void main() {
     });
 
     test('default isUnlocked is false', () {
-      final locked = Achievement(
+      const locked = Achievement(
         id: 'ach-2', name: 'Locked', description: 'Not yet', icon: '🔒',
       );
       expect(locked.isUnlocked, isFalse);

@@ -6,7 +6,7 @@ class CalculateDebtPayoff {
     required double monthlyPayment,
     required PayoffStrategy strategy,
   }) {
-    var sortedDebts = List<DebtInput>.from(debts);
+    final sortedDebts = List<DebtInput>.from(debts);
     if (strategy == PayoffStrategy.snowball) {
       sortedDebts.sort((a, b) => a.balance.compareTo(b.balance));
     } else if (strategy == PayoffStrategy.avalanche) {

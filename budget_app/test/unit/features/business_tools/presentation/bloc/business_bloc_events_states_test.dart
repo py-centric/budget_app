@@ -71,7 +71,7 @@ void main() {
     });
 
     test('copyWith clearLastSavedInvoice', () {
-      final state = BusinessState(
+      const state = BusinessState(
         status: BusinessStatus.success,
         lastSavedInvoice: null,
       );

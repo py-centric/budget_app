@@ -3,7 +3,7 @@ import 'package:budget_app/features/financial_health/domain/entities/financial_h
 
 void main() {
   group('FinancialHealthScore', () {
-    final score = FinancialHealthScore(
+    const score = FinancialHealthScore(
       savingsRate: 20.0,
       savingsRateGrade: HealthMetricType.good,
       debtToIncomeRatio: 15.0,
@@ -29,7 +29,7 @@ void main() {
     });
 
     test('equality works', () {
-      final score2 = FinancialHealthScore(
+      const score2 = FinancialHealthScore(
         savingsRate: 20.0,
         savingsRateGrade: HealthMetricType.good,
         debtToIncomeRatio: 15.0,
@@ -47,7 +47,7 @@ void main() {
     });
 
     test('inequality with different score', () {
-      final score2 = FinancialHealthScore(
+      const score2 = FinancialHealthScore(
         savingsRate: 20.0,
         savingsRateGrade: HealthMetricType.good,
         debtToIncomeRatio: 15.0,

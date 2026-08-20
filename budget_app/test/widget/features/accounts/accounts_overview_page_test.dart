@@ -5,7 +5,6 @@ import 'package:mocktail/mocktail.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:budget_app/features/accounts/domain/entities/account.dart';
 import 'package:budget_app/features/accounts/domain/entities/loan_account.dart';
-import 'package:budget_app/features/accounts/domain/entities/savings_account.dart';
 import 'package:budget_app/features/accounts/domain/usecases/calculate_net_worth.dart';
 import 'package:budget_app/features/accounts/presentation/pages/accounts_page.dart';
 import 'package:budget_app/features/accounts/presentation/bloc/account_bloc.dart';

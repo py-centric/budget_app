@@ -73,7 +73,7 @@ class _BillSplitPageState extends State<BillSplitPage> {
               controller: _totalController,
               decoration: const InputDecoration(labelText: 'Total Amount', prefixText: '\$'),
               keyboardType: TextInputType.number,
-              onChanged: (_) => setState(() => _recalculateSplits()),
+              onChanged: (_) => setState(_recalculateSplits),
             ),
             const SizedBox(height: 16),
             Row(

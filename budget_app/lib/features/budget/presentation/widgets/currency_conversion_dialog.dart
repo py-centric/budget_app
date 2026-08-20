@@ -112,7 +112,7 @@ class _CurrencyConversionDialogState extends State<CurrencyConversionDialog> {
                   ),
                 ),
                 const SizedBox(height: 16),
-                // TODO: Live exchange rates — Integrate an exchange rate API
+                // TODO: Live exchange rates - Integrate an exchange rate API
                 // (e.g., exchangerate-api.com or frankfurter.app) to auto-fill
                 // the rate field. Add a "Fetch Rate" button next to the field.
                 TextFormField(

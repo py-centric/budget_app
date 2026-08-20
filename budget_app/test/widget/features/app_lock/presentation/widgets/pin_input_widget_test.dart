@@ -102,10 +102,10 @@ void main() {
     });
 
     testWidgets('digits beyond pinLength are ignored', (tester) async {
-      List<String> completedPins = [];
+      final List<String> completedPins = [];
       await tester.pumpWidget(buildWidget(
         pinLength: 2,
-        onPinComplete: (pin) => completedPins.add(pin),
+        onPinComplete: completedPins.add,
       ));
 
       await tester.tap(find.text('1'));

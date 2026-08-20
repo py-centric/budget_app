@@ -13,7 +13,7 @@ import '../widgets/budget_comparison_table.dart';
 class BudgetComparisonPage extends StatefulWidget {
   const BudgetComparisonPage({super.key});
 
-  // TODO: Custom date range — Add a date range picker to allow comparing
+  // TODO: Custom date range - Add a date range picker to allow comparing
   //任意 two months or a custom date range, instead of only adjacent months.
   @override
   State<BudgetComparisonPage> createState() => _BudgetComparisonPageState();

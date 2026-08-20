@@ -266,31 +266,43 @@ class _SavingsGoalDialogState extends State<SavingsGoalDialog> {
             const SizedBox(height: AppSpacing.sm),
             Wrap(
               spacing: 8,
+              runSpacing: 8,
               children: _availableIcons.map((iconName) {
                 final isSelected = iconName == _selectedIcon;
-                return InkWell(
-                  onTap: () => setState(() => _selectedIcon = iconName),
-                  borderRadius: BorderRadius.circular(8),
-                  child: Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      color: isSelected
-                          ? _getColor(_selectedColor).withValues(alpha: 0.2)
-                          : Theme.of(context).colorScheme.surfaceContainerHighest,
+                return Semantics(
+                  button: true,
+                  selected: isSelected,
+                  label: 'Select icon $iconName',
+                  child: SizedBox(
+                    width: 48,
+                    height: 48,
+                    child: InkWell(
+                      onTap: () => setState(() => _selectedIcon = iconName),
                       borderRadius: BorderRadius.circular(8),
-                      border: isSelected
-                          ? Border.all(
-                              color: _getColor(_selectedColor),
-                              width: 2,
-                            )
-                          : null,
-                    ),
-                    child: Icon(
-                      _getIcon(iconName),
-                      color: isSelected
-                          ? _getColor(_selectedColor)
-                          : Theme.of(context).colorScheme.onSurfaceVariant,
+                      child: Center(
+                        child: Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            color: isSelected
+                                ? _getColor(_selectedColor).withValues(alpha: 0.2)
+                                : Theme.of(context).colorScheme.surfaceContainerHighest,
+                            borderRadius: BorderRadius.circular(8),
+                            border: isSelected
+                                ? Border.all(
+                                    color: _getColor(_selectedColor),
+                                    width: 2,
+                                  )
+                                : null,
+                          ),
+                          child: Icon(
+                            _getIcon(iconName),
+                            color: isSelected
+                                ? _getColor(_selectedColor)
+                                : Theme.of(context).colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 );
@@ -301,35 +313,47 @@ class _SavingsGoalDialogState extends State<SavingsGoalDialog> {
             const SizedBox(height: AppSpacing.sm),
             Wrap(
               spacing: 8,
+              runSpacing: 8,
               children: _availableColors.map((colorName) {
                 final isSelected = colorName == _selectedColor;
-                return InkWell(
-                  onTap: () => setState(() => _selectedColor = colorName),
-                  borderRadius: BorderRadius.circular(20),
-                  child: Container(
-                    width: 36,
-                    height: 36,
-                    decoration: BoxDecoration(
-                      color: _getColor(colorName),
-                      shape: BoxShape.circle,
-                      border: isSelected
-                          ? Border.all(color: Theme.of(context).colorScheme.surface, width: 3)
-                          : null,
-                      boxShadow: isSelected
-                          ? [
-                              BoxShadow(
-                                color: _getColor(
-                                  colorName,
-                                ).withValues(alpha: 0.5),
-                                blurRadius: 8,
-                                spreadRadius: 2,
-                              ),
-                            ]
-                          : null,
+                return Semantics(
+                  button: true,
+                  selected: isSelected,
+                  label: 'Select color $colorName',
+                  child: SizedBox(
+                    width: 48,
+                    height: 48,
+                    child: InkWell(
+                      onTap: () => setState(() => _selectedColor = colorName),
+                      borderRadius: BorderRadius.circular(24),
+                      child: Center(
+                        child: Container(
+                          width: 36,
+                          height: 36,
+                          decoration: BoxDecoration(
+                            color: _getColor(colorName),
+                            shape: BoxShape.circle,
+                            border: isSelected
+                                ? Border.all(color: Theme.of(context).colorScheme.surface, width: 3)
+                                : null,
+                            boxShadow: isSelected
+                                ? [
+                                    BoxShadow(
+                                      color: _getColor(
+                                        colorName,
+                                      ).withValues(alpha: 0.5),
+                                      blurRadius: 8,
+                                      spreadRadius: 2,
+                                    ),
+                                  ]
+                                : null,
+                          ),
+                          child: isSelected
+                              ? const Icon(Icons.check, color: Colors.white, size: 20)
+                              : null,
+                        ),
+                      ),
                     ),
-                    child: isSelected
-                        ? const Icon(Icons.check, color: Colors.white, size: 20)
-                        : null,
                   ),
                 );
               }).toList(),

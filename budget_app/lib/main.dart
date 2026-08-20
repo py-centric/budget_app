@@ -60,6 +60,10 @@ class BudgetApp extends StatelessWidget {
               mode = ThemeMode.dark;
               darkTheme = AppTheme.oledDarkTheme(seedColor, domainColors);
               break;
+            case 'high_contrast':
+              mode = ThemeMode.dark;
+              darkTheme = AppTheme.highContrastTheme(seedColor, domainColors);
+              break;
             default:
               mode = ThemeMode.system;
           }
@@ -69,6 +73,8 @@ class BudgetApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             theme: AppTheme.lightTheme(seedColor, domainColors),
             darkTheme: darkTheme ?? AppTheme.darkTheme(seedColor, domainColors),
+            highContrastTheme: AppTheme.highContrastTheme(seedColor, domainColors),
+            highContrastDarkTheme: AppTheme.highContrastTheme(seedColor, domainColors),
             themeMode: mode,
             home: const SplashPage(),
           );

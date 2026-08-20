@@ -15,7 +15,7 @@ void main() {
     ),
   ];
 
-  final summary = const BudgetComparisonSummary(
+  const summary = BudgetComparisonSummary(
     totalPlanned: 700, totalActual: 700,
     totalVariance: 0, overBudgetCount: 1,
     underBudgetCount: 1, onTrackCount: 0,
@@ -91,7 +91,7 @@ void main() {
           plannedAmount: 500, actualAmount: 300, year: 2024, month: 6,
         ),
       ];
-      final onTrackSummary = const BudgetComparisonSummary(
+      const onTrackSummary = BudgetComparisonSummary(
         totalPlanned: 500, totalActual: 300,
         totalVariance: 200, overBudgetCount: 0,
         underBudgetCount: 0, onTrackCount: 1,

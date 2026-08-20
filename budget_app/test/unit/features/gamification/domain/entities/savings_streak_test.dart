@@ -65,8 +65,8 @@ void main() {
     });
 
     test('inequality with different values', () {
-      final s1 = SavingsStreak(currentStreak: 15, longestStreak: 30);
-      final s2 = SavingsStreak(currentStreak: 20, longestStreak: 30);
+      const s1 = SavingsStreak(currentStreak: 15, longestStreak: 30);
+      const s2 = SavingsStreak(currentStreak: 20, longestStreak: 30);
       expect(s1, isNot(equals(s2)));
     });
   });

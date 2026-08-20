@@ -4,7 +4,7 @@ import 'package:budget_app/features/budget/presentation/widgets/category_delete_
 import 'package:budget_app/features/budget/domain/entities/category.dart';
 
 void main() {
-  final foodCategory = const Category(id: 'food', name: 'Food', type: CategoryType.expense);
+  const foodCategory = Category(id: 'food', name: 'Food', type: CategoryType.expense);
   final availableCategories = [
     const Category(id: 'transport', name: 'Transport', type: CategoryType.expense),
     const Category(id: 'entertainment', name: 'Entertainment', type: CategoryType.expense),

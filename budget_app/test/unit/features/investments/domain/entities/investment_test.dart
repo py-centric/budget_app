@@ -3,7 +3,7 @@ import 'package:budget_app/features/investments/domain/entities/investment.dart'
 
 void main() {
   group('Investment', () {
-    final investment = Investment(
+    const investment = Investment(
       id: 'inv-1',
       name: 'S&P 500 ETF',
       ticker: 'SPY',
@@ -44,7 +44,7 @@ void main() {
     });
 
     test('roi with zero cost returns 0', () {
-      final zeroCost = Investment(
+      const zeroCost = Investment(
         id: 'inv-1', name: 'Test', ticker: 'T',
         shares: 10, avgCost: 0, currentPrice: 100,
       );
@@ -73,7 +73,7 @@ void main() {
     });
 
     test('equality works', () {
-      final investment2 = Investment(
+      const investment2 = Investment(
         id: 'inv-1', name: 'S&P 500 ETF', ticker: 'SPY',
         shares: 10, avgCost: 400, currentPrice: 450,
       );
@@ -81,7 +81,7 @@ void main() {
     });
 
     test('loss scenario', () {
-      final losing = Investment(
+      const losing = Investment(
         id: 'inv-2', name: 'Losing Stock', ticker: 'LOSS',
         shares: 10, avgCost: 500, currentPrice: 400,
       );

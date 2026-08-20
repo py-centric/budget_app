@@ -12,7 +12,7 @@ class RecurringTemplatesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final presets = RecurringTemplatePresets.presets;
+    const presets = RecurringTemplatePresets.presets;
     return Scaffold(
       appBar: AppBar(title: const Text('Quick Add Templates')),
       body: ListView.builder(

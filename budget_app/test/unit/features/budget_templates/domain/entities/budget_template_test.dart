@@ -73,7 +73,7 @@ void main() {
   });
 
   group('TemplateAllocation', () {
-    final alloc = TemplateAllocation(
+    const alloc = TemplateAllocation(
       templateId: 'bt-1',
       categoryId: 'food',
       percentage: 50.0,
@@ -99,7 +99,7 @@ void main() {
     });
 
     test('equality works', () {
-      final alloc2 = TemplateAllocation(templateId: 'bt-1', categoryId: 'food', percentage: 50.0);
+      const alloc2 = TemplateAllocation(templateId: 'bt-1', categoryId: 'food', percentage: 50.0);
       expect(alloc, equals(alloc2));
     });
   });

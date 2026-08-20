@@ -75,7 +75,7 @@ abstract class BaseRepository<T> {
     await db.delete(tableName, where: '$idColumn = ?', whereArgs: [id]);
   }
 
-  /// Custom query — returns raw maps for repositories that need
+  /// Custom query - returns raw maps for repositories that need
   /// complex WHERE clauses or joins.
   Future<List<Map<String, dynamic>>> query({
     String? where,

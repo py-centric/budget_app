@@ -169,7 +169,7 @@ class _CategoryGroupedListState extends State<CategoryGroupedList> {
   String _groupByWeek(DateTime d) {
     final startOfWeek = d.subtract(Duration(days: d.weekday - 1));
     final endOfWeek = startOfWeek.add(const Duration(days: 6));
-    return '${DateFormat('MMM d').format(startOfWeek)} – ${DateFormat('MMM d, yyyy').format(endOfWeek)}';
+    return '${DateFormat('MMM d').format(startOfWeek)} - ${DateFormat('MMM d, yyyy').format(endOfWeek)}';
   }
 
   String _groupByMonth(DateTime d) => DateFormat('MMMM yyyy').format(d);
@@ -510,9 +510,45 @@ class _CategoryGroupedListState extends State<CategoryGroupedList> {
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Category: ${entry.categoryName ?? entry.categoryId}',
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+                Row(
+                  children: [
+                    Text(
+                      'Category: ${entry.categoryName ?? entry.categoryId}',
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    if (entry.accountName != null) ...[
+                      const SizedBox(width: 8),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        decoration: BoxDecoration(
+                          color: theme.colorScheme.surfaceContainerHighest,
+                          borderRadius: BorderRadius.circular(6),
+                          border: Border.all(
+                            color: theme.colorScheme.outline.withValues(alpha: 0.2),
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.account_balance,
+                              size: 12,
+                              color: theme.colorScheme.onSurfaceVariant,
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              entry.accountName!,
+                              style: TextStyle(
+                                fontSize: 11,
+                                color: theme.colorScheme.onSurfaceVariant,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ],
                 ),
                 if (entry.description != null) Text(entry.description!),
               ],
@@ -521,7 +557,7 @@ class _CategoryGroupedListState extends State<CategoryGroupedList> {
               entry.date.toLocal().toString().split(' ')[0],
               style: theme.textTheme.bodySmall,
             ),
-            isThreeLine: entry.description != null,
+            isThreeLine: entry.description != null || entry.accountName != null,
           ),
         ),
       ),
@@ -592,18 +628,55 @@ class _CategoryGroupedListState extends State<CategoryGroupedList> {
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (entry.categoryName != null)
-                  Text(
-                    'Category: ${entry.categoryName}',
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                Text(entry.description ?? 'No description'),
+                Row(
+                  children: [
+                    if (entry.categoryName != null)
+                      Text(
+                        'Category: ${entry.categoryName}',
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    if (entry.accountName != null) ...[
+                      if (entry.categoryName != null) const SizedBox(width: 8),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        decoration: BoxDecoration(
+                          color: theme.colorScheme.surfaceContainerHighest,
+                          borderRadius: BorderRadius.circular(6),
+                          border: Border.all(
+                            color: theme.colorScheme.outline.withValues(alpha: 0.2),
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.account_balance,
+                              size: 12,
+                              color: theme.colorScheme.onSurfaceVariant,
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              entry.accountName!,
+                              style: TextStyle(
+                                fontSize: 11,
+                                color: theme.colorScheme.onSurfaceVariant,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+                if (entry.description != null) Text(entry.description!),
               ],
             ),
             trailing: Text(
               entry.date.toLocal().toString().split(' ')[0],
               style: theme.textTheme.bodySmall,
             ),
+            isThreeLine: entry.description != null || entry.accountName != null,
           ),
         ),
       ),

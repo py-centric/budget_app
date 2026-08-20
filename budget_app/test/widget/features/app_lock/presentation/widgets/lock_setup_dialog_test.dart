@@ -29,14 +29,14 @@ void main() {
 
   group('LockSetupDialog', () {
     testWidgets('shows title "Set Up App Lock"', (tester) async {
-      await tester.pumpWidget(buildDialog(onComplete: (_, __) {}));
+      await tester.pumpWidget(buildDialog(onComplete: (_, _) {}));
       await tester.tap(find.text('Open'));
       await tester.pumpAndSettle();
       expect(find.text('Set Up App Lock'), findsOneWidget);
     });
 
     testWidgets('shows PIN option', (tester) async {
-      await tester.pumpWidget(buildDialog(onComplete: (_, __) {}));
+      await tester.pumpWidget(buildDialog(onComplete: (_, _) {}));
       await tester.tap(find.text('Open'));
       await tester.pumpAndSettle();
       expect(find.text('PIN'), findsOneWidget);
@@ -46,7 +46,7 @@ void main() {
     testWidgets('hides biometrics when not available', (tester) async {
       await tester.pumpWidget(buildDialog(
         isBiometricAvailable: false,
-        onComplete: (_, __) {},
+        onComplete: (_, _) {},
       ));
       await tester.tap(find.text('Open'));
       await tester.pumpAndSettle();
@@ -56,7 +56,7 @@ void main() {
     testWidgets('shows biometrics when available', (tester) async {
       await tester.pumpWidget(buildDialog(
         isBiometricAvailable: true,
-        onComplete: (_, __) {},
+        onComplete: (_, _) {},
       ));
       await tester.tap(find.text('Open'));
       await tester.pumpAndSettle();
@@ -79,7 +79,7 @@ void main() {
     });
 
     testWidgets('Cancel closes dialog', (tester) async {
-      await tester.pumpWidget(buildDialog(onComplete: (_, __) {}));
+      await tester.pumpWidget(buildDialog(onComplete: (_, _) {}));
       await tester.tap(find.text('Open'));
       await tester.pumpAndSettle();
       await tester.tap(find.widgetWithText(TextButton, 'Cancel'));
@@ -93,7 +93,7 @@ void main() {
       addTearDown(() => tester.view.resetPhysicalSize());
       addTearDown(() => tester.view.resetDevicePixelRatio());
 
-      await tester.pumpWidget(buildDialog(onComplete: (_, __) {}));
+      await tester.pumpWidget(buildDialog(onComplete: (_, _) {}));
       await tester.tap(find.text('Open'));
       await tester.pumpAndSettle();
       await tester.tap(find.text('PIN'));
@@ -108,7 +108,7 @@ void main() {
       addTearDown(() => tester.view.resetPhysicalSize());
       addTearDown(() => tester.view.resetDevicePixelRatio());
 
-      await tester.pumpWidget(buildDialog(onComplete: (_, __) {}));
+      await tester.pumpWidget(buildDialog(onComplete: (_, _) {}));
       await tester.tap(find.text('Open'));
       await tester.pumpAndSettle();
       await tester.tap(find.text('PIN'));

@@ -22,7 +22,7 @@ void main() {
   });
 
   group('SpendingTrend', () {
-    final trend = SpendingTrend(
+    const trend = SpendingTrend(
       categoryId: 'cat-1',
       categoryName: 'Food',
       monthlyData: [
@@ -41,7 +41,7 @@ void main() {
     });
 
     test('equality works', () {
-      final trend2 = SpendingTrend(
+      const trend2 = SpendingTrend(
         categoryId: 'cat-1', categoryName: 'Food',
         monthlyData: [
           MonthlySpending(year: 2024, month: 1, amount: 400),
@@ -54,7 +54,7 @@ void main() {
     });
 
     test('empty monthlyData', () {
-      final empty = SpendingTrend(
+      const empty = SpendingTrend(
         categoryId: 'cat-1', categoryName: 'Food',
         monthlyData: [], averageMonthly: 0, trendPercentage: 0,
       );

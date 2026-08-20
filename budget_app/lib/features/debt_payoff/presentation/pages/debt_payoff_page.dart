@@ -84,19 +84,27 @@ class _DebtPayoffPageState extends State<DebtPayoffPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text('Strategy', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-            RadioListTile<PayoffStrategy>(
-              title: const Text('Debt Snowball'),
-              subtitle: const Text('Pay smallest balance first'),
-              value: PayoffStrategy.snowball,
+            RadioGroup<PayoffStrategy>(
               groupValue: _strategy,
-              onChanged: (v) => setState(() => _strategy = v!),
-            ),
-            RadioListTile<PayoffStrategy>(
-              title: const Text('Debt Avalanche'),
-              subtitle: const Text('Pay highest interest first'),
-              value: PayoffStrategy.avalanche,
-              groupValue: _strategy,
-              onChanged: (v) => setState(() => _strategy = v!),
+              onChanged: (v) {
+                if (v != null) {
+                  setState(() => _strategy = v);
+                }
+              },
+              child: const Column(
+                children: [
+                  RadioListTile<PayoffStrategy>(
+                    title: Text('Debt Snowball'),
+                    subtitle: Text('Pay smallest balance first'),
+                    value: PayoffStrategy.snowball,
+                  ),
+                  RadioListTile<PayoffStrategy>(
+                    title: Text('Debt Avalanche'),
+                    subtitle: Text('Pay highest interest first'),
+                    value: PayoffStrategy.avalanche,
+                  ),
+                ],
+              ),
             ),
           ],
         ),

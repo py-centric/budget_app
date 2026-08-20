@@ -3,7 +3,7 @@ import 'package:budget_app/features/tax_estimation/domain/entities/tax_estimate.
 
 void main() {
   group('TaxEstimate', () {
-    final estimate = TaxEstimate(
+    const estimate = TaxEstimate(
       income: 100000,
       deductions: 13850,
       taxableIncome: 86150,
@@ -17,7 +17,7 @@ void main() {
     });
 
     test('equality works', () {
-      final estimate2 = TaxEstimate(
+      const estimate2 = TaxEstimate(
         income: 100000, deductions: 13850, taxableIncome: 86150,
         effectiveRate: 18.0, totalTax: 15507, takeHome: 84493,
       );
@@ -25,7 +25,7 @@ void main() {
     });
 
     test('inequality with different income', () {
-      final estimate2 = TaxEstimate(
+      const estimate2 = TaxEstimate(
         income: 120000, deductions: 13850, taxableIncome: 106150,
         effectiveRate: 20.0, totalTax: 21000, takeHome: 99000,
       );

@@ -44,6 +44,7 @@ Future<void> setupTestDatabase() async {
             period_month INTEGER,
             period_year INTEGER,
             category_id TEXT,
+            account_id TEXT,
             is_potential INTEGER NOT NULL DEFAULT 0,
             FOREIGN KEY (budget_id) REFERENCES budgets (id) ON DELETE CASCADE
           )
@@ -59,8 +60,21 @@ Future<void> setupTestDatabase() async {
             period_month INTEGER,
             period_year INTEGER,
             category_id TEXT,
+            account_id TEXT,
             is_potential INTEGER NOT NULL DEFAULT 0,
             FOREIGN KEY (budget_id) REFERENCES budgets (id) ON DELETE CASCADE
+          )
+        ''');
+
+        await db.execute('''
+          CREATE TABLE accounts (
+            id TEXT PRIMARY KEY,
+            name TEXT NOT NULL,
+            type TEXT NOT NULL,
+            balance REAL NOT NULL DEFAULT 0.0,
+            currency TEXT NOT NULL DEFAULT 'USD',
+            created_at INTEGER NOT NULL,
+            updated_at INTEGER NOT NULL
           )
         ''');
 

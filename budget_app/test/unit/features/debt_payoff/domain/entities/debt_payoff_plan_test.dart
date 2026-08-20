@@ -3,15 +3,15 @@ import 'package:budget_app/features/debt_payoff/domain/entities/debt_payoff_plan
 
 void main() {
   group('DebtPayoffPlan', () {
-    final plan = DebtPayoffPlan(
+    const plan = DebtPayoffPlan(
       strategy: PayoffStrategy.snowball,
       debts: [
-        const DebtPayoffItem(
+        DebtPayoffItem(
           name: 'Visa', balance: 5000, apr: 18.99,
           minimumPayment: 100, payoffOrder: 1,
           monthsToPayoff: 12, interestPaid: 500,
         ),
-        const DebtPayoffItem(
+        DebtPayoffItem(
           name: 'Mastercard', balance: 3000, apr: 15.99,
           minimumPayment: 75, payoffOrder: 2,
           monthsToPayoff: 8, interestPaid: 200,
@@ -30,15 +30,15 @@ void main() {
     });
 
     test('equality works', () {
-      final plan2 = DebtPayoffPlan(
+      const plan2 = DebtPayoffPlan(
         strategy: PayoffStrategy.snowball,
         debts: [
-          const DebtPayoffItem(
+          DebtPayoffItem(
             name: 'Visa', balance: 5000, apr: 18.99,
             minimumPayment: 100, payoffOrder: 1,
             monthsToPayoff: 12, interestPaid: 500,
           ),
-          const DebtPayoffItem(
+          DebtPayoffItem(
             name: 'Mastercard', balance: 3000, apr: 15.99,
             minimumPayment: 75, payoffOrder: 2,
             monthsToPayoff: 8, interestPaid: 200,

@@ -25,14 +25,26 @@ class TagChip extends StatelessWidget {
         ? Color(int.parse('0xFF${tag.color!.replaceFirst('#', '')}'))
         : Theme.of(context).colorScheme.primary;
 
-    return GestureDetector(
-      onTap: onTap,
-      child: Chip(
-        label: Text(tag.name),
-        backgroundColor: selected ? color.withValues(alpha: 0.2) : null,
-        side: BorderSide(color: color),
-        deleteIcon: onDelete != null ? const Icon(Icons.close, size: 16) : null,
-        onDeleted: onDelete,
+    return Semantics(
+      button: onTap != null,
+      selected: selected,
+      label: 'Tag: ${tag.name}',
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(minHeight: 48),
+        child: Center(
+          child: GestureDetector(
+            onTap: onTap,
+            behavior: HitTestBehavior.opaque,
+            child: Chip(
+              label: Text(tag.name),
+              backgroundColor: selected ? color.withValues(alpha: 0.2) : null,
+              side: BorderSide(color: color),
+              deleteIcon: onDelete != null ? const Icon(Icons.close, size: 16) : null,
+              onDeleted: onDelete,
+              materialTapTargetSize: MaterialTapTargetSize.padded,
+            ),
+          ),
+        ),
       ),
     );
   }

@@ -192,27 +192,36 @@ class ProfileSettingsPage extends StatelessWidget {
                         title: const Text('Pick Brand Color'),
                         content: Wrap(
                           spacing: 8,
-                          children:
-                              [
-                                    Colors.blue,
-                                    Colors.red,
-                                    Colors.green,
-                                    Colors.orange,
-                                    Colors.purple,
-                                    Colors.black,
-                                  ]
-                                  .map(
-                                    (c) => GestureDetector(
-                                      onTap: () {
-                                        setState(
-                                          () => primaryColor = c.toARGB32(),
-                                        );
-                                        Navigator.pop(context);
-                                      },
-                                      child: CircleAvatar(backgroundColor: c),
-                                    ),
-                                  )
-                                  .toList(),
+                          runSpacing: 8,
+                          children: [
+                            (Colors.blue, 'Blue'),
+                            (Colors.red, 'Red'),
+                            (Colors.green, 'Green'),
+                            (Colors.orange, 'Orange'),
+                            (Colors.purple, 'Purple'),
+                            (Colors.black, 'Black'),
+                          ].map(
+                            (item) => Semantics(
+                              button: true,
+                              label: 'Select ${item.$2} color',
+                              child: SizedBox(
+                                width: 48,
+                                height: 48,
+                                child: InkWell(
+                                  customBorder: const CircleBorder(),
+                                  onTap: () {
+                                    setState(
+                                      () => primaryColor = item.$1.toARGB32(),
+                                    );
+                                    Navigator.pop(context);
+                                  },
+                                  child: Center(
+                                    child: CircleAvatar(backgroundColor: item.$1),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ).toList(),
                         ),
                       ),
                     );

@@ -171,7 +171,7 @@ class _InvestmentTile extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              '${investment.ticker}',
+              investment.ticker,
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             Text('\$${investment.totalValue.toStringAsFixed(2)}'),

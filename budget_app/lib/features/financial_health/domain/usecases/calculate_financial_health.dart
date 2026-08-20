@@ -67,17 +67,29 @@ class CalculateFinancialHealth {
 
   int _calculateOverallScore(double savingsRate, double debtToIncome, double emergencyMonths) {
     int score = 50;
-    if (savingsRate >= 20) score += 20;
-    else if (savingsRate >= 10) score += 10;
-    else if (savingsRate < 0) score -= 20;
+    if (savingsRate >= 20) {
+      score += 20;
+    } else if (savingsRate >= 10) {
+      score += 10;
+    } else if (savingsRate < 0) {
+      score -= 20;
+    }
 
-    if (debtToIncome <= 10) score += 15;
-    else if (debtToIncome <= 20) score += 5;
-    else if (debtToIncome > 36) score -= 15;
+    if (debtToIncome <= 10) {
+      score += 15;
+    } else if (debtToIncome <= 20) {
+      score += 5;
+    } else if (debtToIncome > 36) {
+      score -= 15;
+    }
 
-    if (emergencyMonths >= 6) score += 15;
-    else if (emergencyMonths >= 3) score += 5;
-    else if (emergencyMonths < 1) score -= 10;
+    if (emergencyMonths >= 6) {
+      score += 15;
+    } else if (emergencyMonths >= 3) {
+      score += 5;
+    } else if (emergencyMonths < 1) {
+      score -= 10;
+    }
 
     return score.clamp(0, 100);
   }

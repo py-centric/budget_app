@@ -389,7 +389,7 @@ class _NavigationDrawerWidgetState extends State<NavigationDrawerWidget> {
                               ],
                             ),
                             subtitle: Text(
-                              '\$${budget.targetIncome?.toStringAsFixed(2) ?? '0.00'} — \$${remaining.toStringAsFixed(2)} remaining',
+                              '\$${budget.targetIncome?.toStringAsFixed(2) ?? '0.00'} - \$${remaining.toStringAsFixed(2)} remaining',
                               style: TextStyle(
                                 fontSize: 12,
                                 color: remaining > 0

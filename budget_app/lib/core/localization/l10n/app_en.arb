@@ -45,5 +45,10 @@
   "tax_estimation": "Tax Estimation",
   "achievements": "Achievements",
   "streak": "Streak",
+  "filter_by_account": "Filter by Account",
+  "unassigned_account": "Unassigned",
+  "all_accounts": "All Accounts",
+  "select_account": "Select Account",
+  "no_account": "None (Unassigned)",
   "@@locale": "en"
 }

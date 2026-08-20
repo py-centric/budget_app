@@ -8,7 +8,7 @@ import '../../domain/usecases/calculate_spending_trends.dart';
 class SpendingTrendsPage extends StatefulWidget {
   const SpendingTrendsPage({super.key});
 
-  // TODO: Custom date range — Add date range picker to allow users to select
+  // TODO: Custom date range - Add date range picker to allow users to select
   // a custom analysis period instead of the fixed 12-month window. Wire the
   // selected range into CalculateSpendingTrends(months: ...).
   @override

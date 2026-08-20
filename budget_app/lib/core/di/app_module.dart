@@ -211,7 +211,7 @@ class AppModule {
     calculateNetWorthUseCase = CalculateNetWorth();
     calculateAmortizationUseCase = CalculateAmortization();
     calculateCompoundInterestUseCase = CalculateCompoundInterest();
-    calculateFinancialHealthUseCase = CalculateFinancialHealth();
+    calculateFinancialHealthUseCase = const CalculateFinancialHealth();
 
     // Services
     notificationService = NotificationService();
