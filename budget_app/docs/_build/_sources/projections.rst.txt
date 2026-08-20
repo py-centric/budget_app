@@ -1,70 +1,77 @@
-# Projections
+Projections
+===========
 
-## Overview
+Overview
+--------
 
-Projections help you forecast your financial future based on recurring transactions and historical data.
+Projections help you forecast your financial future based on recurring transactions, planned expenses, and historical trends.
 
-## Features
+Features
+--------
 
-### Income Projection
+Income Projection
+~~~~~~~~~~~~~~~~~
 
-See your expected income for:
+Forecast expected earnings for:
+
 - Current month
 - Next 3 months
 - Next 6 months
 - Next 12 months
 
-### Expense Projection
+Expense Projection
+~~~~~~~~~~~~~~~~~~
 
-Track expected expenses across:
-- By category
-- Total monthly expenses
+Track anticipated expenses across:
+
+- Individual categories
+- Total monthly obligations
 - Daily burn rate
 
-### Balance Projection
+Balance Projection
+~~~~~~~~~~~~~~~~~~
 
-Forecast your account balance based on:
-- Current balance
-- Projected income
-- Projected expenses
+Forecast account balances based on:
 
-### Projection Periods
+- Current cash position
+- Projected income streams
+- Projected fixed and variable expenses
 
-- **Monthly View**: Current month breakdown
-- **Quarterly View**: 3-month outlook
-- **Yearly View**: 12-month forecast
+Projection Horizons
+~~~~~~~~~~~~~~~~~~~
 
-## How Projections Work
+- **Monthly View**: Detailed current month breakdown
+- **Quarterly View**: 3-month forecast outlook
+- **Yearly View**: 12-month trajectory
 
-1. System identifies all active recurring transactions
-2. Projects future dates based on recurrence rules
-3. Aggregates by category and time period
-4. Displays projected totals and balances
+How Projections Work
+--------------------
 
-### Projection Calculation
+1. System identifies all active recurring transactions.
+2. Projects future occurrences based on interval rules and dates.
+3. Incorporates potential (what-if) transactions if enabled.
+4. Aggregates totals by category and period.
+5. Renders trend lines and balance forecasts in real-time.
 
-```
-Projected Income = Sum of all recurring income
-Projected Expense = Sum of all recurring expenses
-Projected Balance = Current Balance + Projected Income - Projected Expense
-```
+Projection Formula
+~~~~~~~~~~~~~~~~~~
 
-## Visualization
+.. code-block:: text
 
-### Charts
+   Projected Income = Sum of recurring and confirmed income
+   Projected Expense = Sum of recurring and confirmed expenses
+   Projected Balance = Current Balance + Projected Income - Projected Expense
 
-- Line charts for balance trends
-- Bar charts for income vs expenses
-- Pie charts for category breakdown
+Visualizations
+--------------
 
-### Summary Cards
+- **Interactive Line Charts**: Balance trajectories powered by `fl_chart`.
+- **Bar Charts**: Income versus expense comparisons.
+- **Summary Cards**: Net projected cash flow and emergency runway metrics.
 
-- Total projected income
-- Total projected expenses
-- Net projection
+Related Features
+----------------
 
-## Related Features
-
-- [Recurring Transactions](recurring_transactions.rst)
-- [Budget Management](budget_management.rst)
-- [Emergency Fund](emergency_fund.rst)
+- :doc:`recurring_transactions`
+- :doc:`budget_management`
+- :doc:`emergency_fund`

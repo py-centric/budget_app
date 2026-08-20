@@ -5,15 +5,17 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>&lt;no title&gt; &#8212; Budget App 1.0.0 documentation</title>
+    <title>Projections &#8212; Budget App Documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
     <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
-    <script src="_static/documentation_options.js?v=8d563738"></script>
+    <script src="_static/documentation_options.js?v=fc837d61"></script>
     <script src="_static/doctools.js?v=fd6eb6e6"></script>
     <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Currency Conversion" href="currency_conversion.html" />
+    <link rel="prev" title="Recurring Transactions" href="recurring_transactions.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -31,64 +33,86 @@
 
           <div class="body" role="main">
             
-  <p># Projections</p>
-<p>## Overview</p>
-<p>Projections help you forecast your financial future based on recurring transactions and historical data.</p>
-<p>## Features</p>
-<p>### Income Projection</p>
-<p>See your expected income for:
-- Current month
-- Next 3 months
-- Next 6 months
-- Next 12 months</p>
-<p>### Expense Projection</p>
-<p>Track expected expenses across:
-- By category
-- Total monthly expenses
-- Daily burn rate</p>
-<p>### Balance Projection</p>
-<p>Forecast your account balance based on:
-- Current balance
-- Projected income
-- Projected expenses</p>
-<p>### Projection Periods</p>
+  <section id="projections">
+<h1>Projections<a class="headerlink" href="#projections" title="Link to this heading">¶</a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">¶</a></h2>
+<p>Projections help you forecast your financial future based on recurring transactions, planned expenses, and historical trends.</p>
+</section>
+<section id="features">
+<h2>Features<a class="headerlink" href="#features" title="Link to this heading">¶</a></h2>
+<section id="income-projection">
+<h3>Income Projection<a class="headerlink" href="#income-projection" title="Link to this heading">¶</a></h3>
+<p>Forecast expected earnings for:</p>
 <ul class="simple">
-<li><p><strong>Monthly View</strong>: Current month breakdown</p></li>
-<li><p><strong>Quarterly View</strong>: 3-month outlook</p></li>
-<li><p><strong>Yearly View</strong>: 12-month forecast</p></li>
+<li><p>Current month</p></li>
+<li><p>Next 3 months</p></li>
+<li><p>Next 6 months</p></li>
+<li><p>Next 12 months</p></li>
 </ul>
-<p>## How Projections Work</p>
+</section>
+<section id="expense-projection">
+<h3>Expense Projection<a class="headerlink" href="#expense-projection" title="Link to this heading">¶</a></h3>
+<p>Track anticipated expenses across:</p>
+<ul class="simple">
+<li><p>Individual categories</p></li>
+<li><p>Total monthly obligations</p></li>
+<li><p>Daily burn rate</p></li>
+</ul>
+</section>
+<section id="balance-projection">
+<h3>Balance Projection<a class="headerlink" href="#balance-projection" title="Link to this heading">¶</a></h3>
+<p>Forecast account balances based on:</p>
+<ul class="simple">
+<li><p>Current cash position</p></li>
+<li><p>Projected income streams</p></li>
+<li><p>Projected fixed and variable expenses</p></li>
+</ul>
+</section>
+<section id="projection-horizons">
+<h3>Projection Horizons<a class="headerlink" href="#projection-horizons" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><strong>Monthly View</strong>: Detailed current month breakdown</p></li>
+<li><p><strong>Quarterly View</strong>: 3-month forecast outlook</p></li>
+<li><p><strong>Yearly View</strong>: 12-month trajectory</p></li>
+</ul>
+</section>
+</section>
+<section id="how-projections-work">
+<h2>How Projections Work<a class="headerlink" href="#how-projections-work" title="Link to this heading">¶</a></h2>
 <ol class="arabic simple">
-<li><p>System identifies all active recurring transactions</p></li>
-<li><p>Projects future dates based on recurrence rules</p></li>
-<li><p>Aggregates by category and time period</p></li>
-<li><p>Displays projected totals and balances</p></li>
+<li><p>System identifies all active recurring transactions.</p></li>
+<li><p>Projects future occurrences based on interval rules and dates.</p></li>
+<li><p>Incorporates potential (what-if) transactions if enabled.</p></li>
+<li><p>Aggregates totals by category and period.</p></li>
+<li><p>Renders trend lines and balance forecasts in real-time.</p></li>
 </ol>
-<p>### Projection Calculation</p>
-<p><code class="docutils literal notranslate"><span class="pre">`</span>
-<span class="pre">Projected</span> <span class="pre">Income</span> <span class="pre">=</span> <span class="pre">Sum</span> <span class="pre">of</span> <span class="pre">all</span> <span class="pre">recurring</span> <span class="pre">income</span>
-<span class="pre">Projected</span> <span class="pre">Expense</span> <span class="pre">=</span> <span class="pre">Sum</span> <span class="pre">of</span> <span class="pre">all</span> <span class="pre">recurring</span> <span class="pre">expenses</span>
-<span class="pre">Projected</span> <span class="pre">Balance</span> <span class="pre">=</span> <span class="pre">Current</span> <span class="pre">Balance</span> <span class="pre">+</span> <span class="pre">Projected</span> <span class="pre">Income</span> <span class="pre">-</span> <span class="pre">Projected</span> <span class="pre">Expense</span>
-<span class="pre">`</span></code></p>
-<p>## Visualization</p>
-<p>### Charts</p>
+<section id="projection-formula">
+<h3>Projection Formula<a class="headerlink" href="#projection-formula" title="Link to this heading">¶</a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Projected Income = Sum of recurring and confirmed income
+Projected Expense = Sum of recurring and confirmed expenses
+Projected Balance = Current Balance + Projected Income - Projected Expense
+</pre></div>
+</div>
+</section>
+</section>
+<section id="visualizations">
+<h2>Visualizations<a class="headerlink" href="#visualizations" title="Link to this heading">¶</a></h2>
 <ul class="simple">
-<li><p>Line charts for balance trends</p></li>
-<li><p>Bar charts for income vs expenses</p></li>
-<li><p>Pie charts for category breakdown</p></li>
+<li><p><strong>Interactive Line Charts</strong>: Balance trajectories powered by <cite>fl_chart</cite>.</p></li>
+<li><p><strong>Bar Charts</strong>: Income versus expense comparisons.</p></li>
+<li><p><strong>Summary Cards</strong>: Net projected cash flow and emergency runway metrics.</p></li>
 </ul>
-<p>### Summary Cards</p>
+</section>
+<section id="related-features">
+<h2>Related Features<a class="headerlink" href="#related-features" title="Link to this heading">¶</a></h2>
 <ul class="simple">
-<li><p>Total projected income</p></li>
-<li><p>Total projected expenses</p></li>
-<li><p>Net projection</p></li>
+<li><p><a class="reference internal" href="recurring_transactions.html"><span class="doc">Recurring Transactions</span></a></p></li>
+<li><p><a class="reference internal" href="budget_management.html"><span class="doc">Budget Management</span></a></p></li>
+<li><p><a class="reference internal" href="emergency_fund.html"><span class="doc">Emergency Fund</span></a></p></li>
 </ul>
-<p>## Related Features</p>
-<ul class="simple">
-<li><p>[Recurring Transactions](recurring_transactions.rst)</p></li>
-<li><p>[Budget Management](budget_management.rst)</p></li>
-<li><p>[Emergency Fund](emergency_fund.rst)</p></li>
-</ul>
+</section>
+</section>
 
 
           </div>
@@ -116,11 +140,55 @@
     </div>
 </search>
 <script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="feature_flags.html">Feature Flagging &amp; Release Editions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Core Features</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="budget_management.html">Budget Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transactions.html">Transactions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="categories.html">Categories</a></li>
+<li class="toctree-l1"><a class="reference internal" href="recurring_transactions.html">Recurring Transactions</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Projections</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#features">Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#how-projections-work">How Projections Work</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#visualizations">Visualizations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#related-features">Related Features</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced Features</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="currency_conversion.html">Currency Conversion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="travel_budget_planner.html">Travel Budget Planner</a></li>
+<li class="toctree-l1"><a class="reference internal" href="loans.html">Loans Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="emergency_fund.html">Emergency Fund</a></li>
+<li class="toctree-l1"><a class="reference internal" href="business_tools.html">Business Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="invoices.html">Invoices</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Utilities</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="financial_tools.html">Financial Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="export_backup.html">Export &amp; Backup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="app_settings.html">App Settings</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Development</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing Guidelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dependencies.html">Project Dependencies &amp; Licensing</a></li>
+</ul>
 
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="recurring_transactions.html" title="previous chapter">Recurring Transactions</a></li>
+      <li>Next: <a href="currency_conversion.html" title="next chapter">Currency Conversion</a></li>
   </ul></li>
 </ul>
 </div>
@@ -137,7 +205,7 @@
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &#169;2026, Budget App Team.
+      &#169;2026, PyCentric.
       
       |
       Powered by <a href="https://www.sphinx-doc.org/">Sphinx 9.1.0</a>

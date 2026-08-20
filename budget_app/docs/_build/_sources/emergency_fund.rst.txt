@@ -1,61 +1,49 @@
-# Emergency Fund
+Emergency Fund
+==============
 
-## Overview
+Overview
+--------
 
-The Emergency Fund calculator helps you determine and track your financial safety net based on monthly expenses.
+The Emergency Fund module calculates and tracks your financial safety cushion based on monthly essential expenses and user-defined protection horizons.
 
-## Features
+Features
+--------
 
-### Fund Calculation
+Fund Sizing
+~~~~~~~~~~~
 
-Input your monthly expenses to calculate:
-- **3-Month Fund**: Basic emergency coverage
-- **6-Month Fund**: Standard recommendation
-- **12-Month Fund**: Extended safety net
+Input your monthly living expenses to evaluate:
 
-### Input Parameters
+- **3-Month Fund**: Basic emergency coverage (minimum safety net).
+- **6-Month Fund**: Standard financial recommendation.
+- **12-Month Fund**: Comprehensive safety net for freelancers and entrepreneurs.
 
-- Monthly essential expenses
-- Current savings (optional)
-- Number of months to cover
+Input Parameters
+~~~~~~~~~~~~~~~~
 
-### Fund Goals
+- Monthly essential expenditures
+- Current liquid savings allocated to emergency fund
+- Target coverage duration (in months)
 
-- Set target amount
-- Track progress over time
-- Visual progress indicators
+Goal Tracking
+~~~~~~~~~~~~~
 
-## Emergency Fund Calculator
+- Set customized or formula-recommended savings targets.
+- Real-time progress percentage and visual gauges.
+- Calculated months of runway based on current cash reserves.
 
-### Calculation Formula
+Calculation Formulas
+--------------------
 
-```
-Fund Amount = Monthly Expenses × Months
-Progress = Current Savings / Target Amount × 100%
-```
+.. code-block:: text
 
-### Recommendations
+   Target Fund Amount = Monthly Expenses * Target Months
+   Progress Percentage = (Current Savings / Target Fund Amount) * 100%
+   Runway Months = Current Savings / Monthly Expenses
 
-- 3 months: Minimum for job loss
-- 6 months: Standard recommendation
-- 12 months: Full security
+Related Features
+----------------
 
-## Tracking
-
-### Setting Goals
-
-1. Enter monthly expense estimate
-2. Select coverage period
-3. Set target amount (auto-calculated or custom)
-
-### Progress Updates
-
-- Update current savings regularly
-- View progress percentage
-- See months of coverage available
-
-## Related Features
-
-- [Budget Management](budget_management.rst)
-- [Projections](projections.rst)
-- [Financial Tools](financial_tools.rst)
+- :doc:`budget_management`
+- :doc:`projections`
+- :doc:`financial_tools`

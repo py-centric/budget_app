@@ -2,7 +2,7 @@
 #
 
 SPHINXOPTS    ?=
-SPHINXBUILD   ?= uv run --with sphinx --with myst-parser sphinx-build
+SPHINXBUILD   ?= uv run --with sphinx --with myst-parser --with sphinxcontrib-mermaid sphinx-build
 SOURCEDIR     = .
 BUILDDIR      = _build
 

@@ -4,7 +4,7 @@ Transactions
 Overview
 --------
 
-Transactions are the core data in Budget App - every income and expense entry. The app provides comprehensive transaction tracking with categories, dates, and descriptions.
+Transactions are the core data in Budget App: every income and expense entry. The app provides comprehensive transaction tracking with categories, dates, descriptions, optional financial account associations, and multi-account filtering.
 
 Use Case Flow Diagram
 ---------------------
@@ -30,7 +30,10 @@ Use Case Flow Diagram
     Choose Category & Amount                               Mark as Potential (What-if)
            |                                                         |
            v                                                         v
-    Assign Date & Description                              [ User Confirms Actual ]
+    Optional Financial Account                             [ User Confirms Actual ]
+           |                                                         |
+           v                                                         |
+    Assign Date & Description                                        |
            |                                                         |
            +----------------------------+----------------------------+
                                         |
@@ -43,9 +46,11 @@ Use Case Flow Diagram
                                         v
                           [ Re-render Financial Summary ]
 
-## Transaction Types
+Transaction Types
+-----------------
 
-### Income
+Income
+~~~~~~
 
 Money received or expected to be received:
 
@@ -55,7 +60,8 @@ Money received or expected to be received:
 - Gifts
 - Other income sources
 
-### Expenses
+Expenses
+~~~~~~~~
 
 Money spent on goods and services:
 
@@ -68,29 +74,54 @@ Money spent on goods and services:
 - Education
 - And custom categories...
 
-## Adding Transactions
+Adding Transactions
+-------------------
 
-### Via Home Screen
+Via Home Screen
+~~~~~~~~~~~~~~~
 
 1. Tap the **+** button on the Income or Expense card
 2. Enter the amount
 3. Select a category
-4. Add description (optional)
-5. Set the date (defaults to today)
-6. Tap **Add Income** or **Add Expense**
+4. Optionally choose an Account (Checking, Savings, Credit Card, etc.) or None (Unassigned)
+5. Add description (optional)
+6. Set the date (defaults to today)
+7. Tap **Add Income** or **Add Expense**
 
-### Via Recurring Transactions
+Via Recurring Transactions
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Set up automatic recurring transactions:
 
-1. Menu → Recurring Transactions
+1. Menu -> Recurring Transactions
 2. Add new recurring transaction
 3. Configure frequency (daily, weekly, bi-weekly, monthly, etc.)
 4. The app automatically creates entries based on the schedule
 
-## Transaction Features
+Transaction Features
+--------------------
 
-### Category Assignment
+Optional Account Assignment
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Transactions can optionally be linked to a registered bank, cash, or credit account:
+
+- Account dropdown selector in Income and Expense creation/edit dialogs
+- Seamless default to "None (Unassigned)" for quick entry
+- Visual account badges on transaction list items
+
+Multi-Account Filtering
+~~~~~~~~~~~~~~~~~~~~~~~
+
+The FilterBar includes a dedicated **Account** filter button:
+
+- Opens the multi-select Account filter modal
+- Filter by any arbitrary combination of accounts
+- Toggle "Unassigned" transactions to isolate unallocated spending
+- Real-time recalculation of income and expense list headers
+
+Category Assignment
+~~~~~~~~~~~~~~~~~~~
 
 Every transaction must have a category. Categories can be:
 
@@ -98,17 +129,20 @@ Every transaction must have a category. Categories can be:
 - User-created custom categories
 - Modified at any time
 
-### Date Tracking
+Date Tracking
+~~~~~~~~~~~~~
 
 - Individual transactions have specific dates
 - Recurring transactions are auto-generated on scheduled dates
 - Can view transactions by period (month/year)
 
-### Descriptions
+Descriptions
+~~~~~~~~~~~~
 
 Optional free-form text descriptions for additional context.
 
-### Potential Transactions
+Potential Transactions
+~~~~~~~~~~~~~~~~~~~~~~
 
 "Planned" or "Potential" transactions can be:
 
@@ -116,32 +150,46 @@ Optional free-form text descriptions for additional context.
 - Confirmed later when actually incurred
 - Useful for budgeting future expenses
 
-## Transaction Data Model
+Transaction Data Model
+----------------------
 
-```dart
-IncomeEntry {
-  id: String
-  budgetId: String
-  amount: double
-  description: String?
-  date: DateTime
-  categoryId: String
-  isPotential: bool
-}
+.. code-block:: dart
 
-ExpenseEntry {
-  id: String
-  budgetId: String
-  amount: double
-  description: String?
-  date: DateTime
-  categoryId: String
-  isPotential: bool
-}
-```
+    class IncomeEntry {
+      final String id;
+      final String budgetId;
+      final double amount;
+      final String? description;
+      final DateTime date;
+      final int periodMonth;
+      final int periodYear;
+      final String categoryId;
+      final String? categoryName;
+      final String? categoryIcon;
+      final String? accountId;
+      final String? accountName;
+      final bool isPotential;
+    }
 
-## Related Features
+    class ExpenseEntry {
+      final String id;
+      final String budgetId;
+      final double amount;
+      final String categoryId;
+      final String? description;
+      final DateTime date;
+      final int periodMonth;
+      final int periodYear;
+      final String? categoryName;
+      final String? categoryIcon;
+      final String? accountId;
+      final String? accountName;
+      final bool isPotential;
+    }
 
-- [Budget Management](budget_management.rst)
-- [Categories](categories.rst)
-- [Recurring Transactions](recurring_transactions.rst)
+Related Features
+----------------
+
+- `Budget Management <budget_management.rst>`_
+- `Categories <categories.rst>`_
+- `Recurring Transactions <recurring_transactions.rst>`_

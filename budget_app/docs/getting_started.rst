@@ -1,112 +1,101 @@
-# Getting Started
+Getting Started
+===============
 
-## Installation
+Overview
+--------
 
-### Prerequisites
+Budget App is an offline-first personal and business finance management platform built with Flutter and Dart. This guide walks you through setting up your development environment, installing dependencies, configuring your first budget, and navigating the core features.
 
-- Flutter SDK 3.x or later
+Installation
+------------
+
+Prerequisites
+~~~~~~~~~~~~~
+
+- Flutter SDK 3.x or later (pinned stable version)
 - Dart SDK 3.x or later
-- A device or emulator running Android, iOS, Web, or Desktop
+- Android SDK, Xcode, or Linux/macOS/Windows desktop build dependencies
 
-### Clone the Repository
+Clone the Repository
+~~~~~~~~~~~~~~~~~~~~
 
-```bash
-git clone https://github.com/anomalyco/budget_app.git
-cd budget_app/budget_app
-```
+.. code-block:: bash
 
-### Install Dependencies
+   git clone https://github.com/py-centric/budget_app.git
+   cd budget_app/budget_app
 
-```bash
-flutter pub get
-```
+Install Dependencies
+~~~~~~~~~~~~~~~~~~~~
 
-### Run the App
+.. code-block:: bash
 
-```bash
-flutter run
-```
+   flutter pub get
 
-## First Time Setup
+Run the App
+~~~~~~~~~~~
 
-### 1. Set Your Currency
+.. code-block:: bash
 
-Navigate to Settings to configure your default currency. This currency will be used throughout the app for displaying amounts.
+   # Run with default edition
+   flutter run
 
-### 2. Create Your First Budget
+   # Or using Taskfile
+   task dev
 
-1. Open the app - a default budget is created for the current month
-2. To create additional budgets, tap the menu icon (three lines) in the top-left
-3. Select a different month/year to create a new budget period
+First-Time Setup
+----------------
 
-### 3. Add Categories
+1. Set Your Preferred Currency
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The app comes with default categories (Food, Transport, Utilities, etc.). You can:
+Navigate to **Settings** to select your base currency. Over 20 global currencies (USD, EUR, GBP, JPY, CAD, AUD, ZAR, etc.) are supported with automated symbol and decimal formatting.
 
-- Add new categories in Settings → Manage Categories
-- Edit existing categories
-- Delete unused categories
-- Assign icons to categories
+2. Create Your First Budget
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-## Basic Workflow
+1. Launch the app: a default budget is automatically generated for the active calendar month.
+2. To create or navigate to other budget periods, open the sidebar navigation drawer.
+3. Select any target month and year to instantly initialize and switch active periods.
 
-### Adding Income
+3. Configure Accounts & Categories
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-1. Tap the **+** button on the Income card
-2. Enter amount, select category, add description (optional)
-3. Set date (defaults to today)
-4. Tap **Add Income**
+- **Accounts**: Add your primary bank, credit card, and savings accounts in the **Accounts** screen to enable account filtering on your transactions.
+- **Categories**: Organize your spending using built-in categories (Food, Transport, Housing, Utilities) or create custom categories with custom icons and color schemes.
 
-### Adding Expenses
+Basic Workflow
+--------------
 
-1. Tap the **+** button on the Expense card
-2. Enter amount, select category, add description (optional)
-3. Set date (defaults to today)
-4. Tap **Add Expense**
+Adding Income
+~~~~~~~~~~~~~
 
-### Viewing Summary
+1. Tap the **Add Income** floating action button at the bottom of the Home screen.
+2. Enter the amount, select an Income category, specify date, and optionally assign an account.
+3. Save to immediately update your balance and income summaries.
 
-The home screen displays:
-- Total Income for the period
-- Total Expenses for the period
-- Current Balance (Income - Expenses)
-- Budget goal progress (if set)
+Adding Expenses
+~~~~~~~~~~~~~~~
 
-## Navigation
+1. Tap the **Add Expense** floating action button at the bottom of the Home screen.
+2. Enter the expense amount, choose the corresponding category, add a description, and select the payment account.
+3. Submit to record the transaction and recalculate remaining category limits.
 
-- **Sidebar Menu**: Access categories, projections, recurring transactions, settings
-- **Budget Selector**: Switch between different budget periods
-- **Top App Bar**: Access copy budget, currency conversion, and delete functions
+Transaction Filtering & Search
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-## Advanced Features
+Use the top **Filter Bar** to:
 
-### Recurring Transactions
+- Search transaction descriptions in real-time.
+- Sort by amount, date, or category.
+- Filter by transaction amount thresholds.
+- Filter by specific bank or credit card accounts.
+- Reset all active filters using the **Clear** action pinned to the far right.
 
-Set up automatic recurring income or expenses:
+Advanced Capabilities
+---------------------
 
-1. Open menu → Recurring Transactions
-2. Add new recurring transaction
-3. Configure: amount, category, frequency (daily, weekly, monthly, etc.)
-4. Set start and end dates
-
-### Projections
-
-View future financial projections:
-
-1. Open menu → Projections
-2. See projected balances for upcoming months
-3. Based on recurring transactions and current trends
-
-### Export Data
-
-Export your financial data:
-
-1. Open Settings → Export/Backup
-2. Choose format: CSV, PDF, or Excel
-3. Share or save the file
-
-### Backup & Restore
-
-1. Open Settings → Export/Backup
-2. Create backup to save database
-3. Restore from a previous backup file
+- **Recurring Transactions**: Automate regular monthly bills and salary deposits with customizable intervals.
+- **Financial Projections**: Forecast cash flow across 3, 6, and 12-month time horizons.
+- **Multi-Bank Accounts**: Monitor total net worth across multiple liquid and debt accounts.
+- **Export & Backup**: Export financial records to CSV, Excel, or PDF, and generate encrypted SQLite database backups.
+- **App Lock**: Protect your financial data with PIN or biometric (Touch ID / Face ID) authentication.

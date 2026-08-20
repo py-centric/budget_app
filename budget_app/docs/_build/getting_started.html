@@ -5,15 +5,17 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>&lt;no title&gt; &#8212; Budget App 1.0.0 documentation</title>
+    <title>Getting Started &#8212; Budget App Documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
     <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
-    <script src="_static/documentation_options.js?v=8d563738"></script>
+    <script src="_static/documentation_options.js?v=fc837d61"></script>
     <script src="_static/doctools.js?v=fd6eb6e6"></script>
     <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Architecture" href="architecture.html" />
+    <link rel="prev" title="Welcome to Budget App Documentation" href="index.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -31,100 +33,109 @@
 
           <div class="body" role="main">
             
-  <p># Getting Started</p>
-<p>## Installation</p>
-<p>### Prerequisites</p>
+  <section id="getting-started">
+<h1>Getting Started<a class="headerlink" href="#getting-started" title="Link to this heading">¶</a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">¶</a></h2>
+<p>Budget App is an offline-first personal and business finance management platform built with Flutter and Dart. This guide walks you through setting up your development environment, installing dependencies, configuring your first budget, and navigating the core features.</p>
+</section>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Link to this heading">¶</a></h2>
+<section id="prerequisites">
+<h3>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading">¶</a></h3>
 <ul class="simple">
-<li><p>Flutter SDK 3.x or later</p></li>
+<li><p>Flutter SDK 3.x or later (pinned stable version)</p></li>
 <li><p>Dart SDK 3.x or later</p></li>
-<li><p>A device or emulator running Android, iOS, Web, or Desktop</p></li>
+<li><p>Android SDK, Xcode, or Linux/macOS/Windows desktop build dependencies</p></li>
 </ul>
-<p>### Clone the Repository</p>
-<p><code class="docutils literal notranslate"><span class="pre">`bash</span>
-<span class="pre">git</span> <span class="pre">clone</span> <span class="pre">https://github.com/anomalyco/budget_app.git</span>
-<span class="pre">cd</span> <span class="pre">budget_app/budget_app</span>
-<span class="pre">`</span></code></p>
-<p>### Install Dependencies</p>
-<p><code class="docutils literal notranslate"><span class="pre">`bash</span>
-<span class="pre">flutter</span> <span class="pre">pub</span> <span class="pre">get</span>
-<span class="pre">`</span></code></p>
-<p>### Run the App</p>
-<p><code class="docutils literal notranslate"><span class="pre">`bash</span>
-<span class="pre">flutter</span> <span class="pre">run</span>
-<span class="pre">`</span></code></p>
-<p>## First Time Setup</p>
-<p>### 1. Set Your Currency</p>
-<p>Navigate to Settings to configure your default currency. This currency will be used throughout the app for displaying amounts.</p>
-<p>### 2. Create Your First Budget</p>
+</section>
+<section id="clone-the-repository">
+<h3>Clone the Repository<a class="headerlink" href="#clone-the-repository" title="Link to this heading">¶</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/py-centric/budget_app.git
+<span class="nb">cd</span><span class="w"> </span>budget_app/budget_app
+</pre></div>
+</div>
+</section>
+<section id="install-dependencies">
+<h3>Install Dependencies<a class="headerlink" href="#install-dependencies" title="Link to this heading">¶</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>flutter<span class="w"> </span>pub<span class="w"> </span>get
+</pre></div>
+</div>
+</section>
+<section id="run-the-app">
+<h3>Run the App<a class="headerlink" href="#run-the-app" title="Link to this heading">¶</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Run with default edition</span>
+flutter<span class="w"> </span>run
+
+<span class="c1"># Or using Taskfile</span>
+task<span class="w"> </span>dev
+</pre></div>
+</div>
+</section>
+</section>
+<section id="first-time-setup">
+<h2>First-Time Setup<a class="headerlink" href="#first-time-setup" title="Link to this heading">¶</a></h2>
+<section id="set-your-preferred-currency">
+<h3>1. Set Your Preferred Currency<a class="headerlink" href="#set-your-preferred-currency" title="Link to this heading">¶</a></h3>
+<p>Navigate to <strong>Settings</strong> to select your base currency. Over 20 global currencies (USD, EUR, GBP, JPY, CAD, AUD, ZAR, etc.) are supported with automated symbol and decimal formatting.</p>
+</section>
+<section id="create-your-first-budget">
+<h3>2. Create Your First Budget<a class="headerlink" href="#create-your-first-budget" title="Link to this heading">¶</a></h3>
 <ol class="arabic simple">
-<li><p>Open the app - a default budget is created for the current month</p></li>
-<li><p>To create additional budgets, tap the menu icon (three lines) in the top-left</p></li>
-<li><p>Select a different month/year to create a new budget period</p></li>
+<li><p>Launch the app: a default budget is automatically generated for the active calendar month.</p></li>
+<li><p>To create or navigate to other budget periods, open the sidebar navigation drawer.</p></li>
+<li><p>Select any target month and year to instantly initialize and switch active periods.</p></li>
 </ol>
-<p>### 3. Add Categories</p>
-<p>The app comes with default categories (Food, Transport, Utilities, etc.). You can:</p>
+</section>
+<section id="configure-accounts-categories">
+<h3>3. Configure Accounts &amp; Categories<a class="headerlink" href="#configure-accounts-categories" title="Link to this heading">¶</a></h3>
 <ul class="simple">
-<li><p>Add new categories in Settings → Manage Categories</p></li>
-<li><p>Edit existing categories</p></li>
-<li><p>Delete unused categories</p></li>
-<li><p>Assign icons to categories</p></li>
+<li><p><strong>Accounts</strong>: Add your primary bank, credit card, and savings accounts in the <strong>Accounts</strong> screen to enable account filtering on your transactions.</p></li>
+<li><p><strong>Categories</strong>: Organize your spending using built-in categories (Food, Transport, Housing, Utilities) or create custom categories with custom icons and color schemes.</p></li>
 </ul>
-<p>## Basic Workflow</p>
-<p>### Adding Income</p>
+</section>
+</section>
+<section id="basic-workflow">
+<h2>Basic Workflow<a class="headerlink" href="#basic-workflow" title="Link to this heading">¶</a></h2>
+<section id="adding-income">
+<h3>Adding Income<a class="headerlink" href="#adding-income" title="Link to this heading">¶</a></h3>
 <ol class="arabic simple">
-<li><p>Tap the <strong>+</strong> button on the Income card</p></li>
-<li><p>Enter amount, select category, add description (optional)</p></li>
-<li><p>Set date (defaults to today)</p></li>
-<li><p>Tap <strong>Add Income</strong></p></li>
+<li><p>Tap the <strong>Add Income</strong> floating action button at the bottom of the Home screen.</p></li>
+<li><p>Enter the amount, select an Income category, specify date, and optionally assign an account.</p></li>
+<li><p>Save to immediately update your balance and income summaries.</p></li>
 </ol>
-<p>### Adding Expenses</p>
+</section>
+<section id="adding-expenses">
+<h3>Adding Expenses<a class="headerlink" href="#adding-expenses" title="Link to this heading">¶</a></h3>
 <ol class="arabic simple">
-<li><p>Tap the <strong>+</strong> button on the Expense card</p></li>
-<li><p>Enter amount, select category, add description (optional)</p></li>
-<li><p>Set date (defaults to today)</p></li>
-<li><p>Tap <strong>Add Expense</strong></p></li>
+<li><p>Tap the <strong>Add Expense</strong> floating action button at the bottom of the Home screen.</p></li>
+<li><p>Enter the expense amount, choose the corresponding category, add a description, and select the payment account.</p></li>
+<li><p>Submit to record the transaction and recalculate remaining category limits.</p></li>
 </ol>
-<p>### Viewing Summary</p>
-<p>The home screen displays:
-- Total Income for the period
-- Total Expenses for the period
-- Current Balance (Income - Expenses)
-- Budget goal progress (if set)</p>
-<p>## Navigation</p>
+</section>
+<section id="transaction-filtering-search">
+<h3>Transaction Filtering &amp; Search<a class="headerlink" href="#transaction-filtering-search" title="Link to this heading">¶</a></h3>
+<p>Use the top <strong>Filter Bar</strong> to:</p>
 <ul class="simple">
-<li><p><strong>Sidebar Menu</strong>: Access categories, projections, recurring transactions, settings</p></li>
-<li><p><strong>Budget Selector</strong>: Switch between different budget periods</p></li>
-<li><p><strong>Top App Bar</strong>: Access copy budget, currency conversion, and delete functions</p></li>
+<li><p>Search transaction descriptions in real-time.</p></li>
+<li><p>Sort by amount, date, or category.</p></li>
+<li><p>Filter by transaction amount thresholds.</p></li>
+<li><p>Filter by specific bank or credit card accounts.</p></li>
+<li><p>Reset all active filters using the <strong>Clear</strong> action pinned to the far right.</p></li>
 </ul>
-<p>## Advanced Features</p>
-<p>### Recurring Transactions</p>
-<p>Set up automatic recurring income or expenses:</p>
-<ol class="arabic simple">
-<li><p>Open menu → Recurring Transactions</p></li>
-<li><p>Add new recurring transaction</p></li>
-<li><p>Configure: amount, category, frequency (daily, weekly, monthly, etc.)</p></li>
-<li><p>Set start and end dates</p></li>
-</ol>
-<p>### Projections</p>
-<p>View future financial projections:</p>
-<ol class="arabic simple">
-<li><p>Open menu → Projections</p></li>
-<li><p>See projected balances for upcoming months</p></li>
-<li><p>Based on recurring transactions and current trends</p></li>
-</ol>
-<p>### Export Data</p>
-<p>Export your financial data:</p>
-<ol class="arabic simple">
-<li><p>Open Settings → Export/Backup</p></li>
-<li><p>Choose format: CSV, PDF, or Excel</p></li>
-<li><p>Share or save the file</p></li>
-</ol>
-<p>### Backup &amp; Restore</p>
-<ol class="arabic simple">
-<li><p>Open Settings → Export/Backup</p></li>
-<li><p>Create backup to save database</p></li>
-<li><p>Restore from a previous backup file</p></li>
-</ol>
+</section>
+</section>
+<section id="advanced-capabilities">
+<h2>Advanced Capabilities<a class="headerlink" href="#advanced-capabilities" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><strong>Recurring Transactions</strong>: Automate regular monthly bills and salary deposits with customizable intervals.</p></li>
+<li><p><strong>Financial Projections</strong>: Forecast cash flow across 3, 6, and 12-month time horizons.</p></li>
+<li><p><strong>Multi-Bank Accounts</strong>: Monitor total net worth across multiple liquid and debt accounts.</p></li>
+<li><p><strong>Export &amp; Backup</strong>: Export financial records to CSV, Excel, or PDF, and generate encrypted SQLite database backups.</p></li>
+<li><p><strong>App Lock</strong>: Protect your financial data with PIN or biometric (Touch ID / Face ID) authentication.</p></li>
+</ul>
+</section>
+</section>
 
 
           </div>
@@ -152,11 +163,55 @@
     </div>
 </search>
 <script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#first-time-setup">First-Time Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#basic-workflow">Basic Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#advanced-capabilities">Advanced Capabilities</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="feature_flags.html">Feature Flagging &amp; Release Editions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Core Features</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="budget_management.html">Budget Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transactions.html">Transactions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="categories.html">Categories</a></li>
+<li class="toctree-l1"><a class="reference internal" href="recurring_transactions.html">Recurring Transactions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="projections.html">Projections</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced Features</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="currency_conversion.html">Currency Conversion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="travel_budget_planner.html">Travel Budget Planner</a></li>
+<li class="toctree-l1"><a class="reference internal" href="loans.html">Loans Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="emergency_fund.html">Emergency Fund</a></li>
+<li class="toctree-l1"><a class="reference internal" href="business_tools.html">Business Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="invoices.html">Invoices</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Utilities</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="financial_tools.html">Financial Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="export_backup.html">Export &amp; Backup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="app_settings.html">App Settings</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Development</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing Guidelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dependencies.html">Project Dependencies &amp; Licensing</a></li>
+</ul>
 
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Welcome to Budget App Documentation</a></li>
+      <li>Next: <a href="architecture.html" title="next chapter">Architecture</a></li>
   </ul></li>
 </ul>
 </div>
@@ -173,7 +228,7 @@
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &#169;2026, Budget App Team.
+      &#169;2026, PyCentric.
       
       |
       Powered by <a href="https://www.sphinx-doc.org/">Sphinx 9.1.0</a>

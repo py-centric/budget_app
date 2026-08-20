@@ -5,15 +5,17 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>} &#8212; Budget App 1.0.0 documentation</title>
+    <title>Transactions &#8212; Budget App Documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
     <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
-    <script src="_static/documentation_options.js?v=8d563738"></script>
+    <script src="_static/documentation_options.js?v=fc837d61"></script>
     <script src="_static/doctools.js?v=fd6eb6e6"></script>
     <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Categories" href="categories.html" />
+    <link rel="prev" title="Budget Management" href="budget_management.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -31,11 +33,55 @@
 
           <div class="body" role="main">
             
-  <p># Transactions</p>
-<p>## Overview</p>
-<p>Transactions are the core data in Budget App - every income and expense entry. The app provides comprehensive transaction tracking with categories, dates, and descriptions.</p>
-<p>## Transaction Types</p>
-<p>### Income</p>
+  <section id="transactions">
+<h1>Transactions<a class="headerlink" href="#transactions" title="Link to this heading">¶</a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">¶</a></h2>
+<p>Transactions are the core data in Budget App: every income and expense entry. The app provides comprehensive transaction tracking with categories, dates, descriptions, optional financial account associations, and multi-account filtering.</p>
+</section>
+<section id="use-case-flow-diagram">
+<h2>Use Case Flow Diagram<a class="headerlink" href="#use-case-flow-diagram" title="Link to this heading">¶</a></h2>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>+-----------------------------------------------------------------------+
+|                        TRANSACTION LIFECYCLE FLOW                     |
++-----------------------------------------------------------------------+
+                                    |
+                                    v
+                      [ User Action on Dashboard ]
+                                    |
+       +----------------------------+----------------------------+
+       |                                                         |
+       v                                                         v
+[ Manual Entry Creation ]                              [ Potential Transaction ]
+       |                                                         |
+       v                                                         v
+Select Type (Income / Expense)                         Set Planned Amount &amp; Date
+       |                                                         |
+       v                                                         v
+Choose Category &amp; Amount                               Mark as Potential (What-if)
+       |                                                         |
+       v                                                         v
+Optional Financial Account                             [ User Confirms Actual ]
+       |                                                         |
+       v                                                         |
+Assign Date &amp; Description                                        |
+       |                                                         |
+       +----------------------------+----------------------------+
+                                    |
+                                    v
+                        [ Save to SQLite Database ]
+                                    |
+                                    v
+                      [ Recalculate Period Totals ]
+                                    |
+                                    v
+                      [ Re-render Financial Summary ]
+</pre></div>
+</div>
+</section>
+<section id="transaction-types">
+<h2>Transaction Types<a class="headerlink" href="#transaction-types" title="Link to this heading">¶</a></h2>
+<section id="income">
+<h3>Income<a class="headerlink" href="#income" title="Link to this heading">¶</a></h3>
 <p>Money received or expected to be received:</p>
 <ul class="simple">
 <li><p>Salary</p></li>
@@ -44,7 +90,9 @@
 <li><p>Gifts</p></li>
 <li><p>Other income sources</p></li>
 </ul>
-<p>### Expenses</p>
+</section>
+<section id="expenses">
+<h3>Expenses<a class="headerlink" href="#expenses" title="Link to this heading">¶</a></h3>
 <p>Money spent on goods and services:</p>
 <ul class="simple">
 <li><p>Food &amp; Dining</p></li>
@@ -56,78 +104,129 @@
 <li><p>Education</p></li>
 <li><p>And custom categories…</p></li>
 </ul>
-<p>## Adding Transactions</p>
-<p>### Via Home Screen</p>
+</section>
+</section>
+<section id="adding-transactions">
+<h2>Adding Transactions<a class="headerlink" href="#adding-transactions" title="Link to this heading">¶</a></h2>
+<section id="via-home-screen">
+<h3>Via Home Screen<a class="headerlink" href="#via-home-screen" title="Link to this heading">¶</a></h3>
 <ol class="arabic simple">
 <li><p>Tap the <strong>+</strong> button on the Income or Expense card</p></li>
 <li><p>Enter the amount</p></li>
 <li><p>Select a category</p></li>
+<li><p>Optionally choose an Account (Checking, Savings, Credit Card, etc.) or None (Unassigned)</p></li>
 <li><p>Add description (optional)</p></li>
 <li><p>Set the date (defaults to today)</p></li>
 <li><p>Tap <strong>Add Income</strong> or <strong>Add Expense</strong></p></li>
 </ol>
-<p>### Via Recurring Transactions</p>
+</section>
+<section id="via-recurring-transactions">
+<h3>Via Recurring Transactions<a class="headerlink" href="#via-recurring-transactions" title="Link to this heading">¶</a></h3>
 <p>Set up automatic recurring transactions:</p>
 <ol class="arabic simple">
-<li><p>Menu → Recurring Transactions</p></li>
+<li><p>Menu -&gt; Recurring Transactions</p></li>
 <li><p>Add new recurring transaction</p></li>
 <li><p>Configure frequency (daily, weekly, bi-weekly, monthly, etc.)</p></li>
 <li><p>The app automatically creates entries based on the schedule</p></li>
 </ol>
-<p>## Transaction Features</p>
-<p>### Category Assignment</p>
+</section>
+</section>
+<section id="transaction-features">
+<h2>Transaction Features<a class="headerlink" href="#transaction-features" title="Link to this heading">¶</a></h2>
+<section id="optional-account-assignment">
+<h3>Optional Account Assignment<a class="headerlink" href="#optional-account-assignment" title="Link to this heading">¶</a></h3>
+<p>Transactions can optionally be linked to a registered bank, cash, or credit account:</p>
+<ul class="simple">
+<li><p>Account dropdown selector in Income and Expense creation/edit dialogs</p></li>
+<li><p>Seamless default to “None (Unassigned)” for quick entry</p></li>
+<li><p>Visual account badges on transaction list items</p></li>
+</ul>
+</section>
+<section id="multi-account-filtering">
+<h3>Multi-Account Filtering<a class="headerlink" href="#multi-account-filtering" title="Link to this heading">¶</a></h3>
+<p>The FilterBar includes a dedicated <strong>Account</strong> filter button:</p>
+<ul class="simple">
+<li><p>Opens the multi-select Account filter modal</p></li>
+<li><p>Filter by any arbitrary combination of accounts</p></li>
+<li><p>Toggle “Unassigned” transactions to isolate unallocated spending</p></li>
+<li><p>Real-time recalculation of income and expense list headers</p></li>
+</ul>
+</section>
+<section id="category-assignment">
+<h3>Category Assignment<a class="headerlink" href="#category-assignment" title="Link to this heading">¶</a></h3>
 <p>Every transaction must have a category. Categories can be:</p>
 <ul class="simple">
 <li><p>Pre-defined defaults</p></li>
 <li><p>User-created custom categories</p></li>
 <li><p>Modified at any time</p></li>
 </ul>
-<p>### Date Tracking</p>
+</section>
+<section id="date-tracking">
+<h3>Date Tracking<a class="headerlink" href="#date-tracking" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Individual transactions have specific dates</p></li>
 <li><p>Recurring transactions are auto-generated on scheduled dates</p></li>
 <li><p>Can view transactions by period (month/year)</p></li>
 </ul>
-<p>### Descriptions</p>
+</section>
+<section id="descriptions">
+<h3>Descriptions<a class="headerlink" href="#descriptions" title="Link to this heading">¶</a></h3>
 <p>Optional free-form text descriptions for additional context.</p>
-<p>### Potential Transactions</p>
+</section>
+<section id="potential-transactions">
+<h3>Potential Transactions<a class="headerlink" href="#potential-transactions" title="Link to this heading">¶</a></h3>
 <p>“Planned” or “Potential” transactions can be:</p>
 <ul class="simple">
 <li><p>Created in advance</p></li>
 <li><p>Confirmed later when actually incurred</p></li>
 <li><p>Useful for budgeting future expenses</p></li>
 </ul>
-<p>## Transaction Data Model</p>
-<p><a href="#id1"><span class="problematic" id="id2">``</span></a><a href="#id3"><span class="problematic" id="id4">`</span></a>dart
-IncomeEntry {</p>
-<blockquote>
-<div><p>id: String
-budgetId: String
-amount: double
-description: String?
-date: DateTime
-categoryId: String
-isPotential: bool</p>
-</div></blockquote>
-<p>}</p>
-<dl class="simple">
-<dt>ExpenseEntry {</dt><dd><p>id: String
-budgetId: String
-amount: double
-description: String?
-date: DateTime
-categoryId: String
-isPotential: bool</p>
-</dd>
-</dl>
-<section id="id5">
-<h1>}<a class="headerlink" href="#id5" title="Link to this heading">¶</a></h1>
-<p>## Related Features</p>
+</section>
+</section>
+<section id="transaction-data-model">
+<h2>Transaction Data Model<a class="headerlink" href="#transaction-data-model" title="Link to this heading">¶</a></h2>
+<div class="highlight-dart notranslate"><div class="highlight"><pre><span></span><span class="kd">class</span><span class="w"> </span><span class="nc">IncomeEntry</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">id</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">budgetId</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">amount</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">String</span><span class="o">?</span><span class="w"> </span><span class="n">description</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="n">DateTime</span><span class="w"> </span><span class="n">date</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">periodMonth</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">periodYear</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">categoryId</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">String</span><span class="o">?</span><span class="w"> </span><span class="n">categoryName</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">String</span><span class="o">?</span><span class="w"> </span><span class="n">categoryIcon</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">String</span><span class="o">?</span><span class="w"> </span><span class="n">accountId</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">String</span><span class="o">?</span><span class="w"> </span><span class="n">accountName</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">isPotential</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">class</span><span class="w"> </span><span class="nc">ExpenseEntry</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">id</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">budgetId</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">amount</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">categoryId</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">String</span><span class="o">?</span><span class="w"> </span><span class="n">description</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="n">DateTime</span><span class="w"> </span><span class="n">date</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">periodMonth</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">periodYear</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">String</span><span class="o">?</span><span class="w"> </span><span class="n">categoryName</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">String</span><span class="o">?</span><span class="w"> </span><span class="n">categoryIcon</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">String</span><span class="o">?</span><span class="w"> </span><span class="n">accountId</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">String</span><span class="o">?</span><span class="w"> </span><span class="n">accountName</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">isPotential</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="related-features">
+<h2>Related Features<a class="headerlink" href="#related-features" title="Link to this heading">¶</a></h2>
 <ul class="simple">
-<li><p>[Budget Management](budget_management.rst)</p></li>
-<li><p>[Categories](categories.rst)</p></li>
-<li><p>[Recurring Transactions](recurring_transactions.rst)</p></li>
+<li><p><a class="reference external" href="budget_management.rst">Budget Management</a></p></li>
+<li><p><a class="reference external" href="categories.rst">Categories</a></p></li>
+<li><p><a class="reference external" href="recurring_transactions.rst">Recurring Transactions</a></p></li>
 </ul>
+</section>
 </section>
 
 
@@ -156,11 +255,57 @@ isPotential: bool</p>
     </div>
 </search>
 <script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="feature_flags.html">Feature Flagging &amp; Release Editions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Core Features</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="budget_management.html">Budget Management</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Transactions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#use-case-flow-diagram">Use Case Flow Diagram</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#transaction-types">Transaction Types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#adding-transactions">Adding Transactions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#transaction-features">Transaction Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#transaction-data-model">Transaction Data Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#related-features">Related Features</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="categories.html">Categories</a></li>
+<li class="toctree-l1"><a class="reference internal" href="recurring_transactions.html">Recurring Transactions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="projections.html">Projections</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced Features</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="currency_conversion.html">Currency Conversion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="travel_budget_planner.html">Travel Budget Planner</a></li>
+<li class="toctree-l1"><a class="reference internal" href="loans.html">Loans Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="emergency_fund.html">Emergency Fund</a></li>
+<li class="toctree-l1"><a class="reference internal" href="business_tools.html">Business Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="invoices.html">Invoices</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Utilities</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="financial_tools.html">Financial Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="export_backup.html">Export &amp; Backup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="app_settings.html">App Settings</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Development</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing Guidelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dependencies.html">Project Dependencies &amp; Licensing</a></li>
+</ul>
 
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="budget_management.html" title="previous chapter">Budget Management</a></li>
+      <li>Next: <a href="categories.html" title="next chapter">Categories</a></li>
   </ul></li>
 </ul>
 </div>
@@ -177,7 +322,7 @@ isPotential: bool</p>
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &#169;2026, Budget App Team.
+      &#169;2026, PyCentric.
       
       |
       Powered by <a href="https://www.sphinx-doc.org/">Sphinx 9.1.0</a>

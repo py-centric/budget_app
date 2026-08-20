@@ -1,82 +1,87 @@
-# App Settings
+App Settings
+============
 
-## Overview
+Overview
+--------
 
-Configure the app behavior and preferences to suit your needs.
+Configure application preferences, localization, security authentication, accessibility themes, and data management options.
 
-## General Settings
+General Settings
+----------------
 
-### Currency
+Currency
+~~~~~~~~
 
-- Default currency selection
-- Currency symbol display
-- Decimal places
+- Base currency selection from 20 global options.
+- Automated currency symbol formatting and position.
+- Precision decimal configuration.
 
-### Date Format
+Date Formatting
+~~~~~~~~~~~~~~~
 
-- Choose date format:
-  - DD/MM/YYYY
-  - MM/DD/YYYY
-  - YYYY-MM-DD
+Choose preferred date notation:
 
-### First Day of Week
+- DD/MM/YYYY
+- MM/DD/YYYY
+- YYYY-MM-DD
 
-- Sunday
-- Monday
+Appearance & Accessibility
+--------------------------
 
-## App Lock
+Theme Modes
+~~~~~~~~~~~
 
-### PIN Protection
+The app provides four comprehensive visual theme modes:
 
-- Enable/disable app lock
-- Set 4-digit PIN
-- Require PIN on app launch
+- **System**: Automatically matches OS light/dark preference.
+- **Light**: Crisp high-legibility Material 3 light theme.
+- **Dark**: Battery-efficient dark theme.
+- **High Contrast**: WCAG 2.1 AA compliant high-contrast theme engineered for low-vision accessibility with sharp borders, maximum color contrast ratios, and distinct interactive focus indicators.
 
-### Biometric Authentication
+Security & App Lock
+-------------------
 
-- Fingerprint unlock
-- Face recognition (device-dependent)
-- Fallback to PIN
+PIN Protection
+~~~~~~~~~~~~~~
 
-## Categories
+- Enable 4-digit PIN lock.
+- Require authentication immediately upon launch or app switching.
 
-- Manage custom categories
-- Add/edit/delete categories
-- Choose icons and colors
+Biometric Authentication
+~~~~~~~~~~~~~~~~~~~~~~~~
 
-## Recurring Transactions
+- Fingerprint unlock (Touch ID / Android Biometrics).
+- Facial recognition (Face ID / Android Face Unlock).
+- Automatic fallback to secure PIN if biometrics fail.
 
-- View all recurring transactions
-- Enable/disable individual items
+Data Management & Reset
+-----------------------
 
-## Export & Backup
+Export & Backup
+~~~~~~~~~~~~~~~
 
-- Export data to CSV/PDF/Excel
-- Create database backup
-- Restore from backup
+- Instant CSV, Excel, and PDF exports.
+- Local SQLite database backup and restoration.
 
-## Budget Reset
+Budget Reset
+~~~~~~~~~~~~
 
-### Reset Options
+Granular options to clean or reset data:
 
-- Clear current budget
-- Clear all budgets
-- Reset categories to default
+- Clear current active budget.
+- Clear all transaction history across all periods.
+- Reset categories back to factory defaults.
 
-### Data Reset
+About & Attribution
+-------------------
 
-- Confirm before reset
-- Option to keep categories
-- Option to keep settings
+- App version and build details.
+- Open-source dependency licenses and OSI compliance catalog.
+- Developed and Maintained by PyCentric.
 
-## About
+Related Features
+----------------
 
-- App version
-- Open source licenses
-- Privacy information
-
-## Related Features
-
-- [Budget Management](budget_management.rst)
-- [Export & Backup](export_backup.rst)
-- [Categories](categories.rst)
+- :doc:`budget_management`
+- :doc:`export_backup`
+- :doc:`categories`

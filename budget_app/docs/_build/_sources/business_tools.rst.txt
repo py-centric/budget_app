@@ -1,57 +1,60 @@
-# Business Tools
+Business Tools
+==============
 
-## Overview
+Overview
+--------
 
-Business tools provide specialized features for managing business finances, including invoicing and tracking payables.
+Business tools provide specialized capabilities for freelance operators, consultants, and small enterprises, including full invoice generation, client directories, and accounts payable tracking.
 
-## Invoice Dashboard
+Invoice Dashboard
+-----------------
 
-### Features
+Features
+~~~~~~~~
 
-- Create and manage invoices
-- Track payment status
-- View invoice history
-- Client management
+- Create, edit, and duplicate professional invoices.
+- Track real-time invoice lifecycle status.
+- Maintain a local client book and business profiles.
+- Generate structured PDF documents with custom branding and tax breakdowns.
 
-### Invoice Status
+Invoice Status Workflow
+~~~~~~~~~~~~~~~~~~~~~~~
 
-- **Draft**: Not yet sent
-- **Sent**: Awaiting payment
-- **Paid**: Payment received
-- **Overdue**: Past due date
+- **Draft**: In progress, not yet issued to client.
+- **Sent**: Issued, awaiting payment.
+- **Paid**: Settlement received, recorded in cash flow.
+- **Overdue**: Past specified payment terms.
 
-### Invoice Data
+Invoice Data Model
+~~~~~~~~~~~~~~~~~~
 
-```
-Invoice {
-  id: String
-  invoiceNumber: String
-  clientName: String
-  items: List<InvoiceItem>
-  totalAmount: double
-  status: InvoiceStatus
-  issueDate: DateTime
-  dueDate: DateTime
-  notes: String?
-}
-```
+.. code-block:: text
 
-## Payables Tracking
+   Invoice {
+     id: String
+     invoiceNumber: String
+     clientName: String
+     items: List<InvoiceItem>
+     totalAmount: double
+     status: InvoiceStatus (draft / sent / paid / overdue)
+     issueDate: DateTime
+     dueDate: DateTime
+     notes: String?
+   }
 
-### Features
+Accounts Payable Tracking
+-------------------------
 
-- Track money owed to vendors
-- Due date reminders
-- Payment scheduling
+Features
+~~~~~~~~
 
-### Vendor Management
+- Track outstanding liabilities owed to vendors and contractors.
+- Payment scheduling and cash flow impact modeling.
+- Vendor profiles with historical payment records.
 
-- Add and manage vendors
-- Track payment history
-- Categorize by vendor type
+Related Features
+----------------
 
-## Related Features
-
-- [Invoices](invoices.rst)
-- [Financial Tools](financial_tools.rst)
-- [Export & Backup](export_backup.rst)
+- :doc:`invoices`
+- :doc:`financial_tools`
+- :doc:`export_backup`

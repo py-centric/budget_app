@@ -4,7 +4,7 @@ Export & Backup
 Overview
 --------
 
-Export and backup features ensure your financial data is portable and secure.
+Export and backup features ensure your financial data is 100% portable, verifiable, and secure under an offline-first architecture.
 
 Use Case Flow Diagram
 ---------------------
@@ -37,68 +37,50 @@ Use Case Flow Diagram
                                         v
                           [ Save / Send File on Device ]
 
-## Data Export
+Data Export
+-----------
 
-### Supported Formats
+Supported Formats
+~~~~~~~~~~~~~~~~~
 
-- **CSV**: Spreadsheet-compatible format
-- **PDF**: Print-ready documents
-- **Excel**: Native Excel files
+- **CSV**: Universal tabular format for data science and external spreadsheets.
+- **PDF**: Formatted, print-ready financial statements generated on-device.
+- **Excel (XLSX)**: Multi-sheet workbooks with styled summary and transaction tabs.
 
-### Export Options
+Export Options
+~~~~~~~~~~~~~~
 
-- Export all data
-- Export by date range
-- Export by budget
-- Export categories
-- Export transactions
+- Export entire history or specific monthly budget periods.
+- Filter by category or account before exporting.
+- Export transaction ledgers with full date, description, and status tags.
 
-### Export Content
+Database Backup & Restore
+-------------------------
 
-- Budget summaries
-- Transaction lists
-- Category breakdowns
-- Financial reports
+Creating Backups
+~~~~~~~~~~~~~~~~
 
-## Database Backup
+1. Open **Settings** > **Export & Backup**.
+2. Tap **Create Database Backup**.
+3. The app serializes the entire SQLite database into an integrity-checked backup file.
+4. Save locally or share to your preferred secure offline destination.
 
-### Manual Backup
+Restoring from Backup
+~~~~~~~~~~~~~~~~~~~~~
 
-1. Navigate to backup settings
-2. Tap "Create Backup"
-3. Choose storage location
-4. Confirm backup creation
+1. Select **Restore from Backup**.
+2. Choose a valid `.db` backup file from local storage.
+3. Confirm replacement of current database records.
 
-### Backup Contents
+Data Security & Privacy
+-----------------------
 
-- All budgets
-- All transactions
-- Categories
-- Settings
-- Recurring transactions
-- Loans
-- Invoices
+- **100% Local-First**: No remote servers or third-party cloud tracking.
+- **Encrypted Keys**: Sensitive credentials and PINs protected in OS secure keychain via `flutter_secure_storage`.
 
-### Restore from Backup
+Related Features
+----------------
 
-1. Navigate to backup settings
-2. Select "Restore"
-3. Choose backup file
-4. Confirm restoration
-
-### Backup Storage
-
-- Local device storage
-- Share via other apps
-
-## Data Security
-
-- Local-only storage (privacy-focused)
-- Secure storage for sensitive data
-- No cloud sync (by design)
-
-## Related Features
-
-- [Budget Management](budget_management.rst)
-- [Transactions](transactions.rst)
-- [Categories](categories.rst)
+- :doc:`app_settings`
+- :doc:`budget_management`
+- :doc:`transactions`

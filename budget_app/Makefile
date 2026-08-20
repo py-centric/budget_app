@@ -58,7 +58,7 @@ generate-diagrams: ## Generate Mermaid architecture diagrams via Python script
 	python3 docs/generate_diagrams.py
 
 docs-html: generate-diagrams ## Build Sphinx HTML documentation using uv
-	uv run --with sphinx --with myst-parser sphinx-build -b html docs docs/_build/html
+	uv run --with sphinx --with myst-parser --with sphinxcontrib-mermaid sphinx-build -b html docs docs/_build/html
 
 docs: docs-html ## Alias for building HTML documentation
 

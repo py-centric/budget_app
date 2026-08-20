@@ -5,15 +5,17 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>} &#8212; Budget App 1.0.0 documentation</title>
+    <title>Recurring Transactions &#8212; Budget App Documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
     <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
-    <script src="_static/documentation_options.js?v=8d563738"></script>
+    <script src="_static/documentation_options.js?v=fc837d61"></script>
     <script src="_static/doctools.js?v=fd6eb6e6"></script>
     <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Projections" href="projections.html" />
+    <link rel="prev" title="Categories" href="categories.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -31,71 +33,87 @@
 
           <div class="body" role="main">
             
-  <p># Recurring Transactions</p>
-<p>## Overview</p>
-<p>Recurring transactions automate the entry of regular income and expenses, saving time and ensuring you never miss recurring payments.</p>
-<p>## Features</p>
-<p>### Creating Recurring Transactions</p>
+  <section id="recurring-transactions">
+<h1>Recurring Transactions<a class="headerlink" href="#recurring-transactions" title="Link to this heading">¶</a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">¶</a></h2>
+<p>Recurring transactions automate the entry of regular income and expenses, saving time and ensuring scheduled bills, subscriptions, and salaries are reflected in future projections.</p>
+</section>
+<section id="features">
+<h2>Features<a class="headerlink" href="#features" title="Link to this heading">¶</a></h2>
+<section id="creating-recurring-transactions">
+<h3>Creating Recurring Transactions<a class="headerlink" href="#creating-recurring-transactions" title="Link to this heading">¶</a></h3>
 <ol class="arabic simple">
-<li><p>From the transactions screen, tap the recurring button</p></li>
-<li><p>Select transaction type (income/expense)</p></li>
-<li><p>Enter the amount</p></li>
-<li><p>Choose category</p></li>
+<li><p>From the transactions screen or form, toggle the recurring switch.</p></li>
+<li><p>Select transaction type (income or expense).</p></li>
+<li><p>Enter the amount.</p></li>
+<li><p>Choose category and optional account.</p></li>
 <li><p>Set recurrence pattern:
-- <strong>Daily</strong>: Every day
-- <strong>Weekly</strong>: Specific day of week
-- <strong>Monthly</strong>: Specific day of month
-- <strong>Yearly</strong>: Specific date</p></li>
-<li><p>Set start date and optional end date</p></li>
-<li><p>Add optional note</p></li>
+- <strong>Daily</strong>: Fixed daily interval
+- <strong>Weekly</strong>: Specific weekly interval
+- <strong>Monthly</strong>: Specific monthly schedule
+- <strong>Yearly</strong>: Annual billing cycles</p></li>
+<li><p>Set start date and optional end date.</p></li>
+<li><p>Add optional description.</p></li>
 </ol>
-<p>### Recurrence Patterns</p>
+</section>
+<section id="recurrence-patterns">
+<h3>Recurrence Patterns<a class="headerlink" href="#recurrence-patterns" title="Link to this heading">¶</a></h3>
 <ul class="simple">
-<li><p><strong>Monthly</strong>: Most common for rent, subscriptions, salaries</p></li>
-<li><p><strong>Weekly</strong>: Useful for weekly gym membership, weekly allowances</p></li>
-<li><p><strong>Daily</strong>: Rare, but available for daily expenses</p></li>
-<li><p><strong>Yearly</strong>: For annual insurance, subscriptions</p></li>
+<li><p><strong>Monthly</strong>: Standard for rent, utilities, streaming subscriptions, and salaries.</p></li>
+<li><p><strong>Weekly</strong>: For weekly allowances, gym dues, and transit passes.</p></li>
+<li><p><strong>Daily</strong>: Recurring daily allocations.</p></li>
+<li><p><strong>Yearly</strong>: Annual domain registrations, insurance premiums, and memberships.</p></li>
 </ul>
-<p>### Managing Recurring Transactions</p>
-<p>#### Viewing All Recurring</p>
-<p>Access all recurring transactions from the dedicated section in the app.</p>
-<p>#### Editing Recurring Transactions</p>
-<p>Modify any recurring transaction to change amount, category, or dates.</p>
-<p>#### Stopping Recurring</p>
+</section>
+</section>
+<section id="managing-recurring-transactions">
+<h2>Managing Recurring Transactions<a class="headerlink" href="#managing-recurring-transactions" title="Link to this heading">¶</a></h2>
+<section id="viewing-all-recurring">
+<h3>Viewing All Recurring<a class="headerlink" href="#viewing-all-recurring" title="Link to this heading">¶</a></h3>
+<p>Access all active recurring transactions from the dedicated menu section.</p>
+</section>
+<section id="editing-recurring-rules">
+<h3>Editing Recurring Rules<a class="headerlink" href="#editing-recurring-rules" title="Link to this heading">¶</a></h3>
+<p>Modify any recurring transaction to change amount, category, or interval dates.</p>
+</section>
+<section id="pausing-and-stopping">
+<h3>Pausing and Stopping<a class="headerlink" href="#pausing-and-stopping" title="Link to this heading">¶</a></h3>
 <ul class="simple">
-<li><p><strong>Pause</strong>: Temporarily stop without deleting</p></li>
-<li><p><strong>Delete</strong>: Permanently remove the recurring rule</p></li>
+<li><p><strong>Pause</strong>: Temporarily pause occurrences without deleting history.</p></li>
+<li><p><strong>Delete</strong>: Remove the recurring rule permanently.</p></li>
 </ul>
-<p>#### Manual Entry Override</p>
-<p>When a recurring transaction is created, you can:
-- Skip one occurrence
-- Add a one-time adjustment for a specific instance</p>
-<p>## Transaction Data Model</p>
-<p><a href="#id1"><span class="problematic" id="id2">``</span></a>`
-RecurringTransaction {</p>
-<blockquote>
-<div><p>id: String
-amount: double
-categoryId: String
-type: TransactionType (income/expense)
-recurrence: RecurrenceType (daily/weekly/monthly/yearly)
-dayOfWeek: int? (1-7 for weekly)
-dayOfMonth: int? (1-31 for monthly)
-month: int? (1-12 for yearly)
-startDate: DateTime
-endDate: DateTime?
-note: String?
-isActive: bool
-createdAt: DateTime</p>
-</div></blockquote>
-<section id="id3">
-<h1>}<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h1>
-<p>## Related Features</p>
+</section>
+<section id="one-time-overrides">
+<h3>One-Time Overrides<a class="headerlink" href="#one-time-overrides" title="Link to this heading">¶</a></h3>
+<p>Individual occurrences can be overridden or skipped for a specific month without altering the master recurring schedule.</p>
+</section>
+</section>
+<section id="data-model">
+<h2>Data Model<a class="headerlink" href="#data-model" title="Link to this heading">¶</a></h2>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>RecurringTransaction {
+  id: String
+  amount: double
+  categoryId: String
+  type: String (INCOME / EXPENSE)
+  interval: int
+  unit: RecurrenceUnit (day / week / month / year)
+  startDate: DateTime
+  endDate: DateTime?
+  description: String?
+  createdAt: DateTime
+}
+</pre></div>
+</div>
+</section>
+<section id="related-features">
+<h2>Related Features<a class="headerlink" href="#related-features" title="Link to this heading">¶</a></h2>
 <ul class="simple">
-<li><p>[Transactions](transactions.rst)</p></li>
-<li><p>[Categories](categories.rst)</p></li>
-<li><p>[Projections](projections.rst)</p></li>
+<li><p><a class="reference internal" href="transactions.html"><span class="doc">Transactions</span></a></p></li>
+<li><p><a class="reference internal" href="categories.html"><span class="doc">Categories</span></a></p></li>
+<li><p><a class="reference internal" href="projections.html"><span class="doc">Projections</span></a></p></li>
 </ul>
+</section>
 </section>
 
 
@@ -124,11 +142,55 @@ createdAt: DateTime</p>
     </div>
 </search>
 <script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="feature_flags.html">Feature Flagging &amp; Release Editions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Core Features</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="budget_management.html">Budget Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transactions.html">Transactions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="categories.html">Categories</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Recurring Transactions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#features">Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#managing-recurring-transactions">Managing Recurring Transactions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#data-model">Data Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#related-features">Related Features</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="projections.html">Projections</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced Features</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="currency_conversion.html">Currency Conversion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="travel_budget_planner.html">Travel Budget Planner</a></li>
+<li class="toctree-l1"><a class="reference internal" href="loans.html">Loans Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="emergency_fund.html">Emergency Fund</a></li>
+<li class="toctree-l1"><a class="reference internal" href="business_tools.html">Business Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="invoices.html">Invoices</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Utilities</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="financial_tools.html">Financial Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="export_backup.html">Export &amp; Backup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="app_settings.html">App Settings</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Development</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing Guidelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dependencies.html">Project Dependencies &amp; Licensing</a></li>
+</ul>
 
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="categories.html" title="previous chapter">Categories</a></li>
+      <li>Next: <a href="projections.html" title="next chapter">Projections</a></li>
   </ul></li>
 </ul>
 </div>
@@ -145,7 +207,7 @@ createdAt: DateTime</p>
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &#169;2026, Budget App Team.
+      &#169;2026, PyCentric.
       
       |
       Powered by <a href="https://www.sphinx-doc.org/">Sphinx 9.1.0</a>

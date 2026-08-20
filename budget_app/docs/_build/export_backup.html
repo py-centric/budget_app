@@ -5,15 +5,17 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>&lt;no title&gt; &#8212; Budget App 1.0.0 documentation</title>
+    <title>Export &amp; Backup &#8212; Budget App Documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
     <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
-    <script src="_static/documentation_options.js?v=8d563738"></script>
+    <script src="_static/documentation_options.js?v=fc837d61"></script>
     <script src="_static/doctools.js?v=fd6eb6e6"></script>
     <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="App Settings" href="app_settings.html" />
+    <link rel="prev" title="Financial Tools" href="financial_tools.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -31,73 +33,97 @@
 
           <div class="body" role="main">
             
-  <p># Export &amp; Backup</p>
-<p>## Overview</p>
-<p>Export and backup features ensure your financial data is portable and secure.</p>
-<p>## Data Export</p>
-<p>### Supported Formats</p>
+  <section id="export-backup">
+<h1>Export &amp; Backup<a class="headerlink" href="#export-backup" title="Link to this heading">¶</a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">¶</a></h2>
+<p>Export and backup features ensure your financial data is 100% portable, verifiable, and secure under an offline-first architecture.</p>
+</section>
+<section id="use-case-flow-diagram">
+<h2>Use Case Flow Diagram<a class="headerlink" href="#use-case-flow-diagram" title="Link to this heading">¶</a></h2>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>+-----------------------------------------------------------------------+
+|                    EXPORT &amp; BACKUP DATA FLOW                          |
++-----------------------------------------------------------------------+
+                                    |
+                                    v
+                        [ Select Data Operation ]
+                                    |
+       +----------------------------+----------------------------+
+       | (Export Financial Data)                                 | (Database Backup / Restore)
+       v                                                         v
+Choose Target Scope (Period/All)                         Select: [ Create Backup ] / [ Restore ]
+       |                                                         |
+Select Format (CSV / PDF / Excel)                        [ Create ]: Export raw SQLite file
+       |                                                         |
+Serialize Database Tables                                [ Restore ]: Select .db backup file
+       |                                                         |
+Write to Local Temp Directory                            Verify SHA-256 Checksum Integrity
+       |                                                         |
+       +----------------------------+----------------------------+
+                                    |
+                                    v
+                      [ Trigger Native Share Sheet ]
+                                    |
+                                    v
+                      [ Save / Send File on Device ]
+</pre></div>
+</div>
+</section>
+<section id="data-export">
+<h2>Data Export<a class="headerlink" href="#data-export" title="Link to this heading">¶</a></h2>
+<section id="supported-formats">
+<h3>Supported Formats<a class="headerlink" href="#supported-formats" title="Link to this heading">¶</a></h3>
 <ul class="simple">
-<li><p><strong>CSV</strong>: Spreadsheet-compatible format</p></li>
-<li><p><strong>PDF</strong>: Print-ready documents</p></li>
-<li><p><strong>Excel</strong>: Native Excel files</p></li>
+<li><p><strong>CSV</strong>: Universal tabular format for data science and external spreadsheets.</p></li>
+<li><p><strong>PDF</strong>: Formatted, print-ready financial statements generated on-device.</p></li>
+<li><p><strong>Excel (XLSX)</strong>: Multi-sheet workbooks with styled summary and transaction tabs.</p></li>
 </ul>
-<p>### Export Options</p>
+</section>
+<section id="export-options">
+<h3>Export Options<a class="headerlink" href="#export-options" title="Link to this heading">¶</a></h3>
 <ul class="simple">
-<li><p>Export all data</p></li>
-<li><p>Export by date range</p></li>
-<li><p>Export by budget</p></li>
-<li><p>Export categories</p></li>
-<li><p>Export transactions</p></li>
+<li><p>Export entire history or specific monthly budget periods.</p></li>
+<li><p>Filter by category or account before exporting.</p></li>
+<li><p>Export transaction ledgers with full date, description, and status tags.</p></li>
 </ul>
-<p>### Export Content</p>
-<ul class="simple">
-<li><p>Budget summaries</p></li>
-<li><p>Transaction lists</p></li>
-<li><p>Category breakdowns</p></li>
-<li><p>Financial reports</p></li>
-</ul>
-<p>## Database Backup</p>
-<p>### Manual Backup</p>
+</section>
+</section>
+<section id="database-backup-restore">
+<h2>Database Backup &amp; Restore<a class="headerlink" href="#database-backup-restore" title="Link to this heading">¶</a></h2>
+<section id="creating-backups">
+<h3>Creating Backups<a class="headerlink" href="#creating-backups" title="Link to this heading">¶</a></h3>
 <ol class="arabic simple">
-<li><p>Navigate to backup settings</p></li>
-<li><p>Tap “Create Backup”</p></li>
-<li><p>Choose storage location</p></li>
-<li><p>Confirm backup creation</p></li>
+<li><p>Open <strong>Settings</strong> &gt; <strong>Export &amp; Backup</strong>.</p></li>
+<li><p>Tap <strong>Create Database Backup</strong>.</p></li>
+<li><p>The app serializes the entire SQLite database into an integrity-checked backup file.</p></li>
+<li><p>Save locally or share to your preferred secure offline destination.</p></li>
 </ol>
-<p>### Backup Contents</p>
-<ul class="simple">
-<li><p>All budgets</p></li>
-<li><p>All transactions</p></li>
-<li><p>Categories</p></li>
-<li><p>Settings</p></li>
-<li><p>Recurring transactions</p></li>
-<li><p>Loans</p></li>
-<li><p>Invoices</p></li>
-</ul>
-<p>### Restore from Backup</p>
+</section>
+<section id="restoring-from-backup">
+<h3>Restoring from Backup<a class="headerlink" href="#restoring-from-backup" title="Link to this heading">¶</a></h3>
 <ol class="arabic simple">
-<li><p>Navigate to backup settings</p></li>
-<li><p>Select “Restore”</p></li>
-<li><p>Choose backup file</p></li>
-<li><p>Confirm restoration</p></li>
+<li><p>Select <strong>Restore from Backup</strong>.</p></li>
+<li><p>Choose a valid <cite>.db</cite> backup file from local storage.</p></li>
+<li><p>Confirm replacement of current database records.</p></li>
 </ol>
-<p>### Backup Storage</p>
+</section>
+</section>
+<section id="data-security-privacy">
+<h2>Data Security &amp; Privacy<a class="headerlink" href="#data-security-privacy" title="Link to this heading">¶</a></h2>
 <ul class="simple">
-<li><p>Local device storage</p></li>
-<li><p>Share via other apps</p></li>
+<li><p><strong>100% Local-First</strong>: No remote servers or third-party cloud tracking.</p></li>
+<li><p><strong>Encrypted Keys</strong>: Sensitive credentials and PINs protected in OS secure keychain via <cite>flutter_secure_storage</cite>.</p></li>
 </ul>
-<p>## Data Security</p>
+</section>
+<section id="related-features">
+<h2>Related Features<a class="headerlink" href="#related-features" title="Link to this heading">¶</a></h2>
 <ul class="simple">
-<li><p>Local-only storage (privacy-focused)</p></li>
-<li><p>Secure storage for sensitive data</p></li>
-<li><p>No cloud sync (by design)</p></li>
+<li><p><a class="reference internal" href="app_settings.html"><span class="doc">App Settings</span></a></p></li>
+<li><p><a class="reference internal" href="budget_management.html"><span class="doc">Budget Management</span></a></p></li>
+<li><p><a class="reference internal" href="transactions.html"><span class="doc">Transactions</span></a></p></li>
 </ul>
-<p>## Related Features</p>
-<ul class="simple">
-<li><p>[Budget Management](budget_management.rst)</p></li>
-<li><p>[Transactions](transactions.rst)</p></li>
-<li><p>[Categories](categories.rst)</p></li>
-</ul>
+</section>
+</section>
 
 
           </div>
@@ -125,11 +151,56 @@
     </div>
 </search>
 <script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="feature_flags.html">Feature Flagging &amp; Release Editions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Core Features</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="budget_management.html">Budget Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transactions.html">Transactions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="categories.html">Categories</a></li>
+<li class="toctree-l1"><a class="reference internal" href="recurring_transactions.html">Recurring Transactions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="projections.html">Projections</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced Features</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="currency_conversion.html">Currency Conversion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="travel_budget_planner.html">Travel Budget Planner</a></li>
+<li class="toctree-l1"><a class="reference internal" href="loans.html">Loans Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="emergency_fund.html">Emergency Fund</a></li>
+<li class="toctree-l1"><a class="reference internal" href="business_tools.html">Business Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="invoices.html">Invoices</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Utilities</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="financial_tools.html">Financial Tools</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Export &amp; Backup</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#use-case-flow-diagram">Use Case Flow Diagram</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#data-export">Data Export</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#database-backup-restore">Database Backup &amp; Restore</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#data-security-privacy">Data Security &amp; Privacy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#related-features">Related Features</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="app_settings.html">App Settings</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Development</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing Guidelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dependencies.html">Project Dependencies &amp; Licensing</a></li>
+</ul>
 
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="financial_tools.html" title="previous chapter">Financial Tools</a></li>
+      <li>Next: <a href="app_settings.html" title="next chapter">App Settings</a></li>
   </ul></li>
 </ul>
 </div>
@@ -146,7 +217,7 @@
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &#169;2026, Budget App Team.
+      &#169;2026, PyCentric.
       
       |
       Powered by <a href="https://www.sphinx-doc.org/">Sphinx 9.1.0</a>

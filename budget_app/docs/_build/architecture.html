@@ -5,15 +5,373 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>&lt;no title&gt; &#8212; Budget App 1.0.0 documentation</title>
+    <title>Architecture &#8212; Budget App Documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
     <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
-    <script src="_static/documentation_options.js?v=8d563738"></script>
+    <script src="_static/documentation_options.js?v=fc837d61"></script>
     <script src="_static/doctools.js?v=fd6eb6e6"></script>
     <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10.9.0/dist/mermaid.esm.min.mjs";
+
+
+
+const initStyles = () => {
+    const defaultStyle = document.createElement('style');
+    defaultStyle.textContent = "pre.mermaid {\n    /* Same as .mermaid-container > pre */\n    display: block;\n    width: 100%;\n}\n\npre.mermaid > svg {\n    /* Same as .mermaid-container > pre > svg */\n    height: 500px;\n    width: 100%;\n    max-width: 100% !important;\n}";
+    document.head.appendChild(defaultStyle);
+
+    const fullscreenStyle = document.createElement('style');
+    fullscreenStyle.textContent = ".mermaid-container {\n    position: relative;\n    display: flex;\n    flex-direction: row;\n    width: 100%;\n}\n\n.mermaid-container > pre {\n    display: block;\n    width: 100%;\n}\n\n.mermaid-container > pre > svg {\n    height: 500px;\n    width: 100%;\n    max-width: 100% !important;\n}\n\n.mermaid-fullscreen-btn {\n    position: absolute;\n    width: 28px;\n    height: 28px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.3);\n    border-radius: 4px;\n    cursor: pointer;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    transition: all 0.2s;\n    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);\n    font-size: 14px;\n    line-height: 1;\n    padding: 0;\n    color: #333;\n}\n\n.mermaid-fullscreen-btn:hover {\n    opacity: 100% !important;\n    background: rgba(255, 255, 255, 1);\n    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-btn.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.3);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-btn.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal {\n    display: none;\n    position: fixed !important;\n    top: 0 !important;\n    left: 0 !important;\n    width: 95vw;\n    height: 100vh;\n    background: rgba(255, 255, 255, 0.98);\n    z-index: 9999;\n    padding: 20px;\n    overflow: auto;\n}\n\n.mermaid-fullscreen-modal.dark-theme {\n    background: rgba(0, 0, 0, 0.98);\n}\n\n.mermaid-fullscreen-modal.active {\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen {\n    position: relative;\n    width: 95vw;\n    height: 90vh;\n    max-width: 95vw;\n    max-height: 90vh;\n    background: white;\n    border-radius: 8px;\n    padding: 20px;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);\n    overflow: auto;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen.dark-theme {\n    background: #1a1a1a;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);\n}\n\n.mermaid-container-fullscreen pre.mermaid {\n    width: 100%;\n    height: 100%;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen .mermaid svg {\n    height: 100% !important;\n    width: 100% !important;\n    cursor: grab;\n}\n\n.mermaid-fullscreen-close {\n    position: fixed !important;\n    top: 20px !important;\n    right: 20px !important;\n    width: 40px;\n    height: 40px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.2);\n    border-radius: 50%;\n    cursor: pointer;\n    z-index: 10000;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);\n    transition: all 0.2s;\n    font-size: 24px;\n    line-height: 1;\n    color: #333;\n}\n\n.mermaid-fullscreen-close:hover {\n    background: white;\n    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-close.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.2);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-close.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal .mermaid-fullscreen-btn {\n    display: none !important;\n}";
+    document.head.appendChild(fullscreenStyle);
+}
+
+// Detect if page has dark background
+const isDarkTheme = () => {
+    // We use a set of heuristics:
+    // 1. Check for common dark mode classes or attributes
+    // 2. Check computed background color brightness
+    if (document.documentElement.classList.contains('dark') ||
+        document.documentElement.getAttribute('data-theme') === 'dark' ||
+        document.body.classList.contains('dark') ||
+        document.body.getAttribute('data-theme') === 'dark') {
+        // console.log("Dark theme detected via class/attribute");
+        return true;
+    }
+    if (document.documentElement.classList.contains('light') ||
+        document.documentElement.getAttribute('data-theme') === 'light' ||
+        document.body.classList.contains('light') ||
+        document.body.getAttribute('data-theme') === 'light') {
+        // console.log("Light theme detected via class/attribute");
+        return false;
+    }
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        // console.log("Dark theme detected via prefers-color-scheme");
+        return true;
+    }
+    const bgColor = window.getComputedStyle(document.body).backgroundColor;
+    const match = bgColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)/);
+    if (match) {
+        const r = parseInt(match[1]);
+        const g = parseInt(match[2]);
+        const b = parseInt(match[3]);
+        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+        // console.log("Background color brightness:", brightness);
+        return brightness < 128;
+    }
+    // console.log("No dark or light theme detected, defaulting to light theme");
+    return false;
+};
+
+let darkTheme = isDarkTheme();
+let modal = null;
+let modalContent = null;
+let previousScrollOffset = [window.scrollX, window.scrollY];
+let _lazyObserver = null;
+let _renderQueue = Promise.resolve();
+let closeModal = () => {};
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal?.classList.contains('active')) {
+        closeModal();
+    }
+});
+
+// Apply d3 zoom to each SVG. Idempotent: an SVG already wrapped is skipped,
+// so this is safe to call both for the initial batch and for diagrams that
+// render lazily once they become visible.
+const addZoomToSvgs = (svgs) => {
+    svgs.each(function() {
+        if (this.getAttribute('data-zoom-applied') === 'true') return;
+        var svg = d3.select(this);
+        svg.html("<g class='wrapper'>" + svg.html() + "</g>");
+        var inner = svg.select("g");
+        var zoom = d3.zoom().on("zoom", function(event) {
+            inner.attr("transform", event.transform);
+        });
+        svg.call(zoom);
+        this.setAttribute('data-zoom-applied', 'true');
+    });
+};
+
+const runMermaid = async (rerun) => {
+    console.log("Running mermaid diagrams, rerun =", rerun);
+    // clear all existing mermaid charts
+    let all_mermaids = document.querySelectorAll(".mermaid");
+
+    if (rerun) {
+        // Disconnect any previous lazy rendering observer
+        if (_lazyObserver) {
+            _lazyObserver.disconnect();
+            _lazyObserver = null;
+        }
+
+        all_mermaids.forEach((el) => {
+            el.removeAttribute('data-mermaid-deferred');
+            el.removeAttribute('data-mermaid-render-failed');
+            if(!el.hasAttribute("data-original-code")) {
+                // store original code
+                // console.log(`Storing original code for first run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+            if(el.getAttribute("data-processed") === "true") {
+                // remove and restore original
+                el.removeAttribute("data-processed");
+                // console.log(`Restoring original code for re-run: `, el.getAttribute('data-original-code'));
+                el.innerHTML = el.getAttribute('data-original-code');
+            } else {
+                // store original code
+                // console.log(`Storing original code for re-run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+        });
+
+        // Separate visible and hidden elements. Mermaid's layout engine measures
+        // text dimensions via the DOM, which fails for elements hidden by a parent
+        // (e.g., Reveal.js non-active slides, sphinx-design unopened tabs),
+        // producing broken SVGs. Render visible elements now, defer hidden ones.
+        const visible = [];
+        const hidden = [];
+        all_mermaids.forEach((el) => {
+            // offsetParent is null for display:none ancestors.
+            // getClientRects().length > 0 catches position:fixed elements
+            // (which also have null offsetParent but are still visible).
+            if (el.offsetParent !== null || el.getClientRects().length > 0) {
+                visible.push(el);
+            } else {
+                hidden.push(el);
+                el.setAttribute('data-mermaid-deferred', 'true');
+            }
+        });
+
+        if (visible.length > 0) {
+            try {
+                await mermaid.run({ nodes: visible });
+            } catch (e) {
+                console.error("Mermaid rendering failed:", e);
+            }
+        }
+
+        // Lazily render hidden elements when they become visible.
+        // Uses a promise chain (_renderQueue) to serialize rendering,
+        // since IntersectionObserver may report multiple entries at once
+        // and mermaid.run() is not safe to call concurrently.
+        if (hidden.length > 0) {
+            if (typeof IntersectionObserver === 'undefined') {
+                console.warn("IntersectionObserver not available; hidden mermaid diagrams will not render.");
+            } else {
+                _renderQueue = Promise.resolve();
+                _lazyObserver = new IntersectionObserver((entries) => {
+                    for (const entry of entries) {
+                        if (entry.isIntersecting && entry.target.getAttribute("data-processed") !== "true") {
+                            _lazyObserver.unobserve(entry.target);
+                            const el = entry.target;
+                            _renderQueue = _renderQueue.then(async () => {
+                                try {
+                                    await mermaid.run({ nodes: [el] });
+                                    el.removeAttribute('data-mermaid-deferred');
+                                    // Apply zoom to the now-rendered diagram, matching
+                                    // the decoration visible diagrams receive.
+                                    if (false) {
+                                        addZoomToSvgs(d3.selectAll("").select(function() {
+                                            return this.querySelector("svg");
+                                        }));
+                                    }
+                                } catch (e) {
+                                    console.error("Mermaid deferred rendering failed:", e);
+                                    el.removeAttribute('data-mermaid-deferred');
+                                    el.setAttribute('data-mermaid-render-failed', 'true');
+                                }
+                            });
+                        }
+                    }
+                });
+                hidden.forEach((el) => _lazyObserver.observe(el));
+            }
+        }
+    }
+
+    all_mermaids = document.querySelectorAll(".mermaid");
+    // Exclude deferred (hidden) and render-failed elements from completion checks
+    const mermaids_active = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])");
+    const mermaids_processed = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])[data-processed='true']");
+
+    if (false) {
+        const mermaids_to_add_zoom = 0 === -1 ? mermaids_active.length : 0;
+        if(mermaids_to_add_zoom > 0) {
+            var svgs = d3.selectAll("").select(function() {
+                return this.querySelector("svg");
+            });
+            // Wait until every active (visible) diagram has rendered. Deferred
+            // diagrams are excluded, so a fixed d3_node_count that counts a
+            // hidden diagram no longer loops forever waiting for its SVG.
+            if(mermaids_active.length !== mermaids_processed.length) {
+                setTimeout(() => runMermaid(false), 200);
+                return;
+            }
+            addZoomToSvgs(svgs);
+        }
+    } else if(mermaids_active.length !== mermaids_processed.length) {
+        // Wait for mermaid to process all diagrams
+        setTimeout(() => runMermaid(false), 200);
+        return;
+    }
+
+    // Stop here if not adding fullscreen capability
+    if (!true) return;
+
+    if (modal !== null ) {
+        // Destroy existing modal
+        modal.remove();
+        modal = null;
+        modalContent = null;
+    }
+
+    modal = document.createElement('div');
+    modal.className = 'mermaid-fullscreen-modal' + (darkTheme ? ' dark-theme' : '');
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', 'Fullscreen diagram viewer');
+    modal.innerHTML = `
+        <button class="mermaid-fullscreen-close${darkTheme ? ' dark-theme' : ''}" aria-label="Close fullscreen">✕</button>
+        <div class="mermaid-container-fullscreen${darkTheme ? ' dark-theme' : ''}"></div>
+    `;
+    document.body.appendChild(modal);
+
+    modalContent = modal.querySelector('.mermaid-container-fullscreen');
+    const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
+
+    closeModal = () => {
+        modal.classList.remove('active');
+        modalContent.innerHTML = '';
+        document.body.style.overflow = ''
+        window.scrollTo({left: previousScrollOffset[0], top: previousScrollOffset[1], behavior: 'instant'});
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+    document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
+        if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
+            mermaidDiv.closest('.mermaid-fullscreen-modal')) {
+            // Already processed, adjust button class if needed
+            const existingBtn = mermaidDiv.parentNode.querySelector('.mermaid-fullscreen-btn');
+            if (existingBtn) {
+                existingBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+            }
+            return;
+        }
+
+        const container = document.createElement('div');
+        container.className = 'mermaid-container';
+        mermaidDiv.parentNode.insertBefore(container, mermaidDiv);
+        container.appendChild(mermaidDiv);
+
+        const fullscreenBtn = document.createElement('button');
+        fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+        fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
+        fullscreenBtn.textContent = "\u26f6";
+        fullscreenBtn.style.opacity = "50%";
+
+        // Calculate dynamic position based on diagram's margin and padding
+        const diagramStyle = window.getComputedStyle(mermaidDiv);
+        const marginTop = parseFloat(diagramStyle.marginTop) || 0;
+        const marginRight = parseFloat(diagramStyle.marginRight) || 0;
+        const paddingTop = parseFloat(diagramStyle.paddingTop) || 0;
+        const paddingRight = parseFloat(diagramStyle.paddingRight) || 0;
+        fullscreenBtn.style.top = `${marginTop + paddingTop + 4}px`;
+        fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
+
+        fullscreenBtn.addEventListener('click', () => {
+            previousScrollOffset = [window.scrollX, window.scrollY];
+            const clone = mermaidDiv.cloneNode(true);
+            modalContent.innerHTML = '';
+            modalContent.appendChild(clone);
+
+            const svg = clone.querySelector('svg');
+            if (svg) {
+                svg.removeAttribute('width');
+                svg.removeAttribute('height');
+                svg.style.width = '100%';
+                svg.style.height = 'auto';
+                svg.style.maxWidth = '100%';
+                svg.style.display = 'block';
+
+                if (false) {
+                    setTimeout(() => {
+                        const g = svg.querySelector('g');
+                        if (g) {
+                            var svgD3 = d3.select(svg);
+                            svgD3.html("<g class='wrapper'>" + svgD3.html() + "</g>");
+                            var inner = svgD3.select("g");
+                            var zoom = d3.zoom().on("zoom", function(event) {
+                                inner.attr("transform", event.transform);
+                            });
+                            svgD3.call(zoom);
+                        }
+                    }, 100);
+                }
+            }
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+        container.appendChild(fullscreenBtn);
+    });
+};
+
+
+
+const load = async () => {
+    initStyles();
+
+
+    await runMermaid(true);
+
+    const reRunIfThemeChanges = async () => {
+        const newDarkTheme = isDarkTheme();
+        if (newDarkTheme !== darkTheme) {
+            darkTheme = newDarkTheme;
+            console.log("Theme change detected, re-running mermaid with", darkTheme ? "dark" : "default", "theme");
+            await mermaid.initialize(
+                {...{"startOnLoad": false},
+                ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
+                }
+            );
+            await runMermaid(true);
+        }
+    };
+
+    // Update theme classes when theme changes
+    const themeObserver = new MutationObserver(reRunIfThemeChanges);
+    themeObserver.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+    themeObserver.observe(document.body, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+};
+
+
+
+
+
+console.log("Initializing mermaid with", darkTheme ? "dark" : "default", "theme");
+mermaid.initialize(
+    {...{"startOnLoad": false},
+    ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
+    }
+);
+
+window.addEventListener("load", load);
+window.runMermaid = runMermaid;</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Feature Flagging &amp; Release Editions" href="feature_flags.html" />
+    <link rel="prev" title="Getting Started" href="getting_started.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -31,32 +389,38 @@
 
           <div class="body" role="main">
             
-  <p># Architecture</p>
-<p>## Overview</p>
+  <section id="architecture">
+<h1>Architecture<a class="headerlink" href="#architecture" title="Link to this heading">¶</a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">¶</a></h2>
 <p>Budget App follows <strong>Clean Architecture</strong> principles with clear separation between UI, business logic, and data layers. The architecture ensures maintainability, testability, and scalability.</p>
-<p>## Layer Structure</p>
-<p><code class="docutils literal notranslate"><span class="pre">`</span>
-<span class="pre">lib/</span>
-<span class="pre">├──</span> <span class="pre">core/</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">#</span> <span class="pre">Shared</span> <span class="pre">utilities</span> <span class="pre">and</span> <span class="pre">constants</span>
-<span class="pre">│</span>&#160;&#160; <span class="pre">├──</span> <span class="pre">constants/</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">#</span> <span class="pre">App-wide</span> <span class="pre">constants</span>
-<span class="pre">│</span>&#160;&#160; <span class="pre">├──</span> <span class="pre">theme/</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">#</span> <span class="pre">Material</span> <span class="pre">Design</span> <span class="pre">3</span> <span class="pre">theming</span>
-<span class="pre">│</span>&#160;&#160; <span class="pre">└──</span> <span class="pre">utils/</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">#</span> <span class="pre">Currency,</span> <span class="pre">date,</span> <span class="pre">and</span> <span class="pre">chart</span> <span class="pre">utilities</span>
-<span class="pre">│</span>
-<span class="pre">├──</span> <span class="pre">features/</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">#</span> <span class="pre">Feature</span> <span class="pre">modules</span> <span class="pre">(独立功能模块)</span>
-<span class="pre">│</span>&#160;&#160; <span class="pre">├──</span> <span class="pre">budget/</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">#</span> <span class="pre">Core</span> <span class="pre">budget</span> <span class="pre">functionality</span>
-<span class="pre">│</span>&#160;&#160; <span class="pre">├──</span> <span class="pre">settings/</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">#</span> <span class="pre">App</span> <span class="pre">settings</span>
-<span class="pre">│</span>&#160;&#160; <span class="pre">├──</span> <span class="pre">export/</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">#</span> <span class="pre">Data</span> <span class="pre">export</span>
-<span class="pre">│</span>&#160;&#160; <span class="pre">├──</span> <span class="pre">backup/</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">#</span> <span class="pre">Backup</span> <span class="pre">&amp;</span> <span class="pre">restore</span>
-<span class="pre">│</span>&#160;&#160; <span class="pre">├──</span> <span class="pre">loans/</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">#</span> <span class="pre">Loan</span> <span class="pre">management</span>
-<span class="pre">│</span>&#160;&#160; <span class="pre">├──</span> <span class="pre">emergency_fund/</span>&#160; <span class="pre">#</span> <span class="pre">Emergency</span> <span class="pre">fund</span> <span class="pre">calculator</span>
-<span class="pre">│</span>&#160;&#160; <span class="pre">├──</span> <span class="pre">financial_tools/</span> <span class="pre">#</span> <span class="pre">Financial</span> <span class="pre">calculators</span>
-<span class="pre">│</span>&#160;&#160; <span class="pre">└──</span> <span class="pre">business_tools/</span>&#160; <span class="pre">#</span> <span class="pre">Invoices,</span> <span class="pre">clients,</span> <span class="pre">profiles</span>
-<span class="pre">│</span>
-<span class="pre">└──</span> <span class="pre">shared/</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">#</span> <span class="pre">Shared</span> <span class="pre">widgets</span> <span class="pre">and</span> <span class="pre">repositories</span>
-<span class="pre">`</span></code></p>
-<p>## Each Feature Follows Clean Architecture</p>
-<p><a href="#id1"><span class="problematic" id="id2">``</span></a>`
-feature/
+</section>
+<section id="layer-structure">
+<h2>Layer Structure<a class="headerlink" href="#layer-structure" title="Link to this heading">¶</a></h2>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>lib/
+├── core/                  # Shared utilities, feature flags, constants
+│   ├── constants/        # App-wide constants
+│   ├── feature_flags/    # Release editions and feature gating
+│   ├── theme/           # Material Design 3 theming
+│   └── utils/           # Currency, date, and chart utilities
+│
+├── features/             # Feature modules
+│   ├── budget/          # Core budget functionality
+│   ├── settings/        # App settings
+│   ├── export/           # Data export
+│   ├── backup/          # Backup &amp; restore
+│   ├── loans/           # Loan management
+│   ├── emergency_fund/  # Emergency fund calculator
+│   ├── financial_tools/ # Financial calculators
+│   └── business_tools/  # Invoices, clients, profiles
+│
+└── shared/              # Shared widgets and repositories
+</pre></div>
+</div>
+</section>
+<section id="each-feature-follows-clean-architecture">
+<h2>Each Feature Follows Clean Architecture<a class="headerlink" href="#each-feature-follows-clean-architecture" title="Link to this heading">¶</a></h2>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>feature/
 ├── domain/                    # Business Logic Layer
 │   ├── entities/             # Business objects
 │   ├── repositories/         # Repository interfaces
@@ -67,78 +431,618 @@ feature/
 │   ├── models/               # Data models
 │   └── repositories/         # Repository implementations
 │
-└── presentation/             # UI Layer</p>
-<blockquote>
-<div><p>├── bloc/                 # BLoC state management
-├── pages/               # Screen widgets
-└── widgets/             # Reusable UI components</p>
-</div></blockquote>
-<p><a href="#id3"><span class="problematic" id="id4">``</span></a><a href="#id5"><span class="problematic" id="id6">`</span></a></p>
-<p>## Key Components</p>
-<p>### Domain Layer</p>
+└── presentation/             # UI Layer
+    ├── bloc/                 # BLoC state management
+    ├── pages/               # Screen widgets
+    └── widgets/             # Reusable UI components
+</pre></div>
+</div>
+</section>
+<section id="key-components">
+<h2>Key Components<a class="headerlink" href="#key-components" title="Link to this heading">¶</a></h2>
+<section id="domain-layer">
+<h3>Domain Layer<a class="headerlink" href="#domain-layer" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Entities</strong>: Pure business objects (Budget, IncomeEntry, ExpenseEntry, Category)</p></li>
 <li><p><strong>Repositories</strong>: Abstract interfaces for data operations</p></li>
 <li><p><strong>Use Cases</strong>: Business logic implementations</p></li>
 </ul>
-<p>### Data Layer</p>
+</section>
+<section id="data-layer">
+<h3>Data Layer<a class="headerlink" href="#data-layer" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>LocalDatabase</strong>: SQLite database via sqflite package</p></li>
 <li><p><strong>Models</strong>: Database-specific data representations</p></li>
 <li><p><strong>Repository Implementations</strong>: Concrete data access implementations</p></li>
 </ul>
-<p>### Presentation Layer</p>
+</section>
+<section id="presentation-layer">
+<h3>Presentation Layer<a class="headerlink" href="#presentation-layer" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>BLoC</strong>: State management using flutter_bloc</p></li>
 <li><p><strong>Pages</strong>: Full-screen widgets for each route</p></li>
 <li><p><strong>Widgets</strong>: Reusable UI components</p></li>
 </ul>
-<p>## State Management</p>
+</section>
+</section>
+<section id="state-management">
+<h2>State Management<a class="headerlink" href="#state-management" title="Link to this heading">¶</a></h2>
 <p>The app uses <strong>BLoC (Business Logic Component)</strong> pattern via flutter_bloc:</p>
 <ul class="simple">
 <li><p><strong>BudgetBloc</strong>: Manages budget CRUD operations</p></li>
 <li><p><strong>NavigationBloc</strong>: Handles period/budget navigation</p></li>
 <li><p><strong>CategoryBloc</strong>: Manages categories</p></li>
 <li><p><strong>ProjectionBloc</strong>: Handles financial projections</p></li>
+<li><p><strong>FeatureFlagsBloc</strong>: Manages release edition targets and feature toggles</p></li>
 <li><p><strong>SettingsBloc</strong>: App configuration state</p></li>
 </ul>
-<p>## Database Schema</p>
-<p>### Main Tables</p>
+</section>
+<section id="architecture-diagrams">
+<h2>Architecture Diagrams<a class="headerlink" href="#architecture-diagrams" title="Link to this heading">¶</a></h2>
+<section id="decomposed-dao-database-architecture">
+<h3>Decomposed DAO Database Architecture<a class="headerlink" href="#decomposed-dao-database-architecture" title="Link to this heading">¶</a></h3>
+<pre  class="mermaid">
+        classDiagram
+    class LocalDatabase {
+        -Database _database
+        -Completer~Database~ _databaseCompleter
+        +instance LocalDatabase$
+        +initialize() Future~void~$
+        +database Future~Database~
+        +initDatabase() Future~Database~
+        -_onCreate(Database, int) Future~void~
+        -_onUpgrade(Database, int, int) Future~void~
+        +BudgetDao budgetDao
+        +TransactionDao transactionDao
+        +CategoryDao categoryDao
+        +AccountDao accountDao
+        +InvoiceDao invoiceDao
+        +LoanDao loanDao
+        +SavingsDao savingsDao
+        +ReminderDao reminderDao
+        +NetWorthDao netWorthDao
+    }
+
+    class BaseDao {
+        &lt;&lt;abstract&gt;&gt;
+        #Future~Database~ database
+        +BaseDao(Future~Database~ Function() dbProvider)
+    }
+
+    class BudgetDao {
+        +getBudgets() Future~List~
+        +getBudgetById(String id) Future~Map?~
+        +insertBudget(Map budget) Future~int~
+        +updateBudget(Map budget) Future~int~
+        +deleteBudget(String id) Future~int~
+        +getCategoryLimits(String budgetId) Future~List~
+        +getBudgetTemplates() Future~List~
+    }
+
+    class TransactionDao {
+        +getIncomeEntries(String budgetId) Future~List~
+        +getExpenseEntries(String budgetId) Future~List~
+        +insertIncomeEntry(Map entry) Future~int~
+        +insertExpenseEntry(Map entry) Future~int~
+        +getRecurringTransactions(String budgetId) Future~List~
+        +getSplits(String parentId) Future~List~
+        +getTagsForTransaction(String id) Future~List~
+        +getAttachments(String id) Future~List~
+    }
+
+    class CategoryDao {
+        +getCategories(String? type) Future~List~
+        +insertCategory(Map category) Future~int~
+        +updateCategory(Map category) Future~int~
+        +deleteCategory(String id) Future~int~
+        +seedDefaultCategories() Future~void~
+    }
+
+    class AccountDao {
+        +getAccounts() Future~List~
+        +insertAccount(Map account) Future~int~
+        +insertTransfer(Map transfer) Future~int~
+        +getAccountTransactions(String accountId) Future~List~
+        +getSavingsAccounts() Future~List~
+        +getInvestmentPortfolios() Future~List~
+    }
+
+    class InvoiceDao {
+        +getInvoices(String? status) Future~List~
+        +insertInvoice(Map invoice) Future~int~
+        +getInvoiceItems(String invoiceId) Future~List~
+        +getInvoicePayments(String invoiceId) Future~List~
+        +getClients() Future~List~
+        +getCompanyProfile() Future~Map?~
+        +getReceivedInvoices() Future~List~
+    }
+
+    class LoanDao {
+        +getLoanAccounts() Future~List~
+        +getLoanById(String accountId) Future~Map?~
+        +insertLoanAccount(Map loan) Future~int~
+        +updateLoanAccount(Map loan) Future~int~
+        +getSavedCalculations(String type) Future~List~
+    }
+
+    class SavingsDao {
+        +getSavingsGoals() Future~List~
+        +insertSavingsGoal(Map goal) Future~int~
+        +getContributions(String goalId) Future~List~
+        +insertContribution(Map contribution) Future~int~
+    }
+
+    class ReminderDao {
+        +getBillReminders() Future~List~
+        +insertBillReminder(Map reminder) Future~int~
+        +markReminderNotified(String id) Future~int~
+    }
+
+    class NetWorthDao {
+        +getSnapshots() Future~List~
+        +insertSnapshot(Map snapshot) Future~int~
+        +getCreditCards() Future~List~
+        +getInvestments() Future~List~
+    }
+
+    LocalDatabase --&gt; BaseDao : delegates database provider
+    BaseDao &lt;|-- BudgetDao
+    BaseDao &lt;|-- TransactionDao
+    BaseDao &lt;|-- CategoryDao
+    BaseDao &lt;|-- AccountDao
+    BaseDao &lt;|-- InvoiceDao
+    BaseDao &lt;|-- LoanDao
+    BaseDao &lt;|-- SavingsDao
+    BaseDao &lt;|-- ReminderDao
+    BaseDao &lt;|-- NetWorthDao
+
+    LocalDatabase *-- BudgetDao
+    LocalDatabase *-- TransactionDao
+    LocalDatabase *-- CategoryDao
+    LocalDatabase *-- AccountDao
+    LocalDatabase *-- InvoiceDao
+    LocalDatabase *-- LoanDao
+    LocalDatabase *-- SavingsDao
+    LocalDatabase *-- ReminderDao
+    LocalDatabase *-- NetWorthDao
+    </pre></section>
+<section id="bloc-state-orchestration-and-data-flow">
+<h3>BLoC State Orchestration and Data Flow<a class="headerlink" href="#bloc-state-orchestration-and-data-flow" title="Link to this heading">¶</a></h3>
+<pre  class="mermaid">
+        flowchart TD
+    subgraph UI_Presentation_Layer [&quot;Presentation Layer (Flutter Widgets)&quot;]
+        UI_Home[&quot;HomeScreen / Dashboard&quot;]
+        UI_Nav[&quot;Navigation Drawer &amp; Period Selector&quot;]
+        UI_Gate[&quot;FeatureGate &amp; FeatureRouteGuard&quot;]
+        UI_Settings[&quot;SettingsPage (Theme &amp; High Contrast)&quot;]
+        UI_Forms[&quot;Transaction &amp; Invoice Forms&quot;]
+    end
+
+    subgraph State_Orchestration_Layer [&quot;State Orchestration Layer (BLoC)&quot;]
+        direction TB
+        subgraph Global_Blocs [&quot;Global Core BLoCs&quot;]
+            FeatureFlagsBloc[&quot;FeatureFlagsBloc&lt;br/&gt;(HydratedBloc)&quot;]
+            SettingsBloc[&quot;SettingsBloc&lt;br/&gt;(Theme, Currency, Contrast)&quot;]
+            NavigationBloc[&quot;NavigationBloc&lt;br/&gt;(Active Period &amp; Budget ID)&quot;]
+            AppLockBloc[&quot;AppLockBloc&lt;br/&gt;(Biometric &amp; PIN State)&quot;]
+        end
+
+        subgraph Feature_Blocs [&quot;Domain Feature BLoCs&quot;]
+            BudgetBloc[&quot;BudgetBloc&lt;br/&gt;(Income, Expense, Balance)&quot;]
+            CategoryBloc[&quot;CategoryBloc&lt;br/&gt;(Category Master Data)&quot;]
+            AccountBloc[&quot;AccountBloc&lt;br/&gt;(Multi-Bank &amp; Transfers)&quot;]
+            BusinessBloc[&quot;BusinessBloc&lt;br/&gt;(Invoices &amp; Clients)&quot;]
+            LoanBloc[&quot;LoanBloc&lt;br/&gt;(Loans &amp; Amortization)&quot;]
+            SavingsBloc[&quot;SavingsBloc&lt;br/&gt;(Goals &amp; Contributions)&quot;]
+        end
+    end
+
+    subgraph Domain_Services [&quot;Domain Layer (Repositories &amp; Services)&quot;]
+        GateService[&quot;FeatureGateService&lt;br/&gt;(Sync Flag Verification)&quot;]
+        BudgetRepo[&quot;BudgetRepository&quot;]
+        AccountRepo[&quot;AccountRepository&quot;]
+        InvoiceRepo[&quot;InvoiceRepository&quot;]
+        CategoryRepo[&quot;CategoryRepository&quot;]
+        LoanRepo[&quot;LoanRepository&quot;]
+    end
+
+    subgraph Data_Access_Layer [&quot;Data Layer (Decomposed DAOs)&quot;]
+        LocalDB[&quot;LocalDatabase Orchestrator&lt;br/&gt;(Connection, Migrations, PRAGMAs)&quot;]
+        BudgetDao[&quot;BudgetDao&quot;]
+        TxDao[&quot;TransactionDao&quot;]
+        AccountDao[&quot;AccountDao&quot;]
+        InvoiceDao[&quot;InvoiceDao&quot;]
+        CategoryDao[&quot;CategoryDao&quot;]
+        LoanDao[&quot;LoanDao&quot;]
+    end
+
+    subgraph Persistence_Engines [&quot;Persistence Layer&quot;]
+        SQLite[(&quot;SQLite Database&lt;br/&gt;(sqflite / sqflite_ffi)&quot;)]
+        HydratedStore[(&quot;HydratedStorage&lt;br/&gt;(JSON Preferences Cache)&quot;)]
+        SecureStore[(&quot;FlutterSecureStorage&lt;br/&gt;(Encrypted Keychain / Keystore)&quot;)]
+    end
+
+    UI_Nav --&gt;|Select Period / Budget| NavigationBloc
+    UI_Settings --&gt;|Change Theme / Contrast| SettingsBloc
+    UI_Forms --&gt;|Add / Update Event| BudgetBloc
+    UI_Forms --&gt;|Invoice Event| BusinessBloc
+    UI_Home --&gt;|Render View| UI_Gate
+
+    NavigationBloc -.-&gt;|PeriodChanged Notification| BudgetBloc
+    FeatureFlagsBloc --&gt;|Publish Active Flags| GateService
+    UI_Gate --&gt;|Check isFeatureEnabled| GateService
+
+    BudgetBloc --&gt; BudgetRepo
+    CategoryBloc --&gt; CategoryRepo
+    AccountBloc --&gt; AccountRepo
+    BusinessBloc --&gt; InvoiceRepo
+    LoanBloc --&gt; LoanRepo
+
+    BudgetRepo --&gt; BudgetDao
+    BudgetRepo --&gt; TxDao
+    CategoryRepo --&gt; CategoryDao
+    AccountRepo --&gt; AccountDao
+    InvoiceRepo --&gt; InvoiceDao
+    LoanRepo --&gt; LoanDao
+
+    BudgetDao --&gt; LocalDB
+    TxDao --&gt; LocalDB
+    AccountDao --&gt; LocalDB
+    InvoiceDao --&gt; LocalDB
+    CategoryDao --&gt; LocalDB
+    LoanDao --&gt; LocalDB
+    LocalDB --&gt; SQLite
+
+    FeatureFlagsBloc --&gt; HydratedStore
+    SettingsBloc --&gt; HydratedStore
+    AppLockBloc --&gt; SecureStore
+    </pre></section>
+<section id="sqlite-schema-v28-entity-relationships">
+<h3>SQLite Schema v28 Entity Relationships<a class="headerlink" href="#sqlite-schema-v28-entity-relationships" title="Link to this heading">¶</a></h3>
+<pre  class="mermaid">
+        erDiagram
+    BUDGETS ||--o{ INCOME_ENTRIES : &quot;contains&quot;
+    BUDGETS ||--o{ EXPENSE_ENTRIES : &quot;contains&quot;
+    BUDGETS ||--o{ BUDGET_GOALS : &quot;defines&quot;
+    BUDGETS ||--o{ CATEGORY_LIMITS : &quot;sets&quot;
+    BUDGETS ||--o{ RECURRING_TRANSACTIONS : &quot;schedules&quot;
+
+    CATEGORIES ||--o{ INCOME_ENTRIES : &quot;categorizes&quot;
+    CATEGORIES ||--o{ EXPENSE_ENTRIES : &quot;categorizes&quot;
+    CATEGORIES ||--o{ BUDGET_GOALS : &quot;targets&quot;
+    CATEGORIES ||--o{ CATEGORY_LIMITS : &quot;restricts&quot;
+    CATEGORIES ||--o{ SAVINGS_GOALS : &quot;links&quot;
+    CATEGORIES ||--o{ TRANSACTION_SPLITS : &quot;allocates&quot;
+    CATEGORIES ||--o{ BUDGET_TEMPLATE_ALLOCATIONS : &quot;allocates&quot;
+
+    RECURRING_TRANSACTIONS ||--o{ RECURRING_OVERRIDES : &quot;overrides&quot;
+    RECURRING_TRANSACTIONS ||--o{ BILL_REMINDERS : &quot;notifies&quot;
+
+    SAVINGS_GOALS ||--o{ SAVINGS_CONTRIBUTIONS : &quot;receives&quot;
+
+    BUDGET_TEMPLATES ||--o{ BUDGET_TEMPLATE_ALLOCATIONS : &quot;composes&quot;
+
+    TAGS ||--o{ TRANSACTION_TAGS : &quot;labels&quot;
+
+    COMPANY_PROFILES ||--o{ INVOICES : &quot;issues&quot;
+    CLIENTS ||--o{ INVOICES : &quot;billed_to&quot;
+    INVOICES ||--o{ INVOICE_ITEMS : &quot;contains&quot;
+    INVOICES ||--o{ INVOICE_PAYMENTS : &quot;settles&quot;
+
+    ACCOUNTS ||--o{ TRANSFERS : &quot;source_of&quot;
+    ACCOUNTS ||--o{ TRANSFERS : &quot;dest_of&quot;
+    ACCOUNTS ||--o{ ACCOUNT_TRANSACTIONS : &quot;logs&quot;
+    ACCOUNTS ||--o| LOAN_ACCOUNTS : &quot;specializes&quot;
+    ACCOUNTS ||--o| SAVINGS_ACCOUNTS : &quot;specializes&quot;
+    ACCOUNTS ||--o| INVESTMENT_PORTFOLIOS : &quot;specializes&quot;
+
+    BUDGETS {
+        string id PK
+        string name
+        int period_month
+        int period_year
+        int is_active
+        string currency_code
+        string target_currency_code
+        float exchange_rate
+        float converted_amount
+        string type
+        float target_income
+        string source_description
+        string linked_income_id
+    }
+
+    INCOME_ENTRIES {
+        string id PK
+        string budget_id FK
+        float amount
+        string description
+        string date
+        int period_month
+        int period_year
+        string category_id FK
+        int is_potential
+    }
+
+    EXPENSE_ENTRIES {
+        string id PK
+        string budget_id FK
+        float amount
+        string description
+        string date
+        int period_month
+        int period_year
+        string category_id FK
+        int is_potential
+    }
+
+    CATEGORIES {
+        string id PK
+        string name
+        string icon
+        string type
+    }
+
+    CATEGORY_LIMITS {
+        string id PK
+        string budget_id FK
+        string category_id FK
+        float amount
+        string period
+        string created_at
+        string updated_at
+    }
+
+    SAVINGS_GOALS {
+        string id PK
+        string name
+        float target_amount
+        float current_amount
+        string deadline
+        string linked_category_id FK
+        string icon
+        string color
+        int is_completed
+        string created_at
+        string updated_at
+    }
+
+    SAVINGS_CONTRIBUTIONS {
+        string id PK
+        string goal_id FK
+        float amount
+        string date
+        string note
+        string created_at
+    }
+
+    RECURRING_TRANSACTIONS {
+        string id PK
+        string budget_id FK
+        string type
+        float amount
+        string category_id FK
+        string description
+        string start_date
+        string end_date
+        int recurrence_interval
+        string recurrence_unit
+    }
+
+    RECURRING_OVERRIDES {
+        string id PK
+        string recurring_transaction_id FK
+        string target_date
+        float new_amount
+        string new_date
+        int is_deleted
+    }
+
+    BILL_REMINDERS {
+        string id PK
+        string recurring_transaction_id FK
+        string due_date
+        int days_before_due
+        int is_notified
+        string notified_at
+        string created_at
+    }
+
+    INVOICES {
+        string id PK
+        string profile_id FK
+        string client_id FK
+        string invoice_number
+        string date
+        string client_name
+        string client_details
+        string status
+        float sub_total
+        float tax_total
+        float grand_total
+        string notes
+        float balance_due
+        string bank_name
+        string bank_iban
+        string bank_bic
+        string bank_holder
+    }
+
+    INVOICE_ITEMS {
+        string id PK
+        string invoice_id FK
+        string description
+        float quantity
+        float rate
+        float tax_rate
+        float total
+    }
+
+    INVOICE_PAYMENTS {
+        string id PK
+        string invoice_id FK
+        float amount
+        string date
+        string method
+    }
+
+    CLIENTS {
+        string id PK
+        string name
+        string address
+        string tax_id
+        string primary_contact
+        string email
+        string phone
+        string website
+        string industry
+        string notes
+    }
+
+    COMPANY_PROFILES {
+        string id PK
+        string name
+        string address
+        string tax_id
+        string logo_path
+        string payment_info
+        float default_vat_rate
+        string bank_name
+        string bank_iban
+        string bank_bic
+        string bank_holder
+        int primary_color
+        string font_family
+        int logo_on_right
+    }
+
+    ACCOUNTS {
+        string id PK
+        string name
+        string type
+        float balance
+        string currency
+        int created_at
+        int updated_at
+    }
+
+    TRANSFERS {
+        string id PK
+        string from_account_id FK
+        string to_account_id FK
+        float amount
+        int date
+        string note
+        int created_at
+    }
+
+    LOAN_ACCOUNTS {
+        string account_id PK,FK
+        float original_principal
+        float current_principal
+        float interest_rate_apr
+        float minimum_monthly_payment
+        int origination_date
+        int is_paid_off
+    }
+
+    SAVINGS_ACCOUNTS {
+        string account_id PK,FK
+        float interest_rate_apy
+        string compounding_frequency
+        float target_goal_amount
+        float total_contributions
+    }
+
+    INVESTMENT_PORTFOLIOS {
+        string account_id PK,FK
+        float total_market_value
+        float total_deposited
+        float total_withdrawn
+        float target_annual_return_rate
+    }
+
+    ACCOUNTS ||--o{ INCOME_ENTRIES : &quot;funds&quot;
+    ACCOUNTS ||--o{ EXPENSE_ENTRIES : &quot;charged to&quot;
+    </pre></section>
+<section id="transaction-account-filter-data-flow">
+<h3>Transaction Account Filter Data Flow<a class="headerlink" href="#transaction-account-filter-data-flow" title="Link to this heading">¶</a></h3>
+<pre  class="mermaid">
+        sequenceDiagram
+    autonumber
+    actor User
+    participant FilterBar as FilterBar Widget
+    participant FilterSheet as AccountFilterSheet
+    participant FilterUtils as FilterUtils
+
+    User-&gt;&gt;FilterBar: Tap Account Filter Button
+    FilterBar-&gt;&gt;FilterSheet: Open modal with accounts list
+    User-&gt;&gt;FilterSheet: Select Accounts A, B + Tap Apply
+    FilterSheet--&gt;&gt;FilterBar: AccountFilter(selectedAccountIds: {A, B})
+    FilterBar-&gt;&gt;FilterUtils: filterIncomeEntries(entries, filterState)
+    FilterBar-&gt;&gt;FilterUtils: filterExpenseEntries(entries, filterState)
+    FilterUtils--&gt;&gt;FilterBar: Return filtered transaction subsets
+    FilterBar-&gt;&gt;User: Render filtered lists &amp; updated summary totals
+    </pre></section>
+</section>
+<section id="database-schema">
+<h2>Database Schema<a class="headerlink" href="#database-schema" title="Link to this heading">¶</a></h2>
+<section id="main-tables">
+<h3>Main Tables<a class="headerlink" href="#main-tables" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>budgets</strong>: Budget periods and metadata</p></li>
-<li><p><strong>income_entries</strong>: Income transactions</p></li>
-<li><p><strong>expense_entries</strong>: Expense transactions</p></li>
+<li><p><strong>income_entries</strong>: Income transactions (with optional account_id FK)</p></li>
+<li><p><strong>expense_entries</strong>: Expense transactions (with optional account_id FK)</p></li>
 <li><p><strong>categories</strong>: Income and expense categories</p></li>
 <li><p><strong>recurring_transactions</strong>: Recurring transaction definitions</p></li>
 <li><p><strong>budget_goals</strong>: Category budget limits</p></li>
 <li><p><strong>invoices</strong>: Business invoices (business tools)</p></li>
 <li><p><strong>clients</strong>: Business clients (business tools)</p></li>
 <li><p><strong>company_profiles</strong>: Business company profiles</p></li>
+<li><p><strong>accounts</strong>: Bank and financial accounts</p></li>
+<li><p><strong>transfers</strong>: Transfers between accounts</p></li>
+<li><p><strong>savings_goals</strong>: Savings targets and progress</p></li>
+<li><p><strong>savings_contributions</strong>: Goal contributions</p></li>
+<li><p><strong>bill_reminders</strong>: Upcoming bill reminder alerts</p></li>
+<li><p><strong>loan_accounts</strong>: Loans and liability tracking</p></li>
 </ul>
-<p>### Database Version</p>
-<p>Current schema version: 16</p>
-<p>Migrations are handled in <cite>LocalDatabase._onUpgrade()</cite> following constitution requirements.</p>
-<p>## Theme</p>
+</section>
+<section id="database-version">
+<h3>Database Version<a class="headerlink" href="#database-version" title="Link to this heading">¶</a></h3>
+<p>Current schema version: 29</p>
+<p>Migrations are handled in <code class="docutils literal notranslate"><span class="pre">LocalDatabase._onUpgrade()</span></code> following constitutional requirements.</p>
+</section>
+</section>
+<section id="theme">
+<h2>Theme<a class="headerlink" href="#theme" title="Link to this heading">¶</a></h2>
 <p>The app uses <strong>Material Design 3</strong> with custom theming:</p>
 <ul class="simple">
-<li><p>Light and dark mode support</p></li>
+<li><p>Light, Dark, OLED Dark, and High Contrast mode support</p></li>
 <li><p>Custom color scheme for income (green), expenses (red), balance (blue)</p></li>
-<li><p>Accessible color combinations</p></li>
+<li><p>Accessible color combinations meeting WCAG 2.1 AA contrast requirements</p></li>
 </ul>
-<p>## Security</p>
+</section>
+<section id="security">
+<h2>Security<a class="headerlink" href="#security" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p><strong>flutter_secure_storage</strong>: Sensitive data encryption</p></li>
 <li><p><strong>local_auth</strong>: Biometric authentication (fingerprint, Face ID)</p></li>
 <li><p><strong>App Lock</strong>: PIN/biometric app protection</p></li>
 </ul>
-<p>## Offline-First Architecture</p>
+</section>
+<section id="offline-first-architecture">
+<h2>Offline-First Architecture<a class="headerlink" href="#offline-first-architecture" title="Link to this heading">¶</a></h2>
 <p>All data is stored locally on the device using SQLite. No cloud sync is implemented, ensuring user privacy and offline functionality.</p>
-<p>### Backup Strategy</p>
+<section id="backup-strategy">
+<h3>Backup Strategy<a class="headerlink" href="#backup-strategy" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Export to local file system (CSV, PDF, Excel)</p></li>
 <li><p>Full database backup and restore</p></li>
 <li><p>Share functionality via system share sheet</p></li>
 </ul>
+</section>
+</section>
+</section>
 
 
           </div>
@@ -166,11 +1070,60 @@ feature/
     </div>
 </search>
 <script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Architecture</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#layer-structure">Layer Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#each-feature-follows-clean-architecture">Each Feature Follows Clean Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#key-components">Key Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#state-management">State Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#architecture-diagrams">Architecture Diagrams</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#database-schema">Database Schema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#theme">Theme</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#security">Security</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#offline-first-architecture">Offline-First Architecture</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="feature_flags.html">Feature Flagging &amp; Release Editions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Core Features</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="budget_management.html">Budget Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transactions.html">Transactions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="categories.html">Categories</a></li>
+<li class="toctree-l1"><a class="reference internal" href="recurring_transactions.html">Recurring Transactions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="projections.html">Projections</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced Features</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="currency_conversion.html">Currency Conversion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="travel_budget_planner.html">Travel Budget Planner</a></li>
+<li class="toctree-l1"><a class="reference internal" href="loans.html">Loans Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="emergency_fund.html">Emergency Fund</a></li>
+<li class="toctree-l1"><a class="reference internal" href="business_tools.html">Business Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="invoices.html">Invoices</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Utilities</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="financial_tools.html">Financial Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="export_backup.html">Export &amp; Backup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="app_settings.html">App Settings</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Development</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing Guidelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dependencies.html">Project Dependencies &amp; Licensing</a></li>
+</ul>
 
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="getting_started.html" title="previous chapter">Getting Started</a></li>
+      <li>Next: <a href="feature_flags.html" title="next chapter">Feature Flagging &amp; Release Editions</a></li>
   </ul></li>
 </ul>
 </div>
@@ -187,7 +1140,7 @@ feature/
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &#169;2026, Budget App Team.
+      &#169;2026, PyCentric.
       
       |
       Powered by <a href="https://www.sphinx-doc.org/">Sphinx 9.1.0</a>

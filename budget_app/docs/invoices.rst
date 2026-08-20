@@ -4,7 +4,7 @@ Invoices
 Overview
 --------
 
-The invoicing system allows you to create, send, and track professional invoices for clients.
+The invoicing subsystem allows users to generate, format, export, and track professional client invoices with multi-line items, taxes, discounts, and payment lifecycle tracking.
 
 Use Case Flow Diagram
 ---------------------
@@ -45,75 +45,82 @@ Use Case Flow Diagram
            v                                                         v
     Trigger Payment Reminder                             Record Income Entry in DB
 
-## Creating Invoices
+Creating Invoices
+-----------------
 
-### Basic Information
+Basic Information
+~~~~~~~~~~~~~~~~~
 
-- Invoice number (auto-generated or custom)
-- Client name
-- Issue date
-- Due date
+- Unique invoice number (auto-sequenced or custom alphanumeric code).
+- Client name, address, and email coordinates.
+- Issue date and net payment due date terms.
 
-### Line Items
+Line Items
+~~~~~~~~~~
 
-- Description
-- Quantity
-- Unit price
-- Total (calculated)
+- Description of service rendered or goods sold.
+- Quantity / hours billed.
+- Unit rate.
+- Itemized subtotal calculations.
 
-### Tax and Discounts
+Taxes, Fees, and Discounts
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-- Tax rate (optional)
-- Discount percentage (optional)
-- Notes/terms
+- Configurable tax percentage (e.g. VAT / Sales Tax).
+- Absolute or percentage discount deductions.
+- Custom payment instructions and terms of service notes.
 
-## Invoice Management
+Invoice Management
+------------------
 
-### Status Tracking
+Status Tracking
+~~~~~~~~~~~~~~~
 
-- Draft: Work in progress
-- Sent: Delivered to client
-- Paid: Payment received
-- Overdue: Past due date
+- **Draft**: Working version, editable.
+- **Sent**: Delivered to client.
+- **Paid**: Completed transaction.
+- **Overdue**: Payment past due date.
 
-### Actions
+Actions
+~~~~~~~
 
-- Edit draft invoices
-- Mark as sent/paid
-- Delete drafts
-- View payment history
+- Export structured PDF invoice via `pdf` and `printing` packages.
+- Share via system share sheet or email client.
+- Mark as paid to automatically record matching income entry.
 
-## Invoice Data Model
+Data Models
+-----------
 
-```
-Invoice {
-  id: String
-  invoiceNumber: String
-  clientName: String
-  clientEmail: String?
-  items: List<InvoiceItem>
-  subtotal: double
-  taxRate: double?
-  taxAmount: double?
-  discount: double?
-  total: double
-  status: InvoiceStatus
-  issueDate: DateTime
-  dueDate: DateTime
-  paidDate: DateTime?
-  notes: String?
-}
+.. code-block:: text
 
-InvoiceItem {
-  id: String
-  description: String
-  quantity: double
-  unitPrice: double
-  total: double
-}
-```
+   Invoice {
+     id: String
+     invoiceNumber: String
+     clientName: String
+     clientEmail: String?
+     items: List<InvoiceItem>
+     subtotal: double
+     taxRate: double?
+     taxAmount: double?
+     discount: double?
+     total: double
+     status: InvoiceStatus (draft / sent / paid / overdue)
+     issueDate: DateTime
+     dueDate: DateTime
+     paidDate: DateTime?
+     notes: String?
+   }
 
-## Related Features
+   InvoiceItem {
+     id: String
+     description: String
+     quantity: double
+     unitPrice: double
+     total: double
+   }
 
-- [Business Tools](business_tools.rst)
-- [Export & Backup](export_backup.rst)
+Related Features
+----------------
+
+- :doc:`business_tools`
+- :doc:`export_backup`

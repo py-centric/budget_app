@@ -37,9 +37,11 @@ Use Case Flow Diagram
                                         v
                           [ Refresh Home UI Dashboard ]
 
-## Features
+Features
+--------
 
-### Create Budget
+Create Budget
+~~~~~~~~~~~~~
 
 When you first open the app, a default budget is created for the current month. You can create additional budgets by:
 
@@ -47,13 +49,15 @@ When you first open the app, a default budget is created for the current month. 
 2. Selecting a different month/year
 3. A new budget is automatically created
 
-### Budget Periods
+Budget Periods
+~~~~~~~~~~~~~~
 
 - **Monthly Budgets**: Each budget covers a specific month and year
 - **Multiple Budgets**: Support for multiple budgets per period
 - **Navigation**: Easy switching between periods via sidebar
 
-### Budget Actions
+Budget Actions
+~~~~~~~~~~~~~~
 
 From the home page app bar:
 
@@ -61,7 +65,8 @@ From the home page app bar:
 - **Convert Currency**: Convert budget to a different currency
 - **Delete Budget**: Remove a budget (with confirmation)
 
-### Budget Fields
+Budget Fields
+~~~~~~~~~~~~~
 
 Each budget contains:
 
@@ -73,31 +78,35 @@ Each budget contains:
 - **Converted Amount**: Calculated converted amount
 - **Transactions**: Associated income and expense entries
 
-## Budget Data Model
+Budget Data Model
+-----------------
 
-```
-Budget {
-  id: String
-  name: String
-  periodMonth: int (1-12)
-  periodYear: int
-  isActive: bool
-  currencyCode: String (ISO 4217)
-  targetCurrencyCode: String?
-  exchangeRate: double?
-  convertedAmount: double?
-  createdAt: DateTime
-}
-```
+.. code-block:: text
 
-## Budget Selection
+   Budget {
+     id: String
+     name: String
+     periodMonth: int (1-12)
+     periodYear: int
+     isActive: bool
+     currencyCode: String (ISO 4217)
+     targetCurrencyCode: String?
+     exchangeRate: double?
+     convertedAmount: double?
+     createdAt: DateTime
+   }
+
+Budget Selection
+----------------
 
 The budget selector in the home page allows quick switching between:
+
 - Different periods
 - Different budgets within the same period
 
-## Related Features
+Related Features
+----------------
 
-- [Currency Conversion](currency_conversion.rst)
-- [Transactions](transactions.rst)
-- [Categories](categories.rst)
+- :doc:`currency_conversion`
+- :doc:`transactions`
+- :doc:`categories`

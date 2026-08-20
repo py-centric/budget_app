@@ -1,55 +1,57 @@
-# Travel Budget Planner
+Travel Budget Planner
+=====================
 
-## Overview
+Overview
+--------
 
-The Travel Budget Planner helps you manage budgets for international travel by supporting multiple currencies and conversion.
+The Travel Budget Planner enables users to duplicate budgets for travel, convert currency allocations automatically, and track daily spending limits in foreign denominations.
 
-## Features
+Features
+--------
 
-### Creating a Travel Budget
+Creating a Travel Budget
+~~~~~~~~~~~~~~~~~~~~~~~~
 
-1. Select a budget to duplicate
-2. Tap "Copy Budget" from the app bar
-3. Choose the destination period
-4. Select destination currency
-5. Enter exchange rate
-6. Budget is created with converted amounts
+1. Select an existing budget to use as a baseline template.
+2. Tap "Copy Budget" from the top navigation actions.
+3. Choose the destination travel month and year.
+4. Select the target destination currency from the currency catalog.
+5. Enter the target exchange rate.
+6. The app instantiates the new budget with converted category balances.
 
-### Currency Selection
+Currency Selection
+~~~~~~~~~~~~~~~~~~
 
-When duplicating a budget for travel:
-- Select from 20 supported currencies
-- Set custom exchange rate
-- View both original and converted amounts
+- Select from 20 global currencies.
+- Set custom offline conversion rates.
+- Monitor both base and converted amounts in transaction cards.
 
-### Budget Duplication
+Budget Duplication
+~~~~~~~~~~~~~~~~~~
 
-- Copy all categories and budgeted amounts
-- Automatically convert to new currency
-- Keep transaction history reference
+- Preserves all category structures and spending limits.
+- Converts numerical amounts using the exact exchange rate.
+- Creates an independent budget period for the trip duration.
 
-## Use Cases
+Use Cases
+---------
 
-### Pre-Trip Planning
+Pre-Trip Planning
+~~~~~~~~~~~~~~~~~
 
-1. Create travel budget before trip
-2. Set daily spending limits in local currency
-3. Track expenses in real-time
+- Establish daily spending allowances in local destination currency.
+- Allocate budgets for flights, accommodations, dining, and activities.
+- Track expenses in real time while abroad without requiring network access.
 
-### Multi-Currency Household
+Multi-Currency Management
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
-- Separate budgets for different currencies
-- Track international subscriptions
-- Plan for currency fluctuations
+- Separate domestic living expenses from foreign travel expenses.
+- Reconcile overseas payment receipts seamlessly.
 
-## Exchange Rate Management
+Related Features
+----------------
 
-- Manual rate entry for accuracy
-- Rate stored per budget
-- Easy rate updates when needed
-
-## Related Features
-
-- [Currency Conversion](currency_conversion.rst)
-- [Budget Management](budget_management.rst)
-- [Transactions](transactions.rst)
+- :doc:`currency_conversion`
+- :doc:`budget_management`
+- :doc:`transactions`

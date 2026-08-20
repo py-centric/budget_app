@@ -1,71 +1,86 @@
-# Export & Backup
+Export & Backup
+===============
 
-## Overview
+Overview
+--------
 
-Export and backup features ensure your financial data is portable and secure.
+Export and backup features ensure your financial data is 100% portable, verifiable, and secure under an offline-first architecture.
 
-## Data Export
+Use Case Flow Diagram
+---------------------
 
-### Supported Formats
+.. code-block:: text
 
-- **CSV**: Spreadsheet-compatible format
-- **PDF**: Print-ready documents
-- **Excel**: Native Excel files
+    +-----------------------------------------------------------------------+
+    |                    EXPORT & BACKUP DATA FLOW                          |
+    +-----------------------------------------------------------------------+
+                                        |
+                                        v
+                            [ Select Data Operation ]
+                                        |
+           +----------------------------+----------------------------+
+           | (Export Financial Data)                                 | (Database Backup / Restore)
+           v                                                         v
+    Choose Target Scope (Period/All)                         Select: [ Create Backup ] / [ Restore ]
+           |                                                         |
+    Select Format (CSV / PDF / Excel)                        [ Create ]: Export raw SQLite file
+           |                                                         |
+    Serialize Database Tables                                [ Restore ]: Select .db backup file
+           |                                                         |
+    Write to Local Temp Directory                            Verify SHA-256 Checksum Integrity
+           |                                                         |
+           +----------------------------+----------------------------+
+                                        |
+                                        v
+                          [ Trigger Native Share Sheet ]
+                                        |
+                                        v
+                          [ Save / Send File on Device ]
 
-### Export Options
+Data Export
+-----------
 
-- Export all data
-- Export by date range
-- Export by budget
-- Export categories
-- Export transactions
+Supported Formats
+~~~~~~~~~~~~~~~~~
 
-### Export Content
+- **CSV**: Universal tabular format for data science and external spreadsheets.
+- **PDF**: Formatted, print-ready financial statements generated on-device.
+- **Excel (XLSX)**: Multi-sheet workbooks with styled summary and transaction tabs.
 
-- Budget summaries
-- Transaction lists
-- Category breakdowns
-- Financial reports
+Export Options
+~~~~~~~~~~~~~~
 
-## Database Backup
+- Export entire history or specific monthly budget periods.
+- Filter by category or account before exporting.
+- Export transaction ledgers with full date, description, and status tags.
 
-### Manual Backup
+Database Backup & Restore
+-------------------------
 
-1. Navigate to backup settings
-2. Tap "Create Backup"
-3. Choose storage location
-4. Confirm backup creation
+Creating Backups
+~~~~~~~~~~~~~~~~
 
-### Backup Contents
+1. Open **Settings** > **Export & Backup**.
+2. Tap **Create Database Backup**.
+3. The app serializes the entire SQLite database into an integrity-checked backup file.
+4. Save locally or share to your preferred secure offline destination.
 
-- All budgets
-- All transactions
-- Categories
-- Settings
-- Recurring transactions
-- Loans
-- Invoices
+Restoring from Backup
+~~~~~~~~~~~~~~~~~~~~~
 
-### Restore from Backup
+1. Select **Restore from Backup**.
+2. Choose a valid `.db` backup file from local storage.
+3. Confirm replacement of current database records.
 
-1. Navigate to backup settings
-2. Select "Restore"
-3. Choose backup file
-4. Confirm restoration
+Data Security & Privacy
+-----------------------
 
-### Backup Storage
+- **100% Local-First**: No remote servers or third-party cloud tracking.
+- **Encrypted Keys**: Sensitive credentials and PINs protected in OS secure keychain via `flutter_secure_storage`.
 
-- Local device storage
-- Share via other apps
+Related Features
+----------------
 
-## Data Security
-
-- Local-only storage (privacy-focused)
-- Secure storage for sensitive data
-- No cloud sync (by design)
-
-## Related Features
-
-- [Budget Management](budget_management.rst)
-- [Transactions](transactions.rst)
-- [Categories](categories.rst)
+- :doc:`app_settings`
+- :doc:`budget_management`
+- :doc:`transactions`

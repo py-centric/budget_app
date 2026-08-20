@@ -5,15 +5,17 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>&lt;no title&gt; &#8212; Budget App 1.0.0 documentation</title>
+    <title>Emergency Fund &#8212; Budget App Documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
     <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
-    <script src="_static/documentation_options.js?v=8d563738"></script>
+    <script src="_static/documentation_options.js?v=fc837d61"></script>
     <script src="_static/doctools.js?v=fd6eb6e6"></script>
     <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Business Tools" href="business_tools.html" />
+    <link rel="prev" title="Loans Management" href="loans.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -31,58 +33,57 @@
 
           <div class="body" role="main">
             
-  <p># Emergency Fund</p>
-<p>## Overview</p>
-<p>The Emergency Fund calculator helps you determine and track your financial safety net based on monthly expenses.</p>
-<p>## Features</p>
-<p>### Fund Calculation</p>
-<p>Input your monthly expenses to calculate:
-- <strong>3-Month Fund</strong>: Basic emergency coverage
-- <strong>6-Month Fund</strong>: Standard recommendation
-- <strong>12-Month Fund</strong>: Extended safety net</p>
-<p>### Input Parameters</p>
+  <section id="emergency-fund">
+<h1>Emergency Fund<a class="headerlink" href="#emergency-fund" title="Link to this heading">¶</a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">¶</a></h2>
+<p>The Emergency Fund module calculates and tracks your financial safety cushion based on monthly essential expenses and user-defined protection horizons.</p>
+</section>
+<section id="features">
+<h2>Features<a class="headerlink" href="#features" title="Link to this heading">¶</a></h2>
+<section id="fund-sizing">
+<h3>Fund Sizing<a class="headerlink" href="#fund-sizing" title="Link to this heading">¶</a></h3>
+<p>Input your monthly living expenses to evaluate:</p>
 <ul class="simple">
-<li><p>Monthly essential expenses</p></li>
-<li><p>Current savings (optional)</p></li>
-<li><p>Number of months to cover</p></li>
+<li><p><strong>3-Month Fund</strong>: Basic emergency coverage (minimum safety net).</p></li>
+<li><p><strong>6-Month Fund</strong>: Standard financial recommendation.</p></li>
+<li><p><strong>12-Month Fund</strong>: Comprehensive safety net for freelancers and entrepreneurs.</p></li>
 </ul>
-<p>### Fund Goals</p>
+</section>
+<section id="input-parameters">
+<h3>Input Parameters<a class="headerlink" href="#input-parameters" title="Link to this heading">¶</a></h3>
 <ul class="simple">
-<li><p>Set target amount</p></li>
-<li><p>Track progress over time</p></li>
-<li><p>Visual progress indicators</p></li>
+<li><p>Monthly essential expenditures</p></li>
+<li><p>Current liquid savings allocated to emergency fund</p></li>
+<li><p>Target coverage duration (in months)</p></li>
 </ul>
-<p>## Emergency Fund Calculator</p>
-<p>### Calculation Formula</p>
-<p><code class="docutils literal notranslate"><span class="pre">`</span>
-<span class="pre">Fund</span> <span class="pre">Amount</span> <span class="pre">=</span> <span class="pre">Monthly</span> <span class="pre">Expenses</span> <span class="pre">×</span> <span class="pre">Months</span>
-<span class="pre">Progress</span> <span class="pre">=</span> <span class="pre">Current</span> <span class="pre">Savings</span> <span class="pre">/</span> <span class="pre">Target</span> <span class="pre">Amount</span> <span class="pre">×</span> <span class="pre">100%</span>
-<span class="pre">`</span></code></p>
-<p>### Recommendations</p>
+</section>
+<section id="goal-tracking">
+<h3>Goal Tracking<a class="headerlink" href="#goal-tracking" title="Link to this heading">¶</a></h3>
 <ul class="simple">
-<li><p>3 months: Minimum for job loss</p></li>
-<li><p>6 months: Standard recommendation</p></li>
-<li><p>12 months: Full security</p></li>
+<li><p>Set customized or formula-recommended savings targets.</p></li>
+<li><p>Real-time progress percentage and visual gauges.</p></li>
+<li><p>Calculated months of runway based on current cash reserves.</p></li>
 </ul>
-<p>## Tracking</p>
-<p>### Setting Goals</p>
-<ol class="arabic simple">
-<li><p>Enter monthly expense estimate</p></li>
-<li><p>Select coverage period</p></li>
-<li><p>Set target amount (auto-calculated or custom)</p></li>
-</ol>
-<p>### Progress Updates</p>
+</section>
+</section>
+<section id="calculation-formulas">
+<h2>Calculation Formulas<a class="headerlink" href="#calculation-formulas" title="Link to this heading">¶</a></h2>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Target Fund Amount = Monthly Expenses * Target Months
+Progress Percentage = (Current Savings / Target Fund Amount) * 100%
+Runway Months = Current Savings / Monthly Expenses
+</pre></div>
+</div>
+</section>
+<section id="related-features">
+<h2>Related Features<a class="headerlink" href="#related-features" title="Link to this heading">¶</a></h2>
 <ul class="simple">
-<li><p>Update current savings regularly</p></li>
-<li><p>View progress percentage</p></li>
-<li><p>See months of coverage available</p></li>
+<li><p><a class="reference internal" href="budget_management.html"><span class="doc">Budget Management</span></a></p></li>
+<li><p><a class="reference internal" href="projections.html"><span class="doc">Projections</span></a></p></li>
+<li><p><a class="reference internal" href="financial_tools.html"><span class="doc">Financial Tools</span></a></p></li>
 </ul>
-<p>## Related Features</p>
-<ul class="simple">
-<li><p>[Budget Management](budget_management.rst)</p></li>
-<li><p>[Projections](projections.rst)</p></li>
-<li><p>[Financial Tools](financial_tools.rst)</p></li>
-</ul>
+</section>
+</section>
 
 
           </div>
@@ -110,11 +111,54 @@
     </div>
 </search>
 <script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="feature_flags.html">Feature Flagging &amp; Release Editions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Core Features</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="budget_management.html">Budget Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transactions.html">Transactions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="categories.html">Categories</a></li>
+<li class="toctree-l1"><a class="reference internal" href="recurring_transactions.html">Recurring Transactions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="projections.html">Projections</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced Features</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="currency_conversion.html">Currency Conversion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="travel_budget_planner.html">Travel Budget Planner</a></li>
+<li class="toctree-l1"><a class="reference internal" href="loans.html">Loans Management</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Emergency Fund</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#features">Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#calculation-formulas">Calculation Formulas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#related-features">Related Features</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="business_tools.html">Business Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="invoices.html">Invoices</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Utilities</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="financial_tools.html">Financial Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="export_backup.html">Export &amp; Backup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="app_settings.html">App Settings</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Development</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing Guidelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dependencies.html">Project Dependencies &amp; Licensing</a></li>
+</ul>
 
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="loans.html" title="previous chapter">Loans Management</a></li>
+      <li>Next: <a href="business_tools.html" title="next chapter">Business Tools</a></li>
   </ul></li>
 </ul>
 </div>
@@ -131,7 +175,7 @@
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &#169;2026, Budget App Team.
+      &#169;2026, PyCentric.
       
       |
       Powered by <a href="https://www.sphinx-doc.org/">Sphinx 9.1.0</a>

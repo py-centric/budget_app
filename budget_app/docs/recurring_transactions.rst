@@ -1,75 +1,82 @@
-# Recurring Transactions
+Recurring Transactions
+======================
 
-## Overview
+Overview
+--------
 
-Recurring transactions automate the entry of regular income and expenses, saving time and ensuring you never miss recurring payments.
+Recurring transactions automate the entry of regular income and expenses, saving time and ensuring scheduled bills, subscriptions, and salaries are reflected in future projections.
 
-## Features
+Features
+--------
 
-### Creating Recurring Transactions
+Creating Recurring Transactions
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-1. From the transactions screen, tap the recurring button
-2. Select transaction type (income/expense)
-3. Enter the amount
-4. Choose category
+1. From the transactions screen or form, toggle the recurring switch.
+2. Select transaction type (income or expense).
+3. Enter the amount.
+4. Choose category and optional account.
 5. Set recurrence pattern:
-   - **Daily**: Every day
-   - **Weekly**: Specific day of week
-   - **Monthly**: Specific day of month
-   - **Yearly**: Specific date
-6. Set start date and optional end date
-7. Add optional note
+   - **Daily**: Fixed daily interval
+   - **Weekly**: Specific weekly interval
+   - **Monthly**: Specific monthly schedule
+   - **Yearly**: Annual billing cycles
+6. Set start date and optional end date.
+7. Add optional description.
 
-### Recurrence Patterns
+Recurrence Patterns
+~~~~~~~~~~~~~~~~~~~
 
-- **Monthly**: Most common for rent, subscriptions, salaries
-- **Weekly**: Useful for weekly gym membership, weekly allowances
-- **Daily**: Rare, but available for daily expenses
-- **Yearly**: For annual insurance, subscriptions
+- **Monthly**: Standard for rent, utilities, streaming subscriptions, and salaries.
+- **Weekly**: For weekly allowances, gym dues, and transit passes.
+- **Daily**: Recurring daily allocations.
+- **Yearly**: Annual domain registrations, insurance premiums, and memberships.
 
-### Managing Recurring Transactions
+Managing Recurring Transactions
+-------------------------------
 
-#### Viewing All Recurring
+Viewing All Recurring
+~~~~~~~~~~~~~~~~~~~~~
 
-Access all recurring transactions from the dedicated section in the app.
+Access all active recurring transactions from the dedicated menu section.
 
-#### Editing Recurring Transactions
+Editing Recurring Rules
+~~~~~~~~~~~~~~~~~~~~~~~
 
-Modify any recurring transaction to change amount, category, or dates.
+Modify any recurring transaction to change amount, category, or interval dates.
 
-#### Stopping Recurring
+Pausing and Stopping
+~~~~~~~~~~~~~~~~~~~~
 
-- **Pause**: Temporarily stop without deleting
-- **Delete**: Permanently remove the recurring rule
+- **Pause**: Temporarily pause occurrences without deleting history.
+- **Delete**: Remove the recurring rule permanently.
 
-#### Manual Entry Override
+One-Time Overrides
+~~~~~~~~~~~~~~~~~~
 
-When a recurring transaction is created, you can:
-- Skip one occurrence
-- Add a one-time adjustment for a specific instance
+Individual occurrences can be overridden or skipped for a specific month without altering the master recurring schedule.
 
-## Transaction Data Model
+Data Model
+----------
 
-```
-RecurringTransaction {
-  id: String
-  amount: double
-  categoryId: String
-  type: TransactionType (income/expense)
-  recurrence: RecurrenceType (daily/weekly/monthly/yearly)
-  dayOfWeek: int? (1-7 for weekly)
-  dayOfMonth: int? (1-31 for monthly)
-  month: int? (1-12 for yearly)
-  startDate: DateTime
-  endDate: DateTime?
-  note: String?
-  isActive: bool
-  createdAt: DateTime
-}
-```
+.. code-block:: text
 
-## Related Features
+   RecurringTransaction {
+     id: String
+     amount: double
+     categoryId: String
+     type: String (INCOME / EXPENSE)
+     interval: int
+     unit: RecurrenceUnit (day / week / month / year)
+     startDate: DateTime
+     endDate: DateTime?
+     description: String?
+     createdAt: DateTime
+   }
 
-- [Transactions](transactions.rst)
-- [Categories](categories.rst)
-- [Projections](projections.rst)
+Related Features
+----------------
+
+- :doc:`transactions`
+- :doc:`categories`
+- :doc:`projections`

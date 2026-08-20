@@ -1,74 +1,64 @@
-# Contributing
+Contributing Guidelines
+=======================
 
-## Overview
+Overview
+--------
 
-Thank you for your interest in contributing to Budget App!
+Thank you for contributing to Budget App! We welcome contributions, bug reports, and enhancements adhering to our architectural and testing standards.
 
-## Development Setup
+Development Setup
+-----------------
 
-### Prerequisites
+Prerequisites
+~~~~~~~~~~~~~
 
-- Flutter SDK 3.x
-- Dart 3.x
-- Android SDK (for Android builds)
-- Xcode (for iOS builds, macOS only)
+- Flutter SDK 3.x (pinned stable version)
+- Dart SDK 3.x
+- Android SDK or Xcode (for mobile targets)
+- Linux build libraries (for desktop targets)
 
-### Clone and Setup
+Setup Steps
+~~~~~~~~~~~
 
-```bash
-git clone <repository-url>
-cd budget_app
-flutter pub get
-flutter pub run build_runner build --delete-conflicting-outputs
-```
+.. code-block:: bash
 
-### Running Tests
+   git clone https://github.com/py-centric/budget_app.git
+   cd budget_app/budget_app
+   flutter pub get
 
-```bash
-flutter test
-```
+Standard Task Commands
+----------------------
 
-### Code Analysis
+The repository includes a cross-platform task runner configured via ``Taskfile.yml``:
 
-```bash
-flutter analyze
-```
+.. code-block:: bash
 
-## Project Structure
+   # Run automated test suite
+   task test
 
-The app uses Clean Architecture with features organized in:
+   # Run static analysis and linting
+   task lint
+   task analyze
 
-```
-lib/
-├── core/           # Shared utilities, themes, constants
-├── features/       # Feature modules
-│   ├── budget/
-│   ├── transactions/
-│   ├── categories/
-│   └── ...
-├── shared/         # Shared widgets and utilities
-└── main.dart       # App entry point
-```
+   # Build Sphinx documentation portal
+   task docs
 
-## Coding Standards
+   # Launch local development instance
+   task dev
 
-- Follow Dart/Flutter conventions
-- Use flutter_bloc for state management
-- Write unit tests for business logic
-- Run flutter analyze before submitting
+Testing Standards
+-----------------
 
-## Pull Requests
+- **Red-Green-Refactor**: Write unit and widget tests before implementing new business features.
+- **Coverage Target**: Minimum 90% coverage for core domain logic, repositories, and use cases; minimum 80% coverage for UI widgets.
+- **Zero Static Analysis Warnings**: ``flutter analyze`` must report 0 errors, 0 warnings, and 0 infos.
+- **Strict Typography Standard**: Zero non-ASCII em-dashes or en-dashes anywhere in code, tests, or documentation. Always use standard hyphens (-), colons (:), or parentheses ().
 
-1. Create a feature branch
-2. Make your changes
-3. Add tests if applicable
-4. Ensure flutter analyze passes
-5. Submit a pull request
+Submitting Changes
+------------------
 
-## Issues
-
-Report bugs and feature requests via GitHub Issues.
-
-## License
-
-This project is open source under the MIT license.
+1. Create a descriptive feature branch from ``main``.
+2. Ensure all tests pass with ``task test``.
+3. Ensure static analysis is clean with ``task analyze``.
+4. Verify Sphinx docs compile cleanly with ``task docs``.
+5. Submit a concise Pull Request for review.
