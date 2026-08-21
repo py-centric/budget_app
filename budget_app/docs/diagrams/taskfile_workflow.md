@@ -1,13 +1,13 @@
-# Makefile Build & Execution Workflow Diagram
+# Taskfile Build & Execution Workflow Diagram
 
 ```mermaid
 flowchart LR
-    subgraph Developer Commands
-        M1["make run-personal"]
-        M2["make run-business"]
-        M3["make run-combined"]
-        M4["make build-all"]
-        M5["make docs"]
+    subgraph Developer Tasks
+        T1["task dev:personal"]
+        T2["task dev:business"]
+        T3["task dev:combined"]
+        T4["task build:all"]
+        T5["task docs"]
     end
 
     subgraph Build Actions
@@ -26,9 +26,9 @@ flowchart LR
         O5["Sphinx HTML Docs"]
     end
 
-    M1 --> A1 --> O1
-    M2 --> A2 --> O2
-    M3 --> A3 --> O3
-    M4 --> A4 --> O4
-    M5 --> A5 --> O5
+    T1 --> A1 --> O1
+    T2 --> A2 --> O2
+    T3 --> A3 --> O3
+    T4 --> A4 --> O4
+    T5 --> A5 --> O5
 ```

@@ -4,15 +4,15 @@
 sequenceDiagram
     autonumber
     actor Developer
-    participant Make as Makefile / CLI
+    participant Task as Taskfile / CLI
     participant View as UI Component / Route
     participant Gate as FeatureGate Widget
     participant Service as FeatureGateService
     participant Bloc as FeatureFlagsBloc
     participant DB as SQLite Local Database
 
-    Developer->>Make: Execute 'make run-personal' / 'make build-business'
-    Make->>Bloc: Passes RELEASE_EDITION flag to App Target
+    Developer->>Task: Execute 'task dev:personal' / 'task build:business'
+    Task->>Bloc: Passes RELEASE_EDITION flag to App Target
     View->>Gate: Evaluate Feature Flag Check
     Gate->>Service: isFeatureEnabled(flag)
     Service->>Bloc: Read effective state (Build flag + Hydrated override)

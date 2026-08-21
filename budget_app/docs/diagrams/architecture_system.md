@@ -3,9 +3,9 @@
 ```mermaid
 graph TD
     subgraph Build & Automation Layer
-        MakeTarget["Makefile Targets<br/>(make run-personal | build-business | build-all)"]
+        TaskTarget["Taskfile Tasks<br/>(task dev:personal | build:business | build:all)"]
         CompileFlag["Compile Target Flag<br/>(--dart-define=RELEASE_EDITION=...)"]
-        MakeTarget --> CompileFlag
+        TaskTarget --> CompileFlag
     end
 
     subgraph Feature Gating Engine

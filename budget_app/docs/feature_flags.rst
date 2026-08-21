@@ -86,32 +86,33 @@ Feature Flag Mapping Matrix
 Building Target Releases
 ------------------------
 
-Using `make` (Recommended)
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+Using `Taskfile` (Recommended)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-A ``Makefile`` is provided to run, build, and test each target release edition easily:
+A standardized ``Taskfile.yml`` is provided to run, build, and test each target release edition easily:
 
 .. code-block:: bash
 
     # Development Server / Desktop App
-    make run-personal       # Run Personal Edition locally
-    make run-business       # Run Business Edition locally
-    make run-combined       # Run Combined Edition locally
+    task dev:personal       # Run Personal Edition locally
+    task dev:business       # Run Business Edition locally
+    task dev:combined       # Run Combined Edition locally (Default)
 
     # Release Desktop Builds (Linux)
-    make build-personal     # Build Linux executable for Personal Edition
-    make build-business     # Build Linux executable for Business Edition
-    make build-combined     # Build Linux executable for Combined Edition
-    make build-all          # Build Linux executables for all 3 editions
+    task build:personal     # Build Linux executable for Personal Edition
+    task build:business     # Build Linux executable for Business Edition
+    task build:combined     # Build Linux executable for Combined Edition (Default)
+    task build:all          # Build Linux executables for all 3 editions
 
     # Release Mobile Builds (Android APK)
-    make build-personal-apk # Build Android APK for Personal Edition
-    make build-business-apk # Build Android APK for Business Edition
-    make build-combined-apk # Build Android APK for Combined Edition
+    task build:apk:personal # Build Android APK for Personal Edition
+    task build:apk:business # Build Android APK for Business Edition
+    task build:apk:combined # Build Android APK for Combined Edition
+    task build:apk:all      # Build Android APKs for all 3 editions
 
     # Documentation & Testing
-    make test               # Run full test suite
-    make docs               # Generate diagrams and Sphinx HTML docs
+    task test               # Run full test suite
+    task docs               # Generate diagrams and Sphinx HTML docs
 
 Direct Flutter CLI Commands
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~

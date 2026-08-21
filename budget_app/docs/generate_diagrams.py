@@ -13,9 +13,9 @@ DIAGRAMS_DIR = DOCS_DIR / "diagrams"
 MERMAID_SYSTEM_ARCHITECTURE = """```mermaid
 graph TD
     subgraph Build & Automation Layer
-        MakeTarget["Makefile Targets<br/>(make run-personal | build-business | build-all)"]
+        TaskTarget["Taskfile Tasks<br/>(task dev:personal | build:business | build:all)"]
         CompileFlag["Compile Target Flag<br/>(--dart-define=RELEASE_EDITION=...)"]
-        MakeTarget --> CompileFlag
+        TaskTarget --> CompileFlag
     end
 
     subgraph Feature Gating Engine
@@ -68,15 +68,15 @@ MERMAID_FEATURE_GATE_SEQUENCE = """```mermaid
 sequenceDiagram
     autonumber
     actor Developer
-    participant Make as Makefile / CLI
+    participant Task as Taskfile / CLI
     participant View as UI Component / Route
     participant Gate as FeatureGate Widget
     participant Service as FeatureGateService
     participant Bloc as FeatureFlagsBloc
     participant DB as SQLite Local Database
 
-    Developer->>Make: Execute 'make run-personal' / 'make build-business'
-    Make->>Bloc: Passes RELEASE_EDITION flag to App Target
+    Developer->>Task: Execute 'task dev:personal' / 'task build:business'
+    Task->>Bloc: Passes RELEASE_EDITION flag to App Target
     View->>Gate: Evaluate Feature Flag Check
     Gate->>Service: isFeatureEnabled(flag)
     Service->>Bloc: Read effective state (Build flag + Hydrated override)
@@ -93,14 +93,14 @@ sequenceDiagram
 ```
 """
 
-MERMAID_MAKEFILE_WORKFLOW = """```mermaid
+MERMAID_TASKFILE_WORKFLOW = """```mermaid
 flowchart LR
-    subgraph Developer Commands
-        M1["make run-personal"]
-        M2["make run-business"]
-        M3["make run-combined"]
-        M4["make build-all"]
-        M5["make docs"]
+    subgraph Developer Tasks
+        T1["task dev:personal"]
+        T2["task dev:business"]
+        T3["task dev:combined"]
+        T4["task build:all"]
+        T5["task docs"]
     end
 
     subgraph Build Actions
@@ -119,11 +119,11 @@ flowchart LR
         O5["Sphinx HTML Docs"]
     end
 
-    M1 --> A1 --> O1
-    M2 --> A2 --> O2
-    M3 --> A3 --> O3
-    M4 --> A4 --> O4
-    M5 --> A5 --> O5
+    T1 --> A1 --> O1
+    T2 --> A2 --> O2
+    T3 --> A3 --> O3
+    T4 --> A4 --> O4
+    T5 --> A5 --> O5
 ```
 """
 
@@ -672,7 +672,7 @@ def generate_diagram_files():
     diagram_mapping = {
         "architecture_system.md": ("# System Architecture & Feature Gating Diagram\n\n", MERMAID_SYSTEM_ARCHITECTURE),
         "feature_gating_sequence.md": ("# Feature Gate Execution Sequence Diagram\n\n", MERMAID_FEATURE_GATE_SEQUENCE),
-        "makefile_workflow.md": ("# Makefile Build & Execution Workflow Diagram\n\n", MERMAID_MAKEFILE_WORKFLOW),
+        "taskfile_workflow.md": ("# Taskfile Build & Execution Workflow Diagram\n\n", MERMAID_TASKFILE_WORKFLOW),
         "budget_usecase_flow.md": ("# Budget Management Use Case Flow Diagram\n\n", MERMAID_BUDGET_USECASE_FLOW),
         "transaction_usecase_flow.md": ("# Transaction Lifecycle Use Case Flow Diagram\n\n", MERMAID_TRANSACTION_USECASE_FLOW),
         "invoice_usecase_flow.md": ("# Invoice Management Use Case Flow Diagram\n\n", MERMAID_INVOICE_USECASE_FLOW),
