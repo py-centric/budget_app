@@ -82,4 +82,8 @@ The documentation is organized into several sections:
 
 ## License
 
-This project is licensed under the MIT License.
+This project is licensed under the GNU Affero General Public License v3.0 (AGPL-3.0).
+See the [LICENSE](../LICENSE) file at the repository root for the full text. In brief:
+you are free to use, study, modify, and redistribute this software under AGPL-3.0
+copyleft terms, and if you offer a modified version as a network service you must
+make the modified source code available to that service's users.

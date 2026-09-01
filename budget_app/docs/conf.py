@@ -6,7 +6,10 @@ from pathlib import Path
 # -- Project information -----------------------------------------------------
 
 project = "Budget App"
-copyright = "2026, PyCentric"
+# Rendered in the HTML footer of every documentation page. Budget App is
+# distributed under the GNU Affero General Public License v3.0; the full
+# license text lives in the LICENSE file at the repository root.
+copyright = "2026, PyCentric (Licensed under GNU AGPL-3.0)"
 author = "PyCentric"
 release = "1.1.0"
 

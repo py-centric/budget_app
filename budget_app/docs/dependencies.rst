@@ -205,3 +205,10 @@ All 24 third-party libraries and frameworks integrated into Budget App use OSI-a
 3. **Attribution Requirement**: MIT, BSD, and Apache 2.0 licenses require maintaining copyright notices and license text in open-source redistributions.
 4. **Patent Protections**: Packages under **Apache License 2.0** (such as ``pdf`` and ``table_calendar``) explicitly grant patent licenses from contributors to users.
 5. **OSI Compliance**: **100%** of included third-party libraries carry verified Open Source Initiative (OSI) approved licenses.
+
+.. note::
+
+   The licenses catalogued above apply exclusively to third-party dependencies.
+   Budget App itself is distributed under the **GNU Affero General Public License
+   v3.0 (AGPL-3.0)**; see the ``LICENSE`` file at the repository root for the full
+   text and applicable copyleft obligations.

@@ -2,6 +2,8 @@
 
 > Professional, offline-first personal and business financial management platform engineered with Flutter and Dart.
 
+**License:** GNU Affero General Public License v3.0 (AGPL-3.0)
+
 Budget App is an offline-first financial management system providing multi-currency budget planning, granular transaction tracking, bank account ledger management, loan amortization, invoicing, financial calculators, and cash flow projections.
 
 ---
@@ -234,6 +236,15 @@ cd budget_app && sphinx-build -W -b html docs/ docs/_build/
 
 ## License & Attribution
 
-Copyright 2026, PyCentric. All rights reserved.
+Copyright 2026, PyCentric.
 
-Distributed under the MIT License. See `LICENSE` for details.
+Budget App is free software: you can redistribute it and/or modify it under the terms of the **GNU Affero General Public License v3.0 (AGPL-3.0)** as published by the Free Software Foundation. The complete license text is available in the [`LICENSE`](LICENSE) file at the repository root.
+
+Plain-language summary of what AGPL-3.0 means for users and contributors:
+
+- **Freedom to use**: You may run Budget App for any purpose, personal or commercial, at no charge.
+- **Freedom to study and modify**: You may inspect, change, and build upon the source code.
+- **Freedom to distribute**: You may share original or modified copies, provided they carry the AGPL-3.0 license text and copyright notices (copyleft).
+- **Copyleft inheritance**: Works based on Budget App that you distribute must be released under AGPL-3.0 with their complete corresponding source code.
+- **Network use is distribution**: If you modify Budget App and offer it as a network service (for example, a hosted or multi-user deployment), you must make your modified source code available to the users interacting with it remotely.
+- **No warranty**: The software is provided "as is", without warranty of any kind.
