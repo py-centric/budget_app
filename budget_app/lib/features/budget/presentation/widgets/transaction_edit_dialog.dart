@@ -130,12 +130,14 @@ class _TransactionEditDialogState extends State<TransactionEditDialog> {
               ),
               SwitchListTile(
                 title: Text(
-                  _isPotential ? 'Potential (Not Guaranteed)' : 'Guaranteed',
+                  isIncome
+                      ? (_isPotential ? 'Pending / Expected Income' : 'Received / Guaranteed Income')
+                      : (_isPotential ? 'Unpaid / Pending Expense' : 'Paid / Settled Expense'),
                 ),
                 subtitle: Text(
-                  _isPotential
-                      ? 'Mark as guaranteed income'
-                      : 'Mark as potential (not guaranteed)',
+                  isIncome
+                      ? (_isPotential ? 'Marked as expected (not yet received)' : 'Income has been received')
+                      : (_isPotential ? 'Marked as planned (not yet paid)' : 'Expense has been paid'),
                 ),
                 value: _isPotential,
                 onChanged: (value) {
@@ -144,6 +146,21 @@ class _TransactionEditDialogState extends State<TransactionEditDialog> {
                   });
                 },
               ),
+              if (_isPotential) ...[
+                const SizedBox(height: 8),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: FilledButton.tonalIcon(
+                    onPressed: () {
+                      setState(() {
+                        _isPotential = false;
+                      });
+                    },
+                    icon: const Icon(Icons.check_circle),
+                    label: Text(isIncome ? 'Mark as Received' : 'Mark as Paid'),
+                  ),
+                ),
+              ],
             ],
           ),
         ),

@@ -553,9 +553,21 @@ class _CategoryGroupedListState extends State<CategoryGroupedList> {
                 if (entry.description != null) Text(entry.description!),
               ],
             ),
-            trailing: Text(
-              entry.date.toLocal().toString().split(' ')[0],
-              style: theme.textTheme.bodySmall,
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (entry.isPotential)
+                  IconButton(
+                    icon: const Icon(Icons.check_circle_outline),
+                    color: theme.colorScheme.primary,
+                    tooltip: 'Mark as Paid',
+                    onPressed: () => widget.onConfirm?.call(entry),
+                  ),
+                Text(
+                  entry.date.toLocal().toString().split(' ')[0],
+                  style: theme.textTheme.bodySmall,
+                ),
+              ],
             ),
             isThreeLine: entry.description != null || entry.accountName != null,
           ),
@@ -672,9 +684,21 @@ class _CategoryGroupedListState extends State<CategoryGroupedList> {
                 if (entry.description != null) Text(entry.description!),
               ],
             ),
-            trailing: Text(
-              entry.date.toLocal().toString().split(' ')[0],
-              style: theme.textTheme.bodySmall,
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (entry.isPotential)
+                  IconButton(
+                    icon: const Icon(Icons.check_circle_outline),
+                    color: theme.colorScheme.primary,
+                    tooltip: 'Mark as Received',
+                    onPressed: () => widget.onConfirm?.call(entry),
+                  ),
+                Text(
+                  entry.date.toLocal().toString().split(' ')[0],
+                  style: theme.textTheme.bodySmall,
+                ),
+              ],
             ),
             isThreeLine: entry.description != null || entry.accountName != null,
           ),

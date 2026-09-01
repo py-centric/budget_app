@@ -357,7 +357,8 @@ class _ExpenseFormState extends State<ExpenseForm> {
               const Divider(),
               SwitchListTile(
                 contentPadding: EdgeInsets.zero,
-                title: const Text('Potential Expense (Not Guaranteed)'),
+                title: const Text('Unpaid / Pending Expense (Planned)'),
+                subtitle: const Text('Keep as pending until paid'),
                 value: _isPotential,
                 onChanged: (value) {
                   setState(() {

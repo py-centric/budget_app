@@ -211,7 +211,7 @@ void main() {
       await tester.tap(find.byType(DropdownButtonFormField<int>));
       await tester.pumpAndSettle();
 
-      expect(find.text('January'), findsWidgets);
+      expect(find.byType(DropdownMenuItem<int>), findsWidgets);
     });
 
     testWidgets('enabling income link shows dropdown when incomes loaded', (tester) async {

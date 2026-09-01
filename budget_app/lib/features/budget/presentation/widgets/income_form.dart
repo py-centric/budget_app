@@ -365,7 +365,8 @@ class _IncomeFormState extends State<IncomeForm> {
               const Divider(),
               SwitchListTile(
                 contentPadding: EdgeInsets.zero,
-                title: const Text('Potential Income (Not Guaranteed)'),
+                title: const Text('Pending / Expected Income (Planned)'),
+                subtitle: const Text('Keep as expected until received'),
                 value: _isPotential,
                 onChanged: (value) {
                   setState(() {
