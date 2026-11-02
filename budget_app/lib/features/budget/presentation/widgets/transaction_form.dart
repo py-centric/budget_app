@@ -496,7 +496,7 @@ class _TransactionFormState extends State<TransactionForm> {
                 },
               ),
               const Divider(),
-              SwitchListTile(
+              SwitchListTile.adaptive(
                 contentPadding: EdgeInsets.zero,
                 title: Text(_potentialLabel),
                 value: _isPotential,
@@ -506,7 +506,7 @@ class _TransactionFormState extends State<TransactionForm> {
                   });
                 },
               ),
-              SwitchListTile(
+              SwitchListTile.adaptive(
                 contentPadding: EdgeInsets.zero,
                 title: const Text('Recurring Transaction'),
                 value: _isRecurring,

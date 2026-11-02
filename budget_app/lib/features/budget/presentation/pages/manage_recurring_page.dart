@@ -41,7 +41,7 @@ class _ManageRecurringPageState extends State<ManageRecurringPage> {
         future: recurringRepo.getAllRecurringTransactions(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator.adaptive());
           }
           if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));

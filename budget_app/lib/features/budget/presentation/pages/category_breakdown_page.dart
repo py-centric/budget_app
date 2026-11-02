@@ -382,7 +382,7 @@ class _CategoryBreakdownPageState extends State<CategoryBreakdownPage> {
                 current is BudgetError,
             builder: (context, state) {
               if (state is BudgetLoading && _loadedSummaries.isEmpty) {
-                return const Center(child: CircularProgressIndicator());
+                return const Center(child: CircularProgressIndicator.adaptive());
               }
 
               if (state is BudgetError && _loadedSummaries.isEmpty) {

@@ -40,7 +40,7 @@ class _CalendarViewPageState extends State<CalendarViewPage> {
       body: BlocBuilder<CalendarBloc, CalendarState>(
         builder: (context, state) {
           if (state is CalendarLoading) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator.adaptive());
           }
 
           if (state is CalendarError) {

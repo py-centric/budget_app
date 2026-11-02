@@ -17,7 +17,7 @@ class CreditCardsPage extends StatelessWidget {
       body: BlocBuilder<CreditCardBloc, CreditCardState>(
         builder: (context, state) {
           if (state is CreditCardLoading) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator.adaptive());
           }
           if (state is CreditCardLoaded) {
             if (state.creditCards.isEmpty) {

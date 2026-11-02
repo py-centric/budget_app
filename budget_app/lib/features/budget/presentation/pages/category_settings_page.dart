@@ -15,7 +15,7 @@ class CategorySettingsPage extends StatelessWidget {
       body: BlocBuilder<CategoryBloc, CategoryState>(
         builder: (context, state) {
           if (state is CategoryLoading) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator.adaptive());
           }
           if (state is CategoriesLoadedState) {
             final incomeCategories = state.categories

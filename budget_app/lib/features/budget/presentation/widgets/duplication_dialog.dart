@@ -133,7 +133,7 @@ class _DuplicationDialogState extends State<DuplicationDialog> {
               ],
             ),
             const SizedBox(height: 16),
-            SwitchListTile(
+            SwitchListTile.adaptive(
               title: const Text('Include Transactions'),
               subtitle: const Text(
                 'Copies all individual entries shifted to the new month.',

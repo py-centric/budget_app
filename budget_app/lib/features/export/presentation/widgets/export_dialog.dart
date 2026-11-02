@@ -6,6 +6,7 @@ import '../../domain/entities/export_period.dart';
 import '../bloc/export_bloc.dart';
 import '../bloc/export_event.dart';
 import '../bloc/export_state.dart';
+import '../../../../core/widgets/adaptive_segmented_control.dart';
 
 class ExportDialog extends StatefulWidget {
   const ExportDialog({super.key});
@@ -64,7 +65,7 @@ class _ExportDialogState extends State<ExportDialog> {
     return const Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        CircularProgressIndicator(),
+        CircularProgressIndicator.adaptive(),
         SizedBox(height: 16),
         Text('Preparing export...'),
       ],
@@ -78,14 +79,20 @@ class _ExportDialogState extends State<ExportDialog> {
       children: [
         const Text('Format:'),
         const SizedBox(height: 8),
-        SegmentedButton<ExportFormat>(
+        AdaptiveSegmentedControl<ExportFormat>(
           segments: ExportFormat.values
-              .map((f) => ButtonSegment(value: f, label: Text(f.displayName)))
+              .map(
+                (f) => AdaptiveSegment(
+                  value: f,
+                  label: Text(f.displayName),
+                  semanticsLabel: f.displayName,
+                ),
+              )
               .toList(),
-          selected: {_selectedFormat},
-          onSelectionChanged: (selection) {
+          selected: _selectedFormat,
+          onChanged: (value) {
             setState(() {
-              _selectedFormat = selection.first;
+              _selectedFormat = value!;
             });
           },
         ),

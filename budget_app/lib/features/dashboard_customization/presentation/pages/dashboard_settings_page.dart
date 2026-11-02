@@ -43,7 +43,7 @@ class _DashboardSettingsPageState extends State<DashboardSettingsPage> {
             child: ListTile(
               leading: const Icon(Icons.drag_handle),
               title: Text(_widgetLabels[widgetId] ?? widgetId),
-              trailing: Switch(
+              trailing: Switch.adaptive(
                 value: isVisible,
                 onChanged: (val) {
                   setState(() {

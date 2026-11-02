@@ -93,7 +93,7 @@ class _BillSplitPageState extends State<BillSplitPage> {
               ],
             ),
             const SizedBox(height: 16),
-            SwitchListTile(
+            SwitchListTile.adaptive(
               title: const Text('Split Equally'),
               value: _splitEqually,
               onChanged: (val) {

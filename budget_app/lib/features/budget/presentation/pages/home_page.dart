@@ -296,7 +296,7 @@ class _HomePageState extends State<HomePage> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      CircularProgressIndicator(),
+                      CircularProgressIndicator.adaptive(),
                       SizedBox(height: AppSpacing.md),
                       Text('Loading...'),
                     ],
@@ -728,7 +728,7 @@ class _HomePageState extends State<HomePage> {
         BlocBuilder<CategoryLimitBloc, CategoryLimitState>(
           builder: (context, state) {
             if (state is CategoryLimitLoading) {
-              return const Center(child: CircularProgressIndicator());
+              return const Center(child: CircularProgressIndicator.adaptive());
             }
 
             if (state is CategoryLimitLoaded) {

@@ -19,7 +19,7 @@ class OutgoingInvoicesTab extends StatelessWidget {
     return BlocBuilder<BusinessBloc, BusinessState>(
       builder: (context, state) {
         if (state.status == BusinessStatus.loading) {
-          return const Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator.adaptive());
         }
 
         if (state.invoices.isEmpty) {

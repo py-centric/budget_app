@@ -42,7 +42,7 @@ class _SpendingTrendsPageState extends State<SpendingTrendsPage> {
     return Scaffold(
       appBar: AppBar(title: const Text('Spending Trends')),
       body: _loading
-          ? const Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator.adaptive())
           : _trends == null || _trends!.isEmpty
               ? const Center(child: Text('No spending data available'))
               : ListView.builder(

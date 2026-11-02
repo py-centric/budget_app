@@ -50,7 +50,7 @@ class _BudgetComparisonPageState extends State<BudgetComparisonPage> {
           return BlocBuilder<BudgetComparisonBloc, BudgetComparisonState>(
             builder: (context, state) {
               if (state is BudgetComparisonLoading) {
-                return const Center(child: CircularProgressIndicator());
+                return const Center(child: CircularProgressIndicator.adaptive());
               }
 
               if (state is BudgetComparisonError) {
@@ -158,7 +158,7 @@ class _BudgetComparisonPageState extends State<BudgetComparisonPage> {
       return _buildEmptyState(context, context.read<NavigationBloc>().state);
     }
 
-    return RefreshIndicator(
+    return RefreshIndicator.adaptive(
       onRefresh: () async {
         context.read<BudgetComparisonBloc>().add(RefreshBudgetComparison());
       },

@@ -33,7 +33,7 @@ class SavingsGoalsPage extends StatelessWidget {
       body: BlocBuilder<SavingsBloc, SavingsState>(
         builder: (context, state) {
           if (state is SavingsLoading) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator.adaptive());
           }
 
           if (state is SavingsError) {

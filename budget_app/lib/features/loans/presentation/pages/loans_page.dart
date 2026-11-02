@@ -22,7 +22,7 @@ class LoansPage extends StatelessWidget {
             child: BlocBuilder<LoanBloc, LoanState>(
               builder: (context, state) {
                 if (state is LoanLoading) {
-                  return const Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator.adaptive());
                 }
 
                 if (state is LoanError) {

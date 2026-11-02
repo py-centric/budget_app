@@ -363,7 +363,7 @@ class _IncomeFormState extends State<IncomeForm> {
                 },
               ),
               const Divider(),
-              SwitchListTile(
+              SwitchListTile.adaptive(
                 contentPadding: EdgeInsets.zero,
                 title: const Text('Pending / Expected Income (Planned)'),
                 subtitle: const Text('Keep as expected until received'),
@@ -374,7 +374,7 @@ class _IncomeFormState extends State<IncomeForm> {
                   });
                 },
               ),
-              SwitchListTile(
+              SwitchListTile.adaptive(
                 contentPadding: EdgeInsets.zero,
                 title: const Text('Recurring Transaction'),
                 value: _isRecurring,

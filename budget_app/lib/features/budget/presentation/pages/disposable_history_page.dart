@@ -26,7 +26,7 @@ class _DisposableHistoryPageState extends State<DisposableHistoryPage> {
       body: BlocBuilder<BudgetBloc, BudgetState>(
         builder: (context, state) {
           if (state is BudgetLoading) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator.adaptive());
           }
 
           if (state is DisposableBudgetsLoaded) {
@@ -36,7 +36,7 @@ class _DisposableHistoryPageState extends State<DisposableHistoryPage> {
                 child: Text('No disposed or persisted budgets yet.'),
               );
             }
-            return RefreshIndicator(
+            return RefreshIndicator.adaptive(
               onRefresh: () async {
                 context.read<BudgetBloc>().add(const LoadDisposableHistoryEvent());
               },

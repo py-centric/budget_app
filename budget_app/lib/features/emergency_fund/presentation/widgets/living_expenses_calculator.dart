@@ -54,7 +54,7 @@ class _LivingExpensesCalculatorState extends State<LivingExpensesCalculator> {
                       'Living Expenses Calculator',
                       style: Theme.of(context).textTheme.titleMedium,
                     ),
-                    Switch(
+                    Switch.adaptive(
                       value: _isManual,
                       onChanged: (value) {
                         setState(() {

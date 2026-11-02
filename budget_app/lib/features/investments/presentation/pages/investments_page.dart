@@ -17,7 +17,7 @@ class InvestmentsPage extends StatelessWidget {
       body: BlocBuilder<InvestmentBloc, InvestmentState>(
         builder: (context, state) {
           if (state is InvestmentLoading) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator.adaptive());
           }
           if (state is InvestmentLoaded) {
             if (state.investments.isEmpty) {

@@ -355,7 +355,7 @@ class _ExpenseFormState extends State<ExpenseForm> {
                 },
               ),
               const Divider(),
-              SwitchListTile(
+              SwitchListTile.adaptive(
                 contentPadding: EdgeInsets.zero,
                 title: const Text('Unpaid / Pending Expense (Planned)'),
                 subtitle: const Text('Keep as pending until paid'),
@@ -366,7 +366,7 @@ class _ExpenseFormState extends State<ExpenseForm> {
                   });
                 },
               ),
-              SwitchListTile(
+              SwitchListTile.adaptive(
                 contentPadding: EdgeInsets.zero,
                 title: const Text('Recurring Transaction'),
                 value: _isRecurring,

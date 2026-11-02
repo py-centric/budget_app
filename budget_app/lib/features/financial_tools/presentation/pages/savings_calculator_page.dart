@@ -3,8 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/financial_bloc.dart';
 import '../widgets/savings_chart.dart';
 import '../../../../core/utils/currency_formatter.dart';
+import '../../../../core/widgets/adaptive_segmented_control.dart';
 import '../../../settings/presentation/bloc/settings_bloc.dart';
 import '../../domain/usecases/calculate_amortization.dart';
+import 'package:budget_app/shared/widgets/adaptive_workspace_shell.dart';
 import 'package:budget_app/shared/widgets/branding_footer.dart';
 
 class SavingsCalculatorPage extends StatefulWidget {
@@ -60,7 +62,8 @@ class _SavingsCalculatorPageState extends State<SavingsCalculatorPage> {
         .settings
         .currencyCode;
 
-    return Scaffold(
+    return AdaptiveWorkspaceShell(
+      selectedIndex: 3,
       appBar: AppBar(
         title: const Text('Savings Calculator'),
         actions: [
@@ -187,20 +190,22 @@ class _SavingsCalculatorPageState extends State<SavingsCalculatorPage> {
                         ],
                       ),
                       const SizedBox(height: 16),
-                      SegmentedButton<InterestType>(
+                      AdaptiveSegmentedControl<InterestType>(
                         segments: const [
-                          ButtonSegment(
+                          AdaptiveSegment(
                             value: InterestType.compound,
                             label: Text('Compound'),
+                            semanticsLabel: 'Compound',
                           ),
-                          ButtonSegment(
+                          AdaptiveSegment(
                             value: InterestType.simple,
                             label: Text('Simple'),
+                            semanticsLabel: 'Simple',
                           ),
                         ],
-                        selected: {state.savingsInterestType},
-                        onSelectionChanged: (Set<InterestType> newSelection) {
-                          _update(type: newSelection.first);
+                        selected: state.savingsInterestType,
+                        onChanged: (value) {
+                          _update(type: value!);
                         },
                       ),
                     ],
@@ -209,12 +214,13 @@ class _SavingsCalculatorPageState extends State<SavingsCalculatorPage> {
               ),
               const SizedBox(height: 24),
               Card(
-                color: Colors.green.shade100,
+                color: Colors.green.withValues(alpha: 0.12),
                 child: Padding(
                   padding: const EdgeInsets.all(24),
                   child: Column(
                     children: [
                       const Text('Estimated Future Value'),
+                      const SizedBox(height: 4),
                       Text(
                         CurrencyFormatter.format(
                           futureValue,

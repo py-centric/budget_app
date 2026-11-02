@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:budget_app/core/theme/app_spacing.dart';
 import 'package:budget_app/core/utils/currency_formatter.dart';
+import 'package:budget_app/core/widgets/adaptive_segmented_control.dart';
 import 'package:budget_app/features/settings/presentation/bloc/settings_bloc.dart';
+import 'package:budget_app/shared/widgets/adaptive_workspace_shell.dart';
 import 'package:budget_app/shared/widgets/branding_footer.dart';
 import '../../domain/usecases/calculate_vat.dart';
 
@@ -62,30 +64,45 @@ class _VatCalculatorPageState extends State<VatCalculatorPage> {
         .settings
         .currencyCode;
 
-    return Scaffold(
+    return AdaptiveWorkspaceShell(
+      selectedIndex: 3,
       appBar: AppBar(title: const Text('VAT Calculator')),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(AppSpacing.md),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            SegmentedButton<bool>(
+            AdaptiveSegmentedControl<bool>(
               segments: const [
-                ButtonSegment(
+                AdaptiveSegment(
                   value: true,
-                  label: Text('Add VAT'),
-                  icon: Icon(Icons.add),
+                  label: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.add),
+                      SizedBox(width: 4),
+                      Text('Add VAT'),
+                    ],
+                  ),
+                  semanticsLabel: 'Add VAT',
                 ),
-                ButtonSegment(
+                AdaptiveSegment(
                   value: false,
-                  label: Text('Remove VAT'),
-                  icon: Icon(Icons.remove),
+                  label: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.remove),
+                      SizedBox(width: 4),
+                      Text('Remove VAT'),
+                    ],
+                  ),
+                  semanticsLabel: 'Remove VAT',
                 ),
               ],
-              selected: {_isNetToGross},
-              onSelectionChanged: (value) {
+              selected: _isNetToGross,
+              onChanged: (value) {
                 setState(() {
-                  _isNetToGross = value.first;
+                  _isNetToGross = value!;
                   _calculate();
                 });
               },
@@ -95,7 +112,8 @@ class _VatCalculatorPageState extends State<VatCalculatorPage> {
               controller: _amountController,
               decoration: InputDecoration(
                 labelText: _isNetToGross ? 'Net Amount' : 'Gross Amount',
-                prefixText: '${CurrencyFormatter.getSymbol(currencyCode: currencyCode)} ',
+                prefixText:
+                    '${CurrencyFormatter.getSymbol(currencyCode: currencyCode)} ',
                 border: const OutlineInputBorder(),
               ),
               keyboardType: const TextInputType.numberWithOptions(
@@ -118,19 +136,28 @@ class _VatCalculatorPageState extends State<VatCalculatorPage> {
             if (_result != null) ...[
               _ResultCard(
                 title: 'Net Amount',
-                value: CurrencyFormatter.format(_result!.netAmount, currencyCode: currencyCode),
+                value: CurrencyFormatter.format(
+                  _result!.netAmount,
+                  currencyCode: currencyCode,
+                ),
                 color: Theme.of(context).colorScheme.secondary,
               ),
               const SizedBox(height: AppSpacing.sm + AppSpacing.xs),
               _ResultCard(
                 title: 'VAT Amount (${_result!.vatRate}%)',
-                value: CurrencyFormatter.format(_result!.vatAmount, currencyCode: currencyCode),
+                value: CurrencyFormatter.format(
+                  _result!.vatAmount,
+                  currencyCode: currencyCode,
+                ),
                 color: Theme.of(context).colorScheme.tertiary,
               ),
               const SizedBox(height: AppSpacing.sm + AppSpacing.xs),
               _ResultCard(
                 title: 'Gross Amount',
-                value: CurrencyFormatter.format(_result!.grossAmount, currencyCode: currencyCode),
+                value: CurrencyFormatter.format(
+                  _result!.grossAmount,
+                  currencyCode: currencyCode,
+                ),
                 color: Theme.of(context).colorScheme.primary,
                 isTotal: true,
               ),

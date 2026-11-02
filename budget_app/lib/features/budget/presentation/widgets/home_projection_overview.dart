@@ -25,7 +25,7 @@ class _HomeProjectionOverviewState extends State<HomeProjectionOverview> {
           return const Card(
             child: SizedBox(
               height: 200,
-              child: Center(child: CircularProgressIndicator()),
+              child: Center(child: CircularProgressIndicator.adaptive()),
             ),
           );
         }

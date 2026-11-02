@@ -41,7 +41,7 @@ class AccountsPage extends StatelessWidget {
       body: BlocBuilder<AccountBloc, AccountState>(
         builder: (context, state) {
           if (state is AccountLoading) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator.adaptive());
           }
 
           if (state is AccountError) {

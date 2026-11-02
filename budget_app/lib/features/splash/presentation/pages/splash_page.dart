@@ -108,7 +108,7 @@ class _SplashPageState extends State<SplashPage>
                     ),
               ),
               const SizedBox(height: AppSpacing.xxl),
-              const CircularProgressIndicator(),
+              const CircularProgressIndicator.adaptive(),
             ],
           ),
         ),

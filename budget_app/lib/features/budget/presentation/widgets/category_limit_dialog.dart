@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../domain/entities/category.dart';
 import '../../domain/entities/category_limit.dart';
+import '../../../../core/widgets/adaptive_segmented_control.dart';
 
 class CategoryLimitDialog extends StatefulWidget {
   final List<Category> categories;
@@ -85,23 +86,37 @@ class _CategoryLimitDialogState extends State<CategoryLimitDialog> {
               ),
             ),
             const SizedBox(height: 16),
-            SegmentedButton<LimitPeriod>(
+            AdaptiveSegmentedControl<LimitPeriod>(
               segments: const [
-                ButtonSegment(
+                AdaptiveSegment(
                   value: LimitPeriod.weekly,
-                  label: Text('Weekly'),
-                  icon: Icon(Icons.calendar_view_week),
+                  label: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.calendar_view_week),
+                      SizedBox(width: 4),
+                      Text('Weekly'),
+                    ],
+                  ),
+                  semanticsLabel: 'Weekly',
                 ),
-                ButtonSegment(
+                AdaptiveSegment(
                   value: LimitPeriod.monthly,
-                  label: Text('Monthly'),
-                  icon: Icon(Icons.calendar_month),
+                  label: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.calendar_month),
+                      SizedBox(width: 4),
+                      Text('Monthly'),
+                    ],
+                  ),
+                  semanticsLabel: 'Monthly',
                 ),
               ],
-              selected: {_selectedPeriod},
-              onSelectionChanged: (selection) {
+              selected: _selectedPeriod,
+              onChanged: (value) {
                 setState(() {
-                  _selectedPeriod = selection.first;
+                  _selectedPeriod = value!;
                 });
               },
             ),

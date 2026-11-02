@@ -35,7 +35,7 @@ class ProjectionPage extends StatelessWidget {
             child: BlocBuilder<ProjectionBloc, ProjectionState>(
               builder: (context, state) {
                 if (state is ProjectionLoading || state is ProjectionInitial) {
-                  return const Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator.adaptive());
                 }
 
                 if (state is ProjectionError) {
@@ -51,7 +51,7 @@ class ProjectionPage extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             const Text('Granularity:'),
-                            Switch(
+                            Switch.adaptive(
                               value: state.isWeekly,
                               onChanged: (_) {
                                 context.read<ProjectionBloc>().add(
@@ -102,7 +102,7 @@ class ProjectionPage extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             const Text('Show Actuals:'),
-                            Switch(
+                            Switch.adaptive(
                               value: state.showActuals,
                               onChanged: (_) {
                                 context.read<ProjectionBloc>().add(
@@ -111,7 +111,7 @@ class ProjectionPage extends StatelessWidget {
                               },
                             ),
                             const Text('Show Potential:'),
-                            Switch(
+                            Switch.adaptive(
                               value: state.showPotential,
                               onChanged: (_) {
                                 context.read<ProjectionBloc>().add(

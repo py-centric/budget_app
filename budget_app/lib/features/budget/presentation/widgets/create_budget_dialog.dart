@@ -120,7 +120,7 @@ class _CreateBudgetDialogState extends State<CreateBudgetDialog> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              SwitchListTile(
+              SwitchListTile.adaptive(
                 title: const Text('Multiple months'),
                 value: _isMultiMonth,
                 onChanged: (val) => setState(() => _isMultiMonth = val),

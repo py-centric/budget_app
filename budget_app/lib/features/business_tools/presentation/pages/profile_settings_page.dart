@@ -19,7 +19,7 @@ class ProfileSettingsPage extends StatelessWidget {
       body: BlocBuilder<BusinessBloc, BusinessState>(
         builder: (context, state) {
           if (state.status == BusinessStatus.loading) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator.adaptive());
           }
 
           return ListView.builder(
@@ -123,7 +123,7 @@ class ProfileSettingsPage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 16),
-                SwitchListTile(
+                SwitchListTile.adaptive(
                   title: const Text('Logo on Right'),
                   value: logoOnRight,
                   onChanged: (val) => setState(() => logoOnRight = val),

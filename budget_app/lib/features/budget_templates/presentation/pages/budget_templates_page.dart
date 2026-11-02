@@ -17,7 +17,7 @@ class BudgetTemplatesPage extends StatelessWidget {
       body: BlocBuilder<BudgetTemplatesBloc, BudgetTemplatesState>(
         builder: (context, state) {
           if (state is BudgetTemplatesLoading) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator.adaptive());
           }
           if (state is BudgetTemplatesLoaded) {
             if (state.templates.isEmpty) {

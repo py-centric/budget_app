@@ -4,8 +4,10 @@ import '../bloc/financial_bloc.dart';
 import '../widgets/amortization_chart.dart';
 import '../widgets/amortization_schedule_table.dart';
 import '../../../../core/utils/currency_formatter.dart';
+import '../../../../core/widgets/adaptive_segmented_control.dart';
 import '../../../settings/presentation/bloc/settings_bloc.dart';
 import '../../domain/usecases/calculate_amortization.dart';
+import 'package:budget_app/shared/widgets/adaptive_workspace_shell.dart';
 import 'package:budget_app/shared/widgets/branding_footer.dart';
 
 class LoanCalculatorPage extends StatefulWidget {
@@ -60,7 +62,8 @@ class _LoanCalculatorPageState extends State<LoanCalculatorPage> {
         .settings
         .currencyCode;
 
-    return Scaffold(
+    return AdaptiveWorkspaceShell(
+      selectedIndex: 3,
       appBar: AppBar(
         title: const Text('Loan Calculator'),
         actions: [
@@ -183,20 +186,22 @@ class _LoanCalculatorPageState extends State<LoanCalculatorPage> {
                         ],
                       ),
                       const SizedBox(height: 16),
-                      SegmentedButton<InterestType>(
+                      AdaptiveSegmentedControl<InterestType>(
                         segments: const [
-                          ButtonSegment(
+                          AdaptiveSegment(
                             value: InterestType.compound,
                             label: Text('Compound'),
+                            semanticsLabel: 'Compound',
                           ),
-                          ButtonSegment(
+                          AdaptiveSegment(
                             value: InterestType.simple,
                             label: Text('Simple'),
+                            semanticsLabel: 'Simple',
                           ),
                         ],
-                        selected: {state.loanInterestType},
-                        onSelectionChanged: (Set<InterestType> newSelection) {
-                          _update(type: newSelection.first);
+                        selected: state.loanInterestType,
+                        onChanged: (value) {
+                          _update(type: value!);
                         },
                       ),
                     ],
@@ -310,7 +315,7 @@ class _LoanCalculatorPageState extends State<LoanCalculatorPage> {
                     'Detailed Schedule',
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
-                  Switch(
+                  Switch.adaptive(
                     value: _showTable,
                     onChanged: (v) => setState(() => _showTable = v),
                   ),

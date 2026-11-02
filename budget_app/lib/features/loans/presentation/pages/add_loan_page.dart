@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:budget_app/core/widgets/adaptive_segmented_control.dart';
 import 'package:budget_app/features/loans/domain/entities/loan.dart';
 import 'package:budget_app/features/loans/presentation/bloc/loan_bloc.dart';
 import 'package:budget_app/features/loans/presentation/bloc/loan_event.dart';
+import 'package:budget_app/shared/widgets/adaptive_workspace_shell.dart';
 import 'package:budget_app/shared/widgets/branding_footer.dart';
 
 class AddLoanPage extends StatefulWidget {
@@ -48,7 +50,8 @@ class _AddLoanPageState extends State<AddLoanPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return AdaptiveWorkspaceShell(
+      selectedIndex: 2,
       appBar: AppBar(title: Text(isEditing ? 'Edit Loan' : 'Add Loan')),
       body: Form(
         key: _formKey,
@@ -125,23 +128,37 @@ class _AddLoanPageState extends State<AddLoanPage> {
                       style: Theme.of(context).textTheme.titleSmall,
                     ),
                     const SizedBox(height: 8),
-                    SegmentedButton<LoanDirection>(
+                    AdaptiveSegmentedControl<LoanDirection>(
                       segments: const [
-                        ButtonSegment(
+                        AdaptiveSegment(
                           value: LoanDirection.lent,
-                          label: Text('Lent by Me'),
-                          icon: Icon(Icons.arrow_upward),
+                          label: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(Icons.arrow_upward),
+                              SizedBox(width: 4),
+                              Text('Lent by Me'),
+                            ],
+                          ),
+                          semanticsLabel: 'Lent by Me',
                         ),
-                        ButtonSegment(
+                        AdaptiveSegment(
                           value: LoanDirection.owed,
-                          label: Text('Owed to Me'),
-                          icon: Icon(Icons.arrow_downward),
+                          label: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(Icons.arrow_downward),
+                              SizedBox(width: 4),
+                              Text('Owed to Me'),
+                            ],
+                          ),
+                          semanticsLabel: 'Owed to Me',
                         ),
                       ],
-                      selected: {_direction},
-                      onSelectionChanged: (Set<LoanDirection> selected) {
+                      selected: _direction,
+                      onChanged: (value) {
                         setState(() {
-                          _direction = selected.first;
+                          _direction = value!;
                         });
                       },
                     ),
@@ -150,7 +167,7 @@ class _AddLoanPageState extends State<AddLoanPage> {
               ),
             ),
             const SizedBox(height: 16),
-            SwitchListTile(
+            SwitchListTile.adaptive(
               title: const Text('Include in Projections'),
               subtitle: const Text('Show in financial forecasts'),
               value: _includeInProjections,

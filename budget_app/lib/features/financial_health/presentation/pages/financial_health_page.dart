@@ -53,7 +53,7 @@ class _FinancialHealthPageState extends State<FinancialHealthPage> {
                 if (state is FinancialHealthLoaded) {
                   return _buildResults(state.score);
                 }
-                return const Center(child: CircularProgressIndicator());
+                return const Center(child: CircularProgressIndicator.adaptive());
               },
             ),
           ],

@@ -28,7 +28,7 @@ class EmergencyCalculatorScreen extends StatelessWidget {
       body: BlocBuilder<EmergencyFundBloc, EmergencyFundState>(
         builder: (context, state) {
           if (state.status == EmergencyFundStatus.loading) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator.adaptive());
           }
 
           final currencyFormat = NumberFormat.currency(symbol: '\$');

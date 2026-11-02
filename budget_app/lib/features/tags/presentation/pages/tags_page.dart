@@ -17,7 +17,7 @@ class TagsPage extends StatelessWidget {
       body: BlocBuilder<TagsBloc, TagsState>(
         builder: (context, state) {
           if (state is TagsLoading) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator.adaptive());
           }
           if (state is TagsLoaded) {
             if (state.tags.isEmpty) {

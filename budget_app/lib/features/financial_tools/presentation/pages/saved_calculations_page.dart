@@ -34,7 +34,7 @@ class _SavedCalculationsPageState extends State<SavedCalculationsPage> {
       body: BlocBuilder<FinancialBloc, FinancialState>(
         builder: (context, state) {
           if (state.isLoading) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator.adaptive());
           }
           if (state.savedCalculations.isEmpty) {
             return const EmptyStateWidget(

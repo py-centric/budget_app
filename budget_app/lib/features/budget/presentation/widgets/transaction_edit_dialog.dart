@@ -128,7 +128,7 @@ class _TransactionEditDialogState extends State<TransactionEditDialog> {
                 trailing: const Icon(Icons.calendar_today),
                 onTap: () => _selectDate(context),
               ),
-              SwitchListTile(
+              SwitchListTile.adaptive(
                 title: Text(
                   isIncome
                       ? (_isPotential ? 'Pending / Expected Income' : 'Received / Guaranteed Income')

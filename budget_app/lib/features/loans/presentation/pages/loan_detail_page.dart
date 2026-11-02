@@ -52,7 +52,7 @@ class _LoanDetailPageState extends State<LoanDetailPage> {
     if (_loan == null) {
       return Scaffold(
         appBar: AppBar(title: const Text('Loan Details')),
-        body: const Center(child: CircularProgressIndicator()),
+        body: const Center(child: CircularProgressIndicator.adaptive()),
       );
     }
 

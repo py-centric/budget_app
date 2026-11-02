@@ -48,7 +48,7 @@ class _NetWorthPageState extends State<NetWorthPage> {
               ),
             );
           }
-          return const Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator.adaptive());
         },
       ),
       floatingActionButton: FloatingActionButton(
