@@ -9,7 +9,8 @@ class AppLocalizations {
     return Localizations.of<AppLocalizations>(context, AppLocalizations)!;
   }
 
-  static const LocalizationsDelegate<AppLocalizations> delegate = _AppLocalizationsDelegate();
+  static const LocalizationsDelegate<AppLocalizations> delegate =
+      _AppLocalizationsDelegate();
 
   static const Map<String, Map<String, String>> _localizedValues = {
     'en': {
@@ -23,6 +24,7 @@ class AppLocalizations {
       'edit': 'Edit',
       'delete': 'Delete',
       'cancel': 'Cancel',
+      'done': 'Done',
       'save': 'Save',
       'confirm': 'Confirm',
       'amount': 'Amount',
@@ -67,7 +69,8 @@ class AppLocalizations {
   }
 }
 
-class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
+class _AppLocalizationsDelegate
+    extends LocalizationsDelegate<AppLocalizations> {
   const _AppLocalizationsDelegate();
 
   @override

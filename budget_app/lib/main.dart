@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -5,6 +6,7 @@ import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'core/di/app_module.dart';
+import 'core/localization/app_localizations.dart';
 import 'core/theme/app_theme.dart';
 import 'core/theme/domain_colors.dart';
 import 'features/settings/presentation/bloc/settings_bloc.dart';
@@ -71,10 +73,22 @@ class BudgetApp extends StatelessWidget {
           return MaterialApp(
             title: 'Budget App',
             debugShowCheckedModeBanner: false,
+            localizationsDelegates: const [
+              AppLocalizations.delegate,
+              DefaultCupertinoLocalizations.delegate,
+              DefaultMaterialLocalizations.delegate,
+            ],
+            supportedLocales: const [Locale('en')],
             theme: AppTheme.lightTheme(seedColor, domainColors),
             darkTheme: darkTheme ?? AppTheme.darkTheme(seedColor, domainColors),
-            highContrastTheme: AppTheme.highContrastTheme(seedColor, domainColors),
-            highContrastDarkTheme: AppTheme.highContrastTheme(seedColor, domainColors),
+            highContrastTheme: AppTheme.highContrastTheme(
+              seedColor,
+              domainColors,
+            ),
+            highContrastDarkTheme: AppTheme.highContrastTheme(
+              seedColor,
+              domainColors,
+            ),
             themeMode: mode,
             home: const SplashPage(),
           );
