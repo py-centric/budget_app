@@ -35,3 +35,10 @@ specs/
 # Business Strategy & Investor Materials
 business/
 investor/
+
+# Secret credentials (Constitution: Supply Chain Security)
+config/secrets.env
+.env
+.env.*
+*.pem
+*.key
