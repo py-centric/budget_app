@@ -1,0 +1,24 @@
+# PyCentric Workspace Configuration (ADR-L0-CLI-01)
+schema_version = "1.0.0"
+
+[project]
+name = "budget_app"
+version = "0.1.0"
+layer = "layer3_consumer_blueprints"
+description = "Sovereign personal and business financial planning and ledger portal"
+
+[toolchain]
+flutter = ">=3.24.0"
+task = ">=3.38.0"
+
+[tasks]
+test = "test"
+"test:fast" = "test:fast"
+lint = "lint"
+fmt = "fmt"
+clean = "clean"
+
+[sandbox]
+profile = "package-build"
+config = ".cordon.toml"
+tier = "tier0"

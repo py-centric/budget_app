@@ -1,0 +1,30 @@
+# Pummel SLA Smoke Load Test for budget_app (ADR-L0-DX-07)
+execution:
+  - concurrency: 10
+    ramp-up: 5s
+    hold-for: 15s
+    scenario: budget-app-smoke
+
+scenarios:
+  budget-app-smoke:
+    requests:
+      - url: "http://127.0.0.1:8080/health"
+        method: GET
+        label: "budget_app-health"
+        assert:
+          - subject: status
+            contains:
+              - "200"
+
+reporting:
+  - module: passfail
+    sla:
+      - metric: p95-response-time
+        threshold: 200.0
+        action: stop
+      - metric: p99-response-time
+        threshold: 500.0
+        action: stop
+      - metric: fail-rate
+        threshold: 0.0
+        action: stop

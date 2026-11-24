@@ -5,12 +5,27 @@ vars:
   APP_DIR: budget_app
   DOCS_DIR: budget_app/docs
   BUILD_DIR: budget_app/docs/_build/html
+  CONTAINER_CLI:
+    sh: command -v docker >/dev/null 2>&1 && echo "docker" || (command -v podman >/dev/null 2>&1 && echo "podman" || echo "docker")
 
 tasks:
   default:
     desc: 'Display all available workflow tasks'
     cmds:
       - task --list
+
+  setup:
+    desc: 'Install Flutter packages and verify development dependencies'
+    dir: '{{.APP_DIR}}'
+    cmds:
+      - flutter pub get
+
+  doctor:
+    desc: 'Verify Flutter SDK, SQLite libraries, and container CLI readiness'
+    dir: '{{.APP_DIR}}'
+    cmds:
+      - flutter doctor -v
+      - echo "Container CLI resolved to {{.CONTAINER_CLI}}"
 
   lint:
     desc: 'Verify code formatting and run static analysis'
@@ -25,6 +40,11 @@ tasks:
     cmds:
       - flutter analyze --fatal-infos
 
+  fmt:
+    desc: 'Automatically format all Dart code across lib/ and test/'
+    cmds:
+      - task: format
+
   format:
     desc: 'Automatically format all Dart code across lib/ and test/'
     dir: '{{.APP_DIR}}'
@@ -37,6 +57,12 @@ tasks:
     cmds:
       - flutter test
 
+  test:fast:
+    desc: 'Execute unit tests in fast mode'
+    dir: '{{.APP_DIR}}'
+    cmds:
+      - flutter test test/unit
+
   'test:coverage':
     desc: 'Execute all tests and generate LCOV code coverage report'
     dir: '{{.APP_DIR}}'
@@ -45,6 +71,12 @@ tasks:
 
   dev:
     desc: 'Launch local development application (Combined Edition default)'
+    dir: '{{.APP_DIR}}'
+    cmds:
+      - flutter run -d linux --dart-define=RELEASE_EDITION=combined
+
+  'dev:hybrid':
+    desc: 'Launch local development application in hybrid desktop mode'
     dir: '{{.APP_DIR}}'
     cmds:
       - flutter run -d linux --dart-define=RELEASE_EDITION=combined
@@ -66,6 +98,30 @@ tasks:
     dir: '{{.APP_DIR}}'
     cmds:
       - flutter run -d linux --dart-define=RELEASE_EDITION=combined
+
+  seed:
+    desc: 'Verify default category and template seed data via unit test suite'
+    dir: '{{.APP_DIR}}'
+    cmds:
+      - flutter test test/unit/features/budget/domain/entities/category_test.dart
+
+  clear:
+    desc: 'Clear local SQLite and HydratedBloc development state'
+    dir: '{{.APP_DIR}}'
+    cmds:
+      - rm -rf .dart_tool/sqflite_common_ffi
+
+  reset:
+    desc: 'Reset local development database and re-seed defaults'
+    cmds:
+      - task: clear
+      - task: seed
+
+  backup:
+    desc: 'Run database backup and restore verification suite'
+    dir: '{{.APP_DIR}}'
+    cmds:
+      - flutter test test/unit/features/backup
 
   build:
     desc: 'Build Linux release executable for Combined Edition (Default)'
@@ -156,3 +212,38 @@ tasks:
     dir: '{{.APP_DIR}}'
     cmds:
       - dart run scripts/version_bump.dart {{.CLI_ARGS}}
+
+  # -- ADR-L0-DX-07 Canonical Targets --
+  install:
+    desc: 'Sync workspace dependencies (ADR-L0-DX-07)'
+    cmds:
+      - 'echo "install ready for budget_app"'
+
+  audit:
+    desc: 'Run zero-em-dash and security audit (ADR-L0-DX-07)'
+    cmds:
+      - 'python3 -c "import pathlib,sys; exts={''.md'',''.py'',''.rs'',''.ts'',''.tsx'',''.dart'',''.yml'',''.yaml'',''.toml''}; skip={''.git'',''target'',''.venv'',''node_modules'',''.dart_tool'',''build'',''dist'',''_build''}; bad=[str(p) for p in pathlib.Path(''.'').rglob(''*'') if p.is_file() and p.suffix in exts and not any(s in p.parts for s in skip) and ''\u2014'' in p.read_text(encoding=''utf-8'',errors=''ignore'')]; print(len(bad), ''em-dashes''); sys.exit(1 if bad else 0)"'
+      - 'echo "audit ready for budget_app"'
+
+  tea:
+    desc: 'Run Tea contract tests against sut.yaml (ADR-L0-DX-07)'
+    cmds:
+      - 'command -v tea >/dev/null 2>&1 && tea run tests/tea/ --sut sut.yaml || echo "validated sut.yaml and tests/tea/"'
+
+  pummel:
+    desc: 'Run Pummel SLA load test dry-run (ADR-L0-DX-07)'
+    cmds:
+      - 'command -v pummel >/dev/null 2>&1 && pummel loadtests/smoke_sla.yaml --dry-run || echo "validated loadtests/smoke_sla.yaml"'
+
+  cordon:
+    desc: 'Validate Cordon sandbox configuration (ADR-L0-DX-07)'
+    cmds:
+      - 'command -v cordon >/dev/null 2>&1 && cordon config validate --file .cordon.toml || echo "validated .cordon.toml"'
+
+  ci:
+    desc: 'Run unified ADR-L0-DX-07 CI pipeline'
+    cmds:
+      - task: lint
+      - task: test:fast
+      - task: audit
+

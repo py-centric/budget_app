@@ -1,0 +1,13 @@
+# Fail-closed Cordon sandbox configuration for budget_app (ADR-L0-SEC-02, ADR-L0-DX-07)
+[environment]
+name = "budget_app-sandbox"
+base_profile = "package-build"
+description = "Canonical ADR-L0-DX-07 execution sandbox for budget_app"
+workdir = "."
+
+[network]
+allowed_domains = ["localhost", "127.0.0.1", "pub.dev", "storage.googleapis.com"]
+denied_domains = ["169.254.169.254", "metadata.google.internal", "pastebin.com", "webhook.site"]
+
+[runtime]
+cmd = ["task", "test:fast"]
